@@ -19,10 +19,15 @@ Oskari.registerLocalization(
             },
             "pan": "Pan the map view by dragging mouse on the map.",
             "zoom": "Zoom in the map view.",
+            "clear": "Clear selections.",
             "measure": {
                 "line": "Measure a line on the map.",
                 "area": "Measure an area on the map."
-            }
+            },
+			"featureinfo": "Click the map and get info about the feature.",
+			"shareLink": {
+				"tooltip": "Share the link"
+			}
         },
         "measure": {
             "title": "Measurement Results",

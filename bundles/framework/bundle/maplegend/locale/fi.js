@@ -3,6 +3,7 @@ Oskari.registerLocalization({
   "key": "maplegend",
   "value": {
     "title": "Karttaselitteet",
-    "desc": ""
+    "desc": "",
+	"tooltip": "Legenda"
   }
 });

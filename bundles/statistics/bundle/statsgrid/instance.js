@@ -11,24 +11,27 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
      */
 
     function () {
+		this.servicePackageData = null;
         this.conf = {
             "name": "StatsGrid",
             "sandbox": "sandbox",
             "stateful": true,
-            "tileClazz": "Oskari.statistics.bundle.statsgrid.Tile",
-            "viewClazz": "Oskari.statistics.bundle.statsgrid.StatsView"
+            "tileClazz": null,//"Oskari.statistics.bundle.statsgrid.Tile",
+            "viewClazz": "Oskari.statistics.bundle.statsgrid.StatsView",
+            "isFullScreenExtension": false,
+            "hideLayers" : false,
         };
         this.state = {
             indicators: [],
             layerId: null
         };
+        this.drawPluginId = this.getName();
     }, {
         "start": function () {
             var me = this,
                 conf = this.conf,
                 sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName);
-
             me.sandbox = sandbox;
             sandbox.register(this);
 
@@ -46,6 +49,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             var indicatorRequestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.IndicatorsRequestHandler', this);
             sandbox.addRequestHandler('StatsGrid.IndicatorsRequest', indicatorRequestHandler);
 
+			var currentStateRequestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.CurrentStateRequestHandler', this);
+            sandbox.addRequestHandler('StatsGrid.CurrentStateRequest', currentStateRequestHandler);
+			
+			var setStateRequestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.SetStateRequestHandler', this);
+            sandbox.addRequestHandler('StatsGrid.SetStateRequest', setStateRequestHandler);
+
             var locale = me.getLocalization(),
                 mapModule = sandbox.findRegisteredModuleInstance('MainMapModule');
             this.mapModule = mapModule;
@@ -62,13 +71,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             userIndicatorsService.init();
             this.userIndicatorsService = userIndicatorsService;
 
-            if (sandbox.getUser().isLoggedIn()) {
-                var userIndicatorsTab = Oskari.clazz.create(
-                    'Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
-                    this, locale.tab
-                );
-                this.userIndicatorsTab = userIndicatorsTab;
-            }
+            // if (sandbox.getUser().isLoggedIn()) {
+                // var userIndicatorsTab = Oskari.clazz.create(
+                    // 'Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
+                    // this, locale.tab
+                // );
+                // this.userIndicatorsTab = userIndicatorsTab;
+            // }
 
             // Register stats plugin for map which creates
             // - the indicator selection UI (unless 'published' param in the conf is true)
@@ -99,7 +108,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
                     "visible": true
                 }]
             };
-            var gridPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin', gridConf, locale);
+
+//            var visualizationPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.VisualizationStatsPlugin', gridConf, locale);
+//            mapModule.registerPlugin(visualizationPlugin);
+//            mapModule.startPlugin(visualizationPlugin);
+//            this.visualizationPlugin = visualizationPlugin;
+
+            var gridPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin', gridConf, locale, this);
             mapModule.registerPlugin(gridPlugin);
             mapModule.startPlugin(gridPlugin);
             this.gridPlugin = gridPlugin;
@@ -113,6 +128,48 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             this.classifyPlugin = classifyPlugin;
 
             this.setState(this.state);
+
+            this.buttons = Oskari.clazz.create("Oskari.statistics.bundle.statsgrid.ButtonHandler", this);
+            this.buttons.start();
+
+            var drawRequest = sandbox.getRequestBuilder('BackgroundDrawPlugin.RegisterForDrawingRequest')(true);
+            sandbox.request(this, drawRequest);
+
+            var tileDescriptions = [
+                {
+                    'title': locale.tile.standardStats,
+                    'sequenceNumber' : 30,
+                    'handler': function () {
+                        me.getSandbox().postRequestByName('userinterface.UpdateExtensionRequest', [me, 'attach']);
+                        if(me.getView().isVisible) {
+                            window.setTimeout(function() {
+                                if (me.gridPlugin.mode != 'servicePackage')
+                                    me.changeMode('all');
+                                }, 250);
+                        } else {
+                            me.changeMode(me.gridPlugin.mode);
+                        }
+                    }
+                }
+            ];
+            
+            if(this.conf.gridDataAllowed) {
+                tileDescriptions.push(
+                {
+                    'title': locale.tile.twoWayStats,
+                    'hidden': true,
+                    'sequenceNumber' : 40,
+                    'handler': function () {
+                        me.changeMode('twoway');
+                    },
+                    'indent': true
+                });
+            }
+            
+            for (var i = 0; i < tileDescriptions.length; i++) {
+                var tileRequest = sandbox.getRequestBuilder('liiteri-ui.UIAddTileRequest')(tileDescriptions[i]);
+                sandbox.request(this, tileRequest);
+            }
         },
         "eventHandlers": {
             /**
@@ -129,6 +186,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
 
                 var isShown = event.getViewState() !== "close";
                 view.prepareMode(isShown, null, true);
+
+                var operation = isShown ? 'show' : 'hide';
+                var tileRequest = me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(me.getLocalization().tile.twoWayStats, operation);                
+                me.sandbox.request(me, tileRequest);
+
+                if (!isShown) {
+                    var tileRequest2 = me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(me.getLocalization().tile.standardStats, 'unselect');
+                    me.sandbox.request(me, tileRequest2);
+                }
             },
             /**
              * @method MapStats.StatsVisualizationChangeEvent
@@ -155,12 +221,26 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
              */
             'MapLayerEvent': function (event) {
                 // Enable tile when stats layer is available
-                var layerPresent = this._isLayerPresent(),
-                    tile = this.plugins['Oskari.userinterface.Tile'];
-                if (layerPresent && tile) {
-                    tile.enable();
+                var me = this;
+                var layerPresent = this._isLayerPresent();
+                if (layerPresent) {
+//                    var mapIconDesc = {
+//                        'text': 'stats',
+//                        'iconCss': 'glyphicon mapicon stats-mapicon',
+//                        'actionType': 'toogle',
+//                    }
+//                    var iconRequest = me.sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(me, mapIconDesc, me);
+//                    me.sandbox.request(me, iconRequest);
                 }
-            }
+            },
+			'liiteri-servicepackages.ServicePackageSelectedEvent': function (event) {
+				//this.gridPlugin.getServicePackageIndicators(event.getThemes())
+				this.servicePackageData = event.getThemes();
+			},
+			'liiteri-ui.UISizeChangedEvent': function(event) {
+			    var me = this;
+			    me.getView().resize();
+			}
         },
         isLayerVisible: function () {
             var ret,
@@ -240,6 +320,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
 
             // We need to notify the grid of the current state
             // so it can load the right indicators.
+
+            //this.visualizationPlugin.setState(this.state);
             this.gridPlugin.setState(this.state);
             this.classifyPlugin.setState(this.state);
             // Reset the classify plugin
@@ -370,7 +452,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
         getGridIndicators: function () {
             return (this.gridPlugin ? this.gridPlugin.indicatorsMeta : null);
         },
-
+        changeMode: function (mode) {
+            var me = this;
+            var locale = me.getLocalization();
+            var requests = [];
+            var ix;
+            if (mode == 'twoway') {
+                me.gridPlugin.changeMode(mode);
+                requests.push(me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(locale.tile.standardStats, 'unselect'));
+                requests.push(me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(locale.tile.twoWayStats, 'select'));
+                for (ix in requests)
+                    me.sandbox.request(me, requests[ix]);
+            } else if (mode == 'all') {
+                me.gridPlugin.changeMode(mode);
+                requests.push(me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(locale.tile.twoWayStats, 'unselect'));
+                requests.push(me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(locale.tile.standardStats, 'select'));
+                for (ix in requests)
+                    me.sandbox.request(me, requests[ix]);
+            } else if (mode == 'servicePackage') {
+                me.gridPlugin.changeMode(mode);
+                requests.push(me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(locale.tile.twoWayStats, 'unselect'));
+                requests.push(me.sandbox.getRequestBuilder('liiteri-ui.UIUpdateTileRequest')(locale.tile.standardStats, 'select'));
+                for (ix in requests)
+                    me.sandbox.request(me, requests[ix]);
+            }
+             
+        },
         /**
          * Creates parameters for printout bundle and sends an event to it.
          * Params include the BBOX and the image url of the layer with current
@@ -380,7 +487,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
          * @private
          * @param {Object} layer
          */
-        _createPrintParams: function (layer) {
+        _createPrintParams: function (layer, indicatorData) {
             if (!layer) {
                 return;
             }
@@ -390,30 +497,45 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
                 return;
             }
             var data = {},
-                oLayer = _.first(oLayers),
-                tile = {
-                    // The max extent of the layer
-                    bbox: oLayer.maxExtent.toArray(),
-                    // URL of the image with current viewport
-                    // bounds and all the original parameters
-                    url: oLayer.getURL(oLayer.getExtent())
-                },
+                geoJsonData = {},
                 retainEvent,
                 eventBuilder;
+
             data[layer.getId()] = [];
-            data[layer.getId()].push(tile);
+            geoJsonData = null;
+            $.each(oLayers, function (key, oLayer) {
+                if (oLayer.visibility == true) {
+                    if (oLayer.getURL) {
+                        var tile = {
+                            // The max extent of the layer
+                            bbox: oLayer.maxExtent.toArray(),
+                            // URL of the image with current viewport
+                            // bounds and all the original parameters
+                            url: oLayer.getURL(oLayer.maxExtent),
+                            indicator: indicatorData,
+                        };
+                        data[layer.getId()].push(tile);
+                    }
+                    //Feature layers moved to StatsLayerPlugin
+                }
+                if (oLayer.visibility == false && !oLayer.getURL) {
+                    geoJsonData = {};
+                    geoJsonData.id = oLayer.name;
+                }
+            });                       
 
             // If the event is already defined, just update the data.
             if (this.printEvent) {
                 retainEvent = true;
                 this.printEvent.setLayer(layer);
                 this.printEvent.setTileData(data);
+                this.printEvent.setGeoJsonData(geoJsonData);
             } else {
                 // Otherwise create the event with the data.
                 retainEvent = false;
                 eventBuilder = this.sandbox.getEventBuilder('Printout.PrintableContentEvent');
                 if (eventBuilder) {
-                    this.printEvent = eventBuilder(this.getName(), layer, data);
+                    this.printEvent = eventBuilder(this.getName(), layer, data, geoJsonData);
                 }
             }
 
@@ -441,7 +563,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             me.state.colors = params.colors;
             me.state.classificationMode = params.classificationMode;
             // Send data to printout bundle
-            me._createPrintParams(layer);
+            me._createPrintParams(layer, params.indicatorData);
         },
 
         /**

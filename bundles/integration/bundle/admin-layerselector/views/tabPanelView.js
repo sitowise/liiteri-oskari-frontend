@@ -68,6 +68,7 @@ define([
                 // If model triggers change event we need to re-render this view
                 // listenTo will remove dead listeners, use it instead of on()
                 this.listenTo(this.layerGroupingModel, 'change:layerGroups', this.render);
+                this.listenTo(this.layerGroupingModel, 'change:filteredLayerGroups', this.renderFiltered);
                 this.listenTo(this.layerGroupingModel, 'adminAction', function(e) {
                     // route adminAction from model to an ui element that View.js listens
                     this.$el.trigger(e);
@@ -87,6 +88,41 @@ define([
                 this.render();
             },
 
+            renderFiltered: function() {
+                if (this.layerGroupingModel != null) {
+                    var container = this.$el;
+                    for (var i = 0; i < this.layerGroupingModel.filteredLayerGroups.length; ++i) {
+                        var group = this.layerGroupingModel.filteredLayerGroups[i];
+                        var groupContainer = container.find(".accordion[lcid=" + group.id + "]");
+                        var visibleLayerCount = 0;
+                        for (var j = 0; j < group.layers.length; j++) {
+                            var layer = group.layers[j];
+                            var layerContainer = groupContainer.find("div[data-id=" + layer.id + "]").parent();
+                            if (layer.show) {
+                                visibleLayerCount += 1;
+                                layerContainer.show();
+                                if (visibleLayerCount % 2 === 1) {
+                                    layerContainer.addClass('odd');
+                                } else {
+                                    layerContainer.removeClass('odd');
+                                }
+                            } else {
+                                layerContainer.hide();
+                            }
+                        }                                                
+                        if (group.show) {
+                            groupContainer.show();
+                            var headerContainer = groupContainer.find(".headerText");
+                            headerContainer.text(group.name + " (" + visibleLayerCount + ")");
+                            this.openLayerGroup(groupContainer.find(".accordion-header"));
+                        } else {
+                            groupContainer.hide();
+                            this.closeLayerGroup(groupContainer.find(".accordion-header"));
+                        }                        
+                    }
+                }                
+            },
+
             /**
              * When rendering this app we need to loop through all the classes or organizations
              * in the tabModel
@@ -99,6 +135,7 @@ define([
 
                 if (this.layerGroupingModel != null) {
                     this.layerContainers = {};
+                    var groupedContainer = jQuery('<div class="groupContainer"></div>');
 
                     // Loop through layer groupings
                     for (var i = 0; i < this.layerGroupingModel.layerGroups.length; ++i) {
@@ -137,7 +174,7 @@ define([
                             }
                         }
                         // At this point we want to add new layer button only for organization
-                        if (this.options.tabId == 'organization') {
+                        if (this.options.tabId == 'organization' || this.options.tabId == 'userThemes') {
                             groupContainer.append(this.addLayerBtnTemplate({
                                 instance: this.options.instance
                             }));
@@ -146,26 +183,33 @@ define([
                         var tab = this.tabTemplate({
                             "lcId" : group.id
                         });
-                        
-                        groupPanel.find('.accordion-header').append((this.options.tabId == 'inspire') ?
-                            this.addInspireTemplate({
-                                data: group,
-                                instance: this.options.instance
-                            }) :
-                            this.addOrganizationTemplate({
-                                data: group,
-                                instance: this.options.instance
-                            })
-                        );
-                        // add group panel to this tab
-                        this.$el.append(jQuery(tab).append(groupPanel));
 
+                        if (this.options.tabId == 'inspire') {
+                            groupPanel.find('.accordion-header').append(this.addInspireTemplate({
+                                data: group,
+                                instance: this.options.instance
+                            }));
+                        }
+                        else if (this.options.tabId == 'organization') {
+                            groupPanel.find('.accordion-header').append(this.addOrganizationTemplate({
+                                data: group,
+                                instance: this.options.instance
+                            }));
+                        }
+                        
+                        // add group panel to this tab
+                        //this.$el.append(jQuery(tab).append(groupPanel));
+                        groupedContainer.append(jQuery(tab).append(groupPanel));
                     }
+
+                    this.$el.append(groupedContainer);
+
                     // add new grouping button and settings template
+
                     this.$el.prepend(this.filterTemplate({
                         instance: this.options.instance
                     }));
-                    
+
                     var newGroup = this.layerGroupingModel.getTemplateGroup();
 
                     if (this.options.tabId == 'inspire') {
@@ -177,7 +221,7 @@ define([
                                 data: newGroup,
                                 instance: this.options.instance
                             }));
-                    } else {
+                    } else if (this.options.tabId == 'organization') {
                         this.$el.find('.oskarifield').append(
                             this.addOrganizationButtonTemplate({
                                 instance: this.options.instance
@@ -208,8 +252,7 @@ define([
              */
             filterLayers: function (e) {
                 e.stopPropagation();
-                //var element = jQuery(e.currentTarget);
-                //this.layerGroupingModel.getFilteredLayerGroups(element.val());
+                this.layerGroupingModel.setFilter($(e.currentTarget).val());
             },
             /**
              * Shows grouping settings (name localization) when admin clicks
@@ -335,14 +378,27 @@ define([
              */
             toggleLayerGroup: function (e) {
                 var element = jQuery(e.currentTarget),
-                    panel = element.parents('.accordion:first'),
-                    headerIcon = panel.find('.headerIcon');
+                    panel = element.parents('.accordion:first');
+                if (panel.hasClass('open')) {
+                    this.closeLayerGroup(element);
+                } else {
+                    this.openLayerGroup(element);
+                }
+            },
+            closeLayerGroup: function(element) {
+                var panel = element.parents('.accordion:first');
+                var headerIcon = panel.find('.headerIcon');
                 if (panel.hasClass('open')) {
                     panel.removeClass('open');
                     headerIcon.removeClass('icon-arrow-down');
                     headerIcon.addClass('icon-arrow-right');
                     jQuery(panel).find('div.content').hide();
-                } else {
+                }
+            },
+            openLayerGroup: function (element) {
+                var panel = element.parents('.accordion:first');
+                var headerIcon = panel.find('.headerIcon');
+                if (!panel.hasClass('open')) {
                     panel.addClass('open');
                     headerIcon.removeClass('icon-arrow-right');
                     headerIcon.addClass('icon-arrow-down');

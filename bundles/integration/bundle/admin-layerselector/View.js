@@ -16,7 +16,9 @@
  *
  *
  */
-Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', function () {}, {
+Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', function() {
+    
+}, {
 
     /**
      * @property eventHandlers
@@ -35,7 +37,7 @@ Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', functi
             if(event.getOperation() === 'update' || 
                 event.getOperation() === 'add') {
                 // schedule to be updated
-                this._scheduleUpdateForLayer(event.getLayerId())
+                this._scheduleUpdateForLayer(event.getLayerId());
                 this._triggerLayerUpdateCountdown();
             }
             else if(event.getOperation() === 'remove') {
@@ -80,19 +82,33 @@ Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', functi
             var layer = mapLayerService.findMapLayer(layerId);
             if (layer) {
                 // layer found -> schedule for update
-                this._scheduledLayers.push(layer);
+                var wrapper = this._getWrappedLayers([layer]);
+                this._scheduledLayers.push(wrapper[0]);
             }
         }
         else {
-            this._scheduledLayers = mapLayerService.getAllLayers();
+            this._scheduledLayers = this._getWrappedLayers(mapLayerService.getAllLayers());
         }
+    },
+    _getWrappedLayers: function(layers) {
+        var result = [];
+        $.each(layers, function (i, l) {
+            if (l.isLayerOfType('WFS')) {
+                var wrapper = Oskari.clazz.create('Oskari.integration.bundle.admin-layerselector.models.ExtendedWFSLayer', l);
+                result.push(wrapper);
+            } else {
+                result.push(l);
+            }
+        });
+
+        return result;
     },
     /**
      * @method _layerUpdateHandler
      * @private
      * Updates layers listing after layers has been changed/MapLayerEvent has been received.
      */
-    _layerUpdateHandler: function () {
+    _layerUpdateHandler: function (first) {
         //console.log("admin-layerselector/View.js:_layerUpdateHandler");
         // TODO! currently update, add and initial additions execute
         // the same code. This needs to be updated when mapLayerService
@@ -103,9 +119,9 @@ Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', functi
             mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
         var success = false;
         if (this.view !== null && this.view !== undefined) {
-            if(!this._scheduledLayers || this._scheduledLayers.length > 30) {
+            if(first || !this._scheduledLayers || this._scheduledLayers.length > 30) {
                 // if more than 30 layers require update -> make full re-render
-                success = this.view.createUI(mapLayerService.getAllLayers());
+                success = this.view.createUI(this._getWrappedLayers(mapLayerService.getAllLayers()));
             }
             else {
                 success = this.view.addToCollection(this._scheduledLayers);
@@ -178,7 +194,7 @@ Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', functi
             // If call for layers is ready before backbone is created,
             // we'll instantiate our view with that data 
             me._scheduleUpdateForLayer();
-            me._layerUpdateHandler();
+            me._layerUpdateHandler(true);
         });
     },
 

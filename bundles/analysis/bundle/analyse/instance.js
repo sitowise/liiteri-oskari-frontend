@@ -20,7 +20,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
         this.plugins = {};
         this.localization = undefined;
         this.analyse = undefined;
-        this.buttonGroup = 'viewtools';
+        this.buttonGroup = 'myplaces';
         this.ignoreEvents = false;
         this.dialog = undefined;
         this.analyseHandler = undefined;
@@ -105,6 +105,28 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
 
             this.mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
 
+			// request toolbar to add buttons
+            var addBtnRequestBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
+                tool,
+                btns = {
+                    'analysis': {
+                        iconCls: 'tool-analysis',
+                        tooltip: this.localization.btnTooltip,
+                        sticky: true,
+                        callback: function () {
+                            me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me, 'attach']);
+                        }
+                    }
+                };
+
+            for (tool in btns) {
+                // Button not in UI - activated in an other route
+                if (conf.buttons && conf.buttons[tool] === false) continue;
+                if (btns.hasOwnProperty(tool)) {
+                    sandbox.request(this, addBtnRequestBuilder(tool, this.buttonGroup, btns[tool]));
+                }
+            }
+			
             //Let's extend UI
             var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
             sandbox.request(this, request);
@@ -126,7 +148,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             var reqBuilder = sandbox.getRequestBuilder('PersonalData.AddTabRequest');
 
             if (reqBuilder) {
-                sandbox.request(this, reqBuilder(this.localization.personalDataTab.title, tab.getContent()));
+                //sandbox.request(this, reqBuilder(this.localization.personalDataTab.title, this.localization.personalDataTab.title, tab.getContent()));
             }
             this.personalDataTab = tab;
         },
@@ -257,7 +279,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
          */
         startExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = Oskari.clazz.create('Oskari.analysis.bundle.analyse.Flyout', this);
-            this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.analysis.bundle.analyse.Tile', this);
+            //this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.analysis.bundle.analyse.Tile', this);
         },
         /**
          * @method stopExtension
@@ -266,7 +288,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
          */
         stopExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = null;
-            this.plugins['Oskari.userinterface.Tile'] = null;
+            //this.plugins['Oskari.userinterface.Tile'] = null;
         },
         /**
          * @method getPlugins
@@ -298,7 +320,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
         _createUi: function () {
             var me = this;
             this.plugins['Oskari.userinterface.Flyout'].createUi();
-            this.plugins['Oskari.userinterface.Tile'].refresh();
+            //this.plugins['Oskari.userinterface.Tile'].refresh();
         },
         /**
          * @method setAnalyseMode
@@ -313,7 +335,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
                 tools = jQuery('#maptools');
 
             if (blnEnabled) {
-                map.addClass('mapAnalyseMode');
+                //map.addClass('mapAnalyseMode');
                 me.sandbox.mapMode = 'mapAnalyseMode';
                 // Hide flyout, it's not needed...
                 jQuery(me.plugins['Oskari.userinterface.Flyout'].container)

@@ -89,7 +89,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
             "tool": '<div class="tool ">' + '<input type="checkbox"/>' + '<label></label></div>',
             "buttons": '<div class="buttons"></div>',
             "help": '<div class="help icon-info"></div>',
-            "main": '<div class="basic_printout">' + '<div class="header">' + '<div class="icon-close">' + '</div>' + '<h3></h3>' + '</div>' + '<div class="content">' + '</div>' + '<form method="post" target="map_popup_111" id="oskari_print_formID" style="display:none" action="" ><input name="geojson" type="hidden" value="" id="oskari_geojson"/><input name="tiles" type="hidden" value="" id="oskari_tiles"/><input name="tabledata" type="hidden" value="" id="oskari_print_tabledata"/></form>' + '</div>',
+            "main": '<div class="basic_printout">' + '<div class="header">' + '<div class="icon-close">' + '</div>' + '<div class="header_title"><p></p></div>' + '</div>' + '<div class="content">' + '</div>' + '<form method="post" target="map_popup_111" id="oskari_print_formID" style="display:none" action="" ><input name="geojson" type="hidden" value="" id="oskari_geojson"/><input name="tiles" type="hidden" value="" id="oskari_tiles"/><input name="tabledata" type="hidden" value="" id="oskari_print_tabledata"/></form>' + '</div>',
             "format": '<div class="printout_format_cont printout_settings_cont"><div class="printout_format_label"></div></div>',
             "formatOptionTool": '<div class="tool ">' + '<input type="radio" name="format" />' + '<label></label></div>',
             "legend": '<div class="printout_legend_cont printout_settings_cont"><div class="printout_legend_label"></div></div>',
@@ -109,7 +109,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
             var content = this.template.main.clone();
 
             this.mainPanel = content;
-            content.find('div.header h3').append(this.loc.title);
+            content.find('div.header > div.header_title > p').append(this.loc.title);
 
             container.append(content);
             var contentDiv = content.find('div.content');
@@ -141,6 +141,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
 
             // Legend setup visible only if statslayer is visible
             this._setLegendVisibility();
+
+            this._setAdditionalOptionsVisibility();
 
             // buttons
             // close
@@ -243,7 +245,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                         me.formatOptions[i].selected = false;
                     }
                     tool.selected = true;
-
+                    me._setAdditionalOptionsVisibility(format);
                 };
             };
             /* format options from localisations files */
@@ -299,6 +301,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                     'for': dat.id,
                     'class': 'printout_checklabel'
                 });
+
+                if(typeof dat.cssClass !== 'undefined') {
+                    opt.addClass(dat.cssClass);
+                }
                 this.contentOptionDivs[dat.id] = opt;
                 contentPanel.append(opt);
 
@@ -476,7 +482,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
             cancelBtn.setHandler(function () {
                 me.instance.setPublishMode(false);
             });
-            cancelBtn.insertTo(buttonCont);
 
             var saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
             saveBtn.setTitle(this.loc.buttons.save);
@@ -491,6 +496,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                 }
             });
             saveBtn.insertTo(buttonCont);
+            cancelBtn.insertTo(buttonCont);
 
             return buttonCont;
         },
@@ -616,7 +622,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                 var stringifiedJson = this._stringifyGeoJson(this.instance.geoJson),
                     stringifiedTileData = this._stringifyTileData(this.instance.tileData),
                     stringifiedTableData = this._stringifyTableData(this.instance.tableJson);
-
+                
                 this.instance.getSandbox().printDebug("PRINT POST URL " + url);
                 this.openPostURLinWindow(stringifiedJson, stringifiedTileData, stringifiedTableData, url, selections);
             } else {
@@ -633,8 +639,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
         modifyUIConfig4Parcel: function (printParams) {
             var me = this;
             var container = me.mainPanel;
-            container.find('div.header h3').empty();
-            container.find('div.header h3').append(me.loc.title+ " (3/3)");
+            container.find('div.header > div.header_title > p').empty();
+            container.find('div.header > div.header_title > p').append(me.loc.title+ " (3/3)");
 
             // Print title
             container.find('.printout_title_field').attr("value",printParams.pageTitle);
@@ -692,7 +698,19 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
         _stringifyGeoJson: function (geoJson) {
             var ret = null;
             if (geoJson) {
-                ret = JSON.stringify(geoJson).replace('\"', '"');
+                var geoJsonArray = [];
+                //Legend layers go at the end
+                var legendLayers = ['LegendHeader', 'LegendBoxes'];
+                $.each(geoJson, function (id, value) {
+                    if (legendLayers.indexOf(value.id) == -1)
+                        geoJsonArray.push(value);
+                });
+                $.each(geoJson, function (id, value) {
+                    if (legendLayers.indexOf(value.id) > -1)
+                        geoJsonArray.push(value);
+                });
+
+                ret = JSON.stringify(geoJsonArray).replace('\"', '"');
             }
             return ret;
         },
@@ -749,6 +767,21 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                 container.find('.printout_legend_cont').show();
             } else {
                 container.find('.printout_legend_cont').hide();
+            }
+        },
+        _setAdditionalOptionsVisibility: function(format) {
+            var container = this.mainPanel;
+            if (format == null)
+                format = container.find('input[name=format]:checked').val();
+            var pdfValue = this.formatOptionsMap['pdf'].format;
+            var isPdf = (format == pdfValue);
+            container.find('.printout_option_cont').show();
+            if (isPdf) {
+                container.find('.printout_option_cont.printout_pdfOnly').show();
+                container.find('.printout_title_cont').show();
+            } else {
+                container.find('.printout_title_cont').hide();
+                container.find('.printout_option_cont.printout_pdfOnly').hide();
             }
         },
         /**
@@ -810,7 +843,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                     }
                     me.legendInProcess = true;
                     this._printMapInfo(legend, function (data) {
-
                         var title = legend.find('.geostats-legend-title').html();
                         // ranges
                         var ranges = [];
@@ -818,16 +850,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                         legend.find('div').each(function () {
                             var myclass = jQuery(this).attr('class');
                             if (myclass === undefined || myclass === null) {
-                                var legend_row = {
-                                    "boxcolor": jQuery(this).find('.geostats-legend-block').attr('style'),
-                                    "range": jQuery(this).text()
+                                var legend_row = {                                    
+                                    "range": jQuery(this).text(),
+                                    "color" : "#FFFFFF"
                                 };
+                                var style;
+                                if (jQuery(this).find('.geostats-legend-block').length > 0) {
+                                    style = jQuery(this).find('.geostats-legend-block').attr('style');
+                                    legend_row.type = 'rectangle';
+                                } else {
+                                    style = jQuery(this).find('.geostats-legend-block-circle').attr('style');
+                                    legend_row.type = 'circle';
+                                }
+                                var pairs = style.split(';');
+                                for (var ix = 0; ix < pairs.length; ix++) {
+                                    var pair = pairs[ix];
+                                    var keyValuePair = pair.split(":");
+                                    if (keyValuePair[0] == 'background-color') {
+                                        legend_row.color = keyValuePair[1];
+                                    } else if (keyValuePair[0] == 'width') {
+                                        legend_row.width = parseFloat(keyValuePair[1].replace("px", ""));
+                                    } else if (keyValuePair[0] == 'height') {
+                                        legend_row.height = parseFloat(keyValuePair[1].replace("px", ""));
+                                    }
+                                }
                                 ranges.push(legend_row);
                             }
                         });
 
                         var legendgjs = me.instance.legendPlugin.plotLegend(title, ranges, data, legend_pos);
-                        me.instance.geoJson = legendgjs;
+
+                        $.each(legendgjs, function(id, value) {
+                            me.instance.geoJson[id] = value;
+                        });                        
                         me.legendInProcess = false;
                     });
                 }

@@ -48,7 +48,7 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
             jQuery('body').append(this.dialog);
 
             contentHeight = contentDiv.height();
-            reasonableHeight = jQuery(document).height() * 0.6;
+            reasonableHeight = jQuery(document).height() * 0.8;
             if (contentHeight > reasonableHeight) {
                 contentDiv.height(reasonableHeight);
                 contentDiv.css('overflow-y', 'auto');
@@ -255,7 +255,45 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
             var me = this;
             me.dialog.css("position", "absolute");
             me.dialog.draggable({
-                scroll: false
+                scroll: false,
+                handle: "h3.popupHeader",
+                cursor: "move"
             });
+        },
+
+        makeResizable: function(options) {
+            var me = this;
+            var contentDiv = me.dialog.find('div.content');
+            me.contentOffset = me.dialog.height() - contentDiv.height();
+
+            //resizable has problems with borders/padding, try to hack around that
+            var padWidth, padHeight;
+            var defaults = {
+                    //handles: "e",
+                    helper: "divmanazerpopup-resizable-helper",
+                    start: function(event,ui){
+                        var $this = $(this);
+                        padWidth = parseFloat($this.css('border-left').replace('px','')) - parseFloat($this.css('border-right').replace('px',''));
+                        padHeight = parseFloat($this.css('border-top').replace('px','')) - parseFloat($this.css('border-bottom').replace('px',''));
+                    },
+                    resize: function (event, ui) {
+
+                    },
+                    stop: function (event, ui) {
+                        var $this = $(this);
+                        $this.css('width',ui.size.width - padWidth); 
+                        $this.css('height',ui.size.height - padHeight); 
+                        if (ui.originalSize.height != ui.size.height)
+                            me._resizeContent(ui.size.height - me.contentOffset);
+                    }
+            };
+
+            var settings = $.extend({}, defaults, options);
+            me.dialog.resizable(settings);
+        },
+        _resizeContent: function (height) {
+            var me = this;
+            var contentDiv = me.dialog.find('div.content');
+            contentDiv.height(height);
         }
     });

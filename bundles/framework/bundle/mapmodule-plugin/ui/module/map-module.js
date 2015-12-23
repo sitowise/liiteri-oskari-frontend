@@ -51,7 +51,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.MapModule',
          * Adds containers for map control plugins
          */
         _addMapControlPluginContainers: function () {
-            var containerClasses = ['bottom center', 'center top', 'center right', 'center left', 'bottom right', 'bottom left', 'right top', 'left top'],
+            var containerClasses = ['bottom center', 'center top', 'center right', 'center left', 'bottom right', 'bottom left', 'right top', 'left top', 'top2 right'],
                 containerDiv,
                 mapDiv = this.getMapEl(),
                 i;
@@ -71,7 +71,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.MapModule',
 
             containerDiv = mapDiv.find(selector);
             if (!containerDiv.length) {
-                var containersClasses = ['bottom center', 'center top', 'center right', 'center left', 'bottom right', 'bottom left', 'right top', 'left top'],
+                var containersClasses = ['bottom center', 'center top', 'center right', 'center left', 'bottom right', 'bottom left', 'right top', 'left top', 'top2 right'],
                     currentClasses,
                     previousFound = null,
                     current,

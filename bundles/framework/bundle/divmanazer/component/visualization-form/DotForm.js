@@ -56,41 +56,41 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.DotForm",
                 scale: 0
                 //            tooltip : loc.tooltip, //todo
             },
-            'arrow': {
-                iconCls: 'marker-arrow',
-                iconId: 6,
-                offset: [5,35],
-                scale: 2
-                //            tooltip : loc.tooltip, //todo
-            },
-            'pin': {
-                iconCls: 'marker-pin',
-                iconId: 3,
-                offset: [2,35],
-                scale: 2
-                //            tooltip : loc.tooltip, //todo
-            },
-            'pin2': {
-                iconCls: 'marker-pin2',
-                iconId: 2,
-                offset: [5,35],
-                scale: 2
-                //            tooltip : loc.tooltip, //todo
-            },
-            'stud': {
-                iconCls: 'marker-stud',
-                iconId: 0,
-                offset: [2,35],
-                scale: 2
-                //            tooltip : loc.tooltip, //todo
-            },
-            'flag': {
-                iconCls: 'marker-flag',
-                iconId: 4,
-                offset: [9,35],
-                scale: 2
-                //            tooltip : loc.tooltip, //todo
-            }
+//            'arrow': {
+//                iconCls: 'marker-arrow',
+//                iconId: 6,
+//                offset: [5,35],
+//                scale: 2
+//                //            tooltip : loc.tooltip, //todo
+//            },
+//            'pin': {
+//                iconCls: 'marker-pin',
+//                iconId: 3,
+//                offset: [2,35],
+//                scale: 2
+//                //            tooltip : loc.tooltip, //todo
+//            },
+//            'pin2': {
+//                iconCls: 'marker-pin2',
+//                iconId: 2,
+//                offset: [5,35],
+//                scale: 2
+//                //            tooltip : loc.tooltip, //todo
+//            },
+//            'stud': {
+//                iconCls: 'marker-stud',
+//                iconId: 0,
+//                offset: [2,35],
+//                scale: 2
+//                //            tooltip : loc.tooltip, //todo
+//            },
+//            'flag': {
+//                iconCls: 'marker-flag',
+//                iconId: 4,
+//                offset: [9,35],
+//                scale: 2
+//                //            tooltip : loc.tooltip, //todo
+//            }
         };
 
         this.templateSymbolDialogContent = jQuery('<div class="pointform">' +
@@ -382,7 +382,7 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.DotForm",
                 me.values.shape = me.defaultValues.shape;
                 renderDialog.close();
             });
-            renderDialog.show(title, dialogContent, [saveBtn, cancelBtn]);
+            renderDialog.show(title, dialogContent, [cancelBtn, saveBtn]);
             renderDialog.moveTo(renderButton, 'top');
             return renderDialog;
         },

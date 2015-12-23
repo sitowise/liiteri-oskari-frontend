@@ -88,6 +88,24 @@ Oskari.registerLocalization({
                 "edit": "Edit the shape of the area by clicking and dragging the break points on its edge line.",
                 "save": "Save shape",
                 "noResult": "0 m²"
+            },
+            "box": {
+                "title": "Suorakulmion lisäys",
+                "tooltip": "Lisää suorakulmio",
+                "add": "Lisää suorakulmio raahamalla kartalla. Lopeta piirto painamalla 'Lopeta piirto'. Voit piirtää useita alueita samaan kohteeseen.",
+                "next": "Voit tallentaa tai piirtää lisää alueita samaan kohteeseen.",
+                "edit": "",
+                "save": "Tallenna muoto",
+                "noResult": "0 m²"
+            },
+            "circle": {
+                "title": "Ympyrän lisäys",
+                "tooltip": "Lisää ympyrä",
+                "add": "Lisää ympyrä raahamalla kartalla. Lopeta piirto painamalla 'Lopeta piirto'. Voit piirtää useita alueita samaan kohteeseen.",
+                "next": "Voit tallentaa tai piirtää lisää alueita samaan kohteeseen.",
+                "edit": "",
+                "save": "Tallenna muoto",
+                "noResult": "0 m²"
             }
         },
         "buttons": {
@@ -118,6 +136,9 @@ Oskari.registerLocalization({
             "placeAttention": {
                 "placeholder": "Attention text"
             },
+			"placeOnlyLabel": {
+				"label": "Show only label"
+			},
             "measurement": {
                 "line": "Line length: ",
                 "area": "Area: "
@@ -285,6 +306,7 @@ Oskari.registerLocalization({
             "categoryDelete": {
                 "title": "Delete map layer",
                 "deleteConfirmMove": "Map layer {0} contains {1} objects. Do you want to delete the map layer and move the places on it to the default map layer {2} ?",
+				"deleteWithObjectsConfirm": "Map layer {0} contains {1} objects. Do you want to delete the map layer?",
                 "deleteConfirm": "Delete map layer {0}?",
                 "deleted": "Map layer deleted"
             },
@@ -303,7 +325,8 @@ Oskari.registerLocalization({
                 "title": "Error!",
                 "generic": "System error. Please try again later.",
                 "deleteCategory": "Error occurred while deleting!",
-                "deleteDefault": "The default map layer cannot be deleted."
+                "deleteDefault": "The default map layer cannot be deleted.",
+				"server_error_key_limit": "The amount of user GIS datasets reached the limit."
             }
         },
         "validation": {

@@ -48,10 +48,16 @@ function() {
             "src" : "../../../../bundles/framework/bundle/mapwfs2/plugin/WfsLayerPlugin.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/bundle/mapwfs2/event/WFSFeatureEvent.js"
+            "src": "../../../../bundles/framework/bundle/mapwfs2/event/WFSFeatureEvent.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/bundle/mapwfs2/event/WFSLoadingFinishedEvent.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/event/WFSFeaturesSelectedEvent.js"
+        }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/mapwfs2/event/WFSFeatureGeometriesEvent.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/event/WFSImageEvent.js"
@@ -64,6 +70,12 @@ function() {
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ShowOwnStyleRequestHandler.js"
+        }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ChangeMapLayerOwnStyleRequest.js"
+        }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ChangeMapLayerOwnStyleRequestHandler.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/domain/QueuedTile.js"

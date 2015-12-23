@@ -115,12 +115,12 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.Flyout',
                 return;
             }
             // Show info or not
-            if (jQuery.cookie('analyse_info_seen') !== '1') {
-                this.view.render(flyout);
-                flyout.parent().parent().css('display', '');
-            } else {
+//            if (jQuery.cookie('analyse_info_seen') !== '1') {
+//                this.view.render(flyout);
+//                flyout.parent().parent().css('display', '');
+//            } else {
                 this.instance.setAnalyseMode(true);
-            }
+//            }
         }
     }, {
         /**

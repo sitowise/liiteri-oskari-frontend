@@ -48,7 +48,18 @@ Oskari.clazz.define(
             "scripts": [{
                 "type": "text/javascript",
                 "src": "../../../../bundles/integration/bundle/admin-layerselector/View.js"
-
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/integration/bundle/admin-layerselector/service/AdminLayerSelectorService.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/integration/bundle/admin-layerselector/models/ExtendedWFSLayer.js"
+            },{
+                "type": "text/javascript",
+                "src": "../../../../bundles/integration/bundle/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequest.js"
+            },{
+                "type": "text/javascript",
+                "src": "../../../../bundles/integration/bundle/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequestHandler.js"
             }, {
                 "type": "text/css",
                 "src": "../../../../resources/integration/bundle/admin-layerselector/css/style.css"

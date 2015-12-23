@@ -2,7 +2,9 @@ Oskari.registerLocalization({
   "lang": "fi",
   "key": "DivManazer",
   "value": {
-    "VisualizationForm": {
+      "VisualizationForm": {
+		  "defaultGroupName": "Määritä tyyli, jolla aineistot piirretään kartalle. Jos kohteesi on piste, muokkaa pisteen tyyliä, jos viiva, muokkaa viivan tyyliä ja jos alue, muokkaa alueen tyyliä.",
+          "setStyleForAllValues": "Aseta sama tyyli kaikille arvoille",
       "tooltips": {
         "dot": "Muokkaa pisteen esitystapaa",
         "area": "Muokkaa alueen esitystapaa",

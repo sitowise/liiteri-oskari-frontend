@@ -106,12 +106,24 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
             request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(me);
             sandbox.request(me, request);
 
+//            var mapIconDesc = {
+//                'text': 'layerselector2',
+//                'iconCss': 'glyphicon mapicon map-mapicon',
+//				'tooltip': me.getLocalization('tooltip').bundle,
+//                'actionType': 'toogle'
+//            }
+//            var request2 = sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(me, mapIconDesc, me);
+//            sandbox.request(me, request2);
+
             // draw ui
             me.createUi();
 
             mapLayerService = me.sandbox.getService('Oskari.mapframework.service.MapLayerService');
 
             sandbox.registerAsStateful(me.mediator.bundleId, me);
+
+            var addTabRequestHandler = Oskari.clazz.create('Oskari.mapframework.bundle.layerselector2.request.AddTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']);
+            sandbox.addRequestHandler('layerselector2.AddTabRequest', addTabRequestHandler);
 
             successCB = function () {
                 // massive update so just recreate the whole ui
@@ -196,16 +208,16 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
                     layer = mapLayerService.findMapLayer(layerId);
                     me.plugins['Oskari.userinterface.Flyout'].handleLayerAdded(layer);
                     // refresh layer count
-                    me.plugins['Oskari.userinterface.Tile'].refresh();
+                    //me.plugins['Oskari.userinterface.Tile'].refresh();
                 } else if (event.getOperation() === 'remove') {
                     me.plugins['Oskari.userinterface.Flyout'].handleLayerRemoved(layerId);
                     // refresh layer count
-                    me.plugins['Oskari.userinterface.Tile'].refresh();
+                    //me.plugins['Oskari.userinterface.Tile'].refresh();
                 } else if (event.getOperation() === 'sticky') {
                     layer = mapLayerService.findMapLayer(layerId);
                     me.plugins['Oskari.userinterface.Flyout'].handleLayerSticky(layer);
                     // refresh layer count
-                    me.plugins['Oskari.userinterface.Tile'].refresh();
+                    //me.plugins['Oskari.userinterface.Tile'].refresh();
                 }
             },
             'BackendStatus.BackendStatusChangedEvent': function (event) {
@@ -223,9 +235,22 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
                     this.plugins['Oskari.userinterface.Flyout']
                         .handleLayerModified(layer);
                 }
+            },
+            'liiteri-servicepackages.ServicePackageSelectedEvent': function (event) {
+                var me = this;
+                var cb = function (layers) { me._selectLayers(layers); };
+				this.plugins['Oskari.userinterface.Flyout'].populateLayersFromServicePackage(event.getThemes(), cb);
+			},
+			'liiteri-groupings.GroupingUpdatedEvent' : function(event) {
+			    this.plugins['Oskari.userinterface.Flyout'].populateGroupings();
+			}
+        },
+        _selectLayers : function(layers) {
+            for (var idx in layers) {
+                var layerItem = layers[idx].layer;
+                this.sandbox.postRequestByName('AddMapLayerRequest', [layerItem.getId(), false, layerItem.isBaseLayer(), false, layers[idx].groupName]);
             }
         },
-
         /**
          * @method stop
          * implements BundleInstance protocol stop method

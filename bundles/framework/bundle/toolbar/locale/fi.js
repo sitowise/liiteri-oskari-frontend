@@ -18,10 +18,15 @@ Oskari.registerLocalization({
       },
       "pan": "Liikuta karttaa",
       "zoom": "Lähennä",
+      "clear": "Tyhjennä valinnat",
       "measure": {
         "line": "Mittaa etäisyys",
-        "area": "Mittaa alue"
-      }
+        "area": "Mittaa pinta-ala"
+      },
+	  "featureinfo": "Tietoja karttakohteesta",
+	  "shareLink": {
+		"tooltip": "Jaa linkki"
+	  }
     },
     "measure" : {
         "title" : "Mittaustulokset",

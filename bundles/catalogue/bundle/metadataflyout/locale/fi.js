@@ -38,10 +38,6 @@ Oskari.registerLocalization({
                     "xml": {
                         "text": "Avaa ISO 19139 XML",
                         "target": "_blank"
-                    },
-                    "pdf": {
-                        "text": "Avaa PDF -tuloste",
-                        "target": "_blank"
                     }
                 },
                 "jhs": {
@@ -51,10 +47,6 @@ Oskari.registerLocalization({
                     "xml": {
                         "text": "Avaa ISO 19139 XML",
                         "target": "_blank"
-                    },
-                    "pdf": {
-                        "text": "Avaa PDF -tuloste",
-                        "target": "_blank"
                     }
                 },
                 "inspire": {
@@ -63,10 +55,6 @@ Oskari.registerLocalization({
                     "inspire": "",
                     "xml": {
                         "text": "Avaa ISO 19139 XML",
-                        "target": "_blank"
-                    },
-                    "pdf": {
-                        "text": "Avaa PDF -tuloste",
                         "target": "_blank"
                     }
                 }

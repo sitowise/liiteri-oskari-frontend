@@ -93,10 +93,9 @@ Oskari.clazz
                 var sandbox = instance.getSandbox();
 
                 var status = cel.children('.oskari-tile-status');
-
-                //        status.empty();
-                //        status.append('(' + layers.length + ')');
-
+                
+                var title = cel.children('.oskari-tile-title');
+                title.addClass('indent');
             }
         }, {
             /**

@@ -18,10 +18,12 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
             // no config -> do nothing
             return;
         }
+
         var me = this,
             toolbar = me.getToolbarContainer(pConfig ? pConfig.toolbarid : null, pConfig),
             group = null,
-            prefixedGroup = (pConfig.toolbarid || 'default') + '-' + pGroup;
+            prefixedGroup = (pConfig.toolbarid || 'default') + '-' + (pGroup == "printout" ? "myplaces" : pGroup);
+
         if (!me.buttons[prefixedGroup]) {
             // create group if not existing
             me.buttons[prefixedGroup] = {};
@@ -43,12 +45,23 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
         var button = me.templateTool.clone();
         button.attr('tool', pId);
         button.attr('title', pConfig.tooltip);
-        if(me.conf.classes && me.conf.classes[pGroup] && me.conf.classes[pGroup][pId]) {
+
+        if (pConfig.text) {
+            /* special case - text button */
+            if (pConfig.iconCls) {
+                var iconEl = jQuery('<span></span>');
+                iconEl.addClass(pConfig.iconCls);
+                iconEl.appendTo(button);
+            }
+            var textEl = jQuery('<span></span>');
+            textEl.text(pConfig.text);
+            textEl.appendTo(button);
+        }
+        else if(me.conf.classes && me.conf.classes[pGroup] && me.conf.classes[pGroup][pId]) {
             button.addClass(me.conf.classes[pGroup][pId].iconCls);
         } else {
             button.addClass(pConfig.iconCls);    
-        }
-
+        }        
 
         // handling for state setting if the button was not yet on toolbar on setState
         if (me.selectedButton) {
@@ -73,6 +86,11 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
                 group: prefixedGroup
             };
         }
+
+        if (pConfig.initiallySelected) {
+            button.addClass('selected');
+        }
+
         button.bind('click', function (event) {
             me._clickButton(pId, prefixedGroup);
         });

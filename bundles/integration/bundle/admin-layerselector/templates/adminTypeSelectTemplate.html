@@ -4,11 +4,13 @@
             <label for="add-layer-type" class="add-layer-label" title="<%= localization.type %>"><%= localization.type %></label>
         </div>
         <div class="add-layer-input-area">
-            <select id="add-layer-type" class="admin-layer-type">
+            <select id="add-layer-type">
                 <option value=""><%= localization.typePlaceholder %></option>
                 <option value="wmslayer"><%= localization.normalLayer %></option>
-                <option value="base"><%= localization.baseLayer %></option>
-                <option value="groupMap"><%= localization.groupLayer %></option>
+                <option value="arcgislayer"><%= localization.arcgisLayer %></option>
+                <option value="wfslayer"><%= localization.wfslayer %></option>
+<!--                <option value="base"><%= localization.baseLayer %></option>-->
+<!--                <option value="groupMap"><%= localization.groupLayer %></option>-->
             </select>
         </div>
     </div>

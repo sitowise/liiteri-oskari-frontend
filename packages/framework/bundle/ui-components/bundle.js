@@ -83,7 +83,10 @@ Oskari.clazz.define("Oskari.userinterface.bundle.ui.ComponentsBundle", function(
             "src" : "../../../../bundles/framework/bundle/divmanazer/component/ProgressSpinner.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/bundle/divmanazer/component/VisualizationForm.js"
+            "src": "../../../../bundles/framework/bundle/divmanazer/component/VisualizationForm.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/bundle/divmanazer/component/GroupVisualizationForm.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/divmanazer/component/visualization-form/AreaForm.js"

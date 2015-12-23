@@ -17,7 +17,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesServic
      */
 
     function (url, uuid, sandbox, defaults, pInstance, options) {
-
         // list of loaded categories & myplaces
         this._categoryList = [];
         this._placesList = [];
@@ -84,18 +83,34 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesServic
                     categoriesLoaded();
                 }
             };
+			
+			var scb = function (categories) {
+                if (categories) {
+                    var i;
+                    for (i = 0; i < categories.length; ++i) {
+                        me._addCategory(categories[i]);
+                    }
+                }
+
+                loadedCategories = true;
+                allLoaded();
+            };
 
 
             var initialLoadCallBackPlaces = function (places) {
                 if (places) {
-                    me._placesList = places;
+                    //me._placesList = places;
+					var i;
+                    for (i = 0; i < places.length; ++i) {
+                        me._addMyPlace(places[i]);
+                    }
                 }
 
                 loadedPlaces = true;
                 allLoaded();
             };
 
-            this.wfstStore.getCategories(initialLoadCallBackCategories);
+            this.wfstStore.getCategories(initialLoadCallBackCategories, scb);
             this.wfstStore.getMyPlaces(initialLoadCallBackPlaces);
         },
         /** 
@@ -135,7 +150,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesServic
                 if (me.getAllCategories().length === 0) {
                     // something went wrong and we should propably just show error
                     // message instead of my places functionality
-                    me._instance.forceDisable();
+					me._instance.forceDisable();
 
                 } else {
                     callback();
@@ -362,7 +377,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesServic
             var me = this;
             var isNew = !(categoryModel.getId());
 
-            var callBackWrapper = function (success, list) {
+            var callBackWrapper = function (success, list, responseText) {
                 if (isNew && success) {
                     me._addCategory(list[0]);
                 } else {
@@ -394,7 +409,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesServic
                     }
                 }
                 me._notifyDataChanged();
-                callback(success, list[0], isNew);
+                callback(success, list[0], isNew, responseText);
             };
 
             this.wfstStore.commitCategories([categoryModel], callBackWrapper);
@@ -591,6 +606,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesServic
                             myplace.setCategoryID(myplaceModel.getCategoryID());
                             myplace.setGeometry(myplaceModel.getGeometry());
                             myplace.setUpdateDate(list[0].getUpdateDate());
+							myplace.setOnlyLabel(myplaceModel.isOnlyLabel());
                         } else {
                             // couldn't load it -> failed to save it
                             success = false;

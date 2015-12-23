@@ -14,3 +14,28 @@
 #publishedgridToggle.showPublishedGrid {
     background: url(/Oskari/resources/framework/bundle/mapmodule-plugin/plugin/fullscreen/images/show-navigation.png);
 }
+
+.publishedgrid .slick-header-column {
+    height: 130px;
+}
+
+.publishedgrid .slick-spanheader-columns .slick-header-column {
+	height: 44px;
+	padding: 0px;
+}
+
+.publishedgrid .headerBorder {
+    padding-right: 3px;
+    padding-left: 3px;
+  	text-overflow: ellipsis;
+  	overflow: hidden;
+}
+
+.publishedgrid .headerAlignWithBorder {
+	padding: 0px;
+	margin: 0px;
+}
+
+.publishedgrid .headerBorder.headerAlignWithBorder {
+	float: left;
+}

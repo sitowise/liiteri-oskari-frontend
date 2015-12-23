@@ -93,7 +93,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
     }, {
         __templates: {
             "content": '<div class="layer_data"></div>',
-            "icons_layer": '<table class=layer-icons> <tr> <td><div class="layer-icon layer-wfs" title="Tietotuote"></div></td><td><div class="layer-info icon-info"></div></td><td><div class="filter icon-funnel"></div></td><td><div class="icon-close"></div></td></tr></table>',
+            "icons_layer": '<table class=layer-icons> <tr> <td><div class="filter icon-funnel"></div></td></tr></table>',
             "icons_temp_layer": '<div class="icon-close"></div>',
             "tool": '<div class="tool ">' + '<input type="checkbox"/>' + '<label></label></div>',
             "buttons": '<div class="buttons"></div>',
@@ -152,10 +152,10 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             var settingsPanel = this._createSettingsPanel();
 
             var outputPanel = this._createOutputPanel();
-            //outputPanel.open();
+            outputPanel.open();
 
             contentPanel.getPanel().open();
-            methodPanel.open();
+            methodPanel.setVisible(false);
             settingsPanel.open();
             accordion.addPanel(contentPanel.getPanel());
             accordion.addPanel(methodPanel);
@@ -237,9 +237,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 if (option.selected) {
                     toolContainer.find('input').attr('checked', 'checked');
                 }
-                tooltipCont = this.template.help.clone();
-                tooltipCont.attr('title', option.tooltip);
-                toolContainer.append(tooltipCont);
+                //tooltipCont = this.template.help.clone();
+                //tooltipCont.attr('title', option.tooltip);
+                //toolContainer.append(tooltipCont);
 
                 contentPanel.append(toolContainer);
                 toolContainer.find('input').attr({
@@ -266,9 +266,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             panel.setTitle(this.loc.settings.label);
             var contentPanel = panel.getContainer();
             // tooltip
-            var tooltipCont = this.template.help.clone();
-            tooltipCont.attr('title', this.loc.settings.tooltip);
-            contentPanel.append(tooltipCont);
+            //var tooltipCont = this.template.help.clone();
+            //tooltipCont.attr('title', this.loc.settings.tooltip);
+            //contentPanel.append(tooltipCont);
 
             // Changing part of parameters ( depends on method)
             var extra = this.template.paramsOptionExtra.clone();
@@ -499,9 +499,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             panel.setTitle(me.loc.output.label);
             var contentPanel = panel.getContainer();
             // tooltip
-            var tooltipCont = me.template.help.clone();
-            tooltipCont.attr('title', me.loc.output.tooltip);
-            contentPanel.append(tooltipCont);
+            //var tooltipCont = me.template.help.clone();
+            //tooltipCont.attr('title', me.loc.output.tooltip);
+            //contentPanel.append(tooltipCont);
             // title
             var colorTitle = me.template.title_color.clone();
             colorTitle.find('.output_color_label').html(me.loc.output.color_label);
@@ -509,13 +509,15 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             // Create random color picker checkbox
             var colorRandomizer = me.template.random_colors.clone();
             colorRandomizer.find('input[name=randomize_colors]').attr('checked', 'checked');
-            colorRandomizer.find('label').addClass('params_checklabel').html(me.loc.output.random_color_label);
+            colorRandomizer.find('label').html(me.loc.output.random_color_label);
             contentPanel.append(colorRandomizer);
 
             var visualizationForm = Oskari.clazz.create('Oskari.userinterface.component.VisualizationForm');
             me.visualizationForm = visualizationForm;
             contentPanel.append(me.visualizationForm.getForm());
 
+            contentPanel.prepend('<div class="info">Valitse luotavan puskurivyöhykkeen tyyli</div>');
+            
             return panel;
         },
         /**
@@ -605,25 +607,19 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
          */
         _getButtons: function () {
             var me = this,
-                buttonCont = this.template.buttons.clone(),
-                cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            cancelBtn.setTitle(this.loc.buttons.cancel);
-            cancelBtn.setHandler(function () {
-                me.instance.setAnalyseMode(false);
-            });
-            cancelBtn.insertTo(buttonCont);
+                buttonCont = this.template.buttons.clone();            
 
-            var saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            saveBtn.setTitle(this.loc.buttons.save);
-            //saveBtn.addClass('primary');
-            saveBtn.setHandler(function () {
-
-                var selections = me._gatherSelections();
-                if (selections) {
-                    me._saveAnalyse(selections);
-                }
-            });
-            saveBtn.insertTo(buttonCont);
+//            var saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+//            saveBtn.setTitle(this.loc.buttons.save);
+//            //saveBtn.addClass('primary');
+//            saveBtn.setHandler(function () {
+//
+//                var selections = me._gatherSelections();
+//                if (selections) {
+//                    me._saveAnalyse(selections);
+//                }
+//            });
+//            saveBtn.insertTo(buttonCont);
 
             var analyseBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
             analyseBtn.setTitle(this.loc.buttons.analyse);
@@ -635,6 +631,13 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
 
             });
             analyseBtn.insertTo(buttonCont);
+
+            var cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+            cancelBtn.setTitle(this.loc.buttons.cancel);
+            cancelBtn.setHandler(function () {
+                me.instance.setAnalyseMode(false);
+            });
+            cancelBtn.insertTo(buttonCont);
 
             return buttonCont;
         },
@@ -756,6 +759,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             _.each(contentOptionDivs, function(div) {
                 layersContainer.append(div)
             });
+            
+            layersContainer.prepend('<div class="info">Valitse puskuroitava kohde joko kartalla olevista karttakohteista tai piirtämällä uusi kohde</div>');
 
             this.contentOptions = contentOptions;
             this.contentOptionsMap = contentOptionsMap;
@@ -767,7 +772,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             me.refreshExtraParameters();
             me._checkParamsSelection();
         },
-        _eligibleForAnalyse: function(layer) {
+        _eligibleForAnalyse: function (layer) {
             return ((layer.hasFeatureData && layer.hasFeatureData()) ||
                     layer.isLayerOfType(this.contentPanel.getLayerType()));
         },
@@ -787,6 +792,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                     'value': '',
                     'placeholder': me.loc.buffer_size.tooltip
                 });
+
+                bufferTitle.prepend($('<label><input type="checkbox" name="includeOriginal" checked="checked"/>' + me.loc.includeOriginal.label + '</label>'));
+                bufferTitle.prepend('<div class="info">Valitse sisällytetäänkö alkuperäinen kohde puskuroinnissa, valitse luotavan vyöhykkeen koko ja säilytettävät ominaisuustiedot</div>');
 
                 extra.append(bufferTitle);
 
@@ -1428,7 +1436,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             var fields = selectedColumnmode && selectedColumnmode.replace(this.id_prefix, '');
             // All fields
             if (fields === 'all') {
-                fields = ((layer && layer.getFields && layer.getFields()) ? layer.getFields().slice() : [0]);
+				var excludedProperties = ["__fid", "__centerX", "__centerY"];				
+                fields = ((layer && layer.getFields && layer.getFields()) ? jQuery(layer.getFields()).not(excludedProperties).get() : []);
             } else if (fields === 'select') {
                 // Selected fields
                 var fieldsList = jQuery('div.analyse-featurelist').find('ul li input:checked');
@@ -1454,7 +1463,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 defaults.features = [layer.getFeature()];
             } else {
                 defaults.fields = fields;
-                defaults.fieldTypes = layer.getPropertyTypes();
+                defaults.fieldTypes = layer.getPropertyTypes ? layer.getPropertyTypes() : [];
                 defaults.layerId = layer.getId();
             }
             // Get method specific selections
@@ -1484,6 +1493,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
 
             // buffer
             var bufferSize = container.find('.settings_buffer_field').val();
+            var includeOriginal = container.find('input[name=includeOriginal]').is(':checked');
             // aggregate
             var aggregateFunctions = container.find('input[name=aggre]:checked');
             aggregateFunctions = jQuery.map(aggregateFunctions, function (val, i) {
@@ -1511,7 +1521,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             var methodSelections = {
                 'buffer': {
                     methodParams: {
-                        distance: bufferSize
+                        distance: bufferSize,
+                        includeOriginal: includeOriginal
                     },
                     opacity: layer.getOpacity()
                 },
@@ -1677,36 +1688,39 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             var layer = this.instance.getSandbox().findMapLayerFromSelectedMapLayers(layer_id);
             var me = this;
             tools.find('div.layer-info').bind('click', function () {
-                var rn = 'catalogue.ShowMetadataRequest';
-                var uuid = layer.getMetadataIdentifier();
-                var additionalUuids = [];
-                var additionalUuidsCheck = {};
-                additionalUuidsCheck[uuid] = true;
-
-                var subLayers = layer.getSubLayers(),
-                    s,
-                    subUuid;
-                if (subLayers && subLayers.length > 0) {
-                    for (s = 0; s < subLayers.length; s++) {
-                        subUuid = subLayers[s].getMetadataIdentifier();
-                        if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
-                            additionalUuidsCheck[subUuid] = true;
-                            additionalUuids.push({
-                                uuid: subUuid
-                            });
-                        }
-                    }
-
-                }
-
-                me.instance.getSandbox().postRequestByName(
-                    rn, [{
-                            uuid: uuid
-                        },
-                        additionalUuids
-                    ]
-                );
+                window.open(layer.getMetadataIdentifier());
             });
+//            tools.find('div.layer-info').bind('click', function () {
+//                var rn = 'catalogue.ShowMetadataRequest';
+//                var uuid = layer.getMetadataIdentifier();
+//                var additionalUuids = [];
+//                var additionalUuidsCheck = {};
+//                additionalUuidsCheck[uuid] = true;
+//
+//                var subLayers = layer.getSubLayers(),
+//                    s,
+//                    subUuid;
+//                if (subLayers && subLayers.length > 0) {
+//                    for (s = 0; s < subLayers.length; s++) {
+//                        subUuid = subLayers[s].getMetadataIdentifier();
+//                        if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
+//                            additionalUuidsCheck[subUuid] = true;
+//                            additionalUuids.push({
+//                                uuid: subUuid
+//                            });
+//                        }
+//                    }
+//
+//                }
+//
+//                me.instance.getSandbox().postRequestByName(
+//                    rn, [{
+//                            uuid: uuid
+//                        },
+//                        additionalUuids
+//                    ]
+//                );
+//            });
         },
         /**
          * Requests to remove a layer from the map.
@@ -1773,6 +1787,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
          * @private
          */
         _addPropertyTypes: function (layers) {
+            //TODO: it is not needed for buffer operation
+            return;
+
             var me = this,
                 i;
             for (i = 0; i < layers.length; i++) {

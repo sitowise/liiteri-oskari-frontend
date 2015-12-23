@@ -4,6 +4,8 @@ Oskari.registerLocalization(
     "key": "DivManazer",
     "value": {
         "VisualizationForm": {
+			"defaultGroupName": "Default group",
+            "setStyleForAllValues": "Set style for all values",
             "tooltips": {
                 "dot": "Edit point feature style",
                 "area": "Edit area feature style",

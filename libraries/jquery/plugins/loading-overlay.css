@@ -1,0 +1,72 @@
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading-inplace {
+  pointer-events: none;
+}
+
+.loading .loading-overlay{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  z-index: 8000;
+}
+
+.loading-inplace .loading-overlay{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.1);
+  text-align: center;
+  z-index: 8000;
+}
+
+.loading .loading-text, .loading-inplace .loading-text {
+  font-size: 0.875rem;
+  line-height: 1.3125rem;
+  text-shadow: white 0 0 1em, white 0 0 0.5em, white 0 0 0.25em;
+  position: relative;
+  display: block;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.loading .loading-text:after, .loading-inplace .loading-text:after {
+  content: "...";
+}
+.loading .loading-spinner {
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: -3.9375rem auto 0;
+  color: #1a1d1d;
+  text-align: center;
+}
+.loading .loading-icon, .loading-inplace .loading-icon {
+  text-shadow: rgba(255, 0, 0, 0.75) 0 0 1.5em;
+  color: #333;
+  font-size: 150px;
+}
+
+.loading-inplace .loading-spinner {
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: -3.9375rem auto 0;
+  color: #1a1d1d;
+  text-align: center;
+  background-image: url(/Oskari/resources/framework/bundle/mapstats/images/ajax-loader.gif);
+  background-position:center;
+  background-repeat:no-repeat;
+}

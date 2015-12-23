@@ -18,16 +18,21 @@ Oskari.registerLocalization({
             "keywordsTitle": "Avainsanat:",
             "shortDescription": "Hae karttasoa nimeen, tiedontuottajaan ja avainsanaan perustuen.",
             "description": "Voit hakea karttatasoja kirjoittamalla osan karttatason nimestä, tiedontuottajan nimestä tai karttatasoa kuvailevasta avainsanasta. Avainsanahaku käynnistyy, kun vähintään 4 merkkiä on kirjoitettu hakukenttään.",
-            "inspire": "Aiheittain",
+            "inspire": "Inspire karttatasot",
             "organization": "Tiedontuottajittain",
+            "servicePackage": "Palvelupaketin tasot",
+            "userThemes": "Kaikki tasot",
             "published": "Käyttäjät",
-            "didYouMean": "Tarkoititko:"
+            "didYouMean": "Tarkoititko:",
+            "expandAll": "Laajenna kaikki",
+            "collapseAll": "Sulje kaikki"
         },
         "published": {
             "organization": "Julkaistu taso",
             "inspire": "Julkaistu taso"
         },
         "tooltip": {
+			"bundle": "Karttatasot",
             "type-base": "Taustakartta",
             "type-wms": "Karttataso",
             "type-wfs": "Tietotuote"
@@ -59,6 +64,7 @@ Oskari.registerLocalization({
             "vk": "Vieruskäsite",
             "ak": "Alakäsite",
             "yk": "Yläkäsite"
-        }
+        },
+		"downloadLayer": "Lataa koneelle"
     }
 });

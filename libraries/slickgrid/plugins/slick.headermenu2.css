@@ -11,6 +11,7 @@
   background-color: #ddd;
   border: 1px solid #a5a5a5;
   border-radius: 15px;
+    box-sizing : content-box;
 }
 
 .slick-header-column:hover > .slick-header-menubutton,

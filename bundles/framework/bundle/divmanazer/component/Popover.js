@@ -98,7 +98,7 @@
             }, self.options.delay.hide);
         },
         show: function () {
-            var $tip, inside, pos, actualWidth, actualHeight, placement, tp;
+            var $tip, inside, pos, actualWidth, actualHeight, placement, tp, arrowPosition;
 
             if (this.hasContent() && this.enabled) {
                 $tip = this.tip();
@@ -115,10 +115,10 @@
                     top: 0,
                     left: 0,
                     display: 'block'
-                }).appendTo(inside ? this.$element : document.body);
+                }).appendTo(inside ? this.$element : document.body);                
                 pos = this.getPosition(inside);
                 actualWidth = $tip[0].offsetWidth;
-                actualHeight = $tip[0].offsetHeight;
+                actualHeight = $tip[0].offsetHeight;                
 
                 switch (inside ? placement.split(' ')[1] : placement) {
                 case 'bottom':
@@ -126,6 +126,13 @@
                         top: pos.top + pos.height,
                         left: pos.left + pos.width / 2 - actualWidth / 2
                     };
+                    if (tp.left + actualWidth > window.innerWidth) {
+                        tp.left = window.innerWidth - actualWidth;
+                        arrowPosition = {
+                            top: 0,
+                            left: pos.left + pos.width / 2
+                        };
+                    }
                     break;
                 case 'top':
                     tp = {
@@ -148,7 +155,11 @@
                 }
 
                 $tip.css(tp).addClass(placement).addClass('in');
-
+                if (arrowPosition) {
+                    var offset = $tip.find('.oskari-arrow').offset();
+                    offset.left = arrowPosition.left;
+                    $tip.find('.oskari-arrow').offset(offset);
+                }
             }
         },
         isHTML: function (text) {
@@ -356,17 +367,19 @@
                 this.data.show();
                 this.shown = true;
             },
-            attachTo: function (element) {
+            attachTo: function (element, options) {
                 var me = this;
                 me.$container = $(element);
                 if (!me.data) {
-                    me.data = new Popover(element, {
+                    var defaults = {
                         'scope': me,
                         'title': me.getTitle,
                         'content': me.getContent,
                         'trigger': 'manual',
                         'placement': me.getPlacement
-                    });
+                    };
+                    jQuery.extend(defaults, options);
+                    me.data = new Popover(element, defaults);
 
                 } else {
                     me.data.attach(me.$container);

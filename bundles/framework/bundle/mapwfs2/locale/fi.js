@@ -16,12 +16,16 @@ Oskari.registerLocalization({
         },
         "error" : {
             "title": "Virhe",
-            "connection_not_available": "Yhteyttä ei voitu muodostaa WFS-taustapalveluun.",
-            "connection_broken": "Yhteys WFS-taustapalveluun katkesi.",
-            "wfs_no_permissions": "WFS-tasoon ({layer}) ei ole riittäviä oikeuksia.",
-            "wfs_configuring_layer_failed": "WFS-tason ({layer}) konfigurointi epäonnistui.",
+            "connection_not_available": "Yhteyttä ei voitu muodostaa taustapalveluun.",
+            "connection_broken": "Yhteys taustapalveluun katkesi.",
+            "wfs_no_permissions": "Tasoon ({layer}) ei ole riittäviä oikeuksia.",
+            "wfs_configuring_layer_failed": "Tason ({layer}) konfigurointi epäonnistui.",
+            "arcgis_configuring_layer_failed": "REST-tason ({layer}) konfigurointi epäonnistui.",
             "wfs_request_failed": "WFS-tason ({layer}) WFS-kysely epäonnistui.",
-            "features_parsing_failed": "WFS-tason ({layer}) featureiden käsittely epäonnistui."
+            "arcgis_request_failed": "REST-tason ({layer}) REST-kysely epäonnistui.",
+            "features_parsing_failed": "Tason ({layer}) featureiden käsittely epäonnistui.",                       
+            "wfs_image_parsing_failed": "Image parsing of WFS layer {layer} failed",
+            "arcgis_image_parsing_failed": "Image parsing of REST layer {layer} failed"
         },
         "button": {
             "cancel": "Peruuta",

@@ -24,7 +24,11 @@ Oskari.clazz.define(
         "protocol": ["Oskari.bundle.Bundle", "Oskari.mapframework.bundle.extension.ExtensionBundle"],
         "source": {
 
-            "scripts": [{
+            "scripts": [
+               {
+                "type": "text/javascript",
+                "src": "../../../../bundles/framework/bundle/mapstats/LoadingPanel.js"
+            }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/framework/bundle/mapstats/plugin/StatsLayerPlugin.js"
             }, {

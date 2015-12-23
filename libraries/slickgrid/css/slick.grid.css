@@ -5,10 +5,18 @@ No built-in (selected, editable, highlight, flashing, invalid, loading, :focus) 
 classes should alter those!
 */
 
-.slick-header.ui-state-default, .slick-headerrow.ui-state-default {
+.slick-header.ui-state-default {
   width: 100%;
   overflow: hidden;
   border-left: 0px;
+    border-top: solid 1px #000000;
+}
+
+.slick-headerrow.ui-state-default {
+  width: 100%;
+  overflow: hidden;
+  border-left: 0px;
+    border-top: solid 2px #000000;
 }
 
 .slick-header-columns, .slick-headerrow-columns {
@@ -18,16 +26,20 @@ classes should alter those!
   overflow: hidden;
 }
 
+.slick-header-column {
+    box-sizing : content-box;
+}
+
 .slick-header-column.ui-state-default {
   position: relative;
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 20px;
+/*  height: 20px;*/
   line-height: 20px;
   margin: 0;
   padding: 4px;
-  border-right: 1px solid silver;
+  border-right: 1px solid transparent;
   border-left: 0px;
 /* Oskari change,  border-top: 0px; */
   border-bottom: 0px;
@@ -35,11 +47,11 @@ classes should alter those!
 }
 
 .slick-headerrow-column.ui-state-default {
-  padding: 4px;
+  padding: 5px 4px 5px 4px;
 }
 
 .slick-header-column-sorted {
-  background-color: #FEDA00;
+  background-color: #fff26f;
 /* Oskari change,  font-style: italic;*/
 }
 
@@ -88,9 +100,6 @@ classes should alter those!
   position: absolute;
 
   border: 1px solid transparent;
-  border-right: 1px dotted silver;
-  border-bottom-color: silver;
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

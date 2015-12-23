@@ -22,6 +22,9 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
         "protocol": ["Oskari.bundle.Bundle", "Oskari.mapframework.bundle.extension.ExtensionBundle"],
         "source": {
             "scripts": [{
+                "type" : "text/javascript",
+                "src" : "../../../../libraries/jquery/plugins/jquery.cookie.js"
+            }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/instance.js"
             }, {
@@ -38,7 +41,16 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/StatsToolbar.js"
             }, {
                 "type" : "text/javascript",
-                "src" : "../../../../bundles/statistics/bundle/statsgrid/AddOwnIndicatorForm.js"
+                "src": "../../../../bundles/statistics/bundle/statsgrid/AddOwnIndicatorForm.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/domain/AreaFilter.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/domain/GeometryFilter.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/domain/RequestQueue.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/plugin/ManageClassificationPlugin.js"
@@ -59,10 +71,34 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/event/SelectHilightsModeEvent.js"
             }, {
                 "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/event/CurrentStateEvent.js"
+            }, {
+                "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/event/IndicatorsEvent.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/event/UserIndicatorEvent.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/event/GridChanged.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/event/IndicatorAdded.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/event/GridVisualizationRowChanged.js"
+            }, {  
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/request/CurrentStateRequest.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/request/CurrentStateRequestHandler.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/request/SetStateRequest.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/request/SetStateRequestHandler.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/request/StatsGridRequest.js"
@@ -91,6 +127,9 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/UserIndicatorsTab.js"
             }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/ButtonHandler.js"
+            }, {
                 "type": "text/css",
                 "src": "../../../../resources/statistics/bundle/statsgrid/css/style.css"
             }, {
@@ -107,6 +146,15 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "src": "../../../../libraries/slickgrid/css/slick-default-theme.css"
             }, {
                 "src": "../../../../libraries/jquery/jquery.event.drag-2.0.min.js",
+                "type": "text/javascript"
+            }, {
+                "src": "../../../../libraries/jquery/plugins/loading-overlay.css",
+                "type": "text/css"
+            }, {
+                "src": "../../../../libraries/jquery/plugins/loading-overlay.js",
+                "type": "text/javascript"
+            }, {
+                "src": "../../../../libraries/jquery/plugins/jquery.collapse.js",
                 "type": "text/javascript"
             }, {
                 "src": "../../../../libraries/slickgrid/slick.core.js",
@@ -145,6 +193,12 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "src": "../../../../libraries/slickgrid/plugins/slick.checkboxselectcolumn2.js",
                 "type": "text/javascript"
             }, {
+                "src": "../../../../libraries/slickgrid/plugins/slick.expander.js",
+                "type": "text/javascript"
+            }, {
+                "src": "../../../../libraries/slickgrid/plugins/slick.expander.css",
+                "type": "text/css"
+            }, {
                 "src": "../../../../libraries/slickgrid/slick.grid.js",
                 "type": "text/javascript"
             }, {
@@ -164,6 +218,12 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "type": "text/javascript"
             }, {
                 "src": "../../../../libraries/chosen/chosen.css",
+                "type": "text/css"
+            }, {
+                "src": "../../../../libraries/jquery/plugins/fancytree/jquery.fancytree-all.js",
+                "type": "text/javascript"
+            }, {
+                "src": "../../../../libraries/jquery/plugins/fancytree/skin-liiteri/ui.fancytree.css",
                 "type": "text/css"
             }],
             "locales": [{

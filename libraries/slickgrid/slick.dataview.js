@@ -971,8 +971,9 @@
     };
   }
 
-  function AvgAggregator(field) {
-    this.field_ = field;
+  function AvgAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.count_ = 0;
@@ -980,13 +981,16 @@
       this.sum_ = 0;
     };
 
+      //CANNOT do return because it is compiled to other function 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      this.count_++;
-      if (val != null && val !== "" && val !== NaN) {
-        this.nonNullCount_++;
-        this.sum_ += parseFloat(val);
-      }
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            this.count_++;
+            if (val != null && val !== "" && val !== NaN) {
+                this.nonNullCount_++;
+                this.sum_ += parseFloat(val);
+            }
+        }
     };
 
     this.storeResult = function (groupTotals) {
@@ -999,20 +1003,25 @@
     };
   }
 
-  function MinAggregator(field) {
-    this.field_ = field;
+  function MinAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.min_ = null;
     };
 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      if (val != null && val !== "" && val !== NaN) {
-        if (this.min_ == null || val < this.min_) {
-          this.min_ = val;
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            if (!item._parent) {
+                if (val != null && val !== "" && val !== NaN) {
+                    if (this.min_ == null || val < this.min_) {
+                        this.min_ = val;
+                    }
+                }
+            }
         }
-      }
     };
 
     this.storeResult = function (groupTotals) {
@@ -1023,20 +1032,23 @@
     }
   }
 
-  function MaxAggregator(field) {
-    this.field_ = field;
+  function MaxAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.max_ = null;
     };
 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      if (val != null && val !== "" && val !== NaN) {
-        if (this.max_ == null || val > this.max_) {
-          this.max_ = val;
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            if (val != null && val !== "" && val !== NaN) {
+                if (this.max_ == null || val > this.max_) {
+                    this.max_ = val;
+                }
+            }
         }
-      }
     };
 
     this.storeResult = function (groupTotals) {
@@ -1047,18 +1059,21 @@
     }
   }
 
-  function SumAggregator(field) {
-    this.field_ = field;
+  function SumAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.sum_ = null;
     };
 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      if (val != null && val !== "" && val !== NaN) {
-        this.sum_ += parseFloat(val);
-      }
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            if (val != null && val !== "" && val !== NaN) {
+                this.sum_ += parseFloat(val);
+            }
+        }
     };
 
     this.storeResult = function (groupTotals) {
@@ -1069,26 +1084,29 @@
     }
   }
 
-  function MdeAggregator(field) {
-    this.field_ = field;
+  function MdeAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.pairs_ = [];
     };
 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      var found = false;
-      if (val != null && val !== "" && val !== NaN) {
-        for (var i = 0; i < this.pairs_.length; i++) {
-          if (this.pairs_[i].value == val) {
-            this.pairs_[i].count++;
-            found = true;
-            break;
-          }
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            var found = false;
+            if (val != null && val !== "" && val !== NaN) {
+                for (var i = 0; i < this.pairs_.length; i++) {
+                    if (this.pairs_[i].value == val) {
+                        this.pairs_[i].count++;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) this.pairs_.push({ value: val, count: 1 });
+            }
         }
-        if (!found) this.pairs_.push({value: val, count: 1});
-      }
     };
 
     this.storeResult = function (groupTotals) {
@@ -1107,26 +1125,29 @@
     };
   }
 
-  function MdnAggregator(field) {
-    this.field_ = field;
+  function MdnAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.sorted_ = [];
     };
 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      var spliced = false;
-      if (val != null && val !== "" && val !== NaN) {
-        for (var i = 0; i < this.sorted_.length; i++) {
-          if (val < this.sorted_[i]) {
-            this.sorted_.splice(i,0,val);
-            spliced = true;
-            break;
-          }
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            var spliced = false;
+            if (val != null && val !== "" && val !== NaN) {
+                for (var i = 0; i < this.sorted_.length; i++) {
+                    if (val < this.sorted_[i]) {
+                        this.sorted_.splice(i, 0, val);
+                        spliced = true;
+                        break;
+                    }
+                }
+                if (!spliced) this.sorted_.push(val);
+            }
         }
-        if (!spliced) this.sorted_.push(val);
-      }
     };
 
     this.storeResult = function (groupTotals) {
@@ -1143,8 +1164,9 @@
     };
   }
 
-  function StdAggregator(field) {
-    this.field_ = field;
+  function StdAggregator(field, countChildren) {
+      this.field_ = field;
+      this.countChildren_ = countChildren;
 
     this.init = function () {
       this.nonNullCount_ = 0;
@@ -1153,16 +1175,18 @@
     };
 
     this.accumulate = function (item) {
-      var val = item[this.field_];
-      if (val != null && val !== "" && val !== NaN) {
-        this.nonNullCount_++;
-        if (this.Mk_ != null) {
-            this.Qk_ = this.Qk_+(this.nonNullCount_-1)*Math.pow((val-this.Mk_),2)/this.nonNullCount_;
-            this.Mk_ = this.Mk_+(val-this.Mk_)/this.nonNullCount_;
-        } else {
-          this.Mk_ = val;
+        if (!item._parent || this.countChildren_) {
+            var val = item[this.field_];
+            if (val != null && val !== "" && val !== NaN) {
+                this.nonNullCount_++;
+                if (this.Mk_ != null) {
+                    this.Qk_ = this.Qk_ + (this.nonNullCount_ - 1) * Math.pow((val - this.Mk_), 2) / this.nonNullCount_;
+                    this.Mk_ = this.Mk_ + (val - this.Mk_) / this.nonNullCount_;
+                } else {
+                    this.Mk_ = val;
+                }
+            }
         }
-      }
     };
 
     this.storeResult = function (groupTotals) {

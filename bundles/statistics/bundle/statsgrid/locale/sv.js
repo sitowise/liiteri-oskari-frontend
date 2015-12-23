@@ -115,6 +115,26 @@ Oskari.registerLocalization({
                 "sum": "NOT TRANSLATED"
             }
         },
+		"indicatorFilters": {
+			"themeLevel0": "Tema",
+			"themeLevel1": "1. SubTema",
+			"themeLevel2": "2. SubTema",
+			"themeLevel3": "3. SubTema",
+			"themeLevel4": "4. SubTema",
+			"name": "Namn",
+			"selectTheme": "[Välj ett värde]"
+		},
+		"connectionErrors": {			
+            "errorTitle": "Fel",
+            "regionDataError": "Fel att fåregionen data.",
+            "regionDataXHRError": "Fel vid laddning av regionen data",
+            "indicatorsDataError": "Fel att få indikatorer.",
+            "indicatorsDataXHRError": "Fel vid laddning av indikatorer.",
+            "indicatorMetaError": "Fel att få indikator metadata",
+            "indicatorMetaXHRError": "Fel vid laddning av indikator metadata",
+            "indicatorDataError": "Fel att få indikator data",
+            "indicatorDataXHRError": "Fel vid laddning av indikator data"
+		},
         "noIndicatorData": "NOT TRANSLATED",
         "values": "värden",
         "included": "Värden",
@@ -125,6 +145,7 @@ Oskari.registerLocalization({
         "not_included": "Inte inlcuded",
         "noMatch": "Inga matchade indikatorer",
         "selectIndicator": "Välja en indikator",
+        "selectIndicatorPlaceholder": "NOT TRANSLATED",
         "filterTitle": "Filtrera kolumndata",
         "indicatorFilterDesc": "Filtrerade värdena kommer att väljas i tabellen. Du kan ställa in filtrering separat för varje kolumn.",
         "filterIndicator": "Indikator:",
@@ -139,7 +160,7 @@ Oskari.registerLocalization({
         "filter": "Filter",
         "filterByValue": "Med värde",
         "filterByRegion": "Med region",
-
+        "dataSource" : "NOT TRANSLATED",
         "selectRegionCategory": "NOT TRANSLATED",
         "regionCatPlaceholder": "NOT TRANSLATED",
         "selectRegion": "NOT TRANSLATED",
@@ -185,5 +206,44 @@ Oskari.registerLocalization({
         "parsedDataInfo": "NOT TRANSLATED",
         "parsedDataUnrecognized": "NOT TRANSLATED",
         "loginToSaveIndicator": "NOT TRANSLATED"
-    }
+    },
+    "filterForm" : {
+        "selectValue": "Select value",
+        "selectSomeOptions": "Select some options",
+        "close": "Close",
+        "clear": "Clear",
+        "and": "AND",
+        "or": "OR",
+        "selectType": "Tarkastelusuunta",
+        "typeHome": "Asuinpaikka",
+        "typeWork": "Työpaikka",
+        "validateKeyMissing": "Valitse aluetyyppi",
+        "validateValuesMissing": "Valitse alueet",
+        "validateTypeMissing": "Valitse tarkastelusuunta",
+        "validateTypeUsed": "Valitse aluerajauksille eri tarkastelusuunnat",
+        "validateOk": "Ok",
+        "infoText": "Valitse alue ja työmatkojen tarkastelusuunta. Asuinpaikka tarkoittaa työmatkojen lähtöaluetta, työpaikka työmatkojen kohdealuetta. Jos valitset ensimmäisen rajauksen suunnaksi asuinpaikan, saat tulostaulukkoon kaikki valitulla alueella asuvien työmatkojen kohdealueet. Jos valitset työpaikan, saat tulostaulukkoon kaikki valitulla alueella työssäkäyvien asuinalueet."    
+    },
+	"csv": {
+		"downloadFile": "NOT TRANSLATED",
+		"toFile": "NOT TRANSLATED",
+		"csvFileName": "NOT TRANSLATED",
+		"formattingOfTheFile": "NOT TRANSLATED",
+		"fieldSeparator": "NOT TRANSLATED",
+		"stringSeparator": "NOT TRANSLATED",
+		"nullSymbolizer": "NOT TRANSLATED",
+		"decimalSeparator": "NOT TRANSLATED",
+		"semicolon": "NOT TRANSLATED",
+		"comma": "NOT TRANSLATED",
+		"dot": "NOT TRANSLATED",
+		"colon": "NOT TRANSLATED",
+		"tab": "NOT TRANSLATED",
+		"verticalLine": "NOT TRANSLATED",
+		"empty": "NOT TRANSLATED",
+		"quotationMarks": "NOT TRANSLATED",
+		"apostrophe": "NOT TRANSLATED",
+		"line": "NOT TRANSLATED",
+		"fileHeader": "NOT TRANSLATED",
+		"dataSources": "NOT TRANSLATED"
+	}
 });

@@ -21,6 +21,7 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
         this.lineCornerMap = ["mitre", "round", "bevel"];
         this.lineStyleMap = ["", "5 2", ""];
         this.dialog = null;
+        this.DEFAULT_GROUP = 'default';
 
         var defaultOptions = {
             // include all forms by default
@@ -50,12 +51,14 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
                         color: "ffde00"
                     }
                 }
-            }
+            },
+            groupMode: false,
+            groups: [{ id: this.DEFAULT_GROUP, display: this._loc.defaultGroupName }]
         };
         options = options || {};
         this._options = jQuery.extend({}, defaultOptions, options);
 
-        this._formClazzes = this._createFormClazzes(this._options.forms, this._options.formValues);
+        this._groupFormClazzes = this._createGroupFormClazzes(this._options.forms, this._options.formValues, this._options.groups);
 
         this.template = jQuery(
             '<div id="visualization-form"></div>'
@@ -63,6 +66,7 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
         this.templateRenderButton = jQuery(
             '<div class="renderButton"></div>'
         );
+        this.templateGroup = jQuery('<div></div>');
     }, {
         /**
          * Creates dom elements for each forms and binds click events to them
@@ -72,6 +76,8 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
          * @return {jQuery}
          */
         getForm: function () {
+            return this.getGroupForm();
+
             var me = this,
                 form = this.template.clone(),
                 formClazzes = this._getFormClazz(),
@@ -91,7 +97,35 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
 
             return form;
         },
+        getGroupForm: function () {
+            var me = this,
+                form = this.template.clone(),
+                groupFormClazzes = this._getGroupFormClazzes(),
+                btnContainer,
+                grpContainer,
+                formName,
+                groupId,
+                formClazz;
 
+            for (groupId in groupFormClazzes) {
+                
+                if (groupFormClazzes.hasOwnProperty(groupId)) {
+                    grpContainer = this.templateGroup.clone();
+                    grpContainer.append('<div class="info">' + groupFormClazzes[groupId]['group']['display'] + '</div>');
+                    var formClazzes = groupFormClazzes[groupId]['forms'];
+                    for (formName in formClazzes) {
+                        btnContainer = this.templateRenderButton.clone();
+                        btnContainer.attr('title', this._loc.tooltips[formName]);
+                        btnContainer.addClass(this._iconClsPrefix + (formName === 'dot' ? 'point' : formName));
+                        btnContainer.click(me._bindRenderButton(formClazzes[formName]));
+                        grpContainer.append(btnContainer);
+                    }                    
+                    form.append(grpContainer);
+                }                
+            }
+
+            return form;
+        },
         /**
          * Returns the values of each form clazz.
          *
@@ -99,6 +133,12 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
          * @return {Object}
          */
         getValues: function () {
+            if (this._options.groupMode) {
+                return this.getGroupValues();
+            } else {
+                return this.getGroupValues(this.DEFAULT_GROUP)[this.DEFAULT_GROUP];
+            }            
+
             var values = {},
                 formClazzes = this._getFormClazz(),
                 fClazzName,
@@ -112,7 +152,25 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
 
             return values;
         },
+        getGroupValues: function (groupId) {
+            var values = {},
+                groupFormClazzes = this._getGroupFormClazzes(groupId),
+                fClazzName,
+                fClazz;
 
+            for (groupId in groupFormClazzes) {
+                values[groupId] = {};
+                if (groupFormClazzes.hasOwnProperty(groupId)) {
+                    var formClazzes = groupFormClazzes[groupId]['forms'];
+                    for (fClazzName in formClazzes) {
+                        fClazz = formClazzes[fClazzName];
+                        values[groupId][fClazzName] = fClazz.getValues();
+                    }
+                }
+            }
+
+            return values;
+        },       
         /**
          * Sets the values of the form clazzes.
          *
@@ -120,6 +178,16 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
          * @param {Object} values
          */
         setValues: function (values) {
+            if (this._options.groupMode) {
+                this.setGroupValues(values);
+            } else {
+                var newValues = {};
+                newValues[this.DEFAULT_GROUP] = values;
+                this.setGroupValues(newValues);
+            }
+
+            return;
+
             if (values === null || values === undefined || typeof values !== 'object') {
                 return;
             }
@@ -135,7 +203,28 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
                 }
             }
         },
+        setGroupValues: function (values) {
+            if (values === null || values === undefined || typeof values !== 'object') {
+                return;
+            }
 
+            var groupFormClazzes = this._getGroupFormClazzes(),
+                fClazzName,
+                fClazz;
+
+            for (groupId in groupFormClazzes) {                
+                if (groupFormClazzes.hasOwnProperty(groupId) && values.hasOwnProperty(groupId)) {
+                    var formClazzes = groupFormClazzes[groupId]['forms'];
+                    for (fClazzName in formClazzes) {
+                        fClazz = formClazzes[fClazzName];
+                        fClazz.setValues(values[groupId][fClazzName]);
+                    }
+                }
+            }
+        },
+        setStyleGroups: function(groups) {
+              
+        },
         /**
          * Convert hexadecimal color values to decimal values (255,255,255)
          * Green: hexToRgb("#0033ff").g
@@ -221,6 +310,17 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
             return ret;
         },
 
+        _getGroupFormClazzes: function(groupId) {
+            var ret;
+            if (groupId !== null && groupId !== undefined) {
+                ret = {};
+                ret[groupId] = this._groupFormClazzes[groupId];
+            } else {
+                ret = this._groupFormClazzes;
+            }
+            return ret;
+        },
+
         /**
          * Returns the localization object for the given key.
          *
@@ -236,7 +336,24 @@ Oskari.clazz.define('Oskari.userinterface.component.VisualizationForm',
             }
             return ret;
         },
+        _createGroupFormClazzes: function (formNames, formValues, groups) {
+            var i,
+                fLen = (groups ? groups.length : 0),
+                fClazzes,
+                group,
+                result = {};
 
+            for (i = 0; i < fLen; ++i) {
+                group = groups[i];
+                fClazzes = this._createFormClazzes(formNames, formValues);
+                result[group.id] = {
+                    'group': group,
+                    'forms' : fClazzes,
+                }
+            }
+
+            return result;
+        },
         /**
          * Creates form clazzes for given form names and values.
          *

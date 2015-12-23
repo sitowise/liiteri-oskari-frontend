@@ -111,6 +111,9 @@ Oskari.clazz.define('Oskari.mapframework.domain.AbstractLayer',
         // Realtime
         me._realtime = false;
         me._refreshRate = null;
+		
+        me._downloadServiceUrl = null;
+        me._copyrightInfo = null;
 
     }, {
         /**
@@ -953,5 +956,19 @@ Oskari.clazz.define('Oskari.mapframework.domain.AbstractLayer',
          */
         getRefreshRate: function() {
             return this._refreshRate;
-        }
+        },
+        
+        setDownloadServiceUrl: function (downloadServiceUrl) {
+            this._downloadServiceUrl = downloadServiceUrl;
+        },
+        
+        getDownloadServiceUrl: function () {
+            return this._downloadServiceUrl;
+        },
+        setCopyrightInfo: function (copyrightInfo) {
+            this._copyrightInfo = copyrightInfo;
+        },        
+        getCopyrightInfo: function () {
+            return this._copyrightInfo;
+        }        
     });

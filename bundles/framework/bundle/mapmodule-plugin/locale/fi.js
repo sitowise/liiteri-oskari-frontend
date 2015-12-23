@@ -23,7 +23,9 @@ Oskari.registerLocalization({
         "terms": "Käyttöehdot",
         "dataSources": "Tietolähteet",
         "layersHeader": "Karttatasot",
-        "indicatorsHeader": "Indikaattorit"
+        "indicatorsHeader": "Tilastot",
+        "emptyDataSource": "Ei tiedossa",
+        "close": "Sulje"
       },
       "DataSourcePlugin": {
         "link": "Aineistolähde",
@@ -66,7 +68,7 @@ Oskari.registerLocalization({
         },
         "measure": {
           "line": "Mittaa etäisyys",
-          "area": "Mittaa alue"
+          "area": "Mittaa pinta-ala"
         }
       }
     }

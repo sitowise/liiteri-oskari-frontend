@@ -90,9 +90,10 @@ Oskari.registerLocalization({
             "content": {
                 "options": [{
                     "id": "pageLogo",
-                    "label": "Add the logo of Paikkatietoikkuna",
+                    "label": "Add the logo of Liiteri",
                     "tooltip": "You can hide the logo if necessary",
-                    "checked": "checked"
+                    "checked": "checked",
+                    "cssClass" : "printout_pdfOnly"
                 }, {
                     "id": "pageScale",
                     "label": "Add scale to the map",
@@ -102,7 +103,14 @@ Oskari.registerLocalization({
                     "id": "pageDate",
                     "label": "Add date",
                     "tooltip": "You can add date to the printout",
-                    "checked": "checked"
+                    "checked": "checked",
+                    "cssClass" : "printout_pdfOnly"
+                }, {
+                    "id": "pageLegend",
+                    "label": "Add layers legend",
+                    "tooltip": "You can add layers legend to the printout",
+                    "checked": "checked",
+                    "cssClass" : "printout_pdfOnly"
                 }]
             },
             "legend": {

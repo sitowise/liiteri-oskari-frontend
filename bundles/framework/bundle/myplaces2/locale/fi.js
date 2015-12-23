@@ -56,8 +56,8 @@ Oskari.registerLocalization({
         "noResult": "0 m"
       },
       "measurearea": {
-        "title": "Mittaa pinta-ala",
-        "tooltip": "Pinta-alan mittaus",
+        "title": "Pinta-alan mittaus",
+        "tooltip": "Mittaa pinta-ala",
         "add": "",
         "next": "",
         "edit": "Muokkaa muotoa raahaamalla reunaviivan taitepisteitä.",
@@ -74,7 +74,7 @@ Oskari.registerLocalization({
       "line": {
         "title": "Viivan lisäys",
         "tooltip": "Lisää viiva",
-        "add": "Lisää viivan taitepiste klikkaamalla karttaa. Lopeta piirto tuplaklikkauksella tai painamalla 'Lopeta piirto'.",
+        "add": "Lisää viivan taitepiste klikkaamalla karttaa. Lopeta piirto tuplaklikkauksella tai painamalla 'Tallenna'.",
         "next": "Voit tallentaa tai piirtää lisää viivoja samaan kohteeseen.",
         "edit": "Muokkaa viivaa raahaamalla viivan taitepisteitä.",
         "save": "Tallenna muoto",
@@ -83,20 +83,38 @@ Oskari.registerLocalization({
       "area": {
         "title": "Alueen lisäys",
         "tooltip": "Lisää alue",
-        "add": "Lisää alueen taitepisteet klikkaamalla karttaa. Lopeta piirto tuplaklikkauksella tai painamalla 'Lopeta piirto'. Voit piirtää alueeseen reiän pitämällä pohjassa Alt-näppäintä.",
+        "add": "Lisää alueen taitepisteet klikkaamalla karttaa. Lopeta piirto tuplaklikkauksella tai painamalla 'Tallenna'. Voit piirtää alueeseen reiän pitämällä pohjassa Alt-näppäintä.",
         "next": "Voit tallentaa tai piirtää lisää alueita samaan kohteeseen.",
         "edit": "Muokkaa muotoa raahaamalla reunaviivan taitepisteitä.",
         "save": "Tallenna muoto",
         "noResult": "0 m²"
-      }
+      },
+      "box": {
+        "title": "Suorakulmion lisäys",
+        "tooltip": "Lisää suorakulmio",
+        "add": "Lisää suorakulmio raahamalla kartalla. Lopeta piirto painamalla 'Tallenna'. Voit piirtää useita alueita samaan kohteeseen.",
+        "next": "Voit tallentaa tai piirtää lisää alueita samaan kohteeseen.",
+        "edit": "",
+        "save": "Tallenna muoto",
+        "noResult": "0 m²"
+      },
+      "circle": {
+          "title": "Ympyrän lisäys",
+          "tooltip": "Lisää ympyrä",
+          "add": "Lisää ympyrä raahamalla kartalla. Lopeta piirto painamalla 'Tallenna'. Voit piirtää useita alueita samaan kohteeseen.",
+          "next": "Voit tallentaa tai piirtää lisää alueita samaan kohteeseen.",
+          "edit": "",
+          "save": "Tallenna muoto",
+          "noResult": "0 m²"
+        }
     },
     "buttons": {
       "ok": "OK",
       "cancel": "Peruuta",
-      "close": "Lopeta",
-      "finish": "Tallenna piirto",
+      "close": "Peruuta",
+      "finish": "Tallenna",
       "save": "Tallenna",
-      "saveAsMyPlace": "Tallenna omaksi paikaksi",
+      "saveAsMyPlace": "Tallenna",
       "movePlaces": "Siirrä kohteet ja poista",
       "deleteCategory": "Poista",
       "deleteCategoryAndPlaces": "Poista kohteineen",
@@ -118,6 +136,9 @@ Oskari.registerLocalization({
       "placeAttention": {
         "placeholder": "Huomioteksti"
       },
+	  "placeOnlyLabel": {
+		"label": "Näytä vain teksti"
+	  },
       "measurement": {
         "line": "Viivan pituus: ",
         "area": "Alueen pinta-ala: "
@@ -276,7 +297,7 @@ Oskari.registerLocalization({
     "notification": {
       "placeAdded": {
         "title": "Kohde tallennettu",
-        "message": "Löydät kohteen Omat Tiedot -valikosta."
+        "message": "Löydät kohteen Karttatasot-valikon Omat tasot -välilehdeltä."
       },
       "categorySaved": {
         "title": "Karttataso tallennettu",
@@ -285,6 +306,7 @@ Oskari.registerLocalization({
       "categoryDelete": {
         "title": "Karttatason poisto",
         "deleteConfirmMove": "Karttataso: {0} sisältää kohteita {1} kpl. Haluatko poistaa tason ja siirtää sen kohteet oletuskarttatasolle {2}?",
+		"deleteWithObjectsConfirm": "Karttataso: {0} sisältää kohteita {1} kpl. Haluatko poista tason?",
         "deleteConfirm": "Haluatko poistaa karttatason {0}?",
         "deleted": "Karttataso poistettu."
       },
@@ -303,7 +325,8 @@ Oskari.registerLocalization({
         "title": "Virhe!",
         "generic": "Järjestelmässä tapahtui virhe. Yritä uudelleen myöhemmin.",
         "deleteCategory": "Virhe poistossa!",
-        "deleteDefault": "Oletuskarttatasoa ei voi poistaa."
+        "deleteDefault": "Oletuskarttatasoa ei voi poistaa.",
+		"server_error_key_limit": "Sallittujen GIS aineistojen määrä on ylittynyt."
       }
     },
     "validation": {

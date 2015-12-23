@@ -25,6 +25,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
             //"use strict";
             return 'Oskari.mapframework.bundle.layerselector2.Tile';
         },
+        getSequenceNumber: function () {
+            return 10;
+        },
         /**
          * @method setEl
          * @param {Object} el
@@ -39,6 +42,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
         setEl: function (el, width, height) {
             //"use strict";
             this.container = jQuery(el);
+            
+            var title = this.container.children('.oskari-tile-title');
+            title.addClass('indent');
         },
         /**
          * @method startPlugin

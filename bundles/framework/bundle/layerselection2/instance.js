@@ -102,6 +102,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
             //sandbox.registerAsStateful(this.mediator.bundleId, this);
             // draw ui
             me.createUi();
+
+            var tabRequest = sandbox.getRequestBuilder('layerselector2.AddTabRequest')(this.plugins['Oskari.userinterface.Flyout'], true);
+            sandbox.request(this, tabRequest);
         },
         /**
          * @method init
@@ -143,7 +146,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
              * Calls flyouts handleLayerSelectionChanged() method
              */
             'AfterMapLayerRemoveEvent': function (event) {
-                this.plugins['Oskari.userinterface.Tile'].refresh();
+                //this.plugins['Oskari.userinterface.Tile'].refresh();
                 this.plugins['Oskari.userinterface.Flyout'].handleLayerSelectionChanged(event.getMapLayer(), false);
             },
             /**
@@ -153,8 +156,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
              * Calls flyouts handleLayerSelectionChanged() method
              */
             'AfterMapLayerAddEvent': function (event) {
-                this.plugins['Oskari.userinterface.Tile'].refresh();
-                this.plugins['Oskari.userinterface.Flyout'].handleLayerSelectionChanged(event.getMapLayer(), true, event.getKeepLayersOrder());
+                //this.plugins['Oskari.userinterface.Tile'].refresh();
+                this.plugins['Oskari.userinterface.Flyout'].handleLayerSelectionChanged(event.getMapLayer(), true, event.getKeepLayersOrder(), event.getGroupName());
             },
             /**
              * @method MapLayerEvent
@@ -203,7 +206,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
             'AfterRearrangeSelectedMapLayerEvent': function (event) {
                 if (event._creator !== this.getName()) {
                     // Layer order has been changed by someone else, resort layers
-                    this.plugins['Oskari.userinterface.Tile'].refresh();
+                    //this.plugins['Oskari.userinterface.Tile'].refresh();
                     this.plugins['Oskari.userinterface.Flyout'].handleLayerOrderChanged(event._movedMapLayer, event._fromPosition, event._toPosition);
                 }
             },
@@ -256,7 +259,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
          */
         startExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = Oskari.clazz.create('Oskari.mapframework.bundle.layerselection2.Flyout', this);
-            this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.mapframework.bundle.layerselection2.Tile', this);
+            //this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.mapframework.bundle.layerselection2.Tile', this);
         },
         /**
          * @method stopExtension
@@ -265,7 +268,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
          */
         stopExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = null;
-            this.plugins['Oskari.userinterface.Tile'] = null;
+            //this.plugins['Oskari.userinterface.Tile'] = null;
         },
         /**
          * @method getPlugins
@@ -296,7 +299,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
         createUi: function () {
             var me = this;
             this.plugins['Oskari.userinterface.Flyout'].createUi();
-            this.plugins['Oskari.userinterface.Tile'].refresh();
+            //this.plugins['Oskari.userinterface.Tile'].refresh();
         }
     }, {
         /**

@@ -4,7 +4,7 @@ Oskari.registerLocalization(
     "key": "LayerSelection",
     "value": {
         "title": "Selected Layers",
-        "desc": "",
+        "desc": "You can change the order of the levels by dragging them.",
         "layer": {
             "style": "Style",
             "show": "Show.",

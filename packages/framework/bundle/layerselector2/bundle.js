@@ -43,6 +43,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/layerselector2/view/PublishedLayersTab.js"
         }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/bundle/layerselector2/request/AddTabRequest.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/bundle/layerselector2/request/AddTabRequestHandler.js"
+        }, {
             "type": "text/css",
             "src": "../../../../resources/framework/bundle/layerselector2/css/style.css"
         }],

@@ -55,6 +55,15 @@ function () {
         this.registerTool();
     },
     /**
+     * @method disableButtons
+     * Disables draw buttons
+     */
+    disableButtons: function () {
+        var sandbox = this.sandbox,
+            stateReqBuilder = sandbox.getRequestBuilder('Toolbar.ToolButtonStateRequest');
+        sandbox.request(this, stateReqBuilder(null, this.buttonGroup, false));
+    },
+    /**
      * Requests the tool to be added to the toolbar.
      * 
      * @method registerTool
@@ -74,6 +83,12 @@ function () {
         if (reqBuilder) {
             request = reqBuilder(this.toolName, this.buttonGroup, this.tool);
             sandbox.request(this, request);
+        }
+
+        var user = this.sandbox.getUser();
+        if (!user.isLoggedIn()) {
+            // disable toolbar buttons for guests
+            this.disableButtons();
         }
     },
     /**
@@ -164,8 +179,8 @@ function () {
             addTabReq;
 
         if (addTabReqBuilder) {
-            addTabReq = addTabReqBuilder(loc.tab.title, userLayersTab.getContent());
-            sandbox.request(this, addTabReq);
+            addTabReq = addTabReqBuilder(loc.tab.title, loc.tab.title, userLayersTab.getContent());
+            //sandbox.request(this, addTabReq);
         }
         return userLayersTab;
     },

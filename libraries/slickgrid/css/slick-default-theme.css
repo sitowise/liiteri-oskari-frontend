@@ -7,8 +7,9 @@ classes should alter those!
 
 .slick-header-columns {
 /* Oskari change,  background: url('/Oskari/libraries/slickgrid/css/images/header-columns-bg.gif') repeat-x center bottom;
-  border-bottom: 1px solid silver; */
+  border-bottom: 1px solid silver; 
   border-bottom: 2px solid black;
+    */
 }
 
 .slick-header-column {
@@ -17,8 +18,8 @@ classes should alter those!
 /*
   Oskari change:
   border-top: 40px solid transparent;
-*/
-  padding-top: 40px !important;
+    padding-top: 40px !important;
+*/  
 }
 
 /* Oskari change,
@@ -28,11 +29,11 @@ classes should alter those!
 */
 
 .slick-headerrow {
-  background: #fafafa;
+  background: #ffffff;
 }
 
 .slick-headerrow-column {
-  background: #fafafa;
+  background: #ffffff;
   border-bottom: 0;
   height: 100%;
 }
@@ -70,11 +71,11 @@ border-bottom: 2px solid red;
 }
 
 .slick-group-toggle.expanded {
-  background: url('/Oskari/libraries/slickgrid/css/images/collapse.gif') no-repeat center center;
+  background: url('../images/collapse.gif') no-repeat center center;
 }
 
 .slick-group-toggle.collapsed {
-  background: url('/Oskari/libraries/slickgrid/css/images/expand.gif') no-repeat center center;
+  background: url('../images/expand.gif') no-repeat center center;
 }
 
 .slick-group-totals {
@@ -96,7 +97,7 @@ border-bottom: 2px solid red;
 }
 
 .slick-row.odd {
-  background: #fafafa;
+  background: #f4f4f4;
 }
 
 .slick-row.ui-state-active {

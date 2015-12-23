@@ -30,7 +30,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.request.ShowOwnStyleRequ
             "toolsButton": '<div style= "display: inline-block; border: 1px solid;"></div>',
             "link": '<div class="link"><a href="javascript:void(0);"></a></div></div>'
         },
-
         /**
          * @method handleRequest
          * Shows WFS feature data with requested properties
@@ -42,11 +41,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.request.ShowOwnStyleRequ
         handleRequest: function (core, request) {
             var layerId = request.getId();
             var layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(layerId);
-            var customStyle = layer.getCustomStyle();
 
-            if (customStyle) {
-                this.visualizationForm.setValues(customStyle);
-            }
+            var customStyle = layer.getCustomStyle();            
+            this.visualizationForm.setFromStyle(customStyle);
 
             // init popup
             var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
@@ -71,9 +68,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.request.ShowOwnStyleRequ
                 self.plugin.deleteTileCache(layerId, styleName);
 
                 // set values to backend 
-                var values = self.visualizationForm.getValues();
-                layer.setCustomStyle(values);
-                self.plugin.setCustomStyle(layerId, values);
+                var style = self.visualizationForm.getStyle();
+                layer.setCustomStyle(style);
+                //console.log('Style from visualization form');
+                //console.log(style);
+
+                self.plugin.setCustomStyle(layerId, style);
 
                 // change style to custom
                 layer.selectStyle(styleName);
@@ -91,7 +91,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.request.ShowOwnStyleRequ
 
             // show popup
             dialog.addClass('wfs_own_style');
-            dialog.show(title, content, [cancelBtn, saveOwnStyleBtn]);
+            dialog.show(title, content, [saveOwnStyleBtn, cancelBtn]);
         }
     }, {
         /**

@@ -1,0 +1,78 @@
+{
+	"divmanazer":{
+		"conf":{
+			
+		},
+		"state":{
+			
+		}
+		
+	},
+	"mapfull":{
+		"conf":{
+			"globalMapAjaxUrl":"/?",
+			"imageLocation":"/Oskari/resources",
+			"layers":[
+			],
+			"plugins":[
+								
+			],
+			"user":{
+				"firstName":"guest",
+				"lastName":"guest",
+				"loginName":"",
+				"nickName":"guest",
+				"roles":[
+					{
+						"id":1,
+						"name":"Guest"
+					}
+					
+				],
+				"userID":-1,
+				"userUUID":""
+			}
+			
+		},
+		"state":{
+			"east":529323,
+			"north":6941343.5,
+			"selectedLayers":[
+				{
+					"id":10,
+					"opacity":100
+				}
+				
+			],
+			"srs":"EPSG:3067",
+			"zoom":2
+		}
+		
+	},	
+	"toolbar":{
+		"conf":{
+			"history": false,
+            "basictools": false,
+            "viewtools": false,
+			"sharing": false
+			
+		},
+		"state":{
+			"selected":{
+				"group":"default-basictools",
+				"id":"select"
+			}
+			
+		}
+	},	
+	"liiteri-ui":{
+		"conf":{
+			"urbanPlansView": true
+		},
+		"state":{}
+	},
+	"liiteri-feedback":{  
+         "conf":{  },
+         "state":{  }
+      }
+}

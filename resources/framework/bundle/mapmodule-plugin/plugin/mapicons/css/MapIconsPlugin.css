@@ -1,0 +1,93 @@
+div.mapiconsplugin {
+}
+
+.mapiconsplugin ul {
+    
+}
+
+.mapiconsplugin li {
+    list-style-type: none;
+    display: inline;
+    margin-right: 16px;
+    cursor: pointer; 
+    cursor: hand;
+}
+
+.mapiconsplugin li.selected span.glyphicon {
+    color: #00bbeb;
+}
+
+.mapiconsplugin li span.disabled {
+    cursor: default;
+    cursor: not-allowed;
+}
+
+.mapicon {
+    width: 48px;
+    height: 48px;
+    background-image: url(/Oskari/resources/framework/bundle/mapmodule-plugin/plugin/mapicons/images/icons.png);
+}
+
+.layer-mapicon {    
+    background-position: 0px 0px;
+}
+
+li.selected .layer-mapicon {
+    background-position:-48px 0px
+}
+
+.layer-mapicon:hover {
+    background-position: -96px 0px;
+}
+
+.stats-mapicon {    
+    background-position: 0px -48px;
+}
+
+.stats-mapicon-disabled {    
+    background-position: -144px -48px;
+}
+
+li.selected .stats-mapicon {
+    background-position:-48px -48px
+}
+
+.stats-mapicon:hover {
+    background-position: -96px -48px;
+}
+
+.user-mapicon {    
+    background-position: 0px -96px;
+}
+
+li.selected .user-mapicon {
+    background-position:-48px -96px
+}
+
+.user-mapicon:hover {
+    background-position: -96px -96px;
+}
+
+.legend-mapicon {    
+    background-position: 0px -144px;
+}
+
+li.selected .legend-mapicon {
+    background-position:-48px -144px
+}
+
+.legend-mapicon:hover {
+    background-position: -96px -144px;
+}
+
+.map-mapicon {    
+    background-position: 0px -192px;
+}
+
+li.selected .map-mapicon {
+    background-position:-48px -192px
+}
+
+.map-mapicon:hover {
+    background-position: -96px -192px;
+}

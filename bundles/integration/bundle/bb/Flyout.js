@@ -43,6 +43,7 @@ function(instance, locale, ui) {
         var ui = me.ui;
         ui.setEl(me.container);
         me.container.append(this.locale.fetchingLayers);
+        me.render();
     },
     stopPlugin : function() {
         this.container.empty();

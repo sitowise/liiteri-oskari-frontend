@@ -220,6 +220,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                     "publish": "no_publication_permission"
                 };
             }
+			if (categoryModel.downloadServiceUrl) {
+				baseJson.downloadServiceUrl = categoryModel.downloadServiceUrl;
+			}
+			
             return baseJson;
         },
         /**
@@ -348,8 +352,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
             cancelBtn.setHandler(function () {
                 dialog.close();
             });
-            buttons.push(cancelBtn);
             buttons.push(saveBtn);
+            buttons.push(cancelBtn);
             dialog.show(catLoc.title, content, buttons);
             dialog.moveTo('div.personaldata ul li select', 'right');
             dialog.makeModal();
@@ -577,17 +581,20 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 });
                 buttons.push(deleteBtn);
 
-                var moveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-                moveBtn.setTitle(btnLoc.movePlaces);
-                moveBtn.addClass('primary');
-                moveBtn.setHandler(function () {
-                    dialog.close();
-                    // move the places in the category to default category
-                    me._deleteCategory(category, true);
-                });
-                buttons.push(moveBtn);
-                var locParams = [category.getName(), places.length, defaultCategory.getName()];
-                content = this._formatMessage(loc.categoryDelete.deleteConfirmMove, locParams);
+                //var moveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+                //moveBtn.setTitle(btnLoc.movePlaces);
+                //moveBtn.addClass('primary');
+                //moveBtn.setHandler(function () {
+                //    dialog.close();
+                //    // move the places in the category to default category
+                //    me._deleteCategory(category, true);
+                //});
+                //buttons.push(moveBtn);
+                //var locParams = [category.getName(), places.length, defaultCategory.getName()];
+                //content = this._formatMessage(loc.categoryDelete.deleteConfirmMove, locParams);
+				
+				var locParams = [category.getName(), places.length];
+                content = this._formatMessage(loc.categoryDelete.deleteWithObjectsConfirm, locParams);
             } else {
 
                 deleteBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');

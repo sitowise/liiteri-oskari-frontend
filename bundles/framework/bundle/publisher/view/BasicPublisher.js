@@ -24,7 +24,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             '<div class="header">' +
             '<div class="icon-close">' +
             '</div>' +
-            '<h3></h3>' +
+            '<div class="header_title"><p></p></div>' +
             '</div>' +
             '<div class="content">' +
             '</div>' +
@@ -208,14 +208,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             var form = Oskari.clazz.create('Oskari.mapframework.bundle.publisher.view.PublisherLocationForm', me.loc, me);
             me.locationForm = form;
             if (me.data) {
-                content.find('div.header h3').append(me.loc.titleEdit);
+                content.find('div.header > div.header_title > p').append(me.loc.titleEdit);
                 form.init({
                     "domain": me.data.domain,
                     "name": me.data.name,
                     "lang": me.data.lang
                 });
             } else {
-                content.find('div.header h3').append(me.loc.title);
+                content.find('div.header > div.header_title > p').append(me.loc.title);
                 form.init();
             }
 
@@ -255,8 +255,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             accordion.addPanel(me._createSizePanel());
             // 4th panel: tools panel
             accordion.addPanel(me._createToolsPanel());
-            // 5th panel: tool layout panel
-            accordion.addPanel(me._createToolLayoutPanel());
 
             // TODO we need to have a serious discussion with this one whenever layout is changed or
             // copy location from config...
@@ -279,8 +277,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             );
             var layoutData = me._getInitialLayoutData(me.data);
             me.layoutPanel.init(layoutData);
-            // 6th panel: layout panel
-            accordion.addPanel(me.layoutPanel.getPanel());
             // 7th panel: map layer panel
             accordion.addPanel(me.maplayerPanel.getPanel());
 
@@ -774,7 +770,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                     gridWidth = 400;
                 }
                 elLeft.removeClass('oskari-closed');
-                jQuery('#contentMap').width(gridWidth + mapWidth);
+                jQuery('#contentMap').width('');
 
                 gridWidth = gridWidth + 'px';
                 gridHeight = gridHeight + 'px';
@@ -855,8 +851,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 me._editToolLayoutOff();
                 me.instance.setPublishMode(false);
             });
-            cancelBtn.insertTo(buttonCont);
-
 
             var saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
             saveBtn.setTitle(me.loc.buttons.save);
@@ -898,6 +892,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 saveBtn.insertTo(buttonCont);
             }
 
+            cancelBtn.insertTo(buttonCont);
+            
             return buttonCont;
         },
 
@@ -1171,9 +1167,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 p,
                 plugin,
                 i;
+
+            $("[data-clazz='Oskari.mapframework.bundle.mapmodule.plugin.MapIconsPlugin']").parent().parent().parent().insertAfter($(".basic_publisher"));
+            
             for (p in plugins) {
                 if (plugins.hasOwnProperty(p)) {
                     plugin = plugins[p];
+                    
+                    if (plugin.getName() == "MainMapModuleMapIconsPlugin")
+                	{
+                    	continue;
+                	}
+
                     if (plugin.hasUI && plugin.hasUI()) {
                         plugin.stopPlugin(me.instance.sandbox);
                         mapModule.unregisterPlugin(plugin);
@@ -1212,6 +1217,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 plugins = mapModule.getPluginInstances(),
                 plugin,
                 i;
+            
+            $("[data-clazz='Oskari.mapframework.bundle.mapmodule.plugin.MapIconsPlugin']").parent().parent().parent().appendTo($("#mapdiv"));
+            
             // teardown preview plugins
             for (i = 0; i < tools.length; i += 1) {
                 if (tools[i].plugin) {
@@ -1323,12 +1331,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             me.sandbox = sandbox;
             sandbox.register(me.instance);
 
-
-            // Create the StatisticsService for handling ajax calls and common functionality.
-            // Used in both plugins below.
-            var statsService = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.StatisticsService', me);
-            sandbox.registerService(statsService);
-            me.statsService = statsService;
+            me.statsService = sandbox.getService('Oskari.statistics.bundle.statsgrid.StatisticsService');
 
             // Fetch the state of the statsgrid bundle and create the UI based on it.
             // TODO: get the saved state from the published map.

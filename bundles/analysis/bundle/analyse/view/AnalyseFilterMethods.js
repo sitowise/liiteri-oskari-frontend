@@ -81,6 +81,15 @@ Oskari.clazz.category('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                     me._createFilterDialog(layer);
                 }
             });
+
+            var filterJson = this.getFilterJson(layer.getId());
+            if (!filterJson && layer.getClickedFeatureIds &&
+                layer.getClickedFeatureIds() != null &&
+                layer.getClickedFeatureIds().length > 0) {
+                // If there is no filter but some features are clicked, set filter to include selected features by default 
+                var newFilter = { 'featureIds': true };
+                me.setFilterJson(layer.getId(), newFilter);                
+            }
         },
 
         /**
@@ -146,7 +155,7 @@ Oskari.clazz.category('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 this._fillDialogContent(popupContent, prevJson, layer);
             }
 
-            popup.show(popupTitle, popupContent, [closeButton, clearButton, updateButton]);
+            popup.show(popupTitle, popupContent, [updateButton, clearButton, closeButton]);
 
             // Make the popup draggable
             popup.makeDraggable();
@@ -189,6 +198,10 @@ Oskari.clazz.category('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             clickedFeaturesSelection.find('label').html(this.loc.filter.clickedFeatures.label);
             content.append(clickedFeaturesSelection);
 
+            if(layer._layerType === "MYPLACES") {
+                clickedFeaturesSelection.find("input").prop({'disabled': true, 'checked': false});
+            }
+            
             // Filter values selection
             valuesSelection.find('div.values-title').html('<h4>' + this.loc.filter.values.title + '</h4>');
             // Add a filter
@@ -227,7 +240,7 @@ Oskari.clazz.category('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 bboxDiv.find('div.bbox-on').find('input[name=filter-bbox]').removeAttr('checked');
             }
 
-            if (values.featureIds) {
+            if (values.featureIds && layer._layerType !== "MYPLACES") {
                 clickedFeaturesDiv.find('input[name=analyse-clicked-features]').attr('checked', 'checked');
             }
 

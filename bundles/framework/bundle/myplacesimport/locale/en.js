@@ -17,7 +17,8 @@ Oskari.registerLocalization(
                 "next": "Next"
             },
             "file": {
-                "submit": "Send"
+                "submit": "Send",
+                "chooseFile": "Choose file"
             },
             "layer": {
                 "title": "Save the map layer information:",
@@ -38,7 +39,8 @@ Oskari.registerLocalization(
                     "message": "You can find the map layer from the menu \"My Data\"."
                 },
                 "failure": {
-                    "title": "NOT TRANSLATED"
+                    "title": "NOT TRANSLATED",
+					"server_error_key_limit": "The amount of user GIS datasets reached the limit or or the file size exceeds the allowable limit."
                 }
             }
         },

@@ -3,7 +3,9 @@ Oskari.registerLocalization({
   "key": "PersonalData",
   "value": {
     "title": "Omat tiedot",
+	"flyoutTitle": "Käyttäjän omat tiedot",
     "desc": "Omat tiedot",
+	"tooltip": "Käyttäjätoiminnot",
     "notLoggedIn": "Omiin tietoihin voit tallentaa omia karttanäkymiä ja kohteita sekä nähdä muille sivustoille julkaisemasi kartat. <a href='/web/fi/login'>Kirjaudu palveluun</a>.",
     "tabs": {
       "myviews": {
@@ -113,16 +115,29 @@ Oskari.registerLocalization({
         }
       },
       "account": {
-        "title": "Tilin tiedot",
+        "title": "Omat tiedot",
         "firstName": "Etunimi",
         "lastName": "Sukunimi",
         "nickName": "Nimimerkki",
         "email": "Sähköpostiosoite",
+        "roles": "Roles",
         "changeInfo": "Muuta tietoja",
         "changePassword": "Muuta salasana",
         "removeAccount": "Poista tili",
         "changeInfoUrl": "/web/fi/profiili"
       }
+    },
+    "menuItems" :{
+    	"myAccount": "Omat tiedot",
+    	"workspaces": "Työtilat",
+    	"userLayers": "Rajapinta-aineistot",
+    	"groupings": "Ryhmittelyjen hallinta",
+    	"announcements": "Ilmoitusten ylläpito",
+    	"layerRights": "Karttatasojen oikeudet",
+    	"adminMapLayers": "Karttatasojen hallinta",
+    	"createMap": "Julkaise kartta",
+    	"logout": "Kirjaudu ulos",
+    	"login": "Kirjaudu"
     },
     "button": {
       "yes": "Kyllä",

@@ -72,7 +72,8 @@ function(instance) {
                 if (_.isFunction(errorCb) && jqXHR.status !== 0) {
                     errorCb(jqXHR, textStatus);
                 }
-            }
+            },
+            cache: false
         });
     },
     /**
@@ -99,12 +100,15 @@ function(instance) {
      * @param {Function} cb (optional)
      */
     addLayerToService: function(layerJson, cb) {
-        var mapLayerService = this.sandbox
-                .getService('Oskari.mapframework.service.MapLayerService'),
+        var mapLayerService = this.sandbox.getService('Oskari.mapframework.service.MapLayerService'),
             // Create the layer model
             mapLayer = mapLayerService.createMapLayer(layerJson);
-        // Add the layer to the map layer service
-        mapLayerService.addLayer(mapLayer);
+		
+		if (!mapLayerService.findMapLayer(mapLayer.getId())) {
+			// Add the layer to the map layer service
+			mapLayerService.addLayer(mapLayer);
+		}
+		
         if (_.isFunction(cb)) cb(mapLayer);
 
         return mapLayer;

@@ -278,6 +278,13 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
             if (newLayerConf.refreshRate) {
                 layer.setRefreshRate(newLayerConf.refreshRate);
             }
+            if (newLayerConf.downloadServiceUrl) {
+                layer.setDownloadServiceUrl(newLayerConf.downloadServiceUrl);
+            }
+            if (newLayerConf.copyrightInfo) {
+                layer.setCopyrightInfo(newLayerConf.copyrightInfo);
+            }
+
 
             // wms specific
             // TODO: we need to figure this out some other way
@@ -739,6 +746,8 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                 this._populateWmsMapLayerAdditionalData(layer, mapLayerJson);
             } else if (mapLayerJson.type === 'vectorlayer') {
                 layer.setStyledLayerDescriptor(mapLayerJson.styledLayerDescriptor);
+            } else if (mapLayerJson.type === 'arcgislayer') {
+                layer.addLayerUrl(mapLayerJson.wmsUrl);
             }
 
             if (mapLayerJson.metaType && layer.setMetaType) {
@@ -823,6 +832,13 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                 builder.parseLayerData(layer, mapLayerJson, this);
             }
 
+			//FIXME: temporary for testing
+			if (mapLayerJson.shared == "true") {
+				layer.shared = true;
+			}
+
+			layer.setDownloadServiceUrl(mapLayerJson.downloadServiceUrl);
+			layer.setCopyrightInfo(mapLayerJson.copyrightInfo);
 
             return layer;
         },

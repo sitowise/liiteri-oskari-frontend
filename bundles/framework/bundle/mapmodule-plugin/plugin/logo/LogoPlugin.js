@@ -21,7 +21,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
         templates: {
             main: jQuery(
                 "<div class='mapplugin logoplugin' data-clazz='Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin'>" +
-                    "<div class='icon'></div>" +
+                    //"<div class='icon'><img src='/Oskari/resources/framework/bundle/mapmodule-plugin/plugin/logo/images/2014_Liiteri_1col_DigitalScreens_b.png'/ height=20 /></div>" +
                     "<div class='terms'><a href='JavaScript:void(0);'></a></div>" +
                     "<div class='data-sources'></div>" +
                     "</div>"
@@ -363,10 +363,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
                 layersHeaderLoc = pluginLoc.layersHeader,
                 layers = me._sandbox.findAllSelectedMapLayers(),
                 layersLen = layers.length,
-                layer,
+                layer, info,
                 i;
 
-            closeButton.setTitle('OK');
+            closeButton.setTitle(pluginLoc['close']);
             closeButton.setHandler(function () {
                 me.dataSourcesDialog = null;
                 dialog.close(true);
@@ -380,11 +380,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
 
                 for (i = 0; i < layersLen; ++i) {
                     layer = layers[i];
-                    layersCont.append(
-                        '<div>' +
-                            layer.getName() + ' - ' + layer.getOrganizationName() +
-                            '</div>'
-                    );
+                    info = layer.getName() + " - " + ((layer.getCopyrightInfo() == null) ? pluginLoc['emptyDataSource'] : layer.getCopyrightInfo());
+
+                    layersCont.append('<div>' + info + '</div>');
                 }
             }
 

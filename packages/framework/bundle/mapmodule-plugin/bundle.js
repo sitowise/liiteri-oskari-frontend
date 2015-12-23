@@ -162,6 +162,24 @@ Oskari.clazz.define("Oskari.mapframework.bundle.PluginMapModuleBundle", function
                     "type": "text/css",
                     "src": "../../../../resources/framework/bundle/mapmodule-plugin/plugin/scalebar/css/scalebar.css"
                 },
+
+                // MapIcons
+                {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/mapicons/MapIconsPlugin.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/mapicons/request/AddMapIconRequest.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/mapicons/request/AddMapIconRequestHandler.js"
+                }, {
+                    "type": "text/css",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/mapicons/css/MapIconsPlugin.css"
+                }, {
+                    "type": "text/css",
+                    "src": "../../../../resources/framework/bundle/mapmodule-plugin/plugin/mapicons/css/MapIconsPlugin.css"
+                },
                 /**
                  * PublisherToolbarPlugin plugin
                  */
@@ -203,6 +221,20 @@ Oskari.clazz.define("Oskari.mapframework.bundle.PluginMapModuleBundle", function
                     "type": "text/css",
                     "src": "../../../../resources/framework/bundle/mapmodule-plugin/plugin/layers/css/backgroundlayerselection.css"
                 },
+                /**
+                 * Layers loading plugin
+                 */
+                 {
+                     "type": "text/javascript",
+                     "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/layers/ol/OLLayerEventsControl.js"
+                 },
+                {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/layers/LayersLoadingPlugin.js"
+                },  {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/event/LayersLoadingEvent.js"
+                },                
                 /**
                  * Layers plugin
                  */
@@ -284,7 +316,52 @@ Oskari.clazz.define("Oskari.mapframework.bundle.PluginMapModuleBundle", function
                     "type": "text/javascript",
                     "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/drawplugin/request/StopDrawingRequestHandler.js"
                 },
-
+                /**
+                 * BackgroundDraw plugin
+                 */
+                {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/BackgroundDrawPlugin.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/InnerDrawPlugin.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/event/AddedFeatureEvent.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/event/FinishedDrawingEvent.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/event/SelectedDrawingEvent.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/event/ActiveDrawingEvent.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/GetGeometryRequest.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/GetGeometryRequestHandler.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/StartDrawingRequest.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/StartDrawingRequestHandler.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/StopDrawingRequest.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/StopDrawingRequestHandler.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/RegisterForDrawingRequest.js"
+                }, {
+                    "type": "text/javascript",
+                    "src": "../../../../bundles/framework/bundle/mapmodule-plugin/plugin/backgrounddrawplugin/request/RegisterForDrawingRequestHandler.js"
+                },
                 /**
                  * Publishertoolbar plugin
                  */

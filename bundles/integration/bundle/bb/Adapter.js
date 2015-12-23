@@ -105,14 +105,15 @@ function(name,viewClazz) {
         me.sandbox = sandbox;
         sandbox.register(this);
 
+        var showAdminLayerselectorFlyoutRequestHandler = Oskari.clazz.create('Oskari.integration.bundle.admin-layerselector.request.ShowAdminLayerselectorFlyoutRequestHandler', this);
+        sandbox.addRequestHandler('ShowAdminLayerselectorFlyoutRequest', showAdminLayerselectorFlyoutRequestHandler);
+        
         /* stateful */
 //        sandbox.registerAsStateful(this.mediator.bundleId, this);
 
         var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
 
         sandbox.request(this, request);
-
-
     },
     /**
      * @method stop
@@ -158,9 +159,6 @@ function(name,viewClazz) {
         }
 
         var locTile = me.getLocalization('tile');
-
-        me.plugins['Oskari.userinterface.Tile'] = 
-            Oskari.clazz.create('Oskari.integration.bundle.bb.Tile', me, locTile);
     },
     /**
      * @method stopExtension
@@ -217,7 +215,18 @@ function(name,viewClazz) {
      * @return {Object} bundle state as JSON
      */
     getState : function() {
-    }
+    },
+    showFlyout: function () {
+		var me = this;
+		jQuery(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', 'block');
+		$(me.plugins['Oskari.userinterface.Flyout'].container).parent().prev().find(".icon-close").on('click', function(){
+			me.hideFlyout();
+		});
+	},
+	hideFlyout: function () {
+		var me = this;
+		$(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', '');
+	}
 
 }, {
     protocol : ['Oskari.bundle.BundleInstance', 'Oskari.mapframework.module.Module', 'Oskari.userinterface.Extension']

@@ -69,6 +69,20 @@ Oskari.clazz.define('Oskari.userinterface.component.GridModel',
             }
             this.data.push(pData);
         },
+        removeData: function(pData) {
+            if (this.fields.length === 0)
+                throw new Exception("Cannot remove from empty data");
+            if (!this.idField)
+                throw new Exception("Id field is not set");
+
+            var data = this.data;
+            var id = this.getIdField();
+            var pDataId = pData[id];
+
+            this.data = jQuery.grep(data, function (value) {
+                return value[id] != pDataId;
+            });
+        },
         /**
          * @method getData
          * Returns the model data as array

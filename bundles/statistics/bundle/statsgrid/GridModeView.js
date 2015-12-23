@@ -26,15 +26,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
             var me = this,
                 sandbox = me.instance.getSandbox();
 
-            me.toolbar = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.StatsToolbar', {
-                title: me.getTitle()
-            }, me.instance);
-
             me.requestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.StatsGridRequestHandler', me);
             sandbox.addRequestHandler('StatsGrid.StatsGridRequest', me.requestHandler);
 
             var el = me.getEl();
             el.addClass("statsgrid");
+            
+            var resizeTimer;
+            var resizeFunc = function() {
+                var center = me.getCenterColumn();
+                var left = me.getLeftColumn();
+                var mapModule = me.instance.getSandbox().findRegisteredModuleInstance('MainMapModule');
+
+                left.width(left.width());
+                center.width(jQuery('.row-fluid').width() - left.width());
+                if (me.instance.gridPlugin.grid)
+                    me.instance.gridPlugin.grid.resizeCanvas();
+                if (me.instance.gridPlugin.grid)
+                    me.instance.gridPlugin.autosizeColumns();
+                mapModule.updateSize();
+            }
+            jQuery(window).resize(function () {
+                clearTimeout(resizeTimer);
+                if(me.isVisible) {
+                    resizeTimer = setTimeout(resizeFunc, 100);
+                }
+            });
         },
 
         /**
@@ -64,8 +81,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                     me.instance.gridPlugin.setLayer(me._layer);
                     // Save the changed layer to the state.
                     me.instance.state.layerId = me._layer.getId();
-                    me.toolbar.changeName(me.instance.getLocalization('tile').title + ' - ' + me._layer.getName());
-                    me._layer.setOpacity(100);
+                    //me.toolbar.changeName(me.instance.getLocalization('tile').title + ' - ' + me._layer.getName());
+                    //me._layer.setOpacity(100);
                 }
                 // use default layer if we're showing the UI and don't have a layer
                 var layerAdded = me.isVisible && !me._layer;
@@ -83,7 +100,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                         me.instance.gridPlugin.setLayer(me._layer);
                         // Save the changed layer to the state.
                         me.instance.state.layerId = me._layer.getId();
-                        me.toolbar.changeName(me.instance.getLocalization('tile').title + ' - ' + me._layer.getName());
+                        //me.toolbar.changeName(me.instance.getLocalization('tile').title + ' - ' + me._layer.getName());
                         me._layer.setOpacity(100);
                     }
                 } else if (!me.isVisible && me._layer) {
@@ -97,8 +114,56 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                     me.showContent(isShown);
 
                     if (isShown) {
+                        //Create template
+                        var container = (jQuery('<div class="viewContainer"></div>'));
+
+                        container.append(jQuery('<div class="viewTitle"><h4>' + me.locale.title + '</h4></div>'));
+                        var closeTopButton = jQuery('<span class="topOne"><span class="toogleHideView glyphicon icon-close"></span></span>');
+                        closeTopButton.click(function() {
+                            me.instance.getSandbox().postRequestByName('userinterface.UpdateExtensionRequest', [me.instance, 'close']);
+                        });
+                        container.append(closeTopButton);
+                        var closeBottomButton = jQuery('<span class="bottomOne"><span class="toogleHideView glyphicon icon-close"></span></span>');
+                        closeBottomButton.click(function() {
+                            me.instance.getSandbox().postRequestByName('userinterface.UpdateExtensionRequest', [me.instance, 'close']);
+                        });
+                        container.append(closeBottomButton);                        
+
+                        var doHiding = function() {
+                            if (jQuery('.hideSelectorsButton .toogleHideView').hasClass("glyphicon-arrow-left")) {
+                                jQuery('.hideSelectorsButton .toogleHideView').removeClass('glyphicon-arrow-left').addClass('glyphicon-arrow-right');
+                                jQuery('.indicatorsSource').hide();
+                                jQuery('span.hideSelectorsButton').css('left', '20px');
+                            } else {
+                                jQuery('.hideSelectorsButton .toogleHideView').removeClass('glyphicon-arrow-right').addClass('glyphicon-arrow-left');
+                                jQuery('.indicatorsSource').show();
+                                jQuery('.hideSelectorsButton').css('left', '360px');
+                            }
+                            me.instance.gridPlugin.grid.resizeCanvas();
+                            me.instance.gridPlugin.grid.autosizeColumns();
+                            me.instance.gridPlugin.grid.invalidate();
+                        };
+                        
+                        var hideButtonTop = jQuery('<span class="hideSelectorsButton top"><span class="toogleHideView glyphicon glyphicon-arrow-left"></span></span>');
+                        hideButtonTop.click(doHiding);
+                        container.append(hideButtonTop);
+
+                        var hideButtonBottom = jQuery('<span class="hideSelectorsButton bottom"><span class="toogleHideView glyphicon glyphicon-arrow-left"></span></span>');
+                        hideButtonBottom.click(doHiding);
+                        container.append(hideButtonBottom);
+
+                        if(me.instance.gridPlugin._state.indicators.length === 0 && (!me.instance.gridPlugin.grid || me.instance.gridPlugin.grid.getColumns().length <= 2)) {
+                            hideButtonTop.hide();
+                            hideButtonBottom.hide();
+                        }
+                        
+                        var contentContainer = jQuery('<div class="contentContainer"></div>');
+                        container.append(contentContainer);
+
+                        me.getEl().append(container);
+
                         // Create the indicators selection and the grid.
-                        me.instance.gridPlugin.createStatsOut(me.getEl());
+                        me.instance.gridPlugin.createStatsOut(contentContainer);
                     }
 
                     // Notify other components of the mode change.
@@ -112,7 +177,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 if (!(!me._layer && isShown)) {
                     if (layerAdded) {
                         // wait a bit so the OL layers are surely added
-                        window.setTimeout(toggle, 50);
+                        window.setTimeout(toggle, 150);
                     } else {
                         toggle();
                     }
@@ -130,7 +195,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
         showMode: function (isShown, blnFromExtensionEvent) {
             var me = this,
                 sandbox = me.instance.getSandbox();
-            me.toolbar.show(isShown);
+            //me.toolbar.show(isShown);
 
             var mapModule = me.instance.getSandbox().findRegisteredModuleInstance('MainMapModule'),
                 map = mapModule.getMap(),
@@ -147,37 +212,41 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
             if (isShown) {
                 /** ENTER The Mode */
                 // Hide base layers, store hidden layers to state so we can show them on exit
-                layers = me.instance.sandbox.findAllSelectedMapLayers();
                 me.instance.state.hiddenLayers = [];
-                for (i = 0; i < layers.length; i++) {
-                    layer = layers[i];
-                    if (layer && me._layer && layer.getId() !== me._layer.getId() && layer.isVisible()) {
-                        me.instance.state.hiddenLayers.push(layer);
-                        request = visibilityRequestBuilder(layer.getId(), false);
-                        sandbox.request(me.instance.getName(), request);
+                if (me.instance.conf.hideLayers) {
+                    layers = me.instance.sandbox.findAllSelectedMapLayers();
+                    for (i = 0; i < layers.length; i++) {
+                        layer = layers[i];
+                        if (layer && me._layer && layer.getId() !== me._layer.getId() && layer.isVisible()) {
+                            me.instance.state.hiddenLayers.push(layer);
+                            request = visibilityRequestBuilder(layer.getId(), false);
+                            sandbox.request(me.instance.getName(), request);
+                        }
                     }
                 }
-                // FIXME move center location and zoom level to config
-                /** Center Finland and set zoom to min **/
-                var newCenter = new OpenLayers.LonLat(520000, 7250000);
-                mapModule.centerMap(newCenter, 0);
-
                 jQuery('#contentMap').addClass('statsgrid-contentMap');
                 jQuery('.oskariui-mode-content').addClass('statsgrid-mode');
                 // TODO we are going to create a handle for grid vs. map separator
-                var leftWidth = 40;
+                var leftWidth = 350,
+                    centerWidth = jQuery('.row-fluid').width() - leftWidth;
+
+                if(me.instance.gridPlugin._state.indicators.length > 0 || (me.instance.gridPlugin.grid && me.instance.gridPlugin.grid.getColumns().length >= 3)) {
+                    leftWidth = 60;
+                    centerWidth = (100 - leftWidth) + '%';
+                    leftWidth = leftWidth + '%';
+                }
 
                 /** show our mode view - view hacks */
                 elCenter.removeClass('span12');
-                elCenter.width((100 - leftWidth) + '%');
+                elCenter.width(centerWidth);
                 // remove toolbar's height
                 mapModule.getMapEl().height(jQuery(window).height() - jQuery('#contentMap').find('.oskariui-menutoolbar').height());
                 //window resize is handled in mapfull - instance.js
                 elLeft.empty();
                 elLeft.removeClass('oskari-closed');
-                elLeft.width(leftWidth + '%');
+                elLeft.width(leftWidth);
                 elLeft.resizable({
-                    minWidth: 450,
+                    minWidth: 350,
                     handles: "e",
                     resize: function (event, ui) {
                         elCenter.width(jQuery('.row-fluid').width() - elLeft.width());
@@ -192,9 +261,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                         me.instance.gridPlugin.autosizeColumns();
                     }
                 });
-
+                
                 /** a hack to notify openlayers of map size change */
-                map.updateSize();
+                mapModule.updateSize();
 
             } else {
                 /** EXIT The Mode */
@@ -236,7 +305,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 }
 
                 /** a hack to notify openlayers of map size change */
-                map.updateSize();
+                mapModule.updateSize();
             }
         },
         getLeftColumn: function () {
@@ -248,12 +317,26 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
         getRightColumn: function () {
             return jQuery('.oskariui-right');
         },
+        resize: function () {
+            var me = this;
+            var center = me.getCenterColumn();
+            var left = me.getLeftColumn();
+            var mapModule = me.instance.getSandbox().findRegisteredModuleInstance('MainMapModule');
+
+            left.width(left.width());
+            center.width(jQuery('.row-fluid').width() - left.width());
+            if (me.instance.gridPlugin.grid)
+                me.instance.gridPlugin.grid.resizeCanvas();            
+            if (me.instance.gridPlugin.grid)
+                me.instance.gridPlugin.autosizeColumns();
+            mapModule.updateSize();
+        },
         /**
          * @method stopPlugin
          * called by host to stop view operations
          */
         stopPlugin: function () {
-            this.toolbar.destroy();
+            //this.toolbar.destroy();
             sandbox.removeRequestHandler('StatsGrid.StatsGridRequest', this.requestHandler);
         }
     }, {

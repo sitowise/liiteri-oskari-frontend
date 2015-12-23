@@ -33,7 +33,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.PublisherLocation
             }
         };
         this.langField = {
-            template: jQuery('<div class="field">' +
+            template: jQuery('<div class="field" style="display: none;">' +
                 '<div class="help icon-info" title="' + localization.language.tooltip + '" helptags="portti,help,publisher,language"></div>' +
                 '<label for="language">' + localization.language.label + '</label><br clear="all" />' +
                 '<select name="language"></select>' +

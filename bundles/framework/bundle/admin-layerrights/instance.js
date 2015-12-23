@@ -115,6 +115,9 @@ Oskari.clazz.define("Oskari.framework.bundle.admin-layerrights.AdminLayerRightsB
                 sandbox.registerForEventByName(me, p);
             }
 
+            var showLayerrightsFlyoutRequestHandler = Oskari.clazz.create('Oskari.mapframework.bundle.admin-layerrights.request.ShowLayerrightsFlyoutRequestHandler', this);
+            sandbox.addRequestHandler('ShowLayerrightsFlyoutRequest', showLayerrightsFlyoutRequestHandler);
+            
             //Let's extend UI
             var reqName = 'userinterface.AddExtensionRequest',
                 reqBuilder = sandbox.getRequestBuilder(reqName),
@@ -201,9 +204,7 @@ Oskari.clazz.define("Oskari.framework.bundle.admin-layerrights.AdminLayerRightsB
         startExtension: function () {
             "use strict";
             this.plugins['Oskari.userinterface.Flyout'] =
-                Oskari.clazz.create('Oskari.framework.bundle.admin-layerrights.Flyout', this);
-            this.plugins['Oskari.userinterface.Tile'] =
-                Oskari.clazz.create('Oskari.framework.bundle.admin-layerrights.Tile', this);
+                Oskari.clazz.create('Oskari.framework.bundle.admin-layerrights.Flyout', this, this.getLocalization('flyout'));
         },
 
         /**
@@ -256,7 +257,6 @@ Oskari.clazz.define("Oskari.framework.bundle.admin-layerrights.AdminLayerRightsB
             "use strict";
             var me = this;
             me.plugins['Oskari.userinterface.Flyout'].setContent();
-            me.plugins['Oskari.userinterface.Tile'].refresh();
         },
 
         /**
@@ -275,7 +275,23 @@ Oskari.clazz.define("Oskari.framework.bundle.admin-layerrights.AdminLayerRightsB
         getState: function () {
             "use strict";
             return this.plugins['Oskari.userinterface.Flyout'].getState();
-        }
+        },
+        showMessage: function (title, message) {
+            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+            dialog.show(title, message);
+            dialog.fadeout(5000);
+        },
+        showFlyout: function () {
+    		var me = this;
+    		jQuery(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', 'block');
+    		$(me.plugins['Oskari.userinterface.Flyout'].container).parent().prev().find(".icon-close").on('click', function(){
+    			me.hideFlyout();
+    		});
+    	},
+    	hideFlyout: function () {
+    		var me = this;
+    		$(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', '');
+    	}
     }, {
 
         /**

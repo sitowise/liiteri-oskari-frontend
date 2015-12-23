@@ -43,13 +43,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
          * 'connects' to store (does not but might)
          */
         connect: function () {
+			
+			this._fixGetFeatureBug();
+			
             var url = this.url;
             this.protocols.categories = new OpenLayers.Protocol.WFS({
                 version: '1.1.0',
                 srsName: 'EPSG:3067',
                 featureType: 'categories',
                 featureNS: this.featureNS,
-                url: url
+                url: url + '&own=categories'
             });
             // myplaces uses version 1.0.0 since with 1.1.0 geoserver connects
             // multilines to one continuous line on save
@@ -59,12 +62,35 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 geometryName: 'geometry',
                 featureType: 'my_places',
                 featureNS: this.featureNS,
-                url: url
+                url: url + '&own=my_places'
             };
             if (this.options.maxFeatures) {
                 myPlacesProps.maxFeatures = this.options.maxFeatures;
             }
             this.protocols.my_places = new OpenLayers.Protocol.WFS(myPlacesProps);
+			
+			//SHARED
+			this.protocols.sharedCategories = new OpenLayers.Protocol.WFS({
+                version: '1.1.0',
+                srsName: 'EPSG:3067',
+                featureType: 'categories',
+                featureNS: this.featureNS,
+                url: url + '&shared=categories'
+            });
+            // myplaces uses version 1.0.0 since with 1.1.0 geoserver connects
+            // multilines to one continuous line on save
+            var sharedMyPlacesProps = {
+                version: '1.0.0',
+                srsName: 'EPSG:3067',
+                geometryName: 'geometry',
+                featureType: 'my_places',
+                featureNS: this.featureNS,
+                url: url + '&shared=my_places'
+            };
+            if (this.options.maxFeatures) {
+                sharedMyPlacesProps.maxFeatures = this.options.maxFeatures;
+            }
+            this.protocols.sharedMy_places = new OpenLayers.Protocol.WFS(sharedMyPlacesProps);
         },
 
         /**
@@ -73,7 +99,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
          * loads categories from backend to given service filters by
          * initialised user uuid
          */
-        getCategories: function (cb) {
+        getCategories: function (cb, scb) {
             var uuid = this.uuid;
             var uuidFilter = new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
@@ -88,6 +114,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 filter: uuidFilter,
                 callback: function (response) {
                     me._handleCategoriesResponse(response, cb);
+                }
+            });
+			
+			var ps = this.protocols.sharedCategories;
+
+            ps.read({
+                filter: uuidFilter,
+                callback: function (response) {
+                    me._handleCategoriesResponse(response, scb);
                 }
             });
 
@@ -141,7 +176,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 category.setDotShape(featAtts.dot_shape);
                 category.setDotColor(this._formatColorFromServer(featAtts.dot_color));
                 category.setDotSize(featAtts.dot_size);
-                category.setUUID(uuid);
+                category.setUUID(featAtts.uuid);
+				category.setDownloadServiceUrl(featAtts.download_service_url);
                 if (featAtts.publisher_name) {
                     category.setPublic(true);
                 }
@@ -272,8 +308,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 cb(true, list);
 
             } else {
-
-                cb(false, list);
+				var errorMessage;
+				if (response.priv && response.priv.responseText) {
+					errorMessage = JSON.parse(response.priv.responseText)['error'];
+				}
+                cb(false, list, errorMessage);
             }
 
         },
@@ -374,6 +413,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                     me._handleMyPlacesResponse(response, cb);
                 }
             });
+			
+			
+			var ps = this.protocols.sharedMy_places;
+
+            ps.read({
+                filter: uuidFilter,
+                callback: function (response) {
+                    me._handleMyPlacesResponse(response, cb);
+                }
+            });
 
         },
 
@@ -413,7 +462,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 place.setCreateDate(featAtts.created);
                 place.setUpdateDate(featAtts.updated);
                 place.setGeometry(f.geometry);
-                place.setUUID(uuid);
+                place.setUUID(featAtts.uuid);
+				place.setOnlyLabel(featAtts.only_label);
 
                 list.push(place);
                 //service._addMyPlace(place);
@@ -484,7 +534,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                     'link': m.getLink(),
                     'image_url': m.getImageLink(),
                     'category_id': m.getCategoryID(),
-                    'uuid': uuid
+                    'uuid': uuid,
+					'only_label': m.isOnlyLabel()
                 };
 
                 feat = new OpenLayers.Feature.Vector(geom, featAtts);
@@ -630,5 +681,31 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
          */
         disconnect: function () {
 
-        }
+        },
+		
+		/*
+         * @method _fixGetFeatureBug
+         *
+         * Fixes bug in IE11 where OpenLayers create invalid 'GetFeature' request.
+		 * TODO: there is probably better way to solve this.
+		 * Resources:
+		 * http://stackoverflow.com/questions/21255173/malformed-wfs-xmlhttprequest-from-gwt-openlayers-in-ie11
+		 * http://osgeo-org.1560.x6.nabble.com/WFS-and-IE-11-td5090636.html
+		 * 
+         */
+		_fixGetFeatureBug: function() {
+			var _class = OpenLayers.Format.XML;
+			var originalWriteFunction = _class.prototype.write;
+
+			var patchedWriteFunction = function() {
+				var child = originalWriteFunction.apply( this, arguments );
+
+				// NOTE: Remove the rogue namespaces as one block of text.
+				child = child.replace(new RegExp('xmlns:NS\\d+="" NS\\d+:', 'g'), '');
+
+				return child;
+			}
+
+			_class.prototype.write = patchedWriteFunction;
+		}
     });

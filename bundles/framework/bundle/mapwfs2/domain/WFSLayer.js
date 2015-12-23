@@ -20,6 +20,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.domain.WFSLayer',
         this._selectedFeatures = []; // filtered features
         this._clickedFeatureIds = []; // clicked feature ids (map)
         this._clickedFeatureListIds = []; // clicked feature ids (list)
+        this._clickedGeometries = []; // clicked feature geometries [[id, geom]..]
         this._propertyTypes = {}; // name and describeFeatureType type (hashmap, json)
         this._styles = []; /* Array of styles that this layer supports */
         this._customStyle = null;
@@ -131,7 +132,31 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.domain.WFSLayer',
         setClickedFeatureIds: function (ids) {
             this._clickedFeatureIds = ids;
         },
+        /**
+         * @method getClickedGeometries
+         * @return {String[[]..]} featureId, geometry
+         */
+        getClickedGeometries: function () {
+            return this._clickedGeometries;
+        },
 
+        /**
+         * @method setClickedGeometries
+         * @param {String[[]..]} id,geom
+         */
+        setClickedGeometries: function (fgeom) {
+            this._clickedGeometries = fgeom;
+        },
+        /**
+         * @method addClickedGeometries
+         * @param {[]} id,geom
+         */
+        addClickedGeometries: function (fgeom) {
+            for (var j = 0; j < fgeom.length; ++j) {
+                this._clickedGeometries.push(fgeom[j]);
+            }
+
+        },
         /**
          * @method getClickedFeatureListIds
          * @return {String[]} featureIds
@@ -197,7 +222,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.domain.WFSLayer',
         getCustomStyle: function () {
             return this._customStyle;
         },
-
+        setWmsName: function (wmsName) {
+            this._wmsName = wmsName;
+        },
+        getWmsName: function () {
+            return this._wmsName;
+        },
         /**
          * @method getStyles
          * @return {Oskari.mapframework.domain.Style[]}

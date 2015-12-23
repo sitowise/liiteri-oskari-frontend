@@ -13,16 +13,19 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
      * @param {Oskari.framework.bundle.admin-layerrights.AdminLayerRightsBundleInstance}
      *        instance reference to component that created the tile
      */
-    function (instance) {
+    function (instance, locale) {
         "use strict";
         var me = this;
         me.instance = instance;
+        me.locale = locale;
         me.container = null;
         me.state = null;
         me.template = null;
         me.columns = null;
         me.cleanData = null;
         me.activeRole = null;
+        me.dataTable = null;
+        me.datatableLocaleLocation = Oskari.getSandbox().getService('Oskari.liiteri.bundle.liiteri-ui.service.UIConfigurationService').getDataTablesLocaleLocation() + locale.datatablelanguagefile;
     }, {
         /**
          * @method getName
@@ -63,16 +66,19 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             this.template = jQuery(
                 '<div class="admin-layerrights">\n' +
                     '   <form method="post" id="admin-layerrights-form">' +
-                    '       <label><span></span>' +
-                    '          <select class="admin-layerrights-role"></select>\n' +
-                    '       </label>' + /*
+                    '       <div class="header-container">' +
+                    '          <label><span></span>' +
+                    '               <select class="admin-layerrights-role"></select>\n' +
+                    '          </label>' +
+                    '          <div class="controls"></div>' +
+                    '       </div>' +
+                    /*
                     '       <label for="admin-layerrights-theme">Theme</label>' +
                     '       <select id="admin-layerrights-theme"></select>\n' +
                     '       <label for="admin-layerrights-dataprovidere">Data provider</label>' +
                     '       <select id="admin-layerrights-dataprovider"></select>\n' +*/
                     '       <div class="admin-layerrights-layers">' +
-                    '       </div>' +
-                    '       <div class="controls"></div>' +
+                    '       </div>' +                    
                     '   </form>' +
                     '</div>\n'
             );
@@ -146,7 +152,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
         doSave : function () {
             "use strict";
             var me = this,
-                saveData = {"resource" : JSON.stringify(me.extractSelections()) };
+                saveData = { "resource": JSON.stringify(me.extractSelections()) };
 
             jQuery.ajax({
                 type: 'POST',
@@ -155,12 +161,17 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 timestamp: new Date().getTime(),
                
                 data: saveData,
-                success: function () {
-                    // TODO use promises
+                success: function (response) {
+                    if (response && response.error) {
+                        me.instance.showMessage(me.instance.getLocalization('error').title, me.instance.getLocalization('error')[response.error] || response.error);
+                    } else {
+                        me.instance.showMessage(me.instance.getLocalization('info').title, me.instance.getLocalization('info').success);
+                    }
                     me.updatePermissionsTable(me.activeRole, "ROLE");
                 },
-                error: function() {
-                    // TODO add error handling
+                error: function (jqXHR, textStatus, errorThrown) {
+                    var errorLoc = me.instance.getLocalization('error');                
+                    me.instance.showMessage(errorLoc.title, errorLoc[errorThrown] || errorLoc.defaultErrorMessage);
                 }
             });
         },
@@ -206,66 +217,27 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             // We're only supporting ROLE ATM, USER support might be added later
             me.getExternalIdsAjaxRequest("ROLE", 0);
         },
-
-        /**
-         * @method createLayerRightGrid
-         * Creates the permissions table as a String
-         * @param {Array} columnHeaders
-         * @param {Object} layerRightsJSON
-         * @return {String} Permissions table
-         */
-        createLayerRightGrid: function (columnHeaders, layerRightsJSON) {
-            "use strict";
-            var table = '<table class="layer-rights-table">',
-                i = 0,
-                tr = 0,
-                layerRight = null,
-                header = null,
-                value = null;
-
+        createLayerRightGrid2: function (columnHeaders) {
+            var table = '<table class="layer-rights-table stripe hover row-border" width="100%">';
             table += "<thead><tr>";
-            for (i  = 0; i < columnHeaders.length; i += 1) {
-                table += '<th>' + columnHeaders[i].name + '</th>';
-            }
-            table += "</tr></thead>";
-            var service = this.instance.getSandbox().getService('Oskari.mapframework.service.MapLayerService');
-
-            table += "<tbody>";
-            for (i = 0; tr < layerRightsJSON.length; tr += 1) {
-                layerRight = layerRightsJSON[tr];
-                var layer = service.findMapLayer(layerRight.id);
-
-                table += "<tr>";
-
-                // lets loop through header
-                for (i = 0; i < columnHeaders.length; i += 1) {
-                    header = columnHeaders[i];
-                    //select input value based on arrangement of header columns
-                    value = layerRight[header.id];
-                    var tooltip = header.name;
-
-                    if (header.id === 'name') {
-                        if(layer) {
-                            tooltip = layer.getLayerType() + '/' + layer.getInspireName() + '/' + layer.getOrganizationName();
-                            //value = '<div class="layer-icon ' + layer.getIconClassname() + '"></div> ' + value;
-                        }
-                        table += '<td><span class="layer-name" data-resource="' + layerRight.resourceName + 
-                            '" data-namespace="' + layerRight.namespace + 
-                            '" title="' + tooltip + 
-                            '">' + value + '</span></td>';
-                    } else if (value) {
-                        table += '<td><input type="checkbox" checked="checked" data-right="' + header.id + '" title="' + tooltip + '" /></td>';
-                    } else {
-                        table += '<td><input type="checkbox" data-right="' + header.id + '" title="' + tooltip + '" /></td>';
-                    }
+            for (i = 0; i < columnHeaders.length; i += 1) {
+                if (i == 0) {
+                    table += '<th class="layer-name">' + columnHeaders[i].name + '</th>';
+                } else {
+                    table += '<th>';
+                    table += columnHeaders[i].name;
+                    table += '<br /><input name="layer-rights-table-select-all-' + this.columns[i].id + '" value="1" id="layer-rights-table-select-all-' + this.columns[i].id + '" type="checkbox">';
+                    table += '</th>';
                 }
 
-                table += "</tr>";
             }
+            table += "</tr></thead>";
+            table += "<tbody>";
             table += "</tbody>";
-            return table;
-        },
+            table += "</table>";
 
+            return jQuery(table);
+        },
         /**
          * @method extractSelections
          * Returns dirty table rows as JSON
@@ -276,7 +248,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             var me = this,
                 data = [],
                 container = jQuery(me.container),
-                trs = container.find('tbody tr'),
+                trs = me.dataTable.$("tr"),
                 i = 0,
                 j = 0,
                 dataObj = null,
@@ -290,16 +262,17 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 dirty = false;
             for (i = 0; i < trs.length; i += 1) {
                 // TODO check if data has changed on this row before adding to output
-                dirty = false;
-                cleanDataObj = me.cleanData[i];
+                dirty = false;                
                 dataObj = {};
                 tr = jQuery(trs[i]);
                 tdName = tr.find('td span');
                 tds = tr.find('td input');
                 dataObj.name            = tdName.text();
                 dataObj.resourceName    = tdName.attr('data-resource');
-                dataObj.namespace       = tdName.attr('data-namespace');
+                dataObj.namespace = tdName.attr('data-namespace');
+                dataObj.id = tdName.attr('data-layer-id');
                 dataObj.roleId = me.activeRole;
+                cleanDataObj = me.cleanData[dataObj.id];
 
                 for (j = 0; j < tds.length; j += 1) {
                     td = jQuery(tds[j]);
@@ -348,14 +321,132 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 lang: Oskari.getLang(),
                 timestamp: new Date().getTime(),
                 externalId: activeRole,
+                dataType: 'json',
                //resourceType: "WMS_LAYER",
                 externalType: externalType
             }, function (result) {
                 // store unaltered data so we can do a dirty check on save
-                me.cleanData = result.resource;
-                var table = me.createLayerRightGrid(me.columns, result.resource);
+                me.cleanData = {};
+                for (var j = 0; j < result.resource.length; j++) {
+                    me.cleanData[result.resource[j].id] = result.resource[j];
+                }
+
+                var table = me.createLayerRightGrid2(me.columns);
                 jQuery(me.container).find('.admin-layerrights-layers').empty().append(table);
+
+                var dataTableColumns = [];
+                for (var i = 0; i < me.columns.length; i++) {
+                    var item = { "data": me.columns[i].id };
+                    dataTableColumns.push(item);
+                }
+                me.dataTable = table.dataTable({
+                    "data": result.resource,
+                    "columns": dataTableColumns,
+                    "dom": '<<"info-wrapper"if<"clearfix">><t>>',
+                    "paging": false,
+                    "scrollY": "auto",
+                    "language": {
+                        "url": me.datatableLocaleLocation,
+                        "sThousands": ""
+                    },
+                    "columnDefs": [
+                        {
+                            "render": function (data, type, row, meta) {
+                                var columnId = meta.col;
+                                var id = me.columns[columnId].id;
+                                var tooltip = "empty";
+                                var inputx = data === true ?
+                                    jQuery('<input type="checkbox" checked="checked" data-right="' + id + '" title="' + tooltip + '" />') :
+                                    jQuery('<input type="checkbox" data-right="' + id + '" title="' + tooltip + '" />');
+                                return inputx[0].outerHTML;
+                            },
+                            "className" : "dt-center",
+                            "sortable" : false,
+                            "targets": [1, 2, 3, 4],
+                            "searchable" : false
+                        },
+                        {
+                            "render": function (data, type, row, meta) {
+                                var tooltip = "empty";
+                                var inputx = jQuery('<span class="layer-name" data-resource="' + row.resourceName +
+                                    '" data-layer-id="' + row.id +
+                                    '" data-namespace="' + row.namespace +
+                                    '" title="' + tooltip +
+                                    '">' + data + '</span>');
+                                return inputx[0].outerHTML;
+                            },
+                            "className": "dt-left",
+                            "sortable": true,
+                            "targets": [0],
+                            "searchable": true
+                        }                        
+                    ]
+                });
+
+                //apply filter also to 'select all' checkboxes
+                table.on('search.dt', function () {
+                    for (var i = 1; i < me.columns.length; i++) {
+                        var columnId = me.columns[i].id;
+                        me._setSelectAllCheckbox(columnId, table);
+                    }
+                });
+
+                for (var i = 1; i < me.columns.length; i++) {
+
+                    var columnId = me.columns[i].id;
+
+                    //handle click on 'select all' checkbox
+                    $('#layer-rights-table-select-all-' + columnId).on('click', { columnId: columnId, table: table }, me._handleSelectAllCheckbox);
+
+                    //handle change of a checkboxes in the column
+                    table.on('change', 'input[type="checkbox"][data-right="' + columnId + '"]', { columnId: columnId, table: table, me: me }, me._handleDataRightCheckbox);
+
+                    //set proper status in "select all" checkbox
+                    me._setSelectAllCheckbox(columnId, table);
+                }
             });
+        },
+
+        _handleSelectAllCheckbox: function(event) {
+            var columnId = event.data.columnId,
+                table = event.data.table,
+                rows = table.DataTable().rows({ 'search': 'applied' }).nodes();
+                        
+            $('input[type="checkbox"][data-right="' + columnId + '"]', rows).prop('checked', this.checked);
+        },
+
+        _handleDataRightCheckbox: function(event) {
+            var columnId = event.data.columnId,
+                table = event.data.table,
+                me = event.data.me;
+
+            me._setSelectAllCheckbox(columnId, table);
+        },
+
+        /**
+         * @method _setSelectAllCheckbox
+         * 
+         * Check if all checkboxes in the column are selected (take into account only visible elements after applied filter) 
+         * and set proper status for the 'select all' checkbox
+         */
+        _setSelectAllCheckbox: function(columnId, table) {
+            var selectAllCheckbox = $('#layer-rights-table-select-all-' + columnId).get(0),
+                rows = table.DataTable().rows({ 'search': 'applied' }).nodes(),
+                checkedElements = $('input:checked[type="checkbox"][data-right="' + columnId + '"]', rows);
+
+            if (checkedElements.length == 0) {
+                //no element is checked
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+            } else if (checkedElements.length < rows.length) {
+                //some elements are checked
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = true;
+            } else if (checkedElements.length == rows.length) {
+                //all elements are checked
+                selectAllCheckbox.checked = true;
+                selectAllCheckbox.indeterminate = false;
+            }
         },
 
         /**

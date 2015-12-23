@@ -1,0 +1,1 @@
+node uglify\bin\uglifyjs -o %2 %1

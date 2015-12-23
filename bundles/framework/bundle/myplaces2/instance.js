@@ -222,8 +222,8 @@ function() {
         var reqName = 'PersonalData.AddTabRequest';
         var reqBuilder = sandbox.getRequestBuilder(reqName);
   
-        var req = reqBuilder(title, content, first);
-        sandbox.request(this, req);
+        var req = reqBuilder(title, title, content, first); //title twice because request now needs some id also
+		//sandbox.request(this, req);
     },
     /**
      * @method stop

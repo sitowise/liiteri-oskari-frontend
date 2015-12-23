@@ -1,11 +1,13 @@
 th.asc {
-  background-image: url('/Oskari/resources/framework/bundle/divmanazer/images/asc_arrow.png');
-  background-repeat: no-repeat;
-  background-position: center center; }
-th.desc {
   background-image: url('/Oskari/resources/framework/bundle/divmanazer/images/desc_arrow.png');
   background-repeat: no-repeat;
-  background-position: center center; }
+  background-position: center left;
+  padding-left: 10px; }
+th.desc {
+  background-image: url('/Oskari/resources/framework/bundle/divmanazer/images/asc_arrow.png');
+  background-repeat: no-repeat;
+  background-position: center left;
+  padding-left: 10px; }
 
 div.column-selector-placeholder {
   border-style: none;

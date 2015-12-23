@@ -4,6 +4,7 @@ div#visualization-form div.renderButton {
   margin: 5px; }
 
 div.renderdialog label {
+  margin-bottom: 0px;
   padding-top: 5px;
   padding-bottom: 5px; }
 
@@ -68,8 +69,10 @@ div.simpleColorChooser {
   top: -0.3em; }
 
 .renderdialog .ui-slider .ui-slider-handle {
+  border: 0 none !important;
   cursor: default;
   height: 1.2em;
+  margin-top: 2px;
   position: absolute;
   width: 1.2em;
   z-index: 2; }
@@ -94,18 +97,18 @@ div.pointform div.column1 {
 div.lineform div.column1, div.areaform div.column1 {
   float: left;
   width: 130px;
-  height: 225px;
+  height: 270px;
   padding-left: 5px;
   padding-right: 5px; }
 
 div.pointform div.column2, div.lineform div.column2, div.areaform div.column22 {
   float: right;
-  width: 320px; }
+  width: 350px; }
 
 div.renderdialog div.column21, div.areaform div.column221 {
   float: left;
-  width: 155px;
-  height: 170px;
+  width: 175px;
+  height: 200px;
   padding-left: 5px;
   padding-right: 5px; }
 
@@ -118,7 +121,8 @@ div.pointform div.column22, div.lineform div.column22, div.areaform div.column22
 
 div.areaform div.column2 {
   float: right;
-  width: 485px; }
+  width: 565px;
+  height: 310px;  }
 
 div.areaform div.custom-fill {
   width: 155px; }
@@ -134,6 +138,7 @@ div.renderdialog div.sizer-values {
   position: relative;
   margin-left: 5px;
   margin-top: 5px;
+  margin-bottom: 11px;
   width: 110px;
   height: 10px; }
 
@@ -193,8 +198,10 @@ div.renderdialog div.colorcolumn22 {
 
 div.renderdialog input.custom-color {
   width: 25px;
-  height: 10px;
-  margin-top: 5px; }
+  height: 20px;
+  margin-top: 5px;
+  padding: 8px 5px;
+}
 
 div.renderdialog input.custom-color:disabled {
   background: #dddddd; }
@@ -210,10 +217,24 @@ div.renderdialog input.linewidth {
   margin-top: 5px; }
 
 div.pointvisualization {
-  width: 510px; }
+  width: 540px; }
 
 div.linevisualization {
-  width: 500px; }
+  width: 530px; }
 
 div.areavisualization {
-  width: 650px; }
+  width: 730px; }
+  
+div.renderdialog div.container {
+	width: auto;
+	padding: 0;
+}
+
+div.renderdialog, div.renderdialog * {
+	 box-sizing: content-box;
+}
+
+div.renderdialog {
+	 box-sizing: content-box;
+	 max-width: 800px;
+}

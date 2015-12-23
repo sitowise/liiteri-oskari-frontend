@@ -23,9 +23,12 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.LineForm"
             color: this.defaultValues.color
         };
 
-        this.styleButtonNames = ["icon-line-basic", "icon-line-dashed", "icon-double-line"];
-        this.capButtonNames = ["icon-line-flat_cap", "icon-line-round_cap"];
-        this.cornerButtonNames = ["icon-corner-sharp", "icon-corner-round"];
+        //this.styleButtonNames = ["icon-line-basic", "icon-line-dashed", "icon-double-line"];
+        //this.capButtonNames = ["icon-line-flat_cap", "icon-line-round_cap"];
+        //this.cornerButtonNames = ["icon-corner-sharp", "icon-corner-round"];
+        this.styleButtonNames = ["icon-line-basic", "icon-line-dashed"];
+        this.capButtonNames = [];
+        this.cornerButtonNames = [];
 
         this.basicColors = ["#ffffff", "#666666", "#ffde00", "#f8931f", "#ff3334", "#bf2652",
             "#000000", "#cccccc", "#652d90", "#3233ff", "#26bf4b", "#00ff01"
@@ -46,10 +49,10 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.LineForm"
             '<div class="column1">' +
             '<label>' + this.loc.style.label + '</label>' +
             '<div class="style icon-buttons"></div>' +
-            '<label>' + this.loc.cap.label + '</label>' +
-            '<div class="cap icon-buttons"></div>' +
-            '<label>' + this.loc.corner.label + '</label>' +
-            '<div class="corner icon-buttons"></div>' +
+//            '<label>' + this.loc.cap.label + '</label>' +
+//            '<div class="cap icon-buttons"></div>' +
+//            '<label>' + this.loc.corner.label + '</label>' +
+//            '<div class="corner icon-buttons"></div>' +
             '<label>' + this.loc.width.label + '</label><br>' +
             '<div class="width"></div>' +
             '</div>' +
@@ -411,7 +414,7 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.LineForm"
                 me.values.shape = me.defaultValues.shape;
                 renderDialog.close();
             });
-            renderDialog.show(title, dialogContent, [saveBtn, cancelBtn]);
+            renderDialog.show(title, dialogContent, [cancelBtn, saveBtn]);
             renderDialog.moveTo(renderButton, 'top');
 
             me._updatePreview();

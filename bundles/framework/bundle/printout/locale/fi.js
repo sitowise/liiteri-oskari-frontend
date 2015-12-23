@@ -88,23 +88,31 @@ Oskari.registerLocalization({
             "content" : {
                 "options" : [{
                         "id" : "pageLogo",
-                        "label" : "Näytä paikkatietoikkunan logo",
+                        "label": "Näytä Liiteri-logo",
                         "tooltip" : "Voit halutessasi piilottaa logon",
-                        "checked" : "checked"
+                        "checked" : "checked",
+                        "cssClass" : "printout_pdfOnly"
                     },{
                         "id" : "pageScale",
                         "label" : "Näytä mittakaava",
                         "tooltip" : "Voit halutessasi lisätä karttaan mittakaavan",
-                        "checked" : "checked"                        
+                        "checked" : "checked"
                     },{
                         "id" : "pageDate",
                         "label" : "Näytä päivämäärä",
                         "tooltip" : "Voit halutessasi lisätä tulosteeseen päivämäärän",
-                        "checked" : "checked"
+                        "checked" : "checked",
+                        "cssClass" : "printout_pdfOnly"
+                    }, {
+                        "id": "pageLegend",
+                        "label": "Lisää karttatasojen legenda (tulostuu toiselle sivulle)",
+                        "tooltip": "You can add layers legend to the printout",
+                        "checked": "checked",
+                        "cssClass" : "printout_pdfOnly"
                     }]
             },
             "legend" : {
-                "label" : "Legenda",
+                "label": "Teemakartan legenda",
                 "tooltip" : "Valitse legendan paikka - ei piirretä, jos paikkaa ei ole valittuna",
                 "options" : [{
                         "id" : "oskari_legend_NO",

@@ -67,16 +67,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
             // sortable component
             this.template = jQuery('<ul class="selectedLayersList sortable" ' + 'data-sortable=\'{' + 'itemCss: "li.layer.selected", ' + 'handleCss: "div.layer-title" ' + '}\'></ul>');
 
-            this.templateLayer = jQuery('<li class="layerselection2 layer selected">' + '<div class="layer-info">' + '<div class="layer-icon"></div>' + '<div class="layer-tool-remove"></div>' + '<div class="layer-title"><h4></h4></div>' + '</div>' + '<div class="stylesel">' + '<label for="style">' + loc.style + '</label>' + '<select name="style"></select></div>' + '<div class="layer-tools volatile">' + '</div>' + '</li>');
+            this.templateLayer = jQuery('<li class="layerselection2 layer selected">' + '<div class="layer-info">' + '<div class="layer-icon"></div>' + '<div class="layer-tool-remove"></div>' + '<div class="layer-title"></div>' + '</div>' + '<div class="stylesel">' + '<label for="style">' + loc.style + '</label>' + '<select name="style"></select></div>' + '<div class="layer-tools volatile">' + '</div>' + '</li>');
 
             // footers are changed based on layer state
             this.templateLayerFooterTools = jQuery('<div class="right-tools">' + '<div class="layer-rights"></div>' + '<div class="object-data"></div>' + '<div class="layer-description">' + '<div class="icon-info"></div>' + '</div></div>' + '<div class="left-tools">' + '<div class="layer-visibility">' + '<a href="JavaScript:void(0);">' + loc.hide + '</a>' + '&nbsp;' + '<span class="temphidden" ' + 'style="display: none;">' + loc.hidden + '</span>' + '</div>' + '<div class="oskariui layer-opacity">' + '<div class="layout-slider" id="layout-slider">' + '</div> ' + '<div class="opacity-slider" style="display:inline-block">' + '<input type="text" name="opacity-slider" class="opacity-slider opacity" id="opacity-slider" />%</div>' + '</div>' + '</div>');
 
-            this.templateLayerFooterHidden = jQuery('<p class="layer-msg">' + '<a href="JavaScript:void(0);">' + loc.show + '</a> ' + loc.hidden + '</p>');
+            this.templateLayerFooterHidden = jQuery('<div class="layer-msg">' + '<a href="JavaScript:void(0);">' + loc.show + '</a> ' + loc.hidden + '<div class="right-tools">' + '<div class="layer-description">' + '<div class="icon-info"></div>' + '</div></div></div>');
 
-            this.templateLayerFooterOutOfScale = jQuery('<p class="layer-msg">' + loc["out-of-scale"] + ' <a href="JavaScript:void(0);">' + loc["move-to-scale"] + '</a></p>');
+            this.templateLayerFooterOutOfScale = jQuery('<div class="layer-msg">' + loc["out-of-scale"] + ' <a href="JavaScript:void(0);">' + loc["move-to-scale"] + '</a>' + '<div class="right-tools">' + '<div class="layer-description">' + '<div class="icon-info"></div>' + '</div></div></div>');
 
-            this.templateLayerFooterOutOfContentArea = jQuery('<p class="layer-msg">' + loc["out-of-content-area"] + ' <a href="JavaScript:void(0);">' + loc["move-to-content-area"] + '</a></p>');
+            this.templateLayerFooterOutOfContentArea = jQuery('<div class="layer-msg">' + loc["out-of-content-area"] + ' <a href="JavaScript:void(0);">' + loc["move-to-content-area"] + '</a>' + '<div class="right-tools">' + '<div class="layer-description">' + '<div class="icon-info"></div>' + '</div></div></div>');
         },
         /**
          * @method stopPlugin
@@ -126,6 +126,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
             var me = this,
                 celOriginal = jQuery(this.container);
             celOriginal.empty();
+			
+			//Information that user can change order of layers by dragging
+//			var description = jQuery('<h4 class="flyoutDescription"></h4>');
+//			description.append(this.instance.getLocalization('desc'));
+//			celOriginal.append(description);
+			
             var listContainer = this.template.clone();
             celOriginal.append(listContainer);
 
@@ -316,7 +322,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
          * layer to render
          * @return {jQuery} reference to the created layer container
          */
-        _createLayerContainer: function (layer) {
+        _createLayerContainer: function (layer, goupName) {
 
             var me = this,
                 sandbox = me.instance.getSandbox(),
@@ -327,8 +333,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 layerDiv = this.templateLayer.clone();
 
             // setup id
+			
             layerDiv.attr('layer_id', layerId);
-            layerDiv.find('div.layer-title h4').append(layer.getName());
+            
+            var themeName = groupName;
+            
+            if(typeof themeName === 'undefined' || themeName === null) {
+                themeName = layer.getInspireName();
+            }
+            
+			var layerTitle = (themeName != null && themeName != '') ? themeName + ": " + layer.getName() : layer.getName();
+			layerDiv.find('div.layer-title').append(layerTitle);
+			layerDiv.find('div.layer-title').append(" ");
             layerDiv.find('div.layer-title').append(layer.getDescription());
 
             this._updateStyles(layer, layerDiv);
@@ -538,6 +554,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 sandbox.request(me.instance.getName(), request);
                 return false;
             });
+            
+            // data url link
+            subLmeta = false;
+            if (!layer.getMetadataIdentifier()) {
+                //Check if sublayers have metadata info     
+                subLayers = layer.getSubLayers();
+
+                if (subLayers && subLayers.length > 0) {
+                    subLmeta = true;
+                    for (s = 0; s < subLayers.length; s += 1) {
+
+                        subUuid = subLayers[s].getMetadataIdentifier();
+                        if (!subUuid || subUuid === "") {
+                            subLmeta = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!subLmeta) {
+                    // no functionality -> hide
+                    msg.find('div.layer-description').hide();
+                }
+            }
+            
+            if ((layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) || subLmeta) {
+                msg.find('div.icon-info').click(function () {
+                    window.open(layer.getMetadataIdentifier());
+                });
+            } else {
+                msg.find('div.icon-info').hide();
+            }
+            
             return msg;
         },
         /**
@@ -563,6 +612,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 sandbox.request(me.instance.getName(), request);
                 return false;
             });
+            
+            // data url link
+            subLmeta = false;
+            if (!layer.getMetadataIdentifier()) {
+                //Check if sublayers have metadata info     
+                subLayers = layer.getSubLayers();
+
+                if (subLayers && subLayers.length > 0) {
+                    subLmeta = true;
+                    for (s = 0; s < subLayers.length; s += 1) {
+
+                        subUuid = subLayers[s].getMetadataIdentifier();
+                        if (!subUuid || subUuid === "") {
+                            subLmeta = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!subLmeta) {
+                    // no functionality -> hide
+                    msg.find('div.layer-description').hide();
+                }
+            }
+            
+            if ((layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) || subLmeta) {
+                msg.find('div.icon-info').click(function () {
+                    window.open(layer.getMetadataIdentifier());
+                });
+            } else {
+                msg.find('div.icon-info').hide();
+            }
+            
             return msg;
         },
         /**
@@ -588,6 +670,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 sandbox.request(me.instance.getName(), request);
                 return false;
             });
+            
+            // data url link
+            subLmeta = false;
+            if (!layer.getMetadataIdentifier()) {
+                //Check if sublayers have metadata info     
+                subLayers = layer.getSubLayers();
+
+                if (subLayers && subLayers.length > 0) {
+                    subLmeta = true;
+                    for (s = 0; s < subLayers.length; s += 1) {
+
+                        subUuid = subLayers[s].getMetadataIdentifier();
+                        if (!subUuid || subUuid === "") {
+                            subLmeta = false;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!subLmeta) {
+                    // no functionality -> hide
+                    msg.find('div.layer-description').hide();
+                }
+            }
+            
+            if ((layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) || subLmeta) {
+                msg.find('div.icon-info').click(function () {
+                    window.open(layer.getMetadataIdentifier());
+                });
+            } else {
+                msg.find('div.icon-info').hide();
+            }
+            
             return msg;
         },
         /**
@@ -637,42 +752,51 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                         }
                     }
                 }
+                
                 if (!subLmeta) {
                     // no functionality -> hide
                     tools.find('div.layer-description').hide();
                 }
             }
-            if (layer.getMetadataIdentifier() || subLmeta) {
-                tools.find('div.icon-info').bind('click', function () {
-                    var rn = 'catalogue.ShowMetadataRequest',
-                        uuid = layer.getMetadataIdentifier(),
-                        additionalUuids = [],
-                        additionalUuidsCheck = {};
-                    additionalUuidsCheck[uuid] = true;
-
-                    var subLayers = layer.getSubLayers(),
-                        s,
-                        subUuid;
-                    if (subLayers && subLayers.length > 0) {
-                        for (s = 0; s < subLayers.length; s++) {
-                            subUuid = subLayers[s].getMetadataIdentifier();
-                            if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
-                                additionalUuidsCheck[subUuid] = true;
-                                additionalUuids.push({
-                                    uuid: subUuid
-                                });
-                            }
-                        }
-
-                    }
-
-                    sandbox.postRequestByName(rn, [{
-                            uuid: uuid
-                        },
-                        additionalUuids
-                    ]);
+            if ((layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) || subLmeta) {
+                tools.find('div.icon-info').click(function () {
+                    window.open(layer.getMetadataIdentifier());
                 });
+            } else {
+                tools.find('div.icon-info').hide();
             }
+            
+//            if (false) {
+//                tools.find('div.icon-info').bind('click', function () {
+//                    var rn = 'catalogue.ShowMetadataRequest',
+//                        uuid = layer.getMetadataIdentifier(),
+//                        additionalUuids = [],
+//                        additionalUuidsCheck = {};
+//                    additionalUuidsCheck[uuid] = true;
+//
+//                    var subLayers = layer.getSubLayers(),
+//                        s,
+//                        subUuid;
+//                    if (subLayers && subLayers.length > 0) {
+//                        for (s = 0; s < subLayers.length; s++) {
+//                            subUuid = subLayers[s].getMetadataIdentifier();
+//                            if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
+//                                additionalUuidsCheck[subUuid] = true;
+//                                additionalUuids.push({
+//                                    uuid: subUuid
+//                                });
+//                            }
+//                        }
+//
+//                    }
+//
+//                    sandbox.postRequestByName(rn, [{
+//                            uuid: uuid
+//                        },
+//                        additionalUuids
+//                    ]);
+//                });
+//            }
 
             var closureMagic = function (tool) {
                 return function () {
@@ -736,14 +860,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
          * If isSelected is true, constructs a matching layer container and adds it
          * to the UI.
          */
-        handleLayerSelectionChanged: function (layer, isSelected, keepLayersOrder) {
+        handleLayerSelectionChanged: function (layer, isSelected, keepLayersOrder, groupName) {
             // add layer
             if (isSelected) {
                 var me = this,
                     sandbox = me.instance.getSandbox(),
                     scale = sandbox.getMap().getScale(),
                     listContainer = jQuery('ul.selectedLayersList'),
-                    layerContainer = this._createLayerContainer(layer),
+                    layerContainer = this._createLayerContainer(layer, groupName),
                     footer = layerContainer.find('div.layer-tools'), // footer tools
                     previousLayers = [];
                 // insert to top

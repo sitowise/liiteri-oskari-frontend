@@ -1,6 +1,99 @@
 .admin-layerrights-layers .layer-rights-table {
-  margin-top: 20px; }
+   }
   .admin-layerrights-layers .layer-rights-table th {
     padding: 2px 5px; }
   .admin-layerrights-layers .layer-rights-table th, .admin-layerrights-layers .layer-rights-table td {
-    text-align: center; }
+    text-align: left; }
+
+.admin-layerrights-layers .layer-rights-table th.layer-name {
+    text-align: left;
+    min-width: 250px;
+}
+
+.admin-layerrights-layers .layer-rights-table span.layer-name {
+    margin-left: 5px;
+}
+
+.admin-layerrights label {
+    margin-left: 10px;
+}
+
+.admin-layerrights .controls {
+    float: right;
+    margin-right: 10px;
+}
+
+.admin-layerrights .dataTables_wrapper {
+    height: 100%;
+}
+
+@media screen {
+.admin-layerrights .header-container {
+    height: 35px;
+}
+.admin-layerrights .admin-layerrights-layers {
+    position: absolute;
+    top: 35px;
+    overflow: auto;
+    bottom: 0;  
+    width: 100%;
+    padding-top: 5px;
+}
+
+.admin-layerrights .dataTables_scrollBody {
+    overflow: auto;
+    position: absolute;
+    top: 89px;
+    bottom: 0;
+}
+
+.admin-layerrights .dataTables_scrollHead {
+    height: 59px;
+}
+
+.admin-layerrights .info-wrapper {
+    height: 30px;
+}
+
+
+}    
+@media only screen and (min-width: 1200px) {
+.admin-layerrights .header-container {
+    height: 35px;
+}
+
+.admin-layerrights .admin-layerrights-layers {
+    position: absolute;
+    top: 35px;
+    overflow: auto;
+    bottom: 0;  
+    width: 100%;
+    padding-top: 5px;
+}
+
+.admin-layerrights .dataTables_scrollBody {
+    overflow: auto;
+    position: absolute;
+    top: 89px;
+    bottom: 0;
+}
+
+.admin-layerrights .dataTables_scrollHead {
+    height: 59px;
+}
+
+.admin-layerrights .info-wrapper {
+    height: 30px;
+}
+}
+
+
+
+.admin-layerrights .dataTables_info {
+    float: right;
+    margin-right: 0.75em;
+}
+
+.admin-layerrights .dataTables_filter {
+    float: left;
+}

@@ -24,7 +24,9 @@ Oskari.registerLocalization(
                 "terms": "Terms of Use",
                 "dataSources": "Data sources",
                 "layersHeader": "Map Layers",
-                "indicatorsHeader": "Indicators"
+                "indicatorsHeader": "Indicators",
+                "emptyDataSource": "Empty",
+                "close" : "Close"
             },
             "DataSourcePlugin": {
                 "link": "Data source",

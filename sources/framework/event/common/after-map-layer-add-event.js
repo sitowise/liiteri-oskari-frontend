@@ -22,10 +22,11 @@ Oskari.clazz.define('Oskari.mapframework.event.common.AfterMapLayerAddEvent',
      *            isBasemap (optional, defaults to false)
      */
 
-    function (mapLayer, keepLayersOrder, isBasemap) {
+    function (mapLayer, keepLayersOrder, isBasemap, groupName) {
         this._creator = null;
         this._mapLayer = mapLayer;
         this._keepLayersOrder = keepLayersOrder;
+        this._groupName = groupName;
 
         if (isBasemap) {
             this._isBasemap = isBasemap;
@@ -65,6 +66,13 @@ Oskari.clazz.define('Oskari.mapframework.event.common.AfterMapLayerAddEvent',
          */
         isBasemap: function () {
             return this._isBasemap;
+        },
+        /**
+         * @method getGroupName
+         * @return {String} group name
+         */
+        getGroupName : function() {
+            return this._groupName;
         }
     }, {
         /**

@@ -2,15 +2,15 @@ Oskari.registerLocalization({
     "lang": "fi",
     "key": "Analyse",
     "value": {
-        "title": "Analyysi",
-        "flyouttitle": "Analyysi",
+        "title": "Luo puskurivyöhyke",
+        "flyouttitle": "Luo puskurivyöhyke",
         "desc": "",
-        "btnTooltip": "Analyysi",
-        "notLoggedIn": "Vain kirjautunut käyttäjä voi tehdä WFS tasoille analyysejä. <a href='/web/fi/login'>Kirjaudu palveluun</a>.",
+        "btnTooltip": "Luo puskurivyöhyke",
+        "notLoggedIn": "Vain kirjautunut käyttäjä voi tehdä WFS tasoille analyysejä.",
         "AnalyseView": {
-            "title": "Analyysi",
+            "title": "Luo puskurivyöhyke",
             "content": {
-                "label": "Aineisto",
+                "label": "Valitse aineisto",
                 "tooltip": "Lisää tietoaineisto painamalla [lisää tietoaineisto] painiketta",
                 "features": {
                     "title": "Piirrä kohde",
@@ -38,26 +38,26 @@ Oskari.registerLocalization({
                     "classForMethod": "buffer",
                     "selected": true,
                     "tooltip": "Lisää valittujen kohteiden ympärille vyöhykkeet ja käyttää näitä vyöhyke-geometrioita (buffer) analyysissä"
-                }, {
-                    "id": "oskari_analyse_aggregate",
-                    "label": "Kooste",
-                    "classForPreview": "aggregate",
-                    "tooltip": "Laskee kohteen ominaisuuksille aggregointiominaisuuksia esim. summat"
-                }, {
-                    "id": "oskari_analyse_union",
-                    "label": "Yhdiste",
-                    "classForPreview": "union",
-                    "tooltip": "Kohteiden yhdistäminen taulukosta valitsemalla tai yhteisten ominaisuustietoarvojen perusteella"
-                }, {
-                    "id": "oskari_analyse_intersect",
-                    "label": "Leikkaavien kohteiden suodatus",
-                    "classForPreview": "intersect",
-                    "tooltip": "Valitaan uudet kohteet leikkaamalla leikkaavan tason kohteilla leikattavaa tasoa"
-                }, {
-                    "id": "oskari_analyse_layer_union",
-                    "label": "Analyysitasojen yhdiste",
-                    "classForPreview": "layer_union",
-                    "tooltip": "Yhdistää analyysitasoja, joilla on samat ominaisuustietokentät"
+//                }, {
+//                    "id": "oskari_analyse_aggregate",
+//                    "label": "Kooste",
+//                    "classForPreview": "aggregate",
+//                    "tooltip": "Laskee kohteen ominaisuuksille aggregointiominaisuuksia esim. summat"
+//                }, {
+//                    "id": "oskari_analyse_union",
+//                    "label": "Yhdiste",
+//                    "classForPreview": "union",
+//                    "tooltip": "Kohteiden yhdistäminen taulukosta valitsemalla tai yhteisten ominaisuustietoarvojen perusteella"
+//                }, {
+//                    "id": "oskari_analyse_intersect",
+//                    "label": "Leikkaavien kohteiden suodatus",
+//                    "classForPreview": "intersect",
+//                    "tooltip": "Valitaan uudet kohteet leikkaamalla leikkaavan tason kohteilla leikattavaa tasoa"
+//                }, {
+//                    "id": "oskari_analyse_layer_union",
+//                    "label": "Analyysitasojen yhdiste",
+//                    "classForPreview": "layer_union",
+//                    "tooltip": "Yhdistää analyysitasoja, joilla on samat ominaisuustietokentät"
                 }]
             },
             "aggregate": {
@@ -85,15 +85,18 @@ Oskari.registerLocalization({
                 "attribute": "Valitse ominaisuustieto"
             },
             "buffer_size": {
-                "label": "Vyöhykkeen koko (m)",
+                "label": "Valitse vyöhykkeen koko (m)",
                 "tooltip": "Anna vyöhykkeen koko"
             },
+            "includeOriginal": {
+                "label": "Sisällytä alkuperäinen kohde"
+            },
             "analyse_name": {
-                "label": "Analyysin nimi",
-                "tooltip": "Anna analyysin nimi"
+                "label": "Vyöhykkeen nimi",
+                "tooltip": "Anna vyöhykkeen nimi"
             },
             "settings": {
-                "label": "Parametrit",
+                "label": "Asetukset",
                 "tooltip": "Anna parametrit analyysia varten. Parametrit riippuvat valitusta suodattimesta ja menetelmästä"
             },
             "intersect": {
@@ -119,7 +122,7 @@ Oskari.registerLocalization({
                 }]
             },
             "params": {
-                "label": "Säilytettävät ominaisuustiedot",
+                "label": "Valitse säilytettävät ominaisuustiedot",
                 "tooltip": "",
                 "options": [{
                     "id": "oskari_analyse_all",
@@ -142,9 +145,9 @@ Oskari.registerLocalization({
             },
             "buttons": {
                 "save": "Tallenna",
-                "analyse": "Jatka analyysia",
-                "data": "Päivitä tietoaineisto",
-                "cancel": "Poistu",
+                "analyse": "Luo vyöhyke",
+                "data": "Valitse lähtöaineisto",
+                "cancel": "Sulje",
                 "ok": "OK"
             },
             "filter": {
@@ -209,8 +212,8 @@ Oskari.registerLocalization({
                 "Unable_to_process_aggregate_union": "Yhdisteen koosteen prosessointi epäonnistui",
                 "Unable_to_get_features_for_union": "Koosteen input kohteiden haku epäonnistui",
                 "Unable_to_store_analysis_data": "Analyysin tallennus epäonnistui",
-                "Unable_to_get_analysisLayer_data": "Analyysitason tietojen parsinta epäonnistui"
-
+                "Unable_to_get_analysisLayer_data": "Analyysitason tietojen parsinta epäonnistui",
+				"server_error_key_limit": "Sallittujen GIS aineistojen määrä on ylittynyt."
             },
             "infos": {
                 "title": "Tiedoksi",
@@ -264,9 +267,9 @@ Oskari.registerLocalization({
                 "delete": " "
             },
             "title": "Analyysit",
-            "confirmDeleteMsg": "Haluatko poistaa analyysin:",
+            "confirmDeleteMsg": "Haluatko poistaa analyysin: ",
             "buttons": {
-                "ok": "OK",
+                "ok": "Sulje",
                 "cancel": "Peruuta",
                 "delete": "Poista"
             },

@@ -26,7 +26,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
         this.printoutHandler = undefined;
         this.isMapStateChanged = true;
         this.state = undefined;
-        this.geoJson = undefined;
+        this.geoJson = {};
         this.tableJson = undefined;
         // Additional data for each printable layer
         this.tileData = undefined;
@@ -111,7 +111,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
 
             // requesthandler
             this.printoutHandler = Oskari.clazz.create('Oskari.mapframework.bundle.printout.request.PrintMapRequestHandler', sandbox, function () {
-                me.instance.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me.instance, 'attach']);
+                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me, 'attach']);
             });
             sandbox.addRequestHandler('printout.PrintMapRequest', this.printoutHandler);
             // request toolbar to add buttons
@@ -136,6 +136,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                 }
             }
 
+            $(".tool.tool-print").appendTo($("[tbgroup=default-myplaces]"));
+            
             // create the PrintService for handling ajax calls
             // and common functionality.
             var printService = Oskari.clazz.create('Oskari.mapframework.bundle.printout.service.PrintService', me);
@@ -264,7 +266,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                 // view/BasicPrintOut.js should be changed as well
                 // to parse the geoJson for the backend.
                 if (geoJson) {
-                    this.geoJson = geoJson;
+                    this.geoJson[geoJson.id] = geoJson;                
                 }
                 // Save the tile data per layer for later use.
                 if (tileData && layerId) {
@@ -415,7 +417,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
         setPublishMode: function (blnEnabled) {
             var me = this,
                 map = jQuery('#contentMap'),
-                tools = jQuery('#maptools'),
+                tools = jQuery('#mapiconsplugin'),
                 i;
 
             // check if statsgrid mode is on
@@ -438,7 +440,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
 
                 //me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [undefined, 'close']);
                 jQuery(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', 'none');
-
+                //FIXME: consider sending event
+                tools.css('display', 'none');
 
                 // proceed with printout view
                 if (!this.printout) {
@@ -458,6 +461,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                     delete me.sandbox._mapMode;
                 }
                 if (this.printout) {
+                    tools.css('display', '');
                     jQuery(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', '');
                     request = me.sandbox.getRequestBuilder('userinterface.UpdateExtensionRequest')(me, 'close', me.getName());
                     me.sandbox.request(me.getName(), request);

@@ -48,39 +48,6 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
             mapUrlPrefix = me.conf ? me.getSandbox().getLocalizedProperty(me.conf.mapUrlPrefix) : null,
             buttonGroups = [
                     {
-                        'name' : 'history',
-                        'buttons': {
-                            'reset' : {
-                                iconCls: 'tool-reset',
-                                tooltip: loc.history.reset,
-                                sticky: false,
-                                callback: function () {
-                                    // statehandler reset state
-                                    rb = me.getSandbox().getRequestBuilder('StateHandler.SetStateRequest');
-                                    if (rb) {
-                                        me.getSandbox().request(me, rb());
-                                    }
-                                }
-                            },
-                            'history_back' : {
-                                iconCls: 'tool-history-back',
-                                tooltip: loc.history.back,
-                                sticky: false,
-                                callback: function () {
-                                    me.getSandbox().request(me, reqBuilder('map_control_tool_prev'));
-                                }
-                            },
-                            'history_forward' : {
-                                iconCls: 'tool-history-forward',
-                                tooltip: loc.history.next,
-                                sticky: false,
-                                callback: function () {
-                                    me.getSandbox().request(me, reqBuilder('map_control_tool_next'));
-                                }
-                            }
-                        }
-                    },
-                    {
                         'name' : 'basictools',
                         'buttons': {
                             'zoombox' : {
@@ -100,7 +67,7 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
                                 sticky: true,
                                 callback: function () {
                                     rn = 'map_control_navigate_tool';
-                                    me.getSandbox().request(me, gfiReqBuilder(true));
+                                    me.getSandbox().request(me, gfiReqBuilder(false));
                                     me.getSandbox().request(me, reqBuilder(rn));
                                 }
                             },
@@ -123,7 +90,29 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
                                     me.getSandbox().request(me, gfiReqBuilder(false));
                                     me.getSandbox().request(me, reqBuilder(rn));
                                 }
-                            }
+                            },
+							'featureinfo' : {
+								iconCls: 'tool-feature-info',
+                                tooltip: loc.featureinfo,
+                                sticky: true,
+                                callback: function () {
+                                    me.getSandbox().request(me, gfiReqBuilder(true));
+                                }
+							},
+							'clear': {
+							    iconCls: 'tool-clear',
+							    tooltip: loc.clear,
+							    sticky: false,
+							    callback: function () {
+							        me.getSandbox().request(me, gfiReqBuilder(false));
+							        $.each(me.getSandbox().findAllSelectedMapLayers(), function (idx, layer) {
+							            if (layer.hasFeatureData && layer.hasFeatureData()) {
+							                var event = me.getSandbox().getEventBuilder("WFSFeaturesSelectedEvent")([], layer, false);
+							                me.getSandbox().notifyAll(event);
+							            }							            
+							        });							        
+							    }
+							}
                         }
                     },
                     {
@@ -175,9 +164,7 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
         for (group in buttonGroups) {
             var buttonGroup = buttonGroups[group];
             for (tool in buttonGroup.buttons) {
-                if (tool === 'link' && !mapUrlPrefix) {
-                    // skip link tool when no mapUrlPrefix is configured
-                } else if (this._isButtonConfigured(tool, buttonGroup.name)) {
+                if (this._isButtonConfigured(tool, buttonGroup.name)) {
                     this.addToolButton(tool, buttonGroup.name, buttonGroup.buttons[tool]);
                 }
             }

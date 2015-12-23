@@ -98,6 +98,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
                 if (!this.config.port) {
                     // convenience so the port isn't required
                     this.config.port = '' + location.port;
+                    //this.config.port = '' + 2374;
                 }
                 if (this.config.port.length > 0) {
                     this.config.port = ":" + this.config.port;
@@ -124,8 +125,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
             // data for tiles - key: layerId + bbox
             this._tileData = Oskari.clazz.create("Oskari.mapframework.bundle.mapwfs2.plugin.TileCache");
             this._tileDataTemp = Oskari.clazz.create("Oskari.mapframework.bundle.mapwfs2.plugin.TileCache");
-
-            this._visualizationForm = Oskari.clazz.create("Oskari.userinterface.component.VisualizationForm");
+            this._visualizationForm = Oskari.clazz.create('Oskari.userinterface.component.GroupVisualizationForm', { groupMode: true });
         },
 
         /**
@@ -135,6 +135,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
          */
         register: function () {
             this.getMapModule().setLayerPlugin("wfslayer", this);
+            this.getMapModule().setLayerPlugin('arcgislayer', this);
         },
 
         /**
@@ -144,6 +145,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
          */
         unregister: function () {
             this.getMapModule().setLayerPlugin("wfslayer", null);
+            this.getMapModule().setLayerPlugin('arcgislayer', null);
         },
 
         /**
@@ -163,10 +165,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
             }
 
             this.requestHandlers = {
-                showOwnStyleHandler: Oskari.clazz.create('Oskari.mapframework.bundle.mapwfs2.request.ShowOwnStyleRequestHandler', this)
+                showOwnStyleHandler: Oskari.clazz.create('Oskari.mapframework.bundle.mapwfs2.request.ShowOwnStyleRequestHandler', this),
+				changeMapLayerOwnStyleRequestHandler: Oskari.clazz.create('Oskari.mapframework.bundle.mapwfs2.request.ChangeMapLayerOwnStyleRequestHandler', this)
             };
 
             sandbox.addRequestHandler('ShowOwnStyleRequest', this.requestHandlers.showOwnStyleHandler);
+			sandbox.addRequestHandler('ChangeMapLayerOwnStyleRequest', this.requestHandlers.changeMapLayerOwnStyleRequestHandler);
         },
 
         /**
@@ -315,7 +319,16 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
             "WFSSetFilter": function (event) {
                 this.setFilterHandler(event);
             },
-
+            "WFSLoadingFinishedEvent": function (event) {
+                //FIXME: mapwfs2/transport Oskari module doesn't fire OpenLayers loadended event when
+                //there are no features in bbox. To bypass it liiteri.emptyresult event is fired here.
+                //It is used in OLLayerEventsControl
+                var layerName = this.__layerPrefix + event.getLayer().getId() + "_normal";
+                var layers = this._map.getLayersByName(layerName);
+                if (layers != null && layers.length == 1) {
+                    layers[0].events.triggerEvent("liiteri.loadingfinished");
+                }
+            },
             /**
              * @method WFSImageEvent
              * @param {Object} event
@@ -341,7 +354,30 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
         onEvent: function (event) {
             return this.eventHandlers[event.getName()].apply(this, [event]);
         },
+        fireError: function (layer) {
+            var me = this;
+            var layerName = me.__layerPrefix + layer.getId() + "_normal";
+            var layers = me._map.getLayersByName(layerName);
+            if (layers != null && layers.length == 1) {
+                layers[0].events.triggerEvent("liiteri.error");
+            }
+        },
+        _getCachedGridTiles: function (layers, grid) {
+            var result = {};
+            if (grid == null)
+                return result;
 
+            for (var i = 0; i < layers.length; ++i) {
+                var layer = layers[i];
+                var layerId = layer.getId();
+                var cachedPrintTiles = this._getCachedPrintTiles(layerId, grid);
+
+                if (cachedPrintTiles.length > 0)
+                    result[layerId] = cachedPrintTiles;
+            }
+
+            return result;
+        },
         /**
          * @method mapMoveHandler
          */
@@ -349,24 +385,34 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
             var srs = this.getSandbox().getMap().getSrsName(),
                 bbox = this.getSandbox().getMap().getExtent(),
                 zoom = this.getSandbox().getMap().getZoom(),
-                fids;
+                geomRequest = false,
+                fids;            
 
             // clean tiles for printing
-            this._printTiles = {};
-
-            // update location
-            var grid = this.getGrid();
+            // clean only tiles that are no cached       
+//            console.log(new Date());
+//            for (var id in this._printTiles) {
+//                if (this._printTiles.hasOwnProperty(id))
+//                    console.log(id + " " + this._printTiles[id].length);
+//            }            
 
             // update cache
             this.refreshCaches();
 
             var layers = this.getSandbox().findAllSelectedMapLayers();
+
+            // update location
+            var grid = this.getGrid();
+
+            this._printTiles = this._getCachedGridTiles(layers, grid);
+            //this._printTiles = {};
+
             for (var i = 0; i < layers.length; ++i) {
                 if (layers[i].hasFeatureData()) {
                     layers[i].setActiveFeatures([]); /// clean features lists
                     if (grid !== null && grid !== undefined) {
                         var layerId = layers[i].getId();
-                        var tiles = this.getNonCachedGrid(layerId, grid);
+                        var tiles = this.getNonCachedGrid(layerId, grid);                        
                         this.getIO().setLocation(layerId, srs, [bbox.left, bbox.bottom, bbox.right, bbox.top], zoom, grid, tiles);
                         this._tilesLayer.redraw();
                     }
@@ -374,7 +420,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
             }
 
             // update zoomLevel and highlight pictures
-            if (this.zoomLevel != zoom) {
+            //highlighting of the feature should be refreshed after every map move (not only after changing zoom level), because some highlightings are not fully rendered when they are partly out of the map
+
+            var zoomChange = this.zoomLevel != zoom;
+            //if (this.zoomLevel != zoom) {
                 this.zoomLevel = zoom;
 
 
@@ -394,10 +443,11 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
                     if (layers[j].hasFeatureData()) {
                         fids = this.getAllFeatureIds(layers[j]);
                         this.removeHighlightImages(layers[j]);
-                        this.getIO().highlightMapLayerFeatures(layers[j].getId(), fids, false);
+                        if (fids.length > 0 || zoomChange)
+                            this.getIO().highlightMapLayerFeatures(layers[j].getId(), fids, false, geomRequest);
                     }
                 }
-            }
+            //}
         },
 
         /**
@@ -418,7 +468,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
                 }
                 if (styleName === null || styleName === undefined || styleName === "") {
                     styleName = "default";
-                }
+                }           
 
                 this._addMapLayerToMap(event.getMapLayer(), this.__typeNormal); // add WMS layer
 
@@ -466,6 +516,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
                 var layer = event.getMapLayer();
                 var ids = layer.getClickedFeatureListIds();
                 var tmpIds = event.getWfsFeatureIds();
+                var geomRequest = true;
+                
                 if (!event.isKeepSelection()) {
                     layer.setClickedFeatureListIds(event.getWfsFeatureIds());
                 } else {
@@ -490,16 +542,16 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
                     this.removeHighlightImages();
                 }
 
-                // TODO 472: if no connection or the layer is not registered, get highlight with URl
-                if (this.getConnection().isLazy() && !this.getConnection().isConnected() || !this.getSandbox().findMapLayerFromSelectedMapLayers(layer.getId())) {
-                    var srs = this.getSandbox().getMap().getSrsName();
-                    var bbox = this.getSandbox().getMap().getExtent();
-                    var zoom = this.getSandbox().getMap().getZoom();
-                    layer.setClickedFeatureListIds(event.getWfsFeatureIds());
-                    this.getHighlightImage(layer, srs, [bbox.left, bbox.bottom, bbox.right, bbox.top], zoom, event.getWfsFeatureIds());
-                }
+//                // TODO 472: if no connection or the layer is not registered, get highlight with URl
+//                if (this.getConnection().isLazy() && !this.getConnection().isConnected() || !this.getSandbox().findMapLayerFromSelectedMapLayers(layer.getId())) {
+//                    var srs = this.getSandbox().getMap().getSrsName();
+//                    var bbox = this.getSandbox().getMap().getExtent();
+//                    var zoom = this.getSandbox().getMap().getZoom();
+//                    layer.setClickedFeatureListIds(event.getWfsFeatureIds());
+//                    this.getHighlightImage(layer, srs, [bbox.left, bbox.bottom, bbox.right, bbox.top], zoom, event.getWfsFeatureIds());
+//                }
 
-                this.getIO().highlightMapLayerFeatures(layer.getId(), event.getWfsFeatureIds(), event.isKeepSelection());
+                this.getIO().highlightMapLayerFeatures(layer.getId(), event.getWfsFeatureIds(), event.isKeepSelection(), geomRequest);
             }
         },
 
@@ -521,6 +573,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
          */
         changeMapLayerStyleHandler: function (event) {
             if (event.getMapLayer().hasFeatureData()) {
+
+                //update printTiles
+                var layerId = event.getMapLayer().getId();
+                var grid = this.getGrid();
+                this._printTiles[layerId] = this._getCachedGridTiles([event.getMapLayer()], grid)[layerId];
+
                 // render "normal" layer with new style
                 var OLLayer = this.getOLMapLayer(event.getMapLayer(), this.__typeNormal);
                 OLLayer.redraw();
@@ -1036,6 +1094,11 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
         getPrintTiles: function () {
             return this._printTiles;
         },
+        getPrintTilesForLayer: function (layerId) {
+            var result = {};
+            result[layerId] = this._printTiles[layerId];
+            return result;
+        },
 
         /*
          * @method setPrintTile
@@ -1061,6 +1124,22 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
         refreshCaches: function () {
             this._tileData.purgeOffset(4 * 60 * 1000);
             this._tileDataTemp.purgeOffset(4 * 60 * 1000);
+        },
+        _getCachedPrintTiles: function (layerId, grid) {
+            var layer = this.getSandbox().findMapLayerFromSelectedMapLayers(layerId);
+            var style = layer.getCurrentStyle().getName();
+            var result = [];
+            for (var i = 0; i < grid.bounds.length; i++) {
+                var bboxKey = grid.bounds[i].join(",");
+                var dataForTile = this._tileData.mget(layerId, style, bboxKey);
+                if (dataForTile) {
+                    result.push({
+                        'bbox': grid.bounds[i],
+                        'url' : dataForTile,
+                    });
+                }
+            }
+            return result;
         },
 
 

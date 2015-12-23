@@ -182,6 +182,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
 
             // remove old, if any
             this.clearLegendLayers();
+
+            this.conf.general.minLegendItemHeight = 11;
+            this.conf.general.defaultItemWidth = 14;
+            this.conf.general.defaultItemHeight = 14;
+            for (var i = 0; i < ranges.length; i++) {
+                if (!ranges[i].hasOwnProperty('width'))
+                    ranges[i].width = this.conf.general.defaultItemWidth;
+                if (!ranges[i].hasOwnProperty('height'))
+                    ranges[i].height = this.conf.general.defaultItemHeight;
+            }
+
             // Legend box coordinates
             var legend_geom = this._getLegendGeom(title, ranges, printInfo, legend_pos);
 
@@ -226,6 +237,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
          */
         _getLegendGeom: function (title, ranges, printInfo, legend_pos) {
 
+            
             // Print area in pixels
             var properties = printInfo.features[0].properties;
             var pixel_width = properties.targetWidth;
@@ -239,6 +251,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
             // Split long title row - max lenght is this.conf.general.charsInrow
             var titles = [],
                 i;
+            
+            title = title.replace(/<br>/g, " / ");
             if (title.length > this.conf.general.charsInrow) {
                 var titlesplit = title.split(" ");
                 var titletemp = "";
@@ -247,7 +261,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
                         titletemp = titletemp + titlesplit[i] + " ";
                     } else {
                         titles.push(titletemp);
-                        titletemp = titlesplit[i];
+                        titletemp = titlesplit[i] + " ";
                     }
 
                 }
@@ -264,13 +278,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
                 lside = height;
             }
 
-
-            // legend height in meters based on # of color box rows and map area size
-            var l_height = this.conf.general.legendRowHeight * lside * (ranges.length + titles.length + 1);
+            //header
+            var l_height = this.conf.general.legendRowHeight * lside * (titles.length + 1);
+            var titlebox_size = l_height / (titles.length + 1);
+            for (var ix = 0; ix < ranges.length; ix++) {
+                if (ranges[ix].height > this.conf.general.minLegendItemHeight)
+                    l_height += 1.2 * (ranges[ix].height * height / pixel_height);
+                else
+                    l_height += 1.2 * (this.conf.general.minLegendItemHeight * height / pixel_height);
+            }
+            
             // Legend width in meters
-            var l_width = this.conf.general.legendWidth * lside;
-
-            var box_size = l_height / (ranges.length + titles.length + 1);
+            var l_width = this.conf.general.legendWidth * lside;            
 
             var lcoord = [];
             // Legend LL
@@ -307,9 +326,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
             var legend_box = {
                 "print_area": acoord,
                 "bbox": lcoord,
-                "rangebox_size": box_size,
+                "titlebox_size" : titlebox_size,
                 "properties": properties,
-                "titles": titles
+                "titles": titles,
+                'width': width,
+                'height': height,
+                'pixel_width': pixel_width,
+                'pixel_height': pixel_height
             };
 
             return legend_box;
@@ -347,8 +370,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
             var ring = new OpenLayers.Geometry.LinearRing(points);
             var polygon = new OpenLayers.Geometry.Polygon([ring]);
 
-            // property value for empty label - not in IE
-            var myempty = '\0';
+            var myempty = '';
 
             // create some attributes for the feature
             var attributes = {
@@ -371,7 +393,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
                 i;
             for (i = 0; i < titles.length; i++) {
                 var point = coords[0].clone();
-                var label_point = new OpenLayers.Geometry.Point(point.x + (0.2 * legend_geom.rangebox_size), point.y - ((i * legend_geom.rangebox_size) + (legend_geom.rangebox_size / 2.0)));
+                var label_point = new OpenLayers.Geometry.Point(point.x + (0.2 * legend_geom.titlebox_size), point.y - ((i * legend_geom.titlebox_size) + (legend_geom.titlebox_size / 2.0)));
 
                 // create some attributes for the feature
                 var pattributes = {
@@ -394,32 +416,46 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
         _plotLegendBoxes: function (title, ranges, legend_geom) {
             var me = this;
             // property value for empty label - doesn't work in IE
-            var myempty = '\0';
-
+            var myempty = '';           
             var coords = legend_geom.bbox;
             var titles = legend_geom.titles;
-            var box_size = legend_geom.rangebox_size;
-            var box_insize = 0.8 * legend_geom.rangebox_size;
             var point = coords[0].clone();
 
             // Loop ranges
-            var x_LU = point.x + (0.2 * box_size);
-            var y_LU = point.y - (box_size * titles.length),
-                i;
+            var x_LU = point.x + (0.2 * this.conf.general.legendWidth);
+            var y_LU = point.y - (titles.length * legend_geom.titlebox_size)
+                ,i;
             // this is for header label space
+            
+            var rgb2hex = function(rgb) {
+                if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
 
-            for (i = 0; i < ranges.length; i++) {
-                var range = ranges[i];
-                var mycolor = "#FFFFFF";
-                if (range.boxcolor.split(':').length > 1) {
-                    mycolor = range.boxcolor.split(':')[1].replace(/^\s+|\s+$/g, '');
+                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                function hex(x) {
+                    return ("0" + parseInt(x).toString(16)).slice(-2);
                 }
+                return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+            }
 
+            for (i = 0; i < ranges.length; ++i) {
+                var range = ranges[i];
+                var mycolor = rgb2hex(ranges[i].color.trim());
+                var geomWidth = (legend_geom.width * ranges[i].width) / legend_geom.pixel_width;
+                var geomHeight = (legend_geom.height * ranges[i].height) / legend_geom.pixel_height;
+                var outerGeomWidth = 1.2 * geomWidth;
+                var lineHeight = (legend_geom.height * (this.conf.general.minLegendItemHeight > ranges[i].height ? this.conf.general.minLegendItemHeight : ranges[i].height)) / legend_geom.pixel_height;
+                var outerLineHeight = 1.2 * lineHeight;
                 var x = x_LU;
                 var y = y_LU;
-                var points = [new OpenLayers.Geometry.Point(x, y), new OpenLayers.Geometry.Point(x + box_insize, y), new OpenLayers.Geometry.Point(x + box_insize, y - box_insize), new OpenLayers.Geometry.Point(x, y - box_insize)];
-                var ring = new OpenLayers.Geometry.LinearRing(points);
-                var polygon = new OpenLayers.Geometry.Polygon([ring]);
+
+                var polygon;
+                if (ranges[i].type == 'rectangle') {
+                    var points = [new OpenLayers.Geometry.Point(x, y), new OpenLayers.Geometry.Point(x + geomWidth, y), new OpenLayers.Geometry.Point(x + geomWidth, y - geomHeight), new OpenLayers.Geometry.Point(x, y - geomHeight)];
+                    var ring = new OpenLayers.Geometry.LinearRing(points);
+                    polygon = new OpenLayers.Geometry.Polygon([ring]);
+                } else if (ranges[i].type == 'circle') {
+                    polygon = OpenLayers.Geometry.Polygon.createRegularPolygon(new OpenLayers.Geometry.Point(x + geomHeight / 2, y - geomHeight / 2), geomHeight / 2, 20, 0);
+                }                
 
                 // create some attributes for the feature
                 var attributes = {
@@ -432,7 +468,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
                 me.boxesLayer.addFeatures([feature_bbox]);
 
                 //Title
-                point = new OpenLayers.Geometry.Point(x + box_size, y - box_insize);
+                point = new OpenLayers.Geometry.Point(x + outerGeomWidth, y - lineHeight);
 
                 // create some attributes for the feature
                 var pattributes = {
@@ -443,7 +479,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
                 var feature_label = new OpenLayers.Feature.Vector(point, pattributes);
                 me.boxesLayer.addFeatures([feature_label]);
 
-                y_LU = y_LU - box_size;
+                y_LU = y_LU - outerLineHeight;
             }
             me.boxesLayer.redraw();
 

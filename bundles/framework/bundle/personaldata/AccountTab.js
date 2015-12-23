@@ -31,8 +31,21 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.AccountTab',
                 sandbox = me.instance.getSandbox(),
                 fieldTemplate = jQuery('<div class="dataField"><div class="label"></div><div class="value"></div><br clear="all" /></div>'),
                 user = sandbox.getUser(),
-                localization = this.loc,
-                accountData = [{
+                localization = this.loc,                
+                infoContainer = container.find('div.info'),
+                i,
+                data,
+                fieldContainer,
+                bottomLinks,
+                bottomLinksContainer,
+                link,
+                changeInfoUrl = null;
+            var stringRoles = [];
+            for (var j = 0; j < user.getRoles().length; j++) {
+                stringRoles.push(user.getRoles()[j].name);
+            }
+            var accountData = [
+                {
                     label: localization.firstName,
                     value: user.getFirstName()
                 }, {
@@ -44,15 +57,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.AccountTab',
                 }, {
                     label: localization.email,
                     value: user.getLoginName()
-                }],
-                infoContainer = container.find('div.info'),
-                i,
-                data,
-                fieldContainer,
-                bottomLinks,
-                bottomLinksContainer,
-                link,
-                changeInfoUrl = null;
+                }, {
+                    label: localization.roles,
+                    value: stringRoles.join(", ")
+                }
+            ];
+
             for (i = 0; i < accountData.length; i += 1) {
                 data = accountData[i];
                 fieldContainer = fieldTemplate.clone();

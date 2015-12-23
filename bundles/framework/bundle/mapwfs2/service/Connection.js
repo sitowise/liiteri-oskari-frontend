@@ -180,7 +180,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.service.Connection',
                 }
 
                 this.cometd.batch(function () {
-                    self._errorSub = self.cometd.subscribe('/error', self.getError);
+                    self._errorSub = self.cometd.subscribe('/error', function() { self.getError.apply(self, arguments); });
                     self.plugin.getIO().subscribe();
                     self.plugin.getIO().startup({
                         "clientId": handshake.clientId,
@@ -200,10 +200,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.service.Connection',
          * @param {Object} data
          */
         getError: function (data) {
-            var message = data.data.message,
-                layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(data.data.layerId),
-                once = data.data.once;
+            var message = data.data.message;
+            var layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(data.data.layerId);
+            var once = data.data.once;
             this.plugin.showErrorPopup(message, layer, once);
+
+
+            if (layer != null) {
+                this.plugin.fireError(layer);
+            }
+
         }
 
         /**

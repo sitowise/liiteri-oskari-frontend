@@ -88,6 +88,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher.PublisherBundleInstanc
                     sandbox.registerForEventByName(me, p);
                 }
             }
+            
+            var showPublisherFlyoutRequestHandler = Oskari.clazz.create('Oskari.mapframework.bundle.publisher.request.ShowPublisherFlyoutRequestHandler', this);
+            sandbox.addRequestHandler('ShowPublisherFlyoutRequest', showPublisherFlyoutRequestHandler);
 
             //Let's extend UI
             request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
@@ -201,21 +204,34 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher.PublisherBundleInstanc
                 var loc = this.getLocalization(),
                     dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                     okBtn = dialog.createCloseButton(loc.BasicView.buttons.ok),
+                    copyBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                     url,
                     iframeCode,
                     textarea,
-                    content;
+                    content,
+                    buttons = [];
                 okBtn.addClass('primary');
                 url = this.sandbox.getLocalizedProperty(this.conf.publishedMapUrl) + event.getId();
                 iframeCode = '<iframe src="' + url + '" width="' + event.getWidth() +
                     '" height="' + event.getHeight() + '"></iframe>';
                 textarea =
-                    '<textarea rows="3" cols="80">' +
+                    '<textarea id="link_textarea" rows="3" cols="80">' +
                     iframeCode +
                     '</textarea>';
                 content = loc.published.desc + '<br/>' + textarea;
+                
+                if (window.clipboardData && typeof window.clipboardData.setData == 'function') {
+	                copyBtn.setTitle(loc.BasicView.buttons.copy);
+	                copyBtn.setHandler(function () {
+	                	window.clipboardData.setData("Text", iframeCode);
+	                });
+	                buttons.push(copyBtn);
+                }
+                
+                buttons.push(okBtn);
 
-                dialog.show(loc.published.title, content, [okBtn]);
+                dialog.show(loc.published.title, content, buttons);
+                $("#link_textarea").select();
                 this.setPublishMode(false);
             },
             /**
@@ -288,7 +304,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher.PublisherBundleInstanc
          */
         startExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = Oskari.clazz.create('Oskari.mapframework.bundle.publisher.Flyout', this);
-            this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.mapframework.bundle.publisher.Tile', this);
         },
         /**
          * @method stopExtension
@@ -329,7 +344,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher.PublisherBundleInstanc
         _createUi: function () {
             var me = this;
             me.plugins['Oskari.userinterface.Flyout'].createUi();
-            me.plugins['Oskari.userinterface.Tile'].refresh();
         },
 
         /**
@@ -504,7 +518,18 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher.PublisherBundleInstanc
                 }
             }
             return deniedLayers;
-        }
+        },
+        showFlyout: function () {
+    		var me = this;
+    		jQuery(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', 'block');
+    		$(me.plugins['Oskari.userinterface.Flyout'].container).parent().prev().find(".icon-close").on('click', function(){
+    			me.hideFlyout();
+    		});
+    	},
+    	hideFlyout: function () {
+    		var me = this;
+    		$(me.plugins['Oskari.userinterface.Flyout'].container).parent().parent().css('display', '');
+    	}
     }, {
         /**
          * @property {String[]} protocol

@@ -37,7 +37,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.Tile',
         setEl: function (el, width, height) {
             this.container = jQuery(el);
             // disable until we get defaultlayer
-            this.disable();
+            //this.disable();
         },
         /**
          * @method startPlugin

@@ -1,7 +1,7 @@
 // Chosen, a Select Box Enhancer for jQuery and Protoype
 // by Patrick Filler for Harvest, http://getharvest.com
-//
-// Version 0.9.12
+// 
+// Version 0.9.11
 // Full source at https://github.com/harvesthq/chosen
 // Copyright (c) 2011 Harvest http://getharvest.com
 
@@ -207,7 +207,6 @@ Copyright (c) 2011 by Harvest
     };
 
     AbstractChosen.prototype.results_update_field = function() {
-      this.set_default_text();
       if (!this.is_multiple) {
         this.results_reset_cleanup();
       }
@@ -297,7 +296,7 @@ Copyright (c) 2011 by Harvest
 
 
 (function() {
-  var $, Chosen, get_side_border_padding, root,
+  var $, Chosen, get_side_border_padding, root, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -332,7 +331,8 @@ Copyright (c) 2011 by Harvest
     __extends(Chosen, _super);
 
     function Chosen() {
-      return Chosen.__super__.constructor.apply(this, arguments);
+        _ref = Chosen.__super__.constructor.apply(this, arguments);
+        return _ref;
     }
 
     Chosen.prototype.setup = function() {
@@ -371,7 +371,7 @@ Copyright (c) 2011 by Harvest
         container_div.html('<a href="javascript:void(0)" class="chzn-single chzn-default" tabindex="-1"><span>' + this.default_text + '</span><div><b></b></div></a><div class="chzn-drop" style="left:-9000px;"><div class="chzn-search"><input type="text" autocomplete="off" /></div><ul class="chzn-results"></ul></div>');
       }
       this.form_field_jq.hide().after(container_div);
-      this.container = container_div;//$('#' + this.container_id);
+      this.container = $('#' + this.container_id);
       this.dropdown = this.container.find('div.chzn-drop').first();
       dd_top = this.container.height();
       dd_width = this.f_width - get_side_border_padding(this.dropdown);
@@ -404,54 +404,54 @@ Copyright (c) 2011 by Harvest
     Chosen.prototype.register_observers = function() {
       var _this = this;
       this.container.mousedown(function(evt) {
-        _this.container_mousedown(evt);
+        return _this.container_mousedown(evt);
       });
       this.container.mouseup(function(evt) {
-        _this.container_mouseup(evt);
+        return _this.container_mouseup(evt);
       });
       this.container.mouseenter(function(evt) {
-        _this.mouse_enter(evt);
+        return _this.mouse_enter(evt);
       });
       this.container.mouseleave(function(evt) {
-        _this.mouse_leave(evt);
+        return _this.mouse_leave(evt);
       });
       this.search_results.mouseup(function(evt) {
-        _this.search_results_mouseup(evt);
+        return _this.search_results_mouseup(evt);
       });
       this.search_results.mouseover(function(evt) {
-        _this.search_results_mouseover(evt);
+        return _this.search_results_mouseover(evt);
       });
       this.search_results.mouseout(function(evt) {
-        _this.search_results_mouseout(evt);
+        return _this.search_results_mouseout(evt);
       });
       this.form_field_jq.bind("liszt:updated", function(evt) {
-        _this.results_update_field(evt);
+        return _this.results_update_field(evt);
       });
       this.form_field_jq.bind("liszt:activate", function(evt) {
-        _this.activate_field(evt);
+        return _this.activate_field(evt);
       });
       this.form_field_jq.bind("liszt:open", function(evt) {
-        _this.container_mousedown(evt);
+        return _this.container_mousedown(evt);
       });
       this.search_field.blur(function(evt) {
-        _this.input_blur(evt);
+        return _this.input_blur(evt);
       });
       this.search_field.keyup(function(evt) {
-        _this.keyup_checker(evt);
+        return _this.keyup_checker(evt);
       });
       this.search_field.keydown(function(evt) {
-        _this.keydown_checker(evt);
+        return _this.keydown_checker(evt);
       });
       this.search_field.focus(function(evt) {
-        _this.input_focus(evt);
+        return _this.input_focus(evt);
       });
       if (this.is_multiple) {
         return this.search_choices.click(function(evt) {
-          _this.choices_click(evt);
+          return _this.choices_click(evt);
         });
       } else {
         return this.container.click(function(evt) {
-          evt.preventDefault();
+          return evt.preventDefault();
         });
       }
     };
@@ -538,7 +538,7 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.results_build = function() {
-      var content, data, _i, _len, _ref;
+        var content, data, _i, _len, _ref1;
       this.parsing = true;
       this.results_data = root.SelectParser.select_to_array(this.form_field);
       if (this.is_multiple && this.choices > 0) {
@@ -553,9 +553,9 @@ Copyright (c) 2011 by Harvest
         }
       }
       content = '';
-      _ref = this.results_data;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        data = _ref[_i];
+        _ref1 = this.results_data;
+        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        data = _ref1[_i];
         if (data.group) {
           content += this.result_add_group(data);
         } else if (!data.empty) {
@@ -697,8 +697,13 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.choices_click = function(evt) {
-      evt.preventDefault();
-      if (this.active_field && !($(evt.target).hasClass("search-choice" || $(evt.target).parents('.search-choice').first)) && !this.results_showing) {
+      evt.preventDefault();      
+      //backported from 0.9.14
+      //https://github.com/harvesthq/chosen/pull/1163/files#r3989097
+      //if (this.active_field && !($(evt.target).hasClass("search-choice" || $(evt.target).parents('.search-choice').first)) && !this.results_showing) {
+      //  return this.results_show();
+      //}
+      if (!this.results_showing) {
         return this.results_show();
       }
     };
@@ -744,7 +749,8 @@ Copyright (c) 2011 by Harvest
           this.results_hide();
         }
         link.parents('li').first().remove();
-        return this.search_field_scale();
+        this.search_field_scale();
+        return false;
       }
     };
 
@@ -842,46 +848,44 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.winnow_results = function() {
-      var found, option, part, parts, regex, regexAnchor, result, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len1, _ref;
+      var found, option, part, parts, regex, regexAnchor, result, result_id, results, searchText, startpos, text, zregex, _i, _j, _len, _len1, _ref1;
       this.no_results_clear();
       results = 0;
       searchText = this.search_field.val() === this.default_text ? "" : $('<div/>').text($.trim(this.search_field.val())).html();
-      regexAnchor = this.search_contains ? "" : "^";
-      regex = new RegExp(regexAnchor + searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
-      zregex = new RegExp(searchText.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), 'i');
-      _ref = this.results_data;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        option = _ref[_i];
+      words = searchText.toLowerCase().split(' ');
+      _ref1 = this.results_data;
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        option = _ref1[_i];
         if (!option.disabled && !option.empty) {
           if (option.group) {
             $('#' + option.dom_id).css('display', 'none');
           } else if (!(this.is_multiple && option.selected)) {
-            found = false;
             result_id = option.dom_id;
             result = $("#" + result_id);
-            if (regex.test(option.html)) {
-              found = true;
-              results += 1;
-            } else if (this.enable_split_word_search && (option.html.indexOf(" ") >= 0 || option.html.indexOf("[") === 0)) {
-              parts = option.html.replace(/\[|\]/g, "").split(" ");
-              if (parts.length) {
-                for (_j = 0, _len1 = parts.length; _j < _len1; _j++) {
-                  part = parts[_j];
-                  if (regex.test(part)) {
-                    found = true;
-                    results += 1;
-                  }
-                }
+            found = true;
+            for (_j = 0, _len1 = words.length; _j < _len1; _j++) {
+              word = words[_j];
+              if (option.html.toLowerCase().indexOf(word) < 0) {
+                found = false;
+                break;
               }
             }
             if (found) {
+              text = option.html;
               if (searchText.length) {
-                startpos = option.html.search(zregex);
-                text = option.html.substr(0, startpos + searchText.length) + '</em>' + option.html.substr(startpos + searchText.length);
-                text = text.substr(0, startpos) + '<em>' + text.substr(startpos);
-              } else {
-                text = option.html;
+                words.sort(function(a, b) {
+                  return b.length - a.length;
+                });
+                for (_k = 0, _len2 = words.length; _k < _len2; _k++) {
+                  word = words[_k];
+                  startpos = text.toLowerCase().indexOf(word);
+                  while (startpos >= 0) {
+                    text = text.substr(0, startpos) + '<em>' + text.substr(startpos, word.length) + '</em>' + text.substr(startpos + word.length);
+                    startpos = text.toLowerCase().indexOf(word, startpos + 10);
+                  }
+                }
               }
+              results += 1;
               result.html(text);
               this.result_activate(result);
               if (option.group_array_index != null) {
@@ -1005,8 +1009,8 @@ Copyright (c) 2011 by Harvest
     };
 
     Chosen.prototype.keydown_checker = function(evt) {
-      var stroke, _ref;
-      stroke = (_ref = evt.which) != null ? _ref : evt.keyCode;
+      var stroke, _ref1;
+      stroke = (_ref1 = evt.which) != null ? _ref1 : evt.keyCode;
       this.search_field_scale();
       if (stroke !== 8 && this.pending_backstroke) {
         this.clear_backstroke();

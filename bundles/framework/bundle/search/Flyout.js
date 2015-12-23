@@ -56,8 +56,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.search.Flyout',
          */
         setEl: function (el, width, height) {
             this.container = el[0];
-            if (!jQuery(this.container).hasClass('search')) {
-                jQuery(this.container).addClass('search');
+            if (!jQuery(this.container).hasClass('globalsearch')) {
+                jQuery(this.container).addClass('globalsearch');
             }
         },
 
@@ -225,7 +225,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.search.Flyout',
                     button.setEnabled(true);
 
                     var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-                    var okBtn = dialog.createCloseButton('OK');
+                    var okBtn = dialog.createCloseButton('Sulje');
                     var title = me.instance.getLocalization('searchservice_search_alert_title');
                     var msg = me.instance.getLocalization('searchservice_search_not_found_anything_text');
                     dialog.show(title, msg, [okBtn]);
@@ -269,8 +269,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.search.Flyout',
                 resultList.append(al + ':' + nf);
                 return;
             } else {
-                info.append(this.instance.getLocalization('searchResultCount') +
-                    result.totalCount + this.instance.getLocalization('searchResultCount2'));
+                info.append(this.instance.getLocalization('searchResultCount') + " (" +
+                    result.totalCount + ") " + this.instance.getLocalization('searchResultCount2'));
                 info.append('<br/>');
 
                 if (result.hasMore) {
@@ -333,8 +333,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.search.Flyout',
 
             this._populateResultTable(tableBody);
             resultList.append('<div><h3>' +
-                this.instance.getLocalization('searchResults') + result.totalCount +
-                this.instance.getLocalization('searchResultsDescription') + searchKey + '</h3></div>');
+                this.instance.getLocalization('searchResults') + " (" + result.totalCount + ") " +
+                this.instance.getLocalization('searchResultsDescription') + " [" + searchKey + "] " + '</h3></div>');
             resultList.append(table);
         },
 

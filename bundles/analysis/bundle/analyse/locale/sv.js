@@ -38,26 +38,26 @@ Oskari.registerLocalization({
                     "classForMethod": "buffer",
                     "selected": true,
                     "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_aggregate",
-                    "label": "Sammandrag",
-                    "classForPreview": "aggregate",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_union",
-                    "label": "Union",
-                    "classForPreview": "union",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_intersect",
-                    "label": "Sektion",
-                    "classForPreview": "intersect",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_layer_union",
-                    "label": "Analyysitasojen yhdiste",
-                    "classForPreview": "layer_union",
-                    "tooltip": "Yhdistää analyysitasoja, joilla on samat ominaisuustietokentät"
+//                }, {
+//                    "id": "oskari_analyse_aggregate",
+//                    "label": "Sammandrag",
+//                    "classForPreview": "aggregate",
+//                    "tooltip": ""
+//                }, {
+//                    "id": "oskari_analyse_union",
+//                    "label": "Union",
+//                    "classForPreview": "union",
+//                    "tooltip": ""
+//                }, {
+//                    "id": "oskari_analyse_intersect",
+//                    "label": "Sektion",
+//                    "classForPreview": "intersect",
+//                    "tooltip": ""
+//                }, {
+//                    "id": "oskari_analyse_layer_union",
+//                    "label": "Analyysitasojen yhdiste",
+//                    "classForPreview": "layer_union",
+//                    "tooltip": "Yhdistää analyysitasoja, joilla on samat ominaisuustietokentät"
                 }]
             },
             "aggregate": {

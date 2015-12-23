@@ -27,8 +27,10 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.AreaForm"
             fillStyle: this.defaultValues.fill.style
         };
 
-        this.styleButtonNames = ["icon-line-basic", "icon-line-dashed", "icon-double-line"];
-        this.cornerButtonNames = ["icon-corner-sharp", "icon-corner-round"];
+        //this.styleButtonNames = ["icon-line-basic", "icon-line-dashed", "icon-double-line"];
+        this.styleButtonNames = ["icon-line-basic", "icon-line-dashed"];
+        //this.cornerButtonNames = ["icon-corner-sharp", "icon-corner-round"];
+        this.cornerButtonNames = [];
 
         this.colorTypes = ["line", "fill"];
         this.basicColors = ["#ffffff", "#666666", "#ffde00", "#f8931f", "#ff3334", "#bf2652",
@@ -48,15 +50,16 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.AreaForm"
             }
         }
 
-        this.fillButtonNames = ["icon-line-thin-diagonal", "icon-line-wide-diagonal", "icon-line-thin-horizontal", "icon-line-wide-horizontal"];
+        //this.fillButtonNames = ["icon-line-thin-diagonal", "icon-line-wide-diagonal", "icon-line-thin-horizontal", "icon-line-wide-horizontal", "icon-empty"];
+        this.fillButtonNames = ["icon-line-thin-diagonal", null, "icon-line-thin-horizontal", null, "icon-empty"];
 
         this.templateAreaStyleDialogContent = jQuery('<div class="areaform">' +
             '<div class="container">' +
             '<div class="column1">' +
             '<label>' + this.loc.linestyle.label + '</label>' +
             '<div class="style icon-buttons"></div>' +
-            '<label>' + this.loc.linecorner.label + '</label>' +
-            '<div class="corner icon-buttons"></div>' +
+//            '<label>' + this.loc.linecorner.label + '</label>' +
+//            '<div class="corner icon-buttons"></div>' +
             '<label>' + this.loc.linewidth.label + '</label><br>' +
             '<div class="width"></div>' +
             '</div>' +
@@ -88,7 +91,7 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.AreaForm"
             '</div>' +
             '<div class="custom-colors-fill"></div>' +
             '<label>' + this.loc.fill.label + '</label>' +
-            '<div class="fill icon-buttons"></div>' +
+            '<div class="fill icon-buttons"></div>' +            
             '</div>' +
             '<div class="column222">' +
             '<label>' + this.loc.preview.label + '</label>' +
@@ -260,6 +263,9 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.AreaForm"
             for (c = 0; c < 2; c++) {
                 statedChosenColor = false;
                 cType = (c === 0) ? 'lineColor' : 'fillColor';
+
+
+
                 content = dialogContent.find('.color-rectangle.' + me.colorTypes[c]);
                 for (i = 0; i < me.basicColors.length; i++) {
                     colorCell = me.templateColorCell.clone();
@@ -418,6 +424,9 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.AreaForm"
             // Fill style
             content = dialogContent.find('div.fill.icon-buttons');
             for (i = 0; i < me.fillButtonNames.length; i++) {
+                if (me.fillButtonNames[i] == null)
+                    continue;
+
                 var fillBtnContainer = me.templateButton.clone();
                 fillBtnContainer.addClass(me.fillButtonNames[i]);
                 fillBtnContainer.attr('id', i + "fillstyle");
@@ -461,7 +470,12 @@ Oskari.clazz.define("Oskari.userinterface.component.visualization-form.AreaForm"
                 me.values.fillStyle = me.defaultValues.fill.style;
                 renderDialog.close();
             });
-            renderDialog.show(title, dialogContent, [saveBtn, cancelBtn]);
+
+            if (this.showArcGisValuesOnly) {
+                
+            }
+
+            renderDialog.show(title, dialogContent, [cancelBtn, saveBtn]);
             renderDialog.moveTo(renderButton, 'top');
             return renderDialog;
         },

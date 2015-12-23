@@ -21,8 +21,31 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         this.pluginName = null;
         this._sandbox = null;
         this._map = null;
+        this._requestHandlers = [];
         this.element = undefined;
-        this.conf = config;
+        this.defaultConf = {
+            scale: {
+                'grid250m': 60000,
+                'grid500m': 100000,
+                'grid1km': 200000,
+                'grid2km': 400000,
+                'grid5km': 800000,
+                'grid10km': 1600000,
+                'grid20km': 3200000           
+            },
+            graduated: {
+                'strokeColor' : {
+                    'positive': "08519c",
+                    'negative' :"b30000"
+                },
+                'fillColor': {
+                    'positive': "3182bd",
+                    'negative': "e34a33"
+                }
+            }
+        };
+        this.conf = {};
+        $.extend(this.conf, this.defaultConf, config);
         this._state = null;
         this._locale = locale || Oskari.getLocalization("StatsGrid");
         this.initialSetup = true;
@@ -40,11 +63,24 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         this.maxClassNum = 9;
         this.numberOfClasses = 5;
         this.isSelectHilightedMode = false;
+        this._currentScale = 0;        
+        this.ZONE_ADMINISTRATIVE = 'administrative';
+        this.ZONE_GRID = 'grid';
+        this.VISMETHOD_GRADUATED = 'graduated';
+        this.VISMETHOD_CHOROPLETIC = 'choropletic';
+        this._zoneTypes = [this.ZONE_ADMINISTRATIVE, 'grid250m', 'grid500m', 'grid1km', 'grid2km', 'grid5km', 'grid10km', 'grid20km'];
+        this._visualizationMethods = [this.VISMETHOD_CHOROPLETIC, this.VISMETHOD_GRADUATED];
+        this.POINTSIZE_NORMAL = 'normal';
+        this.POINTSIZE_BIG = 'big';
+        this.POINTSIZE_SMALL = 'small';
+        this._pointSizes = [this.POINTSIZE_BIG, this.POINTSIZE_NORMAL, this.POINTSIZE_SMALL];
+        this.timeouts = [];
+        this._queue = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.RequestQueue');
 
         this.templates = {
             'block': '<div class="block"></div>',
             'classificationGuide': '<p class="classification-guide"></p>'
-        };
+        };        
 
     }, {
         /** @static @property __name module name */
@@ -139,6 +175,19 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     sandbox.registerForEventByName(me, p);
                 }
             }
+            me._currentScale = me._map.getScale();
+            me._queue.start();
+
+//            me._requestHandlers.push({ name: 'StatsGrid.ClassifyStatsRequest', clazz: 'Oskari.statistics.bundle.statsgrid.request.visualization.ClassifyStatsRequestHandler' });
+//
+//            _.each(me._requestHandlers, function (item) {
+//                var handler = Oskari.clazz.create(item.clazz, me);
+//                item.instance = handler;
+//                me._sandbox.addRequestHandler(item.name, item.instance);
+//            });
+
+            
+
             me.statsService = me._sandbox.getService('Oskari.statistics.bundle.statsgrid.StatisticsService');
 
             me._initState();
@@ -154,9 +203,24 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             if (this._state.methodId === null || this._state.methodId === undefined || this._state.methodId < 1) {
                 this._state.methodId = '1';
             }
+            if (this._state.zoneTypeId === null || this._state.zoneTypeId === undefined) {
+                this._state.zoneTypeId = this.ZONE_ADMINISTRATIVE;
+            }
+            if (this._state.visualizationmethodId === null || this._state.visualizationmethodId === undefined) {
+                this._state.visualizationmethodId = this.VISMETHOD_CHOROPLETIC;
+            }
+            if (this._state.pointSizeId === null || this._state.pointSizeId === undefined) {
+                this._state.pointSizeId = this.POINTSIZE_NORMAL;
+            }
+            if (this._state.showAreaNames === null || this._state.showAreaNames === undefined) {
+                this._state.showAreaNames = false;
+            }
+            if (this._state.showValues === null || this._state.showValues === undefined) {
+                this._state.showValues = false;
+            }
             var cmode = this._state.classificationMode;
             if (cmode === null || cmode === undefined) {
-                cmode = '';
+                this._state.classificationMode = 'distinct';
             }
             if (this._state.numberOfClasses === null || this._state.numberOfClasses === undefined) {
                 this._state.numberOfClasses = 5;
@@ -189,11 +253,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         stopPlugin: function (sandbox) {
             var me = this,
                 p;
+
+            me._queue.stop();
+
             for (p in me.eventHandlers) {
                 if (me.eventHandlers.hasOwnProperty(p)) {
                     me._sandbox.unregisterFromEventByName(me, p);
                 }
             }
+
+            _.each(me._requestHandlers, function (item) {
+                me._sandbox.removeRequestHandler(item.name, item.instance);
+            });
 
             me._sandbox.unregister(me);
 
@@ -302,8 +373,36 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
              */
             'AfterMapMoveEvent': function (event) {
                 // setup initial state here since we are using selected layers to create ui
-                // and plugin is started before any layers have been added
+                // and plugin is started before any layers have been added     
+                
+                // check if scale changed and disable visualization values
+                var me = this;
+                me._initState();
+                var params = me._state._params;
+                var zoneType = this._state.zoneTypeId;
+                var visualizationMethod = this._state.visualizationmethodId;
 
+                if (zoneType.indexOf(me.ZONE_GRID) == 0) {
+                    switch (visualizationMethod) {
+                    case this.VISMETHOD_CHOROPLETIC:
+                        me._queue.pushJob(function() {
+                            me.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        });
+                        break;
+                    case this.VISMETHOD_GRADUATED:
+                        me._queue.pushJob(function() {
+                            me.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        });
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                
+                if (me._currentScale != event.getScale()) {
+                    me._currentScale = event.getScale();
+                    me._disableVisualizationValues(me._currentScale);
+                }
             },
             'StatsGrid.SelectHilightsModeEvent': function (event) {
                 this.isSelectHilightedMode = true;
@@ -318,20 +417,23 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
              * Creates classification of stats column data and shows it on geostats legend html
              */
             'StatsGrid.SotkadataChangedEvent': function (event) {
-                // Create a new classification for thematic data, if selected
+                // Create a new Manaclassification for thematic data, if selected
                 // thematic data column is changed in (ManageStatsOut)-grid
                 // stats Oskari layer, which send the event
-                this._layer = event.getLayer();
+
+                if (event.getLayer())
+                    this._layer = event.getLayer();
                 //params eg. CUL_COL:"indicator..." , VIS_NAME: "ows:kunnat2013", VIS_ATTR: "kuntakoodi", VIS_CODES: munArray, COL_VALUES: statArray
-                this._params = event.getParams();
-                // Classify data
-                if (this._params && this._params.COL_VALUES && this._params.COL_VALUES.length === 0) {
-                    // If the values are empty, just send the empty values to visualization
-                    this.sendEmptyValues(event);
-                } else {
-                    // Else classify data
-                    this.classifyData(event);
-                }
+
+                if (event.getParams())
+                    this._state._params = event.getParams();
+
+                this._disableVisualizationValues(this._currentScale);
+                
+                this.classifyDataEntry(event);
+            },
+            'StatsGrid.GridChanged': function (event) {
+                this._updateVisualizationRowSelector(event.getFunctionalRows());
             }
         },
 
@@ -354,13 +456,419 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         onEvent: function (event) {
             return this.eventHandlers[event.getName()].apply(this, [event]);
         },
-        /**
-         * @method classifyData
-         * Classify Sotka indicator column data
-         * Parses the data from the grid for geostats and backend so that it can be shown on the map.
-         * @param event  Data sent by 'MapStats.SotkadataChangedEvent' (eg. in  ManageStatsOut.js)
-         */
-        classifyData: function (event) {
+        
+        _updateVisualizationRowSelector: function (visualizationRows) {
+            var visualizationRowSelect = this.element.find('div.content').find('.classificationOptions').find('div.visualizationRow').find('select.visualizationRow');
+            var oldValue = visualizationRowSelect.val();
+            visualizationRowSelect.empty();
+            visualizationRowSelect.append('<option value="administrative" selected="selected">Hallinnollinen</option>');
+            
+            _.each(visualizationRows, function(item) {
+                visualizationRowSelect.append('<option value="' + item.key + "_" + item.id + '">' + item.title + '</option>');
+            });
+            
+        },
+        
+        _disableVisualizationValues: function (scale) {
+            var me = this;
+            var newZoneTypes = me._getZoneTypesDependingOnScale(scale);
+            var toRemove = [];
+            var toAdd = [];
+            var currentZoneTypes = me._zoneTypes.slice();
+            me._zoneTypes = newZoneTypes;
+
+            _.each(currentZoneTypes, function (zoneType) {
+                if ($.inArray(zoneType, newZoneTypes) == -1) {
+                    toRemove.push(zoneType);
+                }
+            });
+            _.each(newZoneTypes, function (zoneType) {
+                if ($.inArray(zoneType, currentZoneTypes) == -1) {
+                    toAdd.push(zoneType);
+                }
+            });
+
+            var zoneTypeSelect = me.element.find('div.content').find('.classificationOptions').find('div.zoneType').find('select.zoneType');
+            var currentValue = zoneTypeSelect.val();
+            _.each(toRemove, function (val) {
+                zoneTypeSelect.find("option[value='" + val + "']").attr('disabled', 'disabled');
+            });
+            _.each(toAdd, function (val) {
+                zoneTypeSelect.find("option[value='" + val + "']").removeAttr('disabled');               
+            });
+
+            if ($.inArray(currentValue, toRemove) != -1) {
+                if (newZoneTypes.length > 0) {
+                    zoneTypeSelect.val(newZoneTypes[0]);
+                    zoneTypeSelect.change();
+                }
+            }
+        },
+        classifyDataEntry: function(event) {
+            var me = this;
+            if (!me._layer) {
+                return;
+            }
+            this._initState();
+            var params = this._state._params;
+
+            var zoneType = this._state.zoneTypeId;
+            var visualizationMethod = this._state.visualizationmethodId;
+            if (!zoneType || !visualizationMethod) {
+                console.log("Empty zone type or visualization method");
+                return;
+            }
+
+            if (zoneType == this.ZONE_ADMINISTRATIVE)
+            {
+                switch (visualizationMethod) {
+                    case this.VISMETHOD_CHOROPLETIC:
+                        if (params && params.COL_VALUES && params.COL_VALUES.length === 0) {
+                            this.administrative_sendEmptyValues(event);
+                        } else {
+                            this.administrative_classifyData(event, params.CUR_COL.indicatorData);
+                        }
+                        break;
+                    case this.VISMETHOD_GRADUATED:
+                        this.graduated_administrative_classifyData(me._layer, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        break;
+                    default:
+                        break;
+                }                
+            }
+            else if (zoneType.indexOf(this.ZONE_GRID) == 0)
+            {
+                switch (visualizationMethod) {
+                    case this.VISMETHOD_CHOROPLETIC:
+                        this.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        break;
+                    case this.VISMETHOD_GRADUATED:
+                        this.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        break;
+                    default:
+                        break;
+                }
+
+                if(me._state._params.CUR_COL.indicatorData.privacyLimit) {
+                    var cookie = JSON.parse($.cookie('gridPrivacyNotice'));
+                    if(cookie === null) {
+                        cookie = [];
+                    }
+                    if($.inArray(me._state._params.CUR_COL.indicatorData.id, cookie) < 0) {
+                        cookie.push(me._state._params.CUR_COL.indicatorData.id);
+                        $.cookie('gridPrivacyNotice', JSON.stringify(cookie));
+                        
+                        me.showMessage(me._locale.classify.privacyNoticeTitle, me._locale.classify.privacyNoticeDescription);
+                    }
+                }
+            }
+            else {
+                console.log("Unsupported method " + method);
+            }
+        },
+        graduated_administrative_classifyData: function (layer, indicatorData, indicatorName) {
+            var me = this;
+
+            this._initState();
+
+            var params = this._state._params;
+            var columnValues = params.COL_VALUES;
+            var columnIds = params.VIS_CODES;
+            var columnNames = params.VIS_NAMES;
+            var classificationMethod = me._state.methodId;
+            var numberOfClasses = me._state.numberOfClasses;
+            var visualizationParams = {
+                'attribute': params.VIS_ATTR,
+                'name' : params.VIS_NAME,
+                'showAreaNames': me._state.showAreaNames,
+                'showValues' : me._state.showValues
+            };            
+
+            var columnAbsoluteValues = columnValues.slice();
+            for (var i = 0; i < columnAbsoluteValues.length; i++) {
+                if (columnAbsoluteValues[i] < 0)
+                    columnAbsoluteValues[i] = -columnAbsoluteValues[i];
+            }            
+            var result = me._classifySeries(columnAbsoluteValues, columnIds, numberOfClasses, classificationMethod, false);
+            if (!result.valid)
+                return;           
+
+            var classificationParams = {
+                min: result.gstats.min(),
+                max: result.gstats.max(),
+                maxSize: me._getPointSize(me._state.pointSizeId)
+            };            
+            me.graduated_setLegend(result.limits, classificationParams, indicatorName);
+
+            var returnObject = {
+                ZONE_TYPE: me.ZONE_ADMINISTRATIVE,
+                VIS_METHOD: me.VISMETHOD_GRADUATED,
+                VIS_ID: -1,
+                VIS_NAME: visualizationParams.name,
+                VIS_ATTR: visualizationParams.attribute,
+                VIS_CLASSES: "",
+                VIS_COLORS: "choro:",
+                VIS_SHOW_AREA_NAMES: visualizationParams.showAreaNames,
+                VIS_SHOW_VALUES: visualizationParams.showValues,
+                COLUMN_VALUES: columnValues,
+                COLUMN_IDS: columnIds,
+                COLUMN_NAMES: columnNames,
+                CLASSIFICATION_PARAMS: classificationParams,
+                indicatorData: indicatorData
+            };
+
+            me.statsService.sendVisualizationData(layer, returnObject);       
+        },
+        graduated_setLegend: function (limits, classificationParams, name) {
+            var me = this;
+            var spreadValue = classificationParams.max - classificationParams.min;
+
+            var colortab = '<div class="geostats-legend"><div class="geostats-legend-title">' + name + '</div>';
+
+            _.each(limits.slice(1), function (limit) {
+                var signClass = limit >= 0 ? "positive" : "negative";
+                var backgroundColor = limit >= 0 ? "#3182bd" : "#e34a33";
+                var size = (Math.sqrt((limit - classificationParams.min) / spreadValue) * classificationParams.maxSize) * 8;
+                colortab += '<div><div class="geostats-legend-block-circle '+ signClass + '" style="background-color:' + backgroundColor + ';width:' + size + 'px;height:' + size + 'px"></div> ' + limit + '</div>';
+            });
+            colortab += '</div>';
+            var classify = me.element.find('.classifications');
+            classify.find('.block').remove();
+            var block = jQuery(me.templates.block).clone();
+
+            block.append(colortab);
+            classify.append(block);
+        },
+        graduated_grid_classifyData: function (layer, zoneType, visualizationMethod, computationMethod, indicatorData, indicatorName) {
+            var me = this;
+            if (this.getMap().getScale() >= this.conf.scale[zoneType])
+                return false;
+            var breaksInput = me._state.manualBreaksInput;
+            var numberOfClasses = me._state.numberOfClasses;
+            if (!this._validateClassificationParameters(computationMethod, breaksInput))
+                return false;
+
+            if (computationMethod == 4) {
+                numberOfClasses = breaksInput.split(',').length;
+            }
+
+            var successCb = function (classifyParam) {
+                var limits = [];
+                var classificationParams = {};
+                classificationParams.maxSize = me._getZoneSize(zoneType)/10/ me._sandbox.getMap().getResolution();
+                for (var j = 0; j < classifyParam.items.length; j++) {
+                    var item = classifyParam.items[j];
+                    if (j == 0) {
+                        limits.push(item.ranges[0]);
+                        classificationParams.min = item.ranges[0];
+                    }
+                            
+                    limits.push(item.ranges[1]);
+
+                    if (j == classifyParam.items.length - 1) {
+                        classificationParams.max = item.ranges[1];
+                    }
+                }                   
+
+                me._finishOverlay();
+                me.graduated_setLegend(limits, classificationParams, indicatorName);
+                me.grid_visualize(classifyParam, layer, zoneType, visualizationMethod, indicatorData);
+            };
+            var errorCb = function() {
+                me._finishOverlay();
+                me.showErrorPopup('general');
+            };
+
+            if (computationMethod == 4) {
+                //manual computation, we've got all data here
+                var classifyParams = me._getManualClassifyParams(breaksInput.split(','));
+                successCb(classifyParams);
+            } else {
+                var params = {
+                    'indicatorData': JSON.stringify(indicatorData),
+                    'size': zoneType,
+                    'bbox': me._getExpandedBbox(me._sandbox.getMap().getBbox()),
+                    'numberOfClasses': numberOfClasses,
+                    'method': computationMethod,
+                    'dataTransformation': 1
+                };
+                me._startOverlay();
+                this.statsService.fetchClassificationData(params, successCb, errorCb);
+            }
+            return true;
+        },
+        _getExpandedBbox : function(bbox) {
+            var ratio = 1.5; //default ratio set in OpenLayers.Layer.Grid.ratio
+            var center = bbox.getCenterLonLat();
+            var tileWidth = bbox.getWidth() * ratio;
+            var tileHeight = bbox.getHeight() * ratio;
+
+            var bounds = new OpenLayers.Bounds(center.lon - (tileWidth / 2),
+                                  center.lat - (tileHeight / 2),
+                                  center.lon + (tileWidth / 2),
+                                  center.lat + (tileHeight / 2));
+            return bounds;
+        },
+        _validateClassificationParameters: function (computationMethod, breaksInput) {
+            var me = this;
+
+            if (computationMethod == 4) {
+                if (breaksInput == null) 
+                    return false;
+                var manBreaks = breaksInput.split(',');
+                if (manBreaks.length - 1 < me.minClassNum || manBreaks.length - 1 > me.maxClassNum) {
+                    var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+                    var msg = this._locale.classify.manualRangeError.replace(/\{min\}/, me.minClassNum + 1).replace(/\{max\}/, me.maxClassNum + 1);
+                    dialog.show(null, msg);
+                    dialog.fadeout();
+                    return false;
+                }
+                for (var j = 0; j < manBreaks.length; j++) {
+                    var rangeVal = Number(manBreaks[j]);
+                    if (isNaN(rangeVal)) {
+                        dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+                        msg = me._locale.classify.nanError;
+                        dialog.show(null, msg);
+                        dialog.fadeout();
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        },
+        _getManualClassifyParams : function(manBreaks) {
+            var classifyParams = { "dataTransformation": 0, "items": [] };
+            var lastItem = { "ranges": [], "description": "0" };
+            var lastIdx = 0;
+            var precision = 1/Math.pow(10, this._state._params.CUR_COL.indicatorData.decimalCount);
+
+            for (var j = 0; j < manBreaks.length; j++) {
+                var rangeVal = Number(manBreaks[j]);
+                if (j == 0) {
+                    lastItem.ranges.push(rangeVal);
+                } else {
+                    lastItem.ranges.push(rangeVal);
+                    lastIdx++;
+                    var newItem = { "ranges": [], "description": lastIdx + "" };
+                    newItem.ranges.push(rangeVal + precision);
+                    classifyParams.items.push(lastItem);
+
+                    lastItem = newItem;
+                }
+            }
+
+            return classifyParams;
+        },
+        grid_classifyData: function (layer, zoneType, visualizationMethod, computationMethod, indicatorData, indicatorName) {
+            var me = this;
+            if (this.getMap().getScale() >= this.conf.scale[zoneType])
+                return false;
+            var breaksInput = me._state.manualBreaksInput;
+            var numberOfClasses = me._state.numberOfClasses;
+            var classificationmode = me._state.classificationMode;
+            if (!this._validateClassificationParameters(computationMethod, breaksInput))
+                return false;
+
+            if (computationMethod == 4) {
+                numberOfClasses = breaksInput.split(',').length;
+            }
+            var colors = me._getColors(this.currentColorSet, me.colorsetIndex, numberOfClasses-2);
+            if (me.colorsFlipped) {
+                colors = colors.split(',').reverse().join(',');
+            }
+            var colorsArray = colors.split(',');
+
+            var successCb = function (classifyParam) {
+                me._finishOverlay();
+
+                for (var j = 0; j < classifyParam.items.length; j++) {
+                    classifyParam.items[j].description = colorsArray[j];
+                }
+
+                me.grid_administrative_setLegend(classifyParam, indicatorName);
+                me.grid_visualize(classifyParam, layer, zoneType, visualizationMethod, indicatorData);
+            };
+            var errorCb = function() {
+                me._finishOverlay();
+                me.showErrorPopup('general');
+            };
+
+            if (computationMethod == 4) {
+                //manual computation, we've got all data here                
+                var classifyParams = me._getManualClassifyParams(breaksInput.split(','));
+                successCb(classifyParams);                    
+            } else {
+                var params = {
+                    'indicatorData': JSON.stringify(indicatorData),
+                    'size': zoneType,
+                    'bbox': me._getExpandedBbox(me._sandbox.getMap().getBbox()),
+                    'numberOfClasses': numberOfClasses,
+                    'method': computationMethod,
+                    'mode': classificationmode
+                };
+                me._startOverlay();
+                this.statsService.fetchClassificationData(params, successCb, errorCb);
+            }
+            return true;
+        },
+        grid_administrative_setLegend: function (classifyParams, name) {
+            var me = this;
+            var colortab = '<div class="geostats-legend"><div class="geostats-legend-title">' + name + '</div>';
+
+            _.each(classifyParams.items, function (item) {
+                colortab += '<div><div class="geostats-legend-block" style="background-color:#' + item.description + '"></div> ' + item.ranges[0] + " - " + item.ranges[1] + '</div>';
+            });
+            colortab += '</div>';
+            var classify = me.element.find('.classifications');
+            classify.find('.block').remove();
+            var block = jQuery(me.templates.block).clone();
+
+            block.append(colortab);
+            classify.append(block);
+        },
+        grid_visualize: function (classifyParam, layer, gridType, visualizationMethod, indicatorData) {
+            var me = this;
+            var params = me._state._params;
+            
+            var indicData = jQuery.extend(true, {}, indicatorData);
+
+            if(me._state.visualizationAreaCategory.key !== 'administrative') {
+                if(typeof indicData.filter === 'undefined' || indicData.filter === null) {
+                    indicData.filter = JSON.stringify([{"key":me._state.visualizationAreaCategory.key,"values":[me._state.visualizationAreaCategory.id]}]);
+                } else {
+                    var filter = JSON.parse(indicData.filter);
+                    filter.push({"boolean":"AND"});
+                    filter.push({"key":me._state.visualizationAreaCategory.key,"values":[me._state.visualizationAreaCategory.id]});
+                    
+                    indicData.filter = JSON.stringify(filter);
+                }
+            }
+
+            var returnObject = {
+                ZONE_TYPE: gridType,
+                VIS_METHOD: visualizationMethod,
+                classify: classifyParam,                
+                methodId: me._state.methodId,
+                numberOfClasses: me._state.numberOfClasses,
+                manualBreaksInput: me._state.manualBreaksInput,
+                colors: {
+                    set: me.currentColorSet,
+                    index: me.colorsetIndex,
+                    flipped: me.colorsFlipped
+                },
+                classificationMode: me._state.classificationMode,
+                VIS_ID: -1,
+                VIS_NAME: params.VIS_NAME,
+                VIS_ATTR: params.VIS_ATTR,
+                VIS_CLASSES: "",
+                VIS_COLORS: me.conf.graduated.fillColor.positive + "," + me.conf.graduated.fillColor.negative,
+                indicatorData: indicData
+            };
+            // Send the data out for visualization.
+            me.statsService.sendVisualizationData(layer, returnObject);
+        },        
+        administrative_classifyData: function (event, indicatorData) {
             // return, if no old data
             var me = this;
             if (!me._layer) {
@@ -371,7 +879,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             // Current Oskari layer
             var layer = this._layer;
             //params eg. CUL_COL:"indicator..." , VIS_NAME: "ows:kunnat2013", VIS_ATTR: "kuntakoodi", VIS_CODES: munArray, COL_VALUES: statArray
-            var params = this._params;
+            var params = this._state._params;
             // Current selected stats grid column
             var sortcol = params.CUR_COL,
                 strings = [],
@@ -383,7 +891,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 i,
                 k,
                 block,
-                classify;
+                classify,
+                classes;
 
             //Check selected column - only data columns are handled
             if (!sortcol || (sortcol && sortcol.field.indexOf('indicator') < 0)) {
@@ -415,57 +924,24 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 this._showClassificationOptions(this.element);
             }
 
+            var COL_VALUES = params.COL_VALUES;
+            var VIS_CODES = params.VIS_CODES;
+
             // Get class count
-            if (me._state.numberOfClasses > params.COL_VALUES.length - 1) {
-                var newValue = Math.max(2, params.COL_VALUES.length - 1);
+            if (me._state.numberOfClasses > COL_VALUES.length - 1) {
+                var newValue = Math.max(2, COL_VALUES.length - 1);
                 this.rangeSlider.slider('option', 'value', newValue);
                 jQuery('input#amount_class').val(newValue);
                 me._state.numberOfClasses = newValue;
             }
-            var classes = me._state.numberOfClasses,
-                gcol_data = params.COL_VALUES;
-            gcol_data = gcol_data.slice(0);
-            var codes = params.VIS_CODES;
-            // Limits
-            var gstats = new geostats(gcol_data),
-                col_data = params.COL_VALUES;
 
-            if (isNonNumeric) {
-                limits = gstats.getUniqueValues();
-                classes = limits.length;
-                _.times(classes, function () {
-                    strings.push([]);
-                });
-                for (k = 0, dataLen = col_data.length; k < dataLen; k++) {
-                    for (i = 0; i < classes; i++) {
-                        if (limits[i] === col_data[k]) {
-                            strings[i].push(codes[k]);
-                        }
-                    }
-                }
-            } else if (method === '1') {
-                limits = gstats.getJenks(classes);
-            } else if (method === '2') {
-                limits = gstats.getQuantile(classes);
-                // Check for errors
-                for (i = 0; i < limits.length; i++) {
-                    if (typeof limits[i] === "undefined") {
-                        valid = false;
-                        break;
-                    }
-                }
-            } else if (method === '3') {
-                limits = gstats.getEqInterval(classes);
-            } else if (method === '4') {
-                limits = this.setManualBreaks(gstats);
-                if (!limits) {
-                    return;
-                }
-                classes = limits.length - 1;
-            }
+            var result = me._classifySeries(COL_VALUES, VIS_CODES, me._state.numberOfClasses, method, isNonNumeric);
+
+            if (!result.limits && method === '4')
+                return;
 
             // Preliminary error handling
-            if (!valid) {
+            if (!result.valid) {
                 classify = me.element.find('.classifications');
                 classify.find('.block').remove();
                 block = jQuery(me.templates.block);
@@ -476,9 +952,177 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 return;
             }
 
-            if (!isNonNumeric) {
+            limits = result.limits;
+            if(params.VIS_NAME === '-1') {
+                strings = [];
+            } else {
+                strings = result.strings;
+            }
+            classes = result.numberOfClasses;
+            var gstats = result.gstats;
+
+            var classString = _.map(strings, function (stringArr) {
+                return stringArr.join(',');
+            }).join('|'),
+                colors = me._getColors(this.currentColorSet, me.colorsetIndex, classes - 2);
+            // If true, reverses the color "array"
+            if (me.colorsFlipped) {
+                colors = colors.split(',').reverse().join(',');
+            }
+            var colorArr = colors.split(",");
+
+            for (i = 0; i < colorArr.length; i++) {
+                colorArr[i] = '#' + colorArr[i];
+            }
+            gstats.setColors(colorArr);
+
+            me._state.manualBreaksInput = (me._state.manualBreaksInput !== null && me._state.manualBreaksInput !== undefined) ? me._state.manualBreaksInput.toString() : "";
+            colors = colors.replace(/,/g, '|');
+            var classificationMode = me._state.classificationMode;
+
+            var columnValues = params.COL_VALUES;
+            var columnIds = params.VIS_CODES;
+            var columnNames = params.VIS_NAMES;
+            var classificationParams = {
+                min: gstats.min(),
+                max: gstats.max(),
+                maxSize: me._getPointSize(me._state.pointSizeId)
+            };
+
+            var returnObject = {
+                ZONE_TYPE: me.ZONE_ADMINISTRATIVE,
+                VIS_METHOD: me.VISMETHOD_CHOROPLETIC,
+                //instance.js - state handling: method
+                methodId: method,
+                //instance.js - state handling: number of classes
+                numberOfClasses: classes,
+                //instance.js - state handling: input string of manual classification method
+                manualBreaksInput: me._state.manualBreaksInput,
+                //instance.js - state handling: input object for colors
+                colors: {
+                    set: me.currentColorSet,
+                    index: me.colorsetIndex,
+                    flipped: me.colorsFlipped
+                },
+                classificationMode: classificationMode,
+                VIS_ID: -1,
+                VIS_NAME: params.VIS_NAME,
+                VIS_ATTR: params.VIS_ATTR,
+                VIS_CLASSES: classString,
+                VIS_COLORS: "choro:" + colors,
+                VIS_SHOW_AREA_NAMES: me._state.showAreaNames,
+                VIS_SHOW_VALUES: me._state.showValues,
+                COLUMN_VALUES: columnValues,
+                COLUMN_IDS: columnIds,
+                COLUMN_NAMES: columnNames,
+                CLASSIFICATION_PARAMS: classificationParams,
+                indicatorData: indicatorData
+            };
+            // Send the data out for visualization.
+            this.statsService.sendVisualizationData(layer, returnObject);
+
+            if (params.COL_VALUES.length >= 2) {
+                var legendRounder = function (i) {
+                    var ret;
+                    if (isNaN(i) || (i % 1 === 0)) {
+                        ret = i;
+                    } else {
+                        ret = (Math.round(i * 100) / 100);
+                    }
+                    return ret;
+                };
+
+                var colortab = gstats.getHtmlLegend(null, sortcol.name, true, legendRounder, classificationMode);
+                classify = me.element.find('.classifications');
+                classify.find('.block').remove();
+                block = jQuery(me.templates.block).clone();
+
+                block.append(colortab);
+                classify.append(block);
+
+                // Show legend in content
+                this.element.find('div.content').show();
+            }
+
+            this._visibilityOn();
+        },
+        administrative_sendEmptyValues: function (event) {
+            var layer, params;
+            if (event) {
+                layer = event.getLayer();
+                params = event.getParams();
+            } else {
+                layer = this._layer;
+                params = this._state._params;
+            }
+
+            var returnObject = {
+                ZONE_TYPE: this.ZONE_ADMINISTRATIVE,
+                VIS_METHOD: this.VISMETHOD_CHOROPLETIC,
+                VIS_ID: -1,
+                VIS_NAME: params.VIS_NAME,
+                VIS_ATTR: params.VIS_ATTR,
+                VIS_CLASSES: "",
+                VIS_COLORS: "choro:"
+            };
+
+            this.statsService.sendVisualizationData(layer, returnObject);
+            this.resetUI();
+        },
+        _classifySeries: function (series, codes, numberOfClasses, method, isNonNumeric) {
+            var classes = numberOfClasses,
+                gcol_data = series,
+                valid = true,
+                limits,
+                check,
+                strings = [];
+            gcol_data = gcol_data.slice(0); //copy
+            var gstats = new geostats(gcol_data),
+                col_data = series;
+
+            gstats.setPrecision(this._state._params.CUR_COL.indicatorData.decimalCount);
+            
+            if (gcol_data == null || gcol_data.length == 0)
+                valid = false;
+
+            if (valid) {
+                if (isNonNumeric) {
+                    limits = gstats.getUniqueValues();
+                    classes = limits.length;
+                    _.times(classes, function () {
+                        strings.push([]);
+                    });
+                    for (var k = 0, dataLen = col_data.length; k < dataLen; k++) {
+                        for (i = 0; i < classes; i++) {
+                            if (limits[i] === col_data[k]) {
+                                strings[i].push(codes[k]);
+                            }
+                        }
+                    }
+                } else if (method === '1') {
+                    limits = gstats.getJenks(classes);
+                } else if (method === '2') {
+                    limits = gstats.getQuantile(classes);
+                    // Check for errors
+                    for (i = 0; i < limits.length; i++) {
+                        if (typeof limits[i] === "undefined") {
+                            valid = false;
+                            break;
+                        }
+                    }
+                } else if (method === '3') {
+                    limits = gstats.getEqInterval(classes);
+                } else if (method === '4') {
+                    limits = this.setManualBreaks(gstats);
+                    if (limits) {
+                        classes = limits.length - 1;
+                    }
+                }
+            }
+
+            if (valid & !isNonNumeric) {
                 // Put municipality codes  in range limits
-                for (i = 0; i < classes; i++) {
+                for (var i = 0; i < classes; i++) {
                     strings[i] = [];
                 }
                 for (k = 0; k < col_data.length; k++) {
@@ -502,98 +1146,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                         check = false;
                         continue;
                     }
-                    strings[strings.length - 1].push(codes[k]);
+                    if (method !== '4')
+                        strings[strings.length - 1].push(codes[k]);
                 }
             }
 
-            var classString = _.map(strings, function (stringArr) {
-                return stringArr.join(',');
-            }).join('|'),
-                colors = me._getColors(this.currentColorSet, me.colorsetIndex, classes - 2);
-            // If true, reverses the color "array"
-            if (me.colorsFlipped) {
-                colors = colors.split(',').reverse().join(',');
-            }
-            var colorArr = colors.split(",");
-
-            for (i = 0; i < colorArr.length; i++) {
-                colorArr[i] = '#' + colorArr[i];
-            }
-            gstats.setColors(colorArr);
-
-            me._state.manualBreaksInput = (me._state.manualBreaksInput !== null && me._state.manualBreaksInput !== undefined) ? me._state.manualBreaksInput.toString() : "";
-            colors = colors.replace(/,/g, '|');
-            var classificationMode = me._state.classificationMode;
-
-            var returnObject = {
-                //instance.js - state handling: method
-                methodId: method,
-                //instance.js - state handling: number of classes
-                numberOfClasses: classes,
-                //instance.js - state handling: input string of manual classification method
-                manualBreaksInput: me._state.manualBreaksInput,
-                //instance.js - state handling: input object for colors
-                colors: {
-                    set: me.currentColorSet,
-                    index: me.colorsetIndex,
-                    flipped: me.colorsFlipped
-                },
-                classificationMode: classificationMode,
-                VIS_ID: -1,
-                VIS_NAME: params.VIS_NAME,
-                VIS_ATTR: params.VIS_ATTR,
-                VIS_CLASSES: classString,
-                VIS_COLORS: "choro:" + colors
+            return {
+                'limits': limits,
+                'numberOfClasses': classes,
+                'valid': valid,
+                'strings': strings,
+                'gstats': gstats
             };
-            // Send the data out for visualization.
-            this.statsService.sendVisualizationData(layer, returnObject);
-
-            if (params.COL_VALUES.length >= 2) {
-                var legendRounder = function (i) {
-                    var ret;
-                    if (isNaN(i) || (i % 1 === 0)) {
-                        ret = i;
-                    } else {
-                        ret = (Math.round(i * 10) / 10);
-                    }
-                    return ret;
-                };
-
-                var colortab = gstats.getHtmlLegend(null, sortcol.name, true, legendRounder, classificationMode);
-                classify = me.element.find('.classifications');
-                classify.find('.block').remove();
-                block = jQuery(me.templates.block).clone();
-
-                block.append(colortab);
-                classify.append(block);
-
-                // Show legend in content
-                this.element.find('div.content').show();
-            }
-
-            this._visibilityOn();
-        },
-
-        /**
-         * Sends empty values for visualization. Used because #classifyData
-         * does a whole lot of other things besides just sending the values.
-         *
-         * @method sendEmptyValues
-         * @param  {Object} event The event with layer and params
-         * @return {undefined}
-         */
-        sendEmptyValues: function (event) {
-            var layer = event.getLayer(),
-                params = event.getParams();
-
-            this.statsService.sendVisualizationData(layer, {
-                VIS_ID: -1,
-                VIS_NAME: params.VIS_NAME,
-                VIS_ATTR: params.VIS_ATTR,
-                VIS_CLASSES: "",
-                VIS_COLORS: "choro:"
-            });
-            this.resetUI();
         },
         _hasNonNumericValues: function (values) {
             for (var i = 0, valLen = values.length; i < valLen; ++i) {
@@ -622,7 +1186,110 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
          */
         resetUI: function () {
             this.element = null;
+            this._initState();
             this._createUI();
+        },
+        _getAllZoneTypes: function() {
+            var result = [];
+            _.each(this.conf.scale, function (scaleValue, method) {
+                 result.push(method);
+            });
+            result.push(this.ZONE_ADMINISTRATIVE);
+            return result;
+        },
+        _getZoneTypesDependingOnScale: function (scale) {
+            var result = [];
+            var areaTypes = null;
+            var me = this;
+            if(typeof me._state._params !== 'undefined') {
+                areaTypes = me._state._params.CUR_COL.indicatorData.areaTypes;
+            }
+            _.each(this.conf.scale, function (scaleValue, method) {
+                if (scale < scaleValue && (me.statsService.instance.gridPlugin.mode == 'twoway' || (areaTypes && $.inArray(method, areaTypes) > -1))) {
+                    result.push(method);
+                }
+            });
+            result.push(this.ZONE_ADMINISTRATIVE);
+            return result;
+        },
+        _changeZoneType: function (zoneType) {
+            var me = this;
+            if (me._state.zoneTypeId != zoneType) {
+                me._state.zoneTypeId = zoneType;
+                me.classifyDataEntry();
+
+                if (zoneType != me.ZONE_ADMINISTRATIVE) {
+                    me.element.find('div.pointSize').hide();
+                }
+                if (zoneType == me.ZONE_ADMINISTRATIVE && me._state.visualizationmethodId == me.VISMETHOD_GRADUATED) {
+                    me.element.find('div.pointSize').show();
+                }
+
+                if (zoneType.indexOf("grid") == 0) {
+                    me.element.find('div.textOptions').hide();
+                } else {
+                    me.element.find('div.textOptions').show();
+                }
+            }            
+        },
+        _changeVisualizationRow: function(visualizationRow) {
+            var parts = visualizationRow.split("_");
+            var category = parts[0];
+            var id = 1;
+            if(parts.length > 1) {
+                id = parts[1];
+            }
+            
+            var eventBuilder = this._sandbox.getEventBuilder('StatsGrid.GridVisualizationRowChanged');
+
+            if (eventBuilder) {
+                var event = eventBuilder(this._state._params.CUR_COL, {key: category, id: id});
+                this._sandbox.notifyAll(event);
+            }
+        },
+        _changeVisualizationMethod: function(visualizationMethod) {
+            var me = this;
+            if (me._state.visualizationmethodId != visualizationMethod) {
+                me._state.visualizationmethodId = visualizationMethod;
+                me.classifyDataEntry();
+
+                if (visualizationMethod != me.VISMETHOD_GRADUATED) {
+                    me.element.find('div.pointSize').hide();
+                    me.element.find('div.classificationColors').show();
+                    me.element.find('div.classificationMode').show();
+                } else {
+                    me.element.find('div.classificationColors').hide();
+                    me.element.find('div.classificationMode').hide();                    
+                }
+
+                if (me._state.zoneTypeId == me.ZONE_ADMINISTRATIVE && visualizationMethod == me.VISMETHOD_GRADUATED) {
+                    me.element.find('div.pointSize').show();
+                }
+            }
+        },
+        _changePointSize: function (pointSize) {
+            var me = this;
+            if (me._state.pointSizeId != pointSize) {
+                me._state.pointSizeId = pointSize;
+                me.classifyDataEntry();
+            }
+        },
+        _getPointSize: function(pointSizeId) {
+            var maxSize;
+            switch (pointSizeId) {
+                case this.POINTSIZE_BIG:
+                    maxSize = 8;
+                    break;
+                case this.POINTSIZE_NORMAL:
+                    maxSize = 2;
+                    break;
+                case this.POINTSIZE_SMALL:
+                    maxSize = 0.5;
+                    break;
+                default:
+                    maxSize = 2;
+            }
+            return maxSize;
         },
         /**
          * @method  _createUI
@@ -632,6 +1299,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
          */
         _createUI: function () {
             var me = this;
+            var params = me._state._params;
 
             // destroy the old plugin from the map
             jQuery('div.manageClassificationPlugin').remove();
@@ -645,6 +1313,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 classify = jQuery(
                     '<div class="classifications">' +
                     '<div class="classificationOptions">' +
+                    '<div class="zoneType"></div>' +
+                    '<div class="visualizationRow"></div>' +
+                    '<div class="visualizationMethod"></div>' +
+                    '<div class="textOptions"></div>' +
+                    '<div class="pointSize"></div>' +
                     '<div class="classificationMethod"></div>' +
                     '<div class="classCount">' +
                     '<div class="countSlider"></div>' +
@@ -657,14 +1330,99 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 ),
                 classifyOptions = classify.find('.classificationOptions'),
                 methods = [this._locale.classify.jenks, this._locale.classify.quantile, this._locale.classify.eqinterval, this._locale.classify.manual],
+                zoneTypes = null,
+                visualizationMethods = this._visualizationMethods,
+                pointSizes = this._pointSizes,
                 i,
                 opt;
 
             // do not show classification option if it is not allowed - published map
             if (me._state.allowClassification !== false) {
                 classifyOptions
+                    .find('div.zoneType')
+                    .append('<label>' + this._locale.classify.visualizationmethod + '</label><br><select class="zoneType"></select><br>');
+                var zoneTypeSelect = classifyOptions.find('select.zoneType');
+
+                var scale = this.getMap().getScale();
+                me._currentScale = scale;
+                zoneTypes = me._getAllZoneTypes();
+                var scaleZoneTypes = me._getZoneTypesDependingOnScale(scale);
+                me._zoneTypes = scaleZoneTypes;
+                for (i = 0; i < zoneTypes.length; i++) {
+                    opt = jQuery('<option value="' + zoneTypes[i] + '">' + this._locale.classify[zoneTypes[i]] + '</option>');
+                    if ($.inArray(zoneTypes[i], scaleZoneTypes) == -1) {
+                        opt.attr('disabled', 'disabled');
+                    }
+                    if(me.statsService.instance.conf.gridDataAllowed || zoneTypes[i] === this.ZONE_ADMINISTRATIVE) {
+                        zoneTypeSelect.append(opt);
+                    }
+                }
+                zoneTypeSelect.val(this._state.zoneTypeId);
+                zoneTypeSelect.change(function (e) {
+                    me._changeZoneType(jQuery(this).val());
+                });
+
+                classifyOptions
+                    .find('div.visualizationRow')
+                    .append('<label>' + this._locale.classify.visualizationRow + '</label><br><select class="visualizationRow"></select><br>');
+                
+                var visualizationRowSelect = classifyOptions.find('select.visualizationRow');
+                visualizationRowSelect.append('<option value="administrative" selected="selected">Hallinnollinen</option>');     
+                visualizationRowSelect.change(function (e) {
+                    me._changeVisualizationRow(jQuery(this).val());
+                });
+                
+                classifyOptions
+                    .find('div.visualizationMethod')
+                    .append('<label>' + this._locale.classify.visualizationsubmethod + '</label><br><select class="visualizationMethod"></select><br>');
+                var visualizationMethodSelect = classifyOptions.find('select.visualizationMethod');
+                for (i = 0; i < visualizationMethods.length; i++) {
+                    opt = jQuery('<option value="' + visualizationMethods[i] + '">' + this._locale.classify[visualizationMethods[i]] + '</option>');
+                    visualizationMethodSelect.append(opt);
+                }
+                visualizationMethodSelect.val(this._state.visualizationmethodId);
+                visualizationMethodSelect.change(function (e) {
+                    me._changeVisualizationMethod(jQuery(this).val());
+                });
+
+                classifyOptions
+                    .find('div.textOptions')
+                    .append('<label>' + this._locale.classify.textOptions + '</label>' +
+                        '<div><input type="checkbox" id="showAreaNames">' + this._locale.classify.showAreaNames + '</input></div>' +
+                        '<div><input type="checkbox" id="showValues">' + this._locale.classify.showValues + '</input></div>');
+
+                classifyOptions.find("#showAreaNames").prop("checked", this._state.showAreaNames);
+                classifyOptions.find("#showValues").prop("checked", this._state.showValues);
+
+                classifyOptions.find("#showAreaNames").change(function(e) {
+                    me._state.showAreaNames = this.checked;
+                    me.classifyDataEntry();
+                });
+                classifyOptions.find("#showValues").change(function (e) {
+                    me._state.showValues = this.checked;
+                    me.classifyDataEntry();
+                });
+
+                classifyOptions
+                    .find('div.pointSize')
+                    .append('<label>' + this._locale.classify.pointSize + '</label><br><select class="pointSize"></select><br>');
+                var pointSizeSelect = classifyOptions.find('select.pointSize');
+                for (i = 0; i < pointSizes.length; i++) {
+                    opt = jQuery('<option value="' + pointSizes[i] + '">' + this._locale.classify[pointSizes[i]] + '</option>');
+                    pointSizeSelect.append(opt);
+                }
+                pointSizeSelect.val(this._state.pointSizeId);
+                pointSizeSelect.change(function (e) {
+                    me._changePointSize(jQuery(this).val());
+                });
+
+                if (this._state.zoneTypeId != me.ZONE_ADMINISTRATIVE || this._state.visualizationmethodId != me.VISMETHOD_GRADUATED) {
+                    classifyOptions.find('div.pointSize').hide();
+                }
+
+                classifyOptions
                     .find('div.classificationMethod')
-                    .append(this._locale.classify.classifymethod + '<br><select class="method"></select><br>');
+                    .append('<label>' + this._locale.classify.classifymethod + '</label><br><select class="method"></select><br>');
                 var sel = classifyOptions.find('select.method');
                 for (i = 0; i < methods.length; i++) {
                     opt = jQuery('<option value="' + (i + 1) + '">' + methods[i] + '</option>');
@@ -680,13 +1438,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                         jQuery('.manualBreaks').hide();
                         jQuery('.countSlider').show();
                         // Classify current columns, if any
-                        me.classifyData();
+                        me.classifyDataEntry();
                     }
                 });
                 // Content HTML / class count input HTML
                 var classcnt = classifyOptions.find('div.classCount div.countSlider');
                 classcnt
-                    .append(this._locale.classify.classes)
+                    .append('<label>' + this._locale.classify.classes + '</label>')
                     .append('<input type="text" id="amount_class" readonly="readonly" value="5" /><div id="slider-range-max"></div>');
                 //var classcnt = jQuery('<div class="classCount">' + this._locale.classify.classes + ' <input type="text" id="amount_class" readonly="readonly" value="5" /><div id="slider-range-max"></div>');
 
@@ -697,13 +1455,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     value: me._state.numberOfClasses,
                     slide: function (event, ui) {
                         var newValue = ui.value;
-                        if (newValue > me._params.COL_VALUES.length - 1) {
-                            newValue = Math.max(2, me._params.COL_VALUES.length - 1);
+                        if (me._state.zoneTypeId == me.ZONE_ADMINISTRATIVE && newValue > me._state._params.COL_VALUES.length - 1) {
+                            newValue = Math.max(2, me._state._params.COL_VALUES.length - 1);
                         }
                         me._state.numberOfClasses = newValue;
                         jQuery('input#amount_class').val(newValue);
                         // Classify again
-                        me.classifyData(event);
+                        me.classifyDataEntry(event);
                     },
                     stop: function (event, ui) {
                         jQuery(this).slider('option', 'value', me._state.numberOfClasses);
@@ -729,7 +1487,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     // FIXME use ===
                     if (evt.which == 13) {
                         me._state.manualBreaksInput = me.element.find('.manualBreaks').find('input[name=breaksInput]').val();
-                        me.classifyData();
+                        me.classifyDataEntry();
                     }
                 }).focus(function () {
                     me._sandbox.postRequestByName('DisableMapKeyboardMovementRequest');
@@ -746,8 +1504,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 // Classification mode selector
 
                 var modeSelector = jQuery(
-                    '<div>' +
-                    this._locale.classify.mode + '<br />' +
+                    '<div><label>' +
+                    this._locale.classify.mode + '</label><br />' +
                     '<select class="classification-mode"></select><br />' +
                     '</div>'
                 );
@@ -761,7 +1519,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 });
                 modeSelector.find('select.classification-mode').change(function (e) {
                     me._state.classificationMode = jQuery(e.target).val();
-                    me.classifyData();
+                    me.classifyDataEntry();
                 });
 
                 // Colours selectors
@@ -780,7 +1538,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 //classifyOptions.find('div.classCount').append(manualcls);
                 classifyOptions.find('div.classificationMode').append(modeSelector);
                 classifyOptions.find('div.classificationColors').append(colorsButton);
-                classifyOptions.find('div.classificationColors').append(flipColorsButton);
+                classifyOptions.find('div.classificationColors').append(flipColorsButton);               
             }
             content.append(classify);
 
@@ -1233,7 +1991,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
 
             // Selected colorset
             me.currentColorSet = me.content.find('select#colo_set').val();
-            me.classifyData();
+            me.classifyDataEntry();
         },
         /**
          * @method  _hiliSelectedColors
@@ -1355,7 +2113,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     jQuery('input#amount_class').val(ui.value);
                     jQuery(this).slider('option', 'value', ui.value);
                     // Classify again
-                    me.classifyData();
+                    me.classifyDataEntry();
                 }
             });
 
@@ -1374,7 +2132,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
          */
         _flipCurrentColors: function () {
             this.colorsFlipped = this.colorsFlipped ? false : true;
-            this.classifyData();
+            this.classifyDataEntry();
         },
 
         /**
@@ -1446,6 +2204,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     var modeSelect = me.element.find('.classification-mode');
                     modeSelect.val(state.classificationMode);
                 }
+                if (state.zoneTypeId !== null && state.zoneTypeId !== undefined) {
+                    var zoneTypeSelectect = me.element.find('div.zoneType').find('select.zoneType');
+                    zoneTypeSelectect.val(state.zoneTypeId);                    
+                }
                 // jenks, quantiles, eq interval, manual breaks
                 if (state.methodId !== null && state.methodId !== undefined && state.methodId > 0) {
                     var select = me.element.find('.classificationMethod').find('.method');
@@ -1480,9 +2242,117 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         showClassificationOptions: function (isAllowed) {
             this._state.allowClassification = isAllowed;
             this.resetUI();
-            this.classifyData();
+            this.classifyDataEntry();
             this._visibilityOn();
-        }
+        },
+        showErrorPopup: function (message) {
+            var dialog = Oskari.clazz.create("Oskari.userinterface.component.Popup");
+            var popupLoc = this._locale.classification.error.title;
+            var content = this._locale.classification.error[message] != null ? this._locale.classification.error[message] : message;
+            var okBtn = dialog.createCloseButton(this._locale.buttons.close);
+
+            okBtn.addClass("primary");
+            dialog.addClass("error_handling");
+            dialog.show(popupLoc, content, [okBtn]);
+            dialog.fadeout(5000);
+        },
+        _getZoneSize: function (zoneType) {
+            var result = 0;
+            var regex = /grid(\d+)(\D+)/g;
+            var match = regex.exec(zoneType);
+            if (match != null) {
+                result = match[1];
+                if (match[2] == 'km')
+                    result *= 1000;
+            }
+            return result;
+        },
+        _startOverlay: function () {
+            this.element.loadingOverlay({
+                'loadingClass': 'loading-inplace'
+            });
+        },
+        _finishOverlay: function () {
+            this.element.loadingOverlay('remove', {
+                'loadingClass': 'loading-inplace'
+            });
+        },
+        /*
+         * Geometry methods
+         */
+        _getGeometryCenter: function(geometry) {
+            var center = geometry.getCentroid();
+            if (geometry.CLASS_NAME == "OpenLayers.Geometry.Polygon" && !geometry.containsPoint(center)) {
+                center = this.__getTheBiggestCircleCenter(geometry);
+            } else if (geometry.CLASS_NAME == "OpenLayers.Geometry.MultiPolygon") {
+                var largestArea = 0;
+                var largestAreaGeometry = null;
+                for (var i = 0; i < geometry.components; i++) {
+                    var component = geometry.components[i];
+                    if (component.CLASS_NAME == "OpenLayers.Geometry.Polygon" && component.getArea() > largestArea) {
+                        largestArea = component.getArea();
+                        largestAreaGeometry = component;
+                    }
+                }
+                if (largestAreaGeometry) {
+                    center = largestAreaGeometry.getCentroid();
+                    if (!largestAreaGeometry.containsPoint(center)) {
+                        center = this.__getTheBiggestCircleCenter(largestAreaGeometry);
+                    }
+                }
+            }
+
+            return center;
+        },
+        __getTheBiggestCircleCenter: function (geometry) {
+            var bounds = geometry.getBounds();
+            var count = 1;
+            var result = { x: 0, y: 0 };
+            while (count++) {
+                result = this.__getTheBiggestCircleCenterSequencial(geometry, bounds);
+
+                var tmpBound = (bounds.right - bounds.left) / 2.0;
+                bounds.left = result.x - tmpBound;
+                bounds.right = result.x + tmpBound;
+                tmpBound = (bounds.top - bounds.bottom) / 2.0;
+                bounds.bottom = result.y - tmpBound;
+                bounds.top = result.y + tmpBound;
+
+                if (bounds.right - bounds.left < 0.01 || bounds.top - bounds.bottom < 0.01) break;
+                if (count > 4) break;
+            }
+
+            return result;
+        },
+        __getTheBiggestCircleCenterSequencial: function (geometry, bounds) {
+            var result = { x: (bounds.left + bounds.right) / 2, y: (bounds.top + bounds.bottom) / 2 };
+            var NSIZE = 20.0;
+            var MSIZE = 20.0;
+            var maxDistance = 0;
+            var i, j;
+
+            var incrementX = (bounds.right - bounds.left) / NSIZE;
+            var incrementY = (bounds.top - bounds.bottom) / MSIZE;
+
+            for (i = 0; i <= NSIZE; i++) {
+                var x = bounds.left + i * incrementX;
+                for (j = 0; j <= MSIZE; j++) {
+                    var y = bounds.bottom + j * incrementY;
+                    var geomPoint = new OpenLayers.Geometry.Point(x, y);
+                    if (geometry.containsPoint && geometry.containsPoint(geomPoint)) {
+                        var distance = geometry.distanceTo(geomPoint);
+                        if (distance > maxDistance) {
+                            maxDistance = distance;
+                            result.x = x;
+                            result.y = y;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        },
+
 
     }, {
         /**

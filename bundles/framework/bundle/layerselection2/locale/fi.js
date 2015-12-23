@@ -3,7 +3,7 @@ Oskari.registerLocalization({
   "key": "LayerSelection",
   "value": {
     "title": "Valitut tasot",
-    "desc": "",
+    "desc": "Voit  vaihtaa tasojen järjestystä raahaamalla niitä.",
     "layer": {
       "style": "Tyyli",
       "show": "Näytä",

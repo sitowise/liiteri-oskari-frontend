@@ -97,6 +97,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
          * @method update
          */
         update: function () {
+            if(!this.container) {
+                this.getContent();
+            }
             var service = this.instance.sandbox.getService('Oskari.mapframework.service.MapLayerService'),
                 layers = service.getAllLayersByMetaType("ANALYSIS"),
                 gridModel = Oskari.clazz.create('Oskari.userinterface.component.GridModel'),
@@ -136,7 +139,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
             });
             var cancelBtn = dialog.createCloseButton(this.loc.buttons.cancel);
             var confirmMsg = this.loc.confirmDeleteMsg + '"' + data.name + '"' + '?';
-            dialog.show(this.loc.title, confirmMsg, [cancelBtn, okBtn]);
+            dialog.show(this.loc.title, confirmMsg, [okBtn, cancelBtn]);
             dialog.makeModal();
         },
         /**

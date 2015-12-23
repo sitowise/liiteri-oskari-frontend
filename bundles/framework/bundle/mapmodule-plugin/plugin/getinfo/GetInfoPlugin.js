@@ -222,6 +222,10 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
                 this._handleInfoBoxEvent(evt);
             },
             'GetInfoResultEvent': function(evt) {
+				if (!this.enabled) {
+					// disabled, do nothing
+					return;
+				}
                 this._handleInfoResult(evt.getData());
             }
         },

@@ -79,7 +79,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.service.AnalyseService',
                     }
                 },
                 success: mysuccess,
-                error: failure
+                error: failure,
+                cache: false
             });
         },
         /**
@@ -139,8 +140,10 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.service.AnalyseService',
                     } else {
                         mapLayerService = this.instance.mapLayerService;
                         mapLayer = mapLayerService.createMapLayer(analyseJson);
-                        // Add the layer to the map layer service
-                        mapLayerService.addLayer(mapLayer, true);
+						if (!mapLayerService.findMapLayer(mapLayer.getId())) {
+							// Add the layer to the map layer service
+							mapLayerService.addLayer(mapLayer, true);
+						}
 
                     }
                 }

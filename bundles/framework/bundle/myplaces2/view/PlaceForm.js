@@ -16,10 +16,14 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
         this.newCategoryId = '-new-';
         this.placeId = undefined;
         this.initialValues = undefined;
+		this.showOnlyLabelCheckbox = false;
 
         var loc = instance.getLocalization('placeform');
 
         this.template = jQuery('<div class="myplacesform">' +
+			'<div class="field onlyLabelCheckbox">' + 
+			'<input type="checkbox" name="onlylabel"/>' + loc.placeOnlyLabel.label +
+			'</div>' +
             '<div class="field">' +
             '<div class="help icon-info" ' +
             'title="' + loc.tooltip + '"></div>' +
@@ -108,6 +112,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
                 ui.find('input[name=placeAttention]').attr('value', this.initialValues.place.attention_text);
                 ui.find('input[name=placelink]').attr('value', this.initialValues.place.link);
                 ui.find('input[name=imagelink]').attr('value', this.initialValues.place.imageLink);
+				ui.find('input[name=onlylabel]').attr('checked', (this.initialValues.place.onlyLabel === 'true'));
                 this._updateImageUrl(this.initialValues.place.imageLink, ui);
             }
 
@@ -117,6 +122,13 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
             } else {
                 measurementDiv.remove();
             }
+			
+			var onlyLabelCheckbox = ui.find('div.onlyLabelCheckbox');
+			if (this.showOnlyLabelCheckbox) {
+				onlyLabelCheckbox.show();
+			} else {
+				onlyLabelCheckbox.hide();
+			}
 
             return ui;
         },
@@ -137,7 +149,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
                 var placeName = onScreenForm.find('input[name=placename]').val(),
                     placeDesc = onScreenForm.find('textarea[name=placedesc]').val(),
                     placeAttention = onScreenForm.find('input[name=placeAttention]').val(),
-                    placeLink = onScreenForm.find('input[name=placelink]').val();
+                    placeLink = onScreenForm.find('input[name=placelink]').val(),
+					onlyLabel = onScreenForm.find('input[name=onlylabel]').prop('checked');
                 if (placeLink) {
                     if (placeLink.indexOf('://') === -1 || placeLink.indexOf('://') > 6) {
                         placeLink = 'http://' + placeLink;
@@ -153,7 +166,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
                     attention_text: placeAttention,
                     link: placeLink,
                     imageLink: imageLink,
-                    category: forcedCategory || categorySelection
+                    category: forcedCategory || categorySelection,
+					onlyLabel: onlyLabel
                 };
                 if (this.placeId) {
                     values.place.id = this.placeId;
@@ -185,6 +199,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
                 onScreenForm.find('input[name=placelink]').val(data.place.link);
                 onScreenForm.find('input[name=imagelink]').val(data.place.imageLink);
                 onScreenForm.find('select[name=category]').val(data.place.category);
+				onScreenForm.find('input[name=onlylabel]').prop('checked', data.place.onlyLabel);
                 this._updateImageUrl(data.place.imageLink, onScreenForm);
 
             }

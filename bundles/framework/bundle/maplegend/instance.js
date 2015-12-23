@@ -98,6 +98,15 @@ Oskari.clazz.define("Oskari.mapframework.bundle.maplegend.MapLegendBundleInstanc
             var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
             sandbox.request(this, request);
 
+//            var mapIconDesc = {
+//                'text': 'Map Legend',
+//                'iconCss': 'glyphicon mapicon legend-mapicon',
+//				'tooltip': me.getLocalization('tooltip'),
+//                'actionType': 'toogle'
+//            }
+//            var request2 = sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(me, mapIconDesc, me);
+//            sandbox.request(me, request2);
+
             // draw ui
             me.createUi();
 

@@ -152,7 +152,8 @@ Oskari.registerLocalization({
                 "ok": "OK",
                 "replace": "Korvaa",
                 "cancel": "Peruuta",
-                "add": "Lisää karttataso"
+                "add": "Lisää karttataso",
+                "copy": "Kopioi"
             },
             "confirm": {
                 "replace": {

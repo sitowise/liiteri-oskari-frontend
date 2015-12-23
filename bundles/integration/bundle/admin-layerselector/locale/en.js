@@ -28,7 +28,8 @@ Oskari.registerLocalization({
             "text": "Search map layers",
             "inspire": "By theme",
             "organization": "By data providers",
-            "published": "Users"
+            "published": "Users",
+            "userThemes" : "User themes"
         },
         "published": {
             "organization": "Published layers",
@@ -65,7 +66,8 @@ Oskari.registerLocalization({
             "layertypes" : {
                 "wms": "WMS layer",
                 "wfs": "WFS layer",
-                "wmts": "WMTS layer"
+                "wmts": "WMTS layer",
+                "arcgislayer": "ArcGis layer"
             },
             "selectLayer": "Select layer",
             "selectSubLayer": "Select sublayer",
@@ -82,13 +84,17 @@ Oskari.registerLocalization({
             "layerTypeDesc": "Layer type: WMS, WFS, WMTS",
             "type": "Layer type",
             "typePlaceholder": "Choose layer type",
-            "normalLayer": "Normal layer",
+            "normalLayer": "WMS layer",
             "baseLayer": "Base layer",
             "groupLayer": "Group layer",
+            "wfslayer" : "WFS layer",
+            "arcgisLayer": "ArcGis layer",
             "interfaceVersion": "Interface version",
             "interfaceVersionDesc": "Interface version",
             "wms1_1_1": "WMS 1.1.1",
             "wms1_3_0": "WMS 1.3.0",
+            "wfs1_0_0": "WFS 1.0.0",
+            "wfs1_1_0": "WFS 1.1.0",
             "getInfo": "Get info",
             "selectClass": "Select class",
             "selectClassDesc": "Select Inspire theme",
@@ -97,7 +103,6 @@ Oskari.registerLocalization({
             "groupName": "Group layer name",
             "subLayers": "Sublayers",
             "addSubLayer": "Add sublayer",
-            "editSubLayer": "Edit sublayer",
 
             "wmsInterfaceAddress": "WMS interface URL",
             "wmsUrl": "WMS interface URL",
@@ -105,11 +110,27 @@ Oskari.registerLocalization({
             "wmsServiceMetaId": "WMS metadata id",
             "wmsServiceMetaIdDesc": "Metadata id of WMS service",
             "layerNameAndDesc": "Name and description of the layer",
+			
+			"downloadServiceUrlDesc": "Download service URL",
+			"downloadServiceUrl": "Download service URL",
+			"copyrightInfoDesc": "Copyright info",
+            "copyrightInfo" : "Copyright info",
 
             "metaInfoIdDesc": "Metadata id to identify xml description of this metadata",
             "metaInfoId": "Metadata Id",
+            "metaInfoUrlDesc": "Metadata Url",
+            "metaInfoUrl": "Metadata Url",
             "wmsName": "WMS name",
             "wmsNameDesc": "WMS layer i.e. unique name",
+
+            "wfsusername": "Username",
+            "wfspassword": "Password",
+            "wfsgmlversion": "GML version",
+            "wfsgmlgeometryproperty": "GML geometry property",
+            "wfsfeaturenamespaceURI": "Feature namespace URI",
+            "wfsfeaturenamespace": "Feature namespace",
+            "wfsfeatureelement": "Feature element",
+            "wfsgeometrynamespaceURI" : "Geometry namespace URI",
 
             "addInspireName": "Class name",
             "addInspireNameTitle": "Name of the Inspire class",
@@ -138,7 +159,6 @@ Oskari.registerLocalization({
             "legendImage": "Legenda image",
             "legendImageDesc": "URL for legenda image",
             "legendImagePlaceholder": "URL for legenda image",
-            "gfiContent": "NOT TRANSLATED",
             "gfiResponseType": "GFI response type",
             "gfiResponseTypeDesc": "Response type for Get Feature Info (GFI)",
             "gfiStyle": "GFI style",
@@ -170,6 +190,11 @@ Oskari.registerLocalization({
             },
 
             "interfaceAddress": "interface URL",
+            "arcgisMapServerInterfaceAddress": "MapServer interface address",
+            "arcgisMapServerAddress": "MapServer address",
+            "wfsInterfaceAddress": "WFS interface URL",
+            "layersLabel" : "Available layers",
+            "layerName": "Layer name",
             "interfaceAddressDesc": "URL for WMS layer definitions",
             "viewingRightsRoles": "Viewing Rights roles",
             "metadataReadFailure": "Fetching layer metadata failed.",

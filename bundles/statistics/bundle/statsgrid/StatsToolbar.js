@@ -46,39 +46,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsToolbar',
 
             var buttonGroup = 'statsgrid-tools';
             var buttons = {
-                'selectAreas': {
+                'toogleTableView': {
                     toolbarid: me.toolbarId,
-                    iconCls: 'selection-square',
+                    iconCls: 'glyphicon glyphicon-list-alt',
                     tooltip: this.instance._localization.showSelected,
+                    text: this.instance._localization.toogleTable,
                     sticky: false,
                     toggleSelection: true,
-                    callback: function () {
-
+                    initiallySelected: true,
+                    callback: function () {                        
                         var statsgrid = view.instance.gridPlugin;
-                        var mode = statsgrid.toggleSelectMunicipalitiesMode(),
-                            eventBuilder,
-                            evt;
-                        // if mode is on, unselect all unhilighted areas and notify other plugins
-                        if (mode) {
-                            // unselect all areas except hilighted
-                            statsgrid.unselectAllAreas(true);
-
-                            // tell statsLayerPlugin to hilight all areas which are selected by clicking
-                            eventBuilder = me.instance.getSandbox().getEventBuilder('StatsGrid.SelectHilightsModeEvent');
-                            if (eventBuilder) {
-                                evt = eventBuilder(statsgrid.selectedMunicipalities);
-                                me.instance.getSandbox().notifyAll(evt);
-                            }
-                            //otherwise, clear hilights
-                        } else {
-                            statsgrid.grid.scrollRowToTop(0);
-                            eventBuilder = me.instance.getSandbox().getEventBuilder('StatsGrid.ClearHilightsEvent');
-                            if (eventBuilder) {
-                                evt = eventBuilder(me.isVisible);
-                                me.instance.getSandbox().notifyAll(evt);
-                            }
-                        }
-                    }
+                        statsgrid.toogleTableView();
+                    },
+                },
+                'toogleMapView': {
+                    toolbarid: me.toolbarId,
+                    iconCls: 'glyphicon glyphicon-screenshot',
+                    tooltip: this.instance._localization.showSelected,
+                    text: this.instance._localization.toogleMap,
+                    sticky: false,
+                    toggleSelection: true,
+                    initiallySelected: true,
+                    selected: true,
+                    callback: function() {
+                        var statsgrid = view.instance.gridPlugin;
+                        statsgrid.toogleMapView();
+                    },
                 }
             };
 
@@ -86,6 +79,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsToolbar',
             var reqBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
                 tool;
 
+			//there shouldn't be any button in Liiteri's toolbar
             for (tool in buttons) {
                 if (buttons.hasOwnProperty(tool)) {
                     sandbox.request(requester, reqBuilder(tool, buttonGroup, buttons[tool]));

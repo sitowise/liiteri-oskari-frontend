@@ -2,13 +2,14 @@ Oskari.registerLocalization({
     "lang" : "fi",
     "key" : "admin-layerrights",
     "value" : {
-        "title" : "Tasojen Oikeudet",
+        "title" : "Oikeudet",
         "desc" : "NOT TRANSLATED",
         "tile" : {
             "title" : "Tasojen Oikeudet"
         },
         "flyout" : {
-            "title" : "Tasojen Oikeuksien Hallinta"
+            "title": "Tasojen Oikeuksien Hallinta",
+            "datatablelanguagefile": "Finnish.json",
         },
         "rights" : {
             "name"              : "Nimi",
@@ -18,6 +19,15 @@ Oskari.registerLocalization({
             "rightToPublishView": "Katseluoikeus julkaistussa kartassa"
         },
         "save" : "Tallenna",
-        "selectRole" : "Rooli"
+        "selectRole": "Rooli",
+        "error": {
+            "title": "Virhe",
+            "defaultErrorMessage": "Oikeuksien päivityksessä on tapahtunut virhe",
+            "Forbidden": "Sinulla ei ole oikeuksia tähän toimintoon"
+        },
+        "info": {
+            "title": "Info",
+            "success": "Oikeudet on päivitetty"
+        }
     }
 });

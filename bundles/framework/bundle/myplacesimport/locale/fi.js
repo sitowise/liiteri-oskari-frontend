@@ -16,7 +16,8 @@ Oskari.registerLocalization({
                 "next": "Seuraava"
             },
             "file": {
-                "submit": "Lähetä"
+                "submit": "Lähetä",
+                "chooseFile": "Valitse tiedosto"
             },
             "layer": {
                 "title": "Tallenna tason tiedot:",
@@ -34,10 +35,11 @@ Oskari.registerLocalization({
             "finish": {
                 "success": {
                     "title": "Tason tuonti onnistui",
-                    "message": "Löydät tason omat tiedot -valikosta"
+                    "message": "Löydät tason Karttatasot-valikon Omat tasot -välilehdeltä"
                 },
                 "failure": {
-                    "message": "Tason tuonti epäonnistui. Yritä myöhemmin uudelleen."
+                    "message": "Tason tuonti epäonnistui. Yritä myöhemmin uudelleen.",
+					"server_error_key_limit": "Sallittujen GIS aineistojen määrä on ylittynyt tai tiedoston koko ylittää sallitun rajan."
                 }
             }
         },

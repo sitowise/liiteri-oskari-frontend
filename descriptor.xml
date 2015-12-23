@@ -1,0 +1,29 @@
+<assembly>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>	
+		<fileSet>
+			<directory>applications</directory>
+		</fileSet>
+		<fileSet>
+			<directory>bundles</directory>
+		</fileSet>		
+		<fileSet>
+			<directory>libraries</directory>
+		</fileSet>		
+		<fileSet>
+			<directory>packages</directory>
+		</fileSet>	
+		<fileSet>
+			<directory>resources</directory>
+		</fileSet>
+    <fileSet>
+      <directory>src</directory>
+    </fileSet>
+    <fileSet>
+      <directory>sources</directory>
+    </fileSet>
+  </fileSets>
+</assembly>

@@ -34,7 +34,9 @@ div.mapplugins {
         margin-bottom: 0; }
       div.mapplugins .mappluginsContainer .mappluginsContent .mapplugin.zoombar {
         margin-top: 10px;
-        margin-bottom: 10px; }
+        margin-bottom: 10px;
+        margin-left: 10px;
+        margin-right: 30px; }
   div.mapplugins.top {
     top: 0; }
     div.mapplugins.top .mappluginsContainer .mappluginsContent {
@@ -63,8 +65,18 @@ div.mapplugins {
         display: block;
         float: right;
         margin: 0 5px; }
-    div.mapplugins.top.left {
-      min-width: 100px; }
+  div.mapplugins.top2 {
+    top: 75px; }
+      div.mapplugins.top2.right .mapplugin.layerselection {
+        margin-left: 0; }
+      div.mapplugins.top2.right .mapplugin.search {
+        text-align: right; }
+      div.mapplugins.top2.right .mapplugin.layerselection, div.mapplugins.top2.right .mapplugin.search {
+        display: block;
+        float: right;
+        margin: 0 5px; }
+    div.mapplugins.top.left {      
+    }
       div.mapplugins.top.left .mapplugin.layerselection {
         margin-right: 0; }
       div.mapplugins.top.left .mapplugin.search {
@@ -120,7 +132,7 @@ div.mapplugins {
   div.mapplugins.right {
     right: 0; }
     div.mapplugins.right .mappluginsContainer .mappluginsContent {
-      margin-right: 10px; }
+      }
     div.mapplugins.right.center {
       height: 100%;
       display: table; }

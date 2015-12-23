@@ -119,11 +119,13 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.QueuedTilesGrid",
                 var right = this.grid[0].length - 1;
                 var topRightTile = this.grid[0][right];
 
-                bounds = new OpenLayers.Bounds(bottomLeftTile.bounds.left,
-                    bottomLeftTile.bounds.bottom,
-                    topRightTile.bounds.right,
-                    topRightTile.bounds.top);
-
+	 			if (bottomLeftTile && topRightTile)
+ 				{
+	                bounds = new OpenLayers.Bounds(bottomLeftTile.bounds.left,
+	                    bottomLeftTile.bounds.bottom,
+	                    topRightTile.bounds.right,
+	                    topRightTile.bounds.top);
+ 				}
             }
             return bounds;
         },
@@ -403,7 +405,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.mapwfs2.plugin.QueuedTilesGrid",
                 for (i = 0, l = this.grid.length; i < l; i++) {
                     row = this.grid[i];
                     tile = row.pop();
-                    tile.destroy();
+                    if (tile)
+                    	tile.destroy();
                 }
             }
         },

@@ -23,6 +23,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.maplegend.Tile',
         getName: function () {
             return 'Oskari.mapframework.bundle.maplegend.Tile';
         },
+        getSequenceNumber: function () {
+            return 20;
+        },
         /**
          * @method setEl
          * @param {Object} el
@@ -36,6 +39,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.maplegend.Tile',
          */
         setEl: function (el, width, height) {
             this.container = jQuery(el);
+            
+            var title = this.container.children('.oskari-tile-title');
+            title.addClass('indent');
         },
         /**
          * @method startPlugin

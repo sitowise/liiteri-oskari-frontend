@@ -1,0 +1,99 @@
+/* FILTER FORM */
+
+div.filter-panel-content div.add-filter-option, div.filter-panel-content div.remove-filter-option {
+    cursor: pointer;
+display: inline-block;
+font-size: 24px;
+font-weight: bold;
+margin-left: 5px;
+min-width: 16px;
+text-align: center;
+}
+
+div.filter-panel-content div.filterRow {
+    clear: both;
+}
+
+div.filter-panel-content div.filter-option div.manage-filter-option {
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+}
+
+div.filter-panel-content div.filter-option div.boolean-filter-option {
+    float: left;
+}
+
+div.filter-panel-content div.filter-option {
+    margin-top: 10px;
+}
+
+div.filter-panel-content div.filter-option select.boolean {
+    width: 80px;
+}
+
+div.filter-panel-content div.filter-option select.value-select {
+    width: 280px;
+}
+
+div.filter-panel-content div.selectWrapper {
+    float: left;
+    margin-right: 10px;
+}
+
+div.filter-panel-content div.filter-option select.category-select {
+}
+
+div.filter-panel-content div.filter-option {
+    margin-bottom: 10px;
+}
+
+div.filter-panel-content div.filter-option select {   
+    width: auto; 
+}
+
+div.filter-panel-content .chzn-container-multi .chzn-choices .search-field input {
+    height: auto;
+}
+
+div.filter-panel-content ul.chzn-choices {
+    margin: 0px !important;
+}
+
+/* FILTER CLOUD */
+
+div.filter-cloud-content .chzn-choices {
+    border: none !important;
+    background-image: none !important;
+}
+
+/* */
+
+div.ajax-loader {
+    background-image: url('../images/ajax-loader.gif') !important;
+    background-repeat: no-repeat !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* SHARING FORM */
+
+.sharingContainer .oskari-grid thead tr {
+    border-bottom: solid 1px #888;
+}
+
+.sharingContainer .oskari-grid thead th {
+    padding: 2px 5px;
+}
+
+.sharingContainer .oskari-grid tbody tr {
+    border-bottom: solid 1px #bbb;
+}
+
+.sharingContainer .oskari-grid tbody td {
+    padding: 2px 5px;
+}
+
+.sharingContainer .form-group label {
+    padding-right: 5px;
+}

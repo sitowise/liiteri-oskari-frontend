@@ -48,7 +48,14 @@ function() {
         },{
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/admin-layerrights/Tile.js"
-        }, {
+        },{
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/admin-layerrights/request/ShowLayerrightsFlyoutRequest.js"
+        },
+        {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/admin-layerrights/request/ShowLayerrightsFlyoutRequestHandler.js"
+        },{
             "type" : "text/css",
             "src" : "../../../../resources/framework/bundle/admin-layerrights/css/style.css"
         }, {

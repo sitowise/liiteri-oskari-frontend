@@ -423,6 +423,10 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.WmsLayerPlugin',
                     oLayers[i].setVisibility(isInScale);
                     oLayers[i].redraw(true);
                 }
+                
+                if(oLayers[i] && oLayers[i].params.LAYERS !== layer._wmsName) {
+                    oLayers[i].mergeNewParams({layers: layer._wmsName});
+                }
             }
         },
         /**

@@ -10,15 +10,23 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
      * @static
      */
 
-    function (layer, sandbox, localization) {
+    function (layer, sandbox, localization, groupName) {
         //"use strict";
         this.sandbox = sandbox;
         this.localization = localization;
         this.layer = layer;
         this.backendStatus = 'OK'; // see also 'backendstatus-ok'
-        this.ui = this._createLayerContainer(layer);
+        this.ui = this._createLayerContainer(layer, groupName);
     }, {
-        __template: '<div class="layer"><input type="checkbox" /> ' + '<div class="layer-tools"><div class="layer-backendstatus-icon backendstatus-ok"></div>' + '<div class="layer-icon"></div><div class="layer-info"></div></div>' + '<div class="layer-title"></div>' +
+        __template: '<div class="layer">' +
+			'<input type="checkbox" /> ' +
+			'<div class="layer-tools">' +
+				'<div class="layer-download-service"><a></a></div>' +
+				'<div class="layer-info"></div>' +
+				'<div class="layer-backendstatus-icon backendstatus-ok"></div>' +
+				'<div class="layer-icon"></div>' +
+			'</div>' +
+			'<div class="layer-title"></div>' +
         //'<div class="layer-keywords"></div>' + 
         '</div>',
         /**
@@ -39,11 +47,21 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
                 this.ui.hide();
             }
         },
-        setSelected: function (isSelected) {
+        setSelected: function (isSelected, sendEvent) {
             //"use strict";
             // TODO assúme boolean and clean up everyhting that passes somehting else
             // checking since we dont assume param is boolean
-            this.ui.find('input').attr('checked', (isSelected == true));
+            var checkbox = this.ui.find('input');
+            checkbox.attr('checked', (isSelected == true));
+            if (isSelected) {
+                checkbox.parent().addClass('selected');
+            } else {
+                checkbox.parent().removeClass('selected');
+            }
+
+            if (sendEvent) {
+                checkbox.change();
+            }
         },
 
         /**
@@ -105,7 +123,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
          * Creates the layer containers
          * @param {Oskari.mapframework.domain.WmsLayer/Oskari.mapframework.domain.WfsLayer/Oskari.mapframework.domain.VectorLayer/Object} layer to render
          */
-        _createLayerContainer: function (layer) {
+        _createLayerContainer: function (layer, groupName) {
             //"use strict";
             var me = this,
                 sandbox = me.sandbox,
@@ -159,37 +177,50 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
                     }
                 }
             }
-            if (layer.getMetadataIdentifier() || subLmeta) {
+            if ((layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) || subLmeta) {
 
                 tools.find('div.layer-info').addClass('icon-info');
                 tools.find('div.layer-info').click(function () {
-                    rn = 'catalogue.ShowMetadataRequest';
-                    uuid = layer.getMetadataIdentifier();
-                    additionalUuids = [];
-                    additionalUuidsCheck = {};
-                    additionalUuidsCheck[uuid] = true;
-                    subLayers = layer.getSubLayers();
-                    if (subLayers && subLayers.length > 0) {
-                        for (s = 0; s < subLayers.length; s += 1) {
-                            subUuid = subLayers[s].getMetadataIdentifier();
-                            if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
-                                additionalUuidsCheck[subUuid] = true;
-                                additionalUuids.push({
-                                    uuid: subUuid
-                                });
-
-                            }
-                        }
-
-                    }
-
-                    sandbox.postRequestByName(rn, [{
-                            uuid: uuid
-                        },
-                        additionalUuids
-                    ]);
+                    window.open(layer.getMetadataIdentifier());
                 });
+//                tools.find('div.layer-info').click(function () {
+//                    rn = 'catalogue.ShowMetadataRequest';
+//                    uuid = layer.getMetadataIdentifier();
+//                    additionalUuids = [];
+//                    additionalUuidsCheck = {};
+//                    additionalUuidsCheck[uuid] = true;
+//                    subLayers = layer.getSubLayers();
+//                    if (subLayers && subLayers.length > 0) {
+//                        for (s = 0; s < subLayers.length; s += 1) {
+//                            subUuid = subLayers[s].getMetadataIdentifier();
+//                            if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
+//                                additionalUuidsCheck[subUuid] = true;
+//                                additionalUuids.push({
+//                                    uuid: subUuid
+//                                });
+//
+//                            }
+//                        }
+//
+//                    }
+//
+//                    sandbox.postRequestByName(rn, [{
+//                            uuid: uuid
+//                        },
+//                        additionalUuids
+//                    ]);
+//                });
             }
+			
+			var downloadService = tools.find('.layer-download-service a');
+			if (layer.getPermission('download') == true && layer.getDownloadServiceUrl() != null && layer.getDownloadServiceUrl() != '') {
+				downloadService.attr('href', layer.getDownloadServiceUrl());
+				downloadService.attr('style', 'font-size: 13px; text-decoration: underline');
+				downloadService.attr('target', '_blank');
+				downloadService.text(me.localization.downloadLayer);
+			} else {
+				downloadService.css( "display", "none" );
+			}
 
             // setup id
             jQuery(layerDiv).attr('layer_id', layer.getId());
@@ -197,7 +228,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
             jQuery(layerDiv).find('input').change(function () {
                 checkbox = jQuery(this);
                 if (checkbox.is(':checked')) {
-                    sandbox.postRequestByName('AddMapLayerRequest', [layer.getId(), false, layer.isBaseLayer()]);
+                    sandbox.postRequestByName('AddMapLayerRequest', [layer.getId(), false, layer.isBaseLayer(), false, groupName]);
                 } else {
                     sandbox.postRequestByName('RemoveMapLayerRequest', [layer.getId()]);
                 }

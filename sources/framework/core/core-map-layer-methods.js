@@ -103,7 +103,8 @@ Oskari.clazz.category('Oskari.mapframework.core.Core', 'map-layer-methods', {
         var me = this,
             id = request.getMapLayerId(),
             keepLayersOrder = request.getKeepLayersOrder(), // TODO we need to pass this as false from layerselector...
-            isBaseMap = request.isBasemap();
+            isBaseMap = request.isBasemap()
+            groupName = request.getGroupName();
 
         me.printDebug("Trying to add map layer with id '" + id + "' AS " + (isBaseMap ? " BASE " : " NORMAL "));
         if (me.isLayerAlreadySelected(id)) {
@@ -143,9 +144,9 @@ Oskari.clazz.category('Oskari.mapframework.core.Core', 'map-layer-methods', {
         }
         var evt;
         if (mapLayer.isBaseLayer() || isBaseMap) {
-            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, keepLayersOrder, isBaseMap);
+            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, keepLayersOrder, isBaseMap, groupName);
         } else {
-            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, true, isBaseMap);
+            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, true, isBaseMap, groupName);
         }
         me.copyObjectCreatorToFrom(evt, request);
         me.dispatch(evt);

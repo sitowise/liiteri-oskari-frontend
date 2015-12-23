@@ -16,6 +16,9 @@ Oskari.clazz.define('Oskari.userinterface.component.Accordion',
         this.panels = [];
         this.ui = this.template.clone();
     }, {
+        addClass: function(className) {
+            this.ui.addClass(className);
+        },
         /**
          * @method addPanel
          * Adds panel to this accordion

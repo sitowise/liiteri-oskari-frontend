@@ -1,6 +1,5 @@
 @import "slick-default-theme.css";
 .statsgrid  {
-    font-family: arial;
     font-size: 8pt;
 }
 .statsgrid ul {
@@ -16,7 +15,7 @@
 }
 #municipalGrid {
     background: none repeat scroll 0 0 white;
-    border: 1px solid gray;
+    border: 0px;
     outline: 0 none;
     -moz-box-sizing: border-box;
     -ie-box-sizing: border-box;
@@ -28,13 +27,18 @@
     -moz-border-left-colors: none;
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
-    background-color: #fafafa;
+    background-color: #fff;
     border-color: -moz-use-text-color gray;
     border-image: none;
     color: black;
     line-height: 24px;
     font-weight: bold;
 }
+
+.slick-headerrow {
+    background-color: #fff;
+}
+
 .grid-header label {
     display: inline-block;
     font-weight: bold;

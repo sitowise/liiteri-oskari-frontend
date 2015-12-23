@@ -23,8 +23,9 @@ div.divmanazerpopup {
   /* Safari 4? Chrome 6? */
   background-clip: content-box;
   /* Firefox 4, Safari 5, Opera 10, IE 9 */
-  border: 5px solid rgba(0, 0, 0, 0.2);
-  border-radius: 7px;
+  border: 5px solid #fff;
+  border-radius: 5px;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
   /*
     box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.80);
     -moz-box-shadow: 0px 3px 3px black;
@@ -33,11 +34,15 @@ div.divmanazerpopup {
   z-index: 10000; }
 
 div.divmanazerpopup h3.popupHeader {
-  background-color: #FDF8D9;
-  border-radius: 5px 5px 0 0;
-  font-size: 18px;
+  background-color: #0186d1;
+  color: #ffffff;
+  border-radius: 0px;
+  font-weight: 600;
+  font-size: 13px;
   line-height: 28px;
-  padding: 5px 10px; }
+  padding: 0px 10px;
+  margin: 0;
+}
 
 div.divmanazerpopup div.content {
   margin: 10px; }
@@ -59,7 +64,6 @@ div.divmanazerpopup div.actions input {
   margin: 10px; }
 
 .divmanazerpopup.arrow:after, .divmanazerpopup.arrow:before {
-  border: solid transparent;
   content: " ";
   height: 0;
   width: 0;
@@ -129,3 +133,9 @@ div.divmanazerpopup div.actions input {
   border-width: 6px;
   margin-top: -6px;
   top: 50%; }
+
+
+.divmanazerpopup-resizable-helper {
+    border: 2px dotted #00ccff;
+    z-index: 10001;
+}

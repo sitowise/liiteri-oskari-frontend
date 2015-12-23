@@ -61,6 +61,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.service.Mediator',
                 '/wfs/feature': function () {
                     self.getWFSFeature.apply(self, arguments);
                 },
+                '/wfs/featureGeometries': function () {
+                    self.getWFSFeatureGeometries.apply(self, arguments);
+                },
                 '/wfs/mapClick': function () {
                     self.getWFSMapClick.apply(self, arguments);
                 },
@@ -72,6 +75,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapwfs2.service.Mediator',
                 },
                 '/wfs/reset': function () {
                     self.resetWFS.apply(self, arguments);
+                },
+                '/wfs/defaultStyle': function () {
+                    self.defaultStyle.apply(self, arguments);
+                },
+                '/wfs/status': function () {
+                    self.status.apply(self, arguments);
                 }
             };
 
@@ -216,12 +225,26 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
         var layer = sandbox.findMapLayerFromSelectedMapLayers(data.data.layerId);
         var keepPrevious = data.data.keepPrevious;
         var featureIds = [];
+		var featureSelected = false;
 
         if (data.data.features != "empty") {
             layer.setSelectedFeatures([]);
             // empty selected
             for (var i = 0; i < data.data.features.length; ++i) {
-                featureIds.push(data.data.features[i][0]);
+			
+				if($.inArray(data.data.features[i][0], layer.getClickedFeatureIds()) === -1) {
+					featureIds.push(data.data.features[i][0]);
+					featureSelected = true;
+				} else if (keepPrevious) {
+					//remove clicked feature Id from layer.getClickedFeatureIds()
+					for (var j = 0; j < layer.getClickedFeatureIds().length; j++) {
+						var selectedFeatureId = layer.getClickedFeatureIds()[j];
+						if (selectedFeatureId === data.data.features[i][0]) {
+							layer.getClickedFeatureIds().splice(j, 1);
+						}
+					}
+					
+				}
             }
         }
 
@@ -230,15 +253,39 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
         } else {
             layer.setClickedFeatureIds(featureIds);
         }
+		
+		var event = sandbox.getEventBuilder("WFSFeaturesSelectedEvent")(featureIds, layer, keepPrevious);
+		sandbox.notifyAll(event);
 
-        var event = sandbox.getEventBuilder("WFSFeaturesSelectedEvent")(featureIds, layer, keepPrevious);
+		if (featureSelected) {
+			data.data.lonlat = this.lonlat;
+			var infoEvent = sandbox.getEventBuilder('GetInfoResultEvent')(data.data);
+			sandbox.notifyAll(infoEvent);
+		}
+    },
+    /**
+     * @method getWFSFeatureGeometries
+     * @param {Object} data
+     *
+     * get highlighted fea geometries
+     * Creates WFSFeatureGeometriesSelectedEvent
+     */
+    getWFSFeatureGeometries: function (data) {
+        var sandbox = this.plugin.getSandbox();
+        var layer = sandbox.findMapLayerFromSelectedMapLayers(data.data.layerId);
+        var keepPrevious = data.data.keepPrevious;
+
+
+        if (keepPrevious) {
+            if (data.data.geometries) layer.addClickedGeometries(data.data.geometries);
+        } else {
+            if (data.data.geometries) layer.setClickedGeometries(data.data.geometries);
+        }
+
+        var event = sandbox.getEventBuilder("WFSFeatureGeometriesEvent")(layer, keepPrevious);
         sandbox.notifyAll(event);
 
-        data.data.lonlat = this.lonlat;
-        var infoEvent = sandbox.getEventBuilder('GetInfoResultEvent')(data.data);
-        sandbox.notifyAll(infoEvent);
     },
-
     /**
      * @method getWFSFilter
      * @param {Object} data
@@ -296,13 +343,12 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
         // send as an event forward to WFSPlugin (draws)
         var event = this.plugin.getSandbox().getEventBuilder("WFSImageEvent")(layer, imageUrl, data.data.bbox, size, layerType, boundaryTile, keepPrevious);
         this.plugin.getSandbox().notifyAll(event);
-
-
         if (layerType == "normal") {
             this.plugin.setPrintTile(layer, data.data.bbox, this.rootURL + data.data.url + "&session=" + this.session.session);
             var printoutEvent = this.plugin.getSandbox().getEventBuilder('Printout.PrintableContentEvent');
             if (printoutEvent) {
-                var evt = printoutEvent(this.plugin.getName(), layer, this.plugin.getPrintTiles(), null);
+                var evt = printoutEvent(this.plugin.getName(), layer, this.plugin.getPrintTilesForLayer(layer.getId()), null);
+                //var evt = printoutEvent(this.plugin.getName(), layer, this.plugin.getPrintTiles(), null);
                 this.plugin.getSandbox().notifyAll(evt);
             }
         }
@@ -314,7 +360,90 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
      */
     resetWFS: function (data) {
         this.startup(null);
-    }
+    },
+    status: function (data) {
+        var layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(data.data.layerId);
+        var event = this.plugin.getSandbox().getEventBuilder("WFSLoadingFinishedEvent")(layer);
+        this.plugin.getSandbox().notifyAll(event);
+    },
+    defaultStyle: function (data) {        
+        var layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(data.data.layerId);
+
+        if (data.data.style && !layer.getCustomStyle()) {
+            var style = data.data.style;
+            var customStyle = this._mapFromStyle(data.data.layerId, style);
+//            console.log('Setting to');
+//            console.log(customStyle);
+            layer.setCustomStyle(customStyle);
+        }                
+    },
+    _mapFromStyle: function (id, style) {
+        var result = {};
+        if (style.type == 'simple') {
+            result.layerId = id;
+            result.type = style.type;
+            result.values = this._mapSymbol(style);
+        } else if (style.type == 'uniqueValue') {
+            result.layerId = id;
+            result.type = style.type;
+            result.field = style.field;
+            result.values = [];
+            for (var group in style.uniqueValuesInfo) {
+                if (!style.uniqueValuesInfo.hasOwnProperty(group))
+                    continue;
+                var valueItem = {};
+                valueItem.group = group;
+                valueItem.symbol = this._mapFromSymbol(style.uniqueValuesInfo[group]);
+                result.values.push(valueItem);
+            }
+        } else if (style.type == 'group') {
+            result.layerId = id;
+            result.type = style.type;
+            result.values = [];
+            for (var subStyle in style.subStyles) {
+                if (!style.subStyles.hasOwnProperty(subStyle))
+                    continue;
+                var valueItem = {};
+                valueItem.group = subStyle;
+                valueItem.symbol = this._mapFromSymbol(style.subStyles[subStyle]);
+                result.values.push(valueItem);
+            }
+        }
+
+        return result;
+    },
+    _mapFromSymbol: function (symbolStyle) {
+        return {
+            area : {
+                fillColor: this._mapFromColor(symbolStyle.fillColor),
+                fillStyle: symbolStyle.fillPattern,
+                lineColor: this._mapFromColor(symbolStyle.borderColor),
+                lineCorner: symbolStyle.borderLinejoin,
+                lineStyle: symbolStyle.borderDasharray,
+                lineWidth: symbolStyle.borderWidth,
+            },
+            line : {
+                cap: symbolStyle.strokeLinecap,
+                color: this._mapFromColor(symbolStyle.strokeColor),
+                corner: symbolStyle.strokeLinejoin,
+                style: symbolStyle.strokeDasharray,
+                width: symbolStyle.strokeWidth,
+            },
+            dot : {
+                color: this._mapFromColor(symbolStyle.dotColor),
+                shape: symbolStyle.dotShape,
+                size: symbolStyle.dotSize,
+            }
+        };
+    },
+    _mapFromColor: function(color) {
+        if (color.charAt(0) == '#')
+            color = color.substr(1);
+        if (color.length > 6)
+            color = color.substr(0, 6);
+
+        return color;
+    },
 });
 
 // send to backend
@@ -355,15 +484,17 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'se
      * @param {Number} id
      * @param {String[]} featureIds
      * @param {Boolean} keepPrevious
+     * @param {Boolean} geomRequest  response geometries, if true
      *
      * sends message to /service/wfs/highlightFeatures
      */
-    highlightMapLayerFeatures: function (id, featureIds, keepPrevious) {
+    highlightMapLayerFeatures: function (id, featureIds, keepPrevious, geomRequest) {
         if (this.connection.isConnected()) {
             this.cometd.publish('/service/wfs/highlightFeatures', {
                 "layerId": id,
                 "featureIds": featureIds,
-                "keepPrevious": keepPrevious
+                "keepPrevious": keepPrevious,
+                "geomRequest": geomRequest
             });
         }
     },
@@ -433,27 +564,73 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'se
      */
     setMapLayerCustomStyle: function (id, style) {
         if (this.connection.isConnected()) {
-            this.cometd.publish('/service/wfs/setMapLayerCustomStyle', {
-                "layerId": id,
 
-                "fill_color": style.area.fillColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                "fill_pattern": style.area.fillStyle,
-                "border_color": style.area.lineColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                "border_linejoin": style.area.lineCorner,
-                "border_dasharray": style.area.lineStyle,
-                "border_width": style.area.lineWidth,
-
-                "stroke_linecap": style.line.cap,
-                "stroke_color": style.line.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                "stroke_linejoin": style.line.corner,
-                "stroke_dasharray": style.line.style,
-                "stroke_width": style.line.width,
-
-                "dot_color": style.dot.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                "dot_shape": style.dot.shape,
-                "dot_size": style.dot.size
-            });
+            var mappedStyle = this._mapToStyle(id, style);
+            //console.log('Style sent to transport module');
+            //console.log(mappedStyle);
+            this.cometd.publish('/service/wfs/setMapLayerCustomStyle', mappedStyle);
         }
+    },
+    _mapToStyle: function (id, style) {
+        var result = {};
+        var i, uvItem, valueItem;
+
+        if (style.type == 'simple') {
+            result.layerId = id;
+            result.type = style.type;
+            result.symbol = this._mapToSymbol(style.values[0].symbol);
+        } else if ((style.type == 'uniqueValue' || style.type == 'group') && style.isDefaultValue) {
+            result.layerId = id;
+            result.type = 'simple';
+            result.symbol = this._mapToSymbol(style.defaultValue.symbol);
+        } else if (style.type == 'uniqueValue') {
+            result.layerId = id;
+            result.type = style.type;
+            result.field = style.field;
+            result.uniqueValueInfos = [];
+            for (i = 0; i < style.values.length; i++) {
+                valueItem = style.values[i];
+                uvItem = {
+                    'symbol': this._mapToSymbol(valueItem.symbol),
+                    'value': valueItem.group,
+                    };
+                result.uniqueValueInfos.push(uvItem);
+            }
+        } else if (style.type == 'group') {
+            result.layerId = id;
+            result.type = style.type;
+            result.subStyles = [];
+            for (i = 0; i < style.values.length; i++) {
+                valueItem = style.values[i];
+                uvItem = {
+                    'symbol': this._mapToSymbol(valueItem.symbol),
+                    'value': valueItem.group,
+                };
+                result.subStyles.push(uvItem);
+            }
+        }
+
+        return result;
+    },
+    _mapToSymbol: function(symbolStyle) {
+        return {
+            "fill_color": symbolStyle.area.fillColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+            "fill_pattern": symbolStyle.area.fillStyle,
+            "border_color": symbolStyle.area.lineColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+            "border_linejoin": symbolStyle.area.lineCorner,
+            "border_dasharray": symbolStyle.area.lineStyle,
+            "border_width": symbolStyle.area.lineWidth,
+
+            "stroke_linecap": symbolStyle.line.cap,
+            "stroke_color": symbolStyle.line.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+            "stroke_linejoin": symbolStyle.line.corner,
+            "stroke_dasharray": symbolStyle.line.style,
+            "stroke_width": symbolStyle.line.width,
+
+            "dot_color": symbolStyle.dot.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+            "dot_shape": symbolStyle.dot.shape,
+            "dot_size": symbolStyle.dot.size,
+        };
     },
 
     /**
@@ -464,13 +641,14 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'se
      *
      * sends message to /service/wfs/setMapClick
      */
-    setMapClick: function (lonlat, keepPrevious) {
+    setMapClick: function (lonlat, keepPrevious, geomRequest) {
         if (this.connection.isConnected()) {
             this.lonlat = lonlat;
             this.cometd.publish('/service/wfs/setMapClick', {
                 "longitude": lonlat.lon,
                 "latitude": lonlat.lat,
-                "keepPrevious": keepPrevious
+                "keepPrevious": keepPrevious,
+                "geomRequest": geomRequest
             });
         }
     },

@@ -100,8 +100,21 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmyplaces.plugin.MyPlacesLayer
                 mapLayerService.registerLayerModelBuilder('myplaceslayer', layerModelBuilder);
             }
 
-            if (jQuery.browser.msie && jQuery.browser.version < 9) { //TODO: fix me fast
+            if (this._isMsieLowerThanNine()) {
                 this._ieHack();
+            }
+        },
+        _isMsieLowerThanNine: function () {
+            if (jQuery.browser.msie) {
+                if (!isNaN(jQuery.browser.version)) {
+                    var versionNo = Number(jQuery.browser.version);
+                    return versionNo < 9;
+                } else {
+                    console.warn("Browser version is not a number. Possible wrong comparision and appliance of IE<9 rules. [Version] = [" + jQuery.browser.version + "]");
+                    return jQuery.browser.version < 9;
+                }
+            } else {
+                return false;
             }
         },
         _ieHack: function () {
@@ -300,7 +313,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmyplaces.plugin.MyPlacesLayer
                     layers: layer.getWmsName(),
                     transparent: true,
                     format: "image/png",
-                    hidden_ids: ""
+                    hidden_ids: "",
+					styles: "MyPlacesNoLabel_2"
                 }, {
                     scales: layerScales,
                     isBaseLayer: false,
@@ -829,6 +843,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmyplaces.plugin.MyPlacesLayer
                 } else if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.MultiPolygon") {
                     _.forEach(feature.geometry.components, function (component) {
                         var rightMostPoint = _.max(component.components[0].components, function (chr) {
+                            return chr.x;
+                        });
+                        vectorLayer.addFeatures(me._createFeature(name, rightMostPoint, category.dotColor, 5));
+                    });
+				} else if (feature.geometry.CLASS_NAME === "OpenLayers.Geometry.MultiLineString") {
+					_.forEach(feature.geometry.components, function (component) {
+                        var rightMostPoint = _.max(component.components, function (chr) {
                             return chr.x;
                         });
                         vectorLayer.addFeatures(me._createFeature(name, rightMostPoint, category.dotColor, 5));

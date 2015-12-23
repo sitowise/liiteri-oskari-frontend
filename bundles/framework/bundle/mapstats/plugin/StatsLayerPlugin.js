@@ -10,6 +10,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
      */
 
     function (config) {
+        var me = this;
         this.mapModule = null;
         this.pluginName = null;
         this._sandbox = null;
@@ -19,18 +20,33 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
         this._highlightCtrl = null;
         this._navCtrl = null;
         this._getFeatureControlHover = null;
-        this._getFeatureControlSelect = null;
         this._modeVisible = false;
         this.config = config;
         this.ajaxUrl = null;
-        this.featureAttribute = 'kuntakoodi';
-        if (config && config.ajaxUrl) {
-            me.ajaxUrl = config.ajaxUrl;
-        }
-        if (config && config.published) {
-            // A sort of a hack to enable the controls in a published map.
-            // At the moment there's no such option in the conf, but there might be.
-            me._modeVisible = config.published;
+        this.featureAttribute = 'koodi';
+        this.useArcGis = false;
+        this.defaultUrl = 'action_route=GetStatsTile';
+        this.arcGisDefaultUrl = 'action_route=GetArcGisStatsTile';
+
+        this.showAreaNames = false;
+        this.showValues = false;
+        this.showSymbols = true;
+        this.columnValues = null;
+        this.columnIds = null;
+        this.columnNames = null;
+        this.classificationParams = null;
+        this.currentZoneType = 'administrative';
+
+        if (config) {
+            if (config.ajaxUrl)
+                me.ajaxUrl = config.ajaxUrl;
+            if (config.published)
+                me._modeVisible = config.published;
+            if (config.useArcGis) {
+                me.useArcGis = config.useArcGis;
+                me.featureAttribute = 'KuntaNro';
+                me.defaultLayerId = '21';
+            }                
         }
     }, {
         /** @static @property __name plugin name */
@@ -95,7 +111,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          *          reference to application sandbox
          */
         init: function (sandbox) {
-
             var sandboxName = (this.config ? this.config.sandbox : null) || 'sandbox',
                 sbx = Oskari.getSandbox(sandboxName),
                 mapLayerService = sbx.getService('Oskari.mapframework.service.MapLayerService'); // register domain builder
@@ -125,7 +140,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
                 }
             }
             if (!this.ajaxUrl) {
-                this.ajaxUrl = sandbox.getAjaxUrl() + 'action_route=GetStatsTile';
+                if (this.useArcGis)
+                    this.ajaxUrl = sandbox.getAjaxUrl() + this.arcGisDefaultUrl;
+                else
+                    this.ajaxUrl = sandbox.getAjaxUrl() + this.defaultUrl;
             }
         },
         /**
@@ -212,8 +230,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          * Adds given layers to map if of type WMS
          * @param {Oskari.mapframework.domain.WmsLayer[]} layers
          */
-        preselectLayers: function (layers) {
-
+        preselectLayers: function (layers) {            
             var sandbox = this._sandbox,
                 i,
                 layer,
@@ -237,7 +254,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          */
         activateControls: function () {
             this._getFeatureControlHover.activate();
-            this._getFeatureControlSelect.activate();
+            this._loadingControl.activate();
         },
 
         /**
@@ -247,58 +264,250 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          */
         deactivateControls: function () {
             this._getFeatureControlHover.deactivate();
-            this._getFeatureControlSelect.deactivate();
+            this._loadingControl.deactivate();
         },
-        /**
-         * Adds a single WMS layer to this map
-         *
-         * @method addMapLayerToMap
-         * @param {Oskari.mapframework.domain.WmsLayer} layer
-         * @param {Boolean} keepLayerOnTop
-         * @param {Boolean} isBaseMap
-         */
-        addMapLayerToMap: function (layer, keepLayerOnTop, isBaseMap) {
+        addMapLayerArcGisToMap: function (layer, keepLayerOnTop, isBaseMap) {
+            var me = this;
+            var layerUrl = me.ajaxUrl + "&LAYERID=" + layer.getId();
+            var openLayer;
+
+            var layerScales = me.getMapModule().calculateLayerScales(layer.getMaxScale(), layer.getMinScale());
+            var layerInfo = {};
+            layerInfo.spatialReference = {};
+            layerInfo.spatialReference.wkid = me._map.projection.substr(me._map.projection.indexOf(':') + 1);
+            openLayer = new OpenLayers.Layer.ArcGIS93Rest("layer_" + layer.getId(), layerUrl, {
+                TRANSPARENT: true,
+                LAYERS: me.defaultLayerId,
+                VIS_METHOD: 'administrative'
+            }, {
+                tileOptions : {
+                    maxGetUrlLength: 3072
+                },
+                scales: layerScales,
+                isBaseLayer: false,
+                displayInLayerSwitcher: false,
+                visibility: true,
+                singleTile: true,
+                buffer: 0
+            });
+
+            this._sandbox.printDebug("#!#! CREATED OPENLAYER.LAYER.ArcGis for ArcGisLayer " + layer.getId());
+
+            return openLayer;
+        },
+        addMapLayerWMSToMap: function (layer, keepLayerOnTop, isBaseMap) {
+            var me = this;
+            var layerScales = me.getMapModule().calculateLayerScales(layer.getMaxScale(), layer.getMinScale());
+            var openLayer = new OpenLayers.Layer.WMS('layer_' + layer.getId(), me.ajaxUrl + "&LAYERID=" + layer.getId(), {
+                layers: layer.getWmsName(),
+                transparent: true,
+                format: "image/png"
+            }, {
+                scales: layerScales,
+                isBaseLayer: false,
+                displayInLayerSwitcher: false,
+                visibility: true,
+                singleTile: true,
+                buffer: 0
+            });
+
+            return openLayer;
+        },
+        _createFeatureLayer: function (layer) {
+            var me = this;
+            var context = {
+                getSize: function (feature) {
+                    var array = feature.attributes ? feature.attributes : feature.properties;
+                    return array["size"] ? array["size"] * 4 : 0;
+                },
+                getFillColor: function (feature) {
+                    var array = feature.attributes ? feature.attributes : feature.properties;
+                    if (array["value"] && array["value"] > 0)
+                        return "#3182bd";
+                    return "#e34a33";
+                },
+                getSymbolOpacity: function (feature) {
+                    return me.showSymbols ? 0.8 : 0;
+                },                
+                getStrokeColor: function (feature) {
+                    var array = feature.attributes ? feature.attributes : feature.properties;
+                    if (array["value"] && array["value"] > 0)
+                        return "#08519c";
+                    return "#b30000";
+                },
+                getLabel: function (feature) {
+                    var array = feature.attributes ? feature.attributes : feature.properties;
+
+                    var result = "";
+                    if (me.showAreaNames && array["name"])
+                        result += array["name"];
+                    if (me.showValues && array["value"]) {
+                        if (result != "")
+                            result += '\n';
+                        result += array["value"];
+                    }
+                    return result;
+                }
+            };
+
+            //NOTE: if style is changed change also statsgrid/instance.js:_createPrintParams
+            var template = {
+                strokeColor: "${getStrokeColor}",
+                strokeWidth: 1,
+                pointRadius: "${getSize}", // using context.getSize(feature)
+                fillColor: "${getFillColor}",
+                fillOpacity: "${getSymbolOpacity}",
+                strokeOpacity: "${getSymbolOpacity}",
+                label: "${getLabel}",
+                graphicZIndex: 3,
+            };
+
+            var style = new OpenLayers.Style(template, { context: context });
+            var styleMap = new OpenLayers.StyleMap({ 'default': style, 'select': { fillColor: '#ff6300' } });
+            var openLayer = new OpenLayers.Layer.Vector("layer_feature_" + layer.getId(), {
+                                strategies: [new OpenLayers.Strategy.Fixed(), new OpenLayers.Strategy.Refresh({force: true, active: true})],
+                                protocol: new OpenLayers.Protocol.HTTP({
+                                    url: "?action_route=GetStatsFeatures",
+                                    format: new OpenLayers.Format.GeoJSON(),
+                                    params : {
+                                        LAYERID: me.defaultLayerId,
+                                        LAYERATTRIBUTE: me.featureAttribute
+                                    },
+                                    parseFeatures: function(request) {
+                                        return me._parseLayerFeatures(me, this, request);
+                                    }
+                                }),
+                                styleMap: styleMap
+            }, {
+                visibility: true
+            });
+
+            openLayer.events.register('loadend', this, this.featureLayerLoadEnd);
+
+            return openLayer;
+        },
+        featureLayerLoadEnd: function (evt) {
+            var geoJsonData;
+            var oLayer = evt.object;
+            var format = new OpenLayers.Format.GeoJSON();
+            var geoJsonString = format.write(oLayer.features);
+            var geoJsonParsed = JSON.parse(geoJsonString);
+            if (geoJsonParsed.features) {
+                var features = [];
+                var context = oLayer.styleMap.styles.default.context;
+                for (var j = 0; j < geoJsonParsed.features.length; j++) {
+                    var feature = geoJsonParsed.features[j];
+                    if (feature.properties.size == null)
+                        continue;
+
+                    feature.properties["getLabel"] = context.getLabel(feature);
+                    feature.properties["getSize"] = context.getSize(feature) * 2;
+                    feature.properties["getFillColor"] = context.getFillColor(feature);
+                    feature.properties["getStrokeColor"] = context.getStrokeColor(feature);
+
+                    features.push(feature);
+                }
+                geoJsonParsed.features = features;
+
+                geoJsonData = {};
+                geoJsonData.id = oLayer.name;
+                geoJsonData.name = oLayer.name;
+                geoJsonData.type = "geojson";
+                geoJsonData.data = geoJsonParsed;
+                geoJsonData.styles = [
+                    {
+                        "name": "default",
+                        "styleMap": {
+                            "default": {
+                                "graphicSize": "${getSize}",
+                                "fillOpacity": context.getSymbolOpacity(),
+                                'strokeWidth': context.getSymbolOpacity() == 0 ? 0 : 1,
+                                'strokeColor': '${getStrokeColor}',
+                                'fillColor': '${getFillColor}',
+                                'strokeOpacity': context.getSymbolOpacity(),
+                                'strokeLinecap': 'round',
+                                'strokeDashstyle': 'solid',
+                                'display': true,
+                                'label': "${getLabel}",
+                                'labelAlign': 'c',
+                                'graphicName': 'circle'
+                            }
+                        }
+                    }
+                ];
+            }
+            if (geoJsonData != null) {
+                var eventBuilder = this._sandbox.getEventBuilder('Printout.PrintableContentEvent');
+                var event = eventBuilder(this.getName(), null, null, geoJsonData);
+                this._sandbox.notifyAll(event);
+            }            
+        },
+        _createGridMapLayer: function(layer) {
+            var me = this;
+            var layerUrl = me.ajaxUrl + "&LAYERID=" + layer.getId();
+            var openLayer;
+            var layerScales = me.getMapModule().calculateLayerScales(layer.getMaxScale(), layer.getMinScale());
+            var layerInfo = {};
+            layerInfo.spatialReference = {};
+            layerInfo.spatialReference.wkid = me._map.projection.substr(me._map.projection.indexOf(':') + 1);
+            openLayer = new OpenLayers.Layer.ArcGIS93Rest("layer_grid_" + layer.getId(), layerUrl, {
+                TRANSPARENT: true,
+                LAYERS: me.defaultLayerId,
+                XLAYERTYPE: 'grid'
+            }, {
+                tileOptions: {
+                    maxGetUrlLength: 3072
+                },
+                scales: layerScales,
+                isBaseLayer: false,
+                displayInLayerSwitcher: false,
+                visibility: true,
+                singleTile: true,
+                buffer: 0
+            });
+
+            return openLayer;
+        },
+        addMapLayerToMap: function (layer, keepLayerOnTop, isBaseMap) {            
             if (!layer.isLayerOfType(this._layerType)) {
                 return;
             }
-
+            var openLayer = null;  
+            
             var me = this,
                 eventBuilder = me._sandbox.getEventBuilder('MapStats.FeatureHighlightedEvent'),
                 highlightEvent;
 
-            var layerScales = me.getMapModule().calculateLayerScales(layer.getMaxScale(), layer.getMinScale()),
-                openLayer = new OpenLayers.Layer.WMS('layer_' + layer.getId(), me.ajaxUrl + "&LAYERID=" + layer.getId(), {
-                    layers: layer.getWmsName(),
-                    transparent: true,
-                    format: "image/png"
-                }, {
-                    scales: layerScales,
-                    isBaseLayer: false,
-                    displayInLayerSwitcher: false,
-                    visibility: true,
-                    singleTile: true,
-                    buffer: 0
-                });
+            if (this.useArcGis) {
+                openLayer = this.addMapLayerArcGisToMap(layer, keepLayerOnTop, isBaseMap);
+            }
+            else {
+                openLayer = this.addMapLayerWMSToMap(layer, keepLayerOnTop, isBaseMap);
+            }
+
+            var gridLayer = me._createGridMapLayer(layer);
+            var featureLayer = me._createFeatureLayer(layer);            
 
             // Select control
             me._statsDrawLayer = new OpenLayers.Layer.Vector("Stats Draw Layer", {
                 styleMap: new OpenLayers.StyleMap({
                     "default": new OpenLayers.Style({
                         fillOpacity: 0.0,
-                        strokeOpacity: 0.0
+                        strokeOpacity: 0.0,
                     }),
                     "temporary": new OpenLayers.Style({
-                        strokeColor: "#ff6666",
+                        strokeColor: "#333333",
                         strokeOpacity: 1.0,
                         strokeWidth: 3,
-                        fillColor: "#ff0000",
-                        fillOpacity: 0.0,
+                        fillColor: "#000000",
+                        fillOpacity: 0.2,
                         graphicZIndex: 2,
                         cursor: "pointer"
                     }),
                     "select": new OpenLayers.Style({})
                 })
             });
+            
             me._map.addLayers([me._statsDrawLayer]);
 
             // Hover control
@@ -323,23 +532,26 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             me._highlightCtrl.activate();
 
             var queryableMapLayers = [openLayer];
-
-            me._getFeatureControlHover = new OpenLayers.Control.WMSGetFeatureInfo({
+            var hoverParams = {
                 drillDown: false,
                 hover: true,
                 handlerOptions: {
                     "hover": {
-                        delay: 0
+                        delay: 50
                     },
                     "stopSingle": false
                 },
                 infoFormat: "application/vnd.ogc.gml",
                 layers: queryableMapLayers,
                 eventListeners: {
-                    getfeatureinfo: function (event) {
+                    getfeatureinfo: function(event) {
                         var drawLayer = me._map.getLayersByName("Stats Draw Layer")[0],
                             i;
                         if (typeof drawLayer === "undefined") {
+                            return;
+                        }
+
+                        if(me.currentZoneType !== 'administrative') {
                             return;
                         }
                         if (event.features.length === 0) {
@@ -371,10 +583,19 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
                         }
                         drawLayer.redraw();
                     },
-                    beforegetfeatureinfo: function (event) {},
-                    nogetfeatureinfo: function (event) {}
+                    beforegetfeatureinfo: function(event) {
+                    },
+                    nogetfeatureinfo: function(event) {}
                 }
-            });
+            };
+
+            if (me.useArcGis) {
+                me._getFeatureControlHover = new OpenLayers.Control.ArcGisGetFeatureInfo(hoverParams);
+            } else {
+                me._getFeatureControlHover = new OpenLayers.Control.WMSGetFeatureInfo(hoverParams);
+            }
+            
+
             // Add the control to the map
             me._map.addControl(me._getFeatureControlHover);
             // Activate only is mode is on.
@@ -382,91 +603,26 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
                 me._getFeatureControlHover.activate();
             }
 
-            // Select control
-            me._getFeatureControlSelect = new OpenLayers.Control.WMSGetFeatureInfo({
-                drillDown: true,
-                hover: false,
-                handlerOptions: {
-                    "click": {
-                        delay: 0
-                    },
-                    "pixelTolerance": 5
-                },
-                infoFormat: "application/vnd.ogc.gml",
-                layers: queryableMapLayers,
-                eventListeners: {
-                    getfeatureinfo: function (event) {
-                        if (event.features.length === 0) {
-                            return;
-                        }
-                        var newFeature = event.features[0],
-                            drawLayer = me._map.getLayersByName("Stats Draw Layer")[0];
-                        if (typeof drawLayer === "undefined") {
-                            return;
-                        }
-                        var foundInd = -1;
-                        var attrText = me.featureAttribute,
-                            i,
-                            featureStyle;
-
-                        for (i = 0; i < drawLayer.features.length; i++) {
-                            if (drawLayer.features[i].attributes[attrText] === event.features[0].attributes[attrText]) {
-                                foundInd = i;
-                                break;
-                            }
-                        }
-                        featureStyle = OpenLayers.Util.applyDefaults(featureStyle, OpenLayers.Feature.Vector.style['default']);
-                        featureStyle.fillColor = "#ff0000";
-                        featureStyle.strokeColor = "#ff3333";
-                        featureStyle.strokeWidth = 3;
-                        featureStyle.fillOpacity = 0.2;
-
-                        if (foundInd >= 0) {
-                            drawLayer.features[i].selected = !drawLayer.features[i].selected;
-                            if (drawLayer.features[i].selected) {
-                                drawLayer.features[i].style = featureStyle;
-                            } else {
-                                drawLayer.features[i].style = null;
-                                me._highlightCtrl.highlight(drawLayer.features[i]);
-                            }
-                            if (eventBuilder) {
-                                highlightEvent = eventBuilder(drawLayer.features[i], drawLayer.features[i].selected, 'click');
-                            }
-                        } else {
-                            drawLayer.addFeatures([newFeature]);
-                            newFeature.selected = true;
-                            newFeature.style = featureStyle;
-                            if (eventBuilder) {
-                                highlightEvent = eventBuilder(newFeature, newFeature.selected, 'click');
-                            }
-                        }
-                        drawLayer.redraw();
-
-                        if (highlightEvent) {
-                            me._sandbox.notifyAll(highlightEvent);
-                        }
-                    },
-                    beforegetfeatureinfo: function (event) {},
-                    nogetfeatureinfo: function (event) {}
-                }
-            });
-            // Add the control to the map
-            me._map.addControl(me._getFeatureControlSelect);
-            // Activate only is mode is on.
-            if (me._modeVisible) {
-                me._getFeatureControlSelect.activate();
+            var loadingPanelOptions = {
+                layerNames: ['layer_' + layer.getId(), 'layer_grid_' + layer.getId(), 'layer_feature_' + layer.getId()]
             }
 
+            me._loadingControl = new OpenLayers.Control.LoadingPanel(loadingPanelOptions);
+            me._map.addControl(me._loadingControl);         
+
             openLayer.opacity = layer.getOpacity() / 100;
-
-            me._map.addLayer(openLayer);
-
-            me._sandbox.printDebug("#!#! CREATED OPENLAYER.LAYER.WMS for StatsLayer " + layer.getId());
-
+            gridLayer.opacity = layer.getOpacity() / 100;
+            featureLayer.opacity = layer.getOpacity() / 100;
+            me._map.addLayers([openLayer, gridLayer, featureLayer]);
+            
             if (keepLayerOnTop) {
-                me._map.setLayerIndex(openLayer, me._map.layers.length);
+                me._map.setLayerIndex(openLayer, me._map.layers.length - 2);
+                me._map.setLayerIndex(gridLayer, me._map.layers.length - 1);
+                me._map.setLayerIndex(featureLayer, me._map.layers.length);
             } else {
                 me._map.setLayerIndex(openLayer, 0);
+                me._map.setLayerIndex(gridLayer, 1);
+                me._map.setLayerIndex(featureLayer, 2);
             }
         },
 
@@ -572,15 +728,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             if (!layer.isLayerOfType(me._layerType)) {
                 return;
             }
-            me._removeMapLayerFromMap(layer);
+            me._removeMapLayerFromMap(layer);            
             me._highlightCtrl.deactivate();
             me._getFeatureControlHover.deactivate();
-            me._getFeatureControlSelect.deactivate();
+            me._loadingControl.deactivate();
             me._map.removeControl(me._highlightCtrl);
 //            me._map.removeControl(me._navCtrl);
             me._map.removeControl(me._getFeatureControlHover);
-            me._map.removeControl(me._getFeatureControlSelect);
-            me._map.removeLayer(me._statsDrawLayer);
+            me._map.removeControl(me._loadingControl);
+            me._map.removeLayer(me._statsDrawLayer);            
         },
 
         /**
@@ -600,10 +756,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             if (this._modeVisible) {
                 if (mapLayer.isVisible()) {
                     this._getFeatureControlHover.activate();
-                    this._getFeatureControlSelect.activate();
+                    this._loadingControl.activate();
                 } else {
                     this._getFeatureControlHover.deactivate();
-                    this._getFeatureControlSelect.deactivate();
+                    this._loadingControl.deactivate();
                 }
             }
         },
@@ -620,9 +776,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
                 return;
             }
 
-            var mapLayer = this.getOLMapLayers(layer);
+            var mapLayers = this.getOLMapLayers(layer);
             /* This should free all memory */
-            mapLayer[0].destroy();
+            $.each(mapLayers, function (key, mapLayer) {
+                mapLayer.destroy();
+            });            
         },
         /**
          * @method getOLMapLayers
@@ -631,12 +789,22 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          * @return {OpenLayers.Layer[]}
          */
         getOLMapLayers: function (layer) {
-
+            var me = this;
             if (!layer.isLayerOfType(this._layerType)) {
                 return null;
             }
 
-            return this._map.getLayersByName('layer_' + layer.getId());
+            var ids = ['layer_' + layer.getId(), 'layer_grid_' + layer.getId(), 'layer_feature_' + layer.getId()];
+            var result = [];
+
+            $.each(ids, function (key, id) {
+                var itemResult = me._map.getLayersByName(id);
+                if (itemResult != null && itemResult.length > 0)
+                    result.push(itemResult[0]);
+//                else
+//                    result.push(null);
+            });
+            return result;
         },
 
         /**
@@ -708,29 +876,193 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             }
 
             this._sandbox.printDebug("Setting Layer Opacity for " + layer.getId() + " to " + layer.getOpacity());
-            var mapLayer = this.getOLMapLayers(layer);
-            if (mapLayer[0] !== null && mapLayer[0] !== undefined) {
-                mapLayer[0].setOpacity(layer.getOpacity() / 100);
-            }
+            var mapLayers = this.getOLMapLayers(layer);
+            $.each(mapLayers, function (key, mapLayer) {
+                 mapLayer.setOpacity(layer.getOpacity() / 100);
+            });            
         },
+        _parseLayerFeatures: function(me, protocol, request) {
+            var result = [];
+            var features = protocol.format.read(request.responseText);
+            var doUpdate = false;
+            var idxLookup = {};
+            var maxValue, minValue, spreadValue, maxSize;
+            
+            if (me.columnValues)
+                doUpdate = true;
 
+            if (doUpdate) {
+                _.each(me.columnIds, function (val, idx) {
+                    idxLookup[val] = idx;
+                });
+                maxValue = me.classificationParams.max;
+                minValue = 0;
+                spreadValue = maxValue - minValue;
+                maxSize = me.classificationParams.maxSize;
+            }            
+
+            _.each(features, function (feature) {
+                feature.geometry = feature.geometry.getCentroid();
+                if (doUpdate) {
+                    var id = feature.attributes[me.featureAttribute];
+                    var idx = idxLookup[id];
+                    var value = me.columnValues[idx];
+                    var name = me.columnNames[idx];
+                    var size;
+                    if (value < 0) {
+                        size = Math.sqrt((-value - minValue) / spreadValue) * maxSize;
+                    } else {
+                        size = Math.sqrt((value - minValue) / spreadValue) * maxSize;
+                    }
+                    feature.attributes.id = id;
+                    feature.attributes.value = value;
+                    feature.attributes.size = size;
+                    feature.attributes.name = name;
+                }
+                result.push(feature);
+            });
+
+//            if (doUpdate) {
+//                console.log('updated');
+//            }
+                
+            return result;
+        },
         _afterStatsVisualizationChangeEvent: function (event) {
+            var me = this;
             var layer = event.getLayer(),
                 params = event.getParams(),
-                mapLayer = this.getOLMapLayers(layer);
+                mapLayers = this.getOLMapLayers(layer);
+            if (mapLayers == null || mapLayers[0] == null || mapLayers[1] == null || mapLayers[2] == null)
+                return;
+
+            var administrativeLayer = mapLayers[0];            
+            var gridLayer = mapLayers[1];
+            var featureLayer = mapLayers[2];
+
+            var updateFeatureLayer = false;
+            var layerChanged = this.layerName != params.VIS_NAME;
 
             this.featureAttribute = params.VIS_ATTR;
+            this.layerName = params.VIS_NAME;
+            this.currentZoneType = params.ZONE_TYPE;
 
-            if (mapLayer !== null && mapLayer !== undefined) {
-                mapLayer[0].mergeNewParams({
-                    VIS_ID: params.VIS_ID,
-                    VIS_NAME: params.VIS_NAME,
-                    VIS_ATTR: params.VIS_ATTR,
-                    VIS_CLASSES: params.VIS_CLASSES,
-                    VIS_COLORS: params.VIS_COLORS,
-                    LAYERS: params.VIS_NAME
-                });
+            if (layerChanged) {
+                featureLayer.protocol.params.LAYERID = this.layerName;
+                featureLayer.protocol.params.LAYERATTRIBUTE = this.featureAttribute;
+                updateFeatureLayer = true;
             }
+            
+            if (params.ZONE_TYPE == 'administrative') {
+
+                    var featureLayerParametersChanged =
+                        this.showAreaNames != params.VIS_SHOW_AREA_NAMES ||
+                        this.showValues != params.VIS_SHOW_VALUES;
+                    this.showAreaNames = params.VIS_SHOW_AREA_NAMES;
+                    this.showValues = params.VIS_SHOW_VALUES;
+                    if (params.COLUMN_VALUES) {
+                        this.columnValues = params.COLUMN_VALUES;
+                        this.columnIds = params.COLUMN_IDS;
+                        this.columnNames = params.COLUMN_NAMES;
+                        this.classificationParams = params.CLASSIFICATION_PARAMS;
+                        updateFeatureLayer = true;
+                    }
+
+                    switch (params.VIS_METHOD) {
+                        case 'choropletic':
+                            featureLayerParametersChanged = featureLayerParametersChanged || this.showSymbols != false;
+                            this.showSymbols = false;
+                            gridLayer.setVisibility(false);
+                            administrativeLayer.mergeNewParams({
+                                VIS_ID: params.VIS_ID,
+                                VIS_NAME: params.VIS_NAME,
+                                VIS_ATTR: params.VIS_ATTR,
+                                VIS_CLASSES: params.VIS_CLASSES,
+                                VIS_COLORS: params.VIS_COLORS,
+                                LAYERS: params.VIS_NAME
+                            });
+                            featureLayer.setVisibility(true);
+                            break;
+                        case 'graduated':
+                            gridLayer.setVisibility(false);
+                            administrativeLayer.mergeNewParams({
+                                VIS_ID: params.VIS_ID,
+                                VIS_NAME: params.VIS_NAME,
+                                VIS_ATTR: params.VIS_ATTR,
+                                VIS_CLASSES: params.VIS_CLASSES,
+                                VIS_COLORS: params.VIS_COLORS,
+                                LAYERS: params.VIS_NAME
+                            });
+                            featureLayerParametersChanged = featureLayerParametersChanged || this.showSymbols != true;
+                            this.showSymbols = true;
+                            featureLayer.setVisibility(true);                                                     
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (featureLayerParametersChanged)
+                        updateFeatureLayer = true;
+                }
+                else if (params.ZONE_TYPE.indexOf("grid") == 0) {
+                    var visMethodType;
+                    switch (params.VIS_METHOD) {
+                        case 'choropletic':
+                            visMethodType = 'SQUARE';
+                            break;
+                        case 'graduated':
+                            visMethodType = 'CIRCLE';
+                            break;
+                        default:
+                            break;
+                    }
+
+                    //this.showSymbols = false;
+                    featureLayer.setVisibility(false);
+                    administrativeLayer.mergeNewParams({
+                        VIS_ID: params.VIS_ID,
+                        VIS_NAME: params.VIS_NAME,
+                        VIS_ATTR: params.VIS_ATTR,
+                        VIS_CLASSES: params.VIS_CLASSES,
+                        VIS_COLORS: params.VIS_COLORS,
+                        LAYERS: params.VIS_NAME
+                    });
+                    administrativeLayer.redraw();
+                    gridLayer.mergeNewParams({
+                        VIS_ID: params.VIS_ID,
+                        VIS_NAME: params.VIS_NAME,
+                        VIS_ATTR: params.VIS_ATTR,
+                        VIS_CLASSES: params.VIS_CLASSES,
+                        VIS_COLORS: params.VIS_COLORS,
+                        LAYERS: params.VIS_NAME,
+                        VIS_METHOD: params.ZONE_TYPE,
+                        VIS_METHOD_TYPE: visMethodType,
+                        indicatorData: params.indicatorData != null ? JSON.stringify(params.indicatorData) : null,
+                        classify: params.classify != null && params.classify.items != null && params.classify.items.length > 0 ? JSON.stringify(params.classify) : null,
+                    });
+                    gridLayer.setVisibility(true);
+
+                    this._clearHilights();
+                    var drawLayer = me._map.getLayersByName("Stats Draw Layer")[0],
+                    i;
+                    if (typeof drawLayer !== "undefined") {
+                        for (i = 0; i < drawLayer.features.length; i++) {
+                            if (!drawLayer.features[i].selected) {
+                                drawLayer.removeFeatures([drawLayer.features[i]]);
+                            }
+                        }
+                        me._removePopup();
+                        return;
+                    }
+                } else {
+                    console.log("Invalid method " + params.visualizationMethod);
+                }
+            
+
+            if (updateFeatureLayer) {
+                featureLayer.refresh();
+            }
+                
         }
     }, {
         /**

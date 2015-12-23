@@ -26,7 +26,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
             'buttons': '<div class="buttons"></div>',
             'layersContainer': '<div class="layers"></div>',
             'toolContainer': '<div class="toolContainer">' +
-                    '<h4 class="title"></h4>' +
+                    '<div class="title"></div>' +
                 '</div>',
             'tool': '<div class="tool"></div>',
             'drawControls': '<div class="buttons"></div>',
@@ -316,15 +316,15 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
             var panel = Oskari.clazz.create(
                     'Oskari.userinterface.component.AccordionPanel'),
                 panelContainer = panel.getContainer(),
-                layersCont = jQuery(this._templates.layersContainer).clone(),
-                tooltipCont = jQuery(this._templates.help).clone();
+                layersCont = jQuery(this._templates.layersContainer).clone();
+                //var tooltipCont = jQuery(this._templates.help).clone();
 
             panel.setTitle(loc.content.label);
-            tooltipCont.attr('title', loc.content.tooltip);
+            //tooltipCont.attr('title', loc.content.tooltip);
 
-            panelContainer.append(tooltipCont);
+            //panelContainer.append(tooltipCont);
             panelContainer.append(layersCont);
-            panelContainer.append(this._createDataButtons(loc));
+            //panelContainer.append(this._createDataButtons(loc));
             panelContainer.append(this._createDrawButtons(loc));
 
             return panel;
@@ -369,12 +369,12 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
             });
             dataButton.insertTo(buttons);
 
-            searchButton.setTitle(loc.content.search.title);
-            searchButton.addClass('primary');
-            searchButton.setHandler(function() {
-                me._openFlyoutAs('Search');
-            });
-            searchButton.insertTo(buttons)
+//            searchButton.setTitle(loc.content.search.title);
+//            searchButton.addClass('primary');
+//            searchButton.setHandler(function() {
+//                me._openFlyoutAs('Search');
+//            });
+//            searchButton.insertTo(buttons);
 
             return buttons;
         },
@@ -393,7 +393,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
                 toolTemplate = jQuery(this._templates.tool),
                 tools = ['point', 'line', 'area'];
 
-            toolContainer.find('h4').html(loc.content.features.title);
+            toolContainer.find('.title').html(loc.content.features.title);
 
             return _.foldl(tools, function(container, tool) {
                 var toolDiv = toolTemplate.clone();

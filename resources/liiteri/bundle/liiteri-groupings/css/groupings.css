@@ -1,0 +1,163 @@
+/*List*/
+
+#groupings-table .operationsLinks {
+	text-align: center;
+}
+
+#groupings-table .operationsLinks a {
+	margin: 0 10px;
+	color: black;
+	text-decoration: none;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.liiteri-groupings .buttons {
+	padding: 5px;
+}
+
+.liiteri-groupings .buttons a span {
+	margin-right: 2px;
+}
+	
+.liiteri-groupings .buttons a {
+	float: left;
+    margin-right: 20px;
+	border-radius: 2px;
+	color: black;
+	background: #CCF1FB;
+	padding: 5px 10px 5px 10px;
+	text-decoration: none;
+	margin-top: 5px;
+}
+
+.liiteri-groupings .buttons a:hover {
+	background: #CCF1FB;
+	text-decoration: none;
+	cursor: pointer;
+}
+/*--------------
+ * Detail's view
+ *--------------*/
+
+.groupingsContainer .accordion, .groupingsContainer .accordion_panel {
+	background-color: white !important;
+}
+
+/* buttons */
+.groupingsContainer .buttons {
+	padding: 5px;
+}
+
+.groupingsContainer .buttons input {
+	/*float: left;*/
+    margin-right: 20px;
+	border-radius: 2px;
+	padding: 5px 10px 5px 10px;
+	text-decoration: none;
+	margin-top: 5px;
+	font-weight: normal;
+	line-height: 18px;
+}
+
+/*.groupingsContainer .buttons input:hover {
+	background: #33CC00;
+	text-decoration: none;
+	cursor: pointer;
+}*/
+
+.groupingsContainer .buttons .cancelBtn{
+	background: white;
+	border: none;
+	color: black;
+}
+
+.groupingsContainer .buttons .saveBtn{
+	background: #33CC00;
+	color: white;
+}
+
+/* form */
+.groupingsContainer label, .groupingsContainer .metadataFieldTitle {
+	font-weight: normal;
+	position: relative;
+    text-align: right;
+    width: 130px;
+    padding-right: 5px;
+}
+.groupingsContainer input[type="text"], .groupingsContainer .metadataFieldValue, .groupingsContainer select {
+	width: 300px;
+	line-height: 18px;
+}
+
+.groupingsContainer .oskarifield {
+	line-height: 30px;
+}
+
+.groupingsContainer  .addItemButtons {
+	padding: 5px;
+}
+
+/*.groupingsContainer  .addItemButtons a span {
+	margin-right: 2px;
+}*/
+	
+.groupingsContainer  .addItemButtons input , .groupingsContainer input.addNewThemeButton {
+	/*float: left;*/
+    margin-right: 20px;
+	border-radius: 2px;
+	color: black;
+	background: #CCF1FB;
+	padding: 5px 10px 5px 10px;
+	text-decoration: none;
+	margin-top: 5px;
+	line-height: 18px;
+}
+
+.groupingsContainer  .addItemButtons input:hover ,  .groupingsContainer input.addNewThemeButton:hover {
+	background: #CCF1FB;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.groupingsContainer  .addItemButtons input:disabled ,  .groupingsContainer input.addNewThemeButton:disabled {
+	background: #DDE3DC;
+	text-decoration: none;
+	cursor: pointer;
+	color: white;
+}
+
+.readyThemes {
+	margin: 10px;
+}
+
+.readyThemes li{
+	margin: 5px !important;
+}
+
+.groupingsContainer .statsContainer {
+	margin-top: 20px;
+	height: 100px;
+}
+
+.groupingsContainer .myGrid  th {
+	border-bottom: 1px solid #111111;
+	font-weight: bold;
+}
+
+.groupingsContainer .myGrid  td{
+	border-bottom: 1px solid #e6e6e6;
+}
+
+.groupingsContainer .dynatree-node-box {
+	background-color: #90E9FF;
+    border: 1px solid #33ccff;
+    border-radius: 3px;
+    color: black;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 5px 10px;
+    text-decoration: none;
+	font-family: "Open Sans",Arial,sans-serif;
+}

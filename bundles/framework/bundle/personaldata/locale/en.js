@@ -3,7 +3,9 @@ Oskari.registerLocalization({
     "key": "PersonalData",
     "value": {
         "title": "My data",
+		"flyoutTitle": "My data",
         "desc": "My data",
+		"tooltip": "My data",
         "notLoggedIn": "You can save map views and browse maps that you have embedded on other websites in My data. <a href='/web/en/login'>Log in</a>.",
         "tabs": {
             "myviews": {
@@ -118,11 +120,23 @@ Oskari.registerLocalization({
                 "lastName": "Last name",
                 "nickName": "Nickname",
                 "email": "E-mail",
+                "roles": "Roles",
                 "changeInfo": "Change your account information",
                 "changePassword": "Change your password",
                 "removeAccount": "Delete your account",
                 "changeInfoUrl": "/web/en/profile"
             }
+        },
+        "menuItems" :{
+        	"myAccount": "My Account",
+        	"workspaces": "Workspaces",
+        	"groupings": "Groupings",
+        	"announcements": "Announcements",
+        	"layerRights": "Layer Rights",
+        	"adminMapLayers": "A: Map Layers",
+        	"createMap": "Create Map",
+        	"logout": "Logout",
+        	"login": "Log in"
         },
         "button": {
             "yes": "Yes",

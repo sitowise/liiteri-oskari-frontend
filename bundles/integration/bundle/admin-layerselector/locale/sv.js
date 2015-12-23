@@ -28,7 +28,8 @@ Oskari.registerLocalization({
             "text": "Sök kartlager",
             "inspire": "Enligt tema",
             "organization": "Enligt dataproducent",
-            "published": "Användare"
+            "published": "Användare",
+            "userThemes": "User themes"
         },
         "published": {
             "organization": "Publicerad kartlager",
@@ -100,7 +101,6 @@ Oskari.registerLocalization({
             "groupName": "Gruppnivåns namn",
             "subLayers": "Undernivå",
             "addSubLayer": "Tillägg en undernivå",
-            "editSubLayer": "Editera undernivå",
 
             "wmsInterfaceAddress": "WMS-gränssnittets address",
             "wmsUrl": "WMS-gränssnittets address",
@@ -108,6 +108,9 @@ Oskari.registerLocalization({
             "wmsServiceMetaId": "WMS metadata tagg",
             "wmsServiceMetaIdDesc": "WMS-tjänstens metadata filtagg",
             "layerNameAndDesc": "Lagrets namn och kort beskrivning",
+			
+			"downloadServiceUrlDesc": "Hämta serviceadress",
+			"downloadServiceUrl": "Hämta serviceadress",
 
             "metaInfoIdDesc": "Geodata&shy;registrets metadata filtagg, som unikt identifierar metadatans XML beskrivning",
             "metaInfoId": "Metadatans filtagg",
@@ -141,7 +144,6 @@ Oskari.registerLocalization({
             "legendaImage": "Förklarings&shy;bildens address",
             "legendaImageDesc": "Förklarings&shy;bildens address",
             "legendaImagePlaceholder": "Förklarings&shy;bildens address",
-            "gfiContent": "NOT TRANSLATED",
             "gfiResponseType": "GFI svartyp",
             "gfiResponseTypeDesc": "Svarets typ dvs Get Feature Info (GFI)",
             "gfiStyle": "GFI stil",

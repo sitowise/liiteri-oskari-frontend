@@ -1,0 +1,22 @@
+    .slick-expander-toggle {
+      height: 9px;
+      width: 9px;
+      display: inline-block;
+	  background: url(../images/expand.gif) no-repeat center center;
+    }
+
+    .slick-expander-toggle.slick-expander-expand {
+      background: url(../images/expand.gif) no-repeat center center;
+    }
+
+    .slick-expander-toggle.slick-expander-collapse {
+      background: url(../images/collapse.gif) no-repeat center center;
+    }
+	
+	.slick-expander-toggle.slick-expander-loaded0 {
+      background: none;
+    }
+	
+	.slick-expander-toggle.slick-expander-loading {
+      background: url(../images/ajax-loader-small.gif) no-repeat center center;
+    }

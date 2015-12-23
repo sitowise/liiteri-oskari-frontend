@@ -24,7 +24,10 @@ function() {
 
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/bundle/publishedgrid/instance.js"
+            "src": "../../../../bundles/statistics/bundle/publishedgrid/instance.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/statistics/bundle/statsgrid/domain/RequestQueue.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/statistics/bundle/statsgrid/plugin/ManageClassificationPlugin.js"
@@ -37,6 +40,9 @@ function() {
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/statistics/bundle/statsgrid/event/IndicatorsEvent.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/statistics/bundle/statsgrid/event/IndicatorAdded.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/statistics/bundle/statsgrid/service/StatisticsService.js"
@@ -52,6 +58,12 @@ function() {
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/statistics/bundle/statsgrid/request/IndicatorsRequestHandler.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/statistics/bundle/statsgrid/domain/AreaFilter.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/statistics/bundle/statsgrid/domain/GeometryFilter.js"
         }, {
             "type" : "text/css",
             "src" : "../../../../resources/statistics/bundle/statsgrid/css/style.css"
@@ -72,7 +84,13 @@ function() {
             "src" : "../../../../libraries/slickgrid/css/slick-default-theme.css"
         }, {
             "src" : "../../../../libraries/jquery/jquery.event.drag-2.0.min.js",
-            "type" : "text/javascript"
+            "type": "text/javascript"
+        }, {
+            "src": "../../../../libraries/jquery/plugins/loading-overlay.css",
+            "type": "text/css"
+        }, {
+            "src": "../../../../libraries/jquery/plugins/loading-overlay.js",
+            "type": "text/javascript"
         }, {
             "src" : "../../../../libraries/slickgrid/slick.core.js",
             "type" : "text/javascript"
@@ -108,7 +126,13 @@ function() {
             "type" : "text/javascript"
         }, {
             "src" : "../../../../libraries/slickgrid/plugins/slick.checkboxselectcolumn2.js",
-            "type" : "text/javascript"
+            "type": "text/javascript"
+        }, {
+            "src": "../../../../libraries/slickgrid/plugins/slick.expander.js",
+            "type": "text/javascript"
+        }, {
+            "src": "../../../../libraries/slickgrid/plugins/slick.expander.css",
+            "type": "text/css"
         }, {
             "src" : "../../../../libraries/slickgrid/slick.grid.js",
             "type" : "text/javascript"

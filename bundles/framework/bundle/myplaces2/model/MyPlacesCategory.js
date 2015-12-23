@@ -27,6 +27,7 @@ function() {
     this.dotSize = 3;
     this.dotColor = '000000';
     this.uuid = undefined;
+	this.downloadServiceUrl = '';
 }, {
     /**
      * @method setId 
@@ -297,5 +298,19 @@ function() {
      */
     getUUID : function() {
         return this.uuid;
+    },
+    /**
+     * @method setDownloadServiceUrl
+     * @param {String} value
+     */
+    setDownloadServiceUrl : function(value) {
+        this.downloadServiceUrl = value;
+    },
+    /**
+     * @method getDownloadServiceUrl
+     * @return {String} 
+     */
+    getDownloadServiceUrl : function() {
+        return this.downloadServiceUrl;
     }
 });

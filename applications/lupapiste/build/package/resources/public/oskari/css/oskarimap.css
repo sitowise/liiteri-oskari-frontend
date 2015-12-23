@@ -91,7 +91,7 @@ div.mapplugins.right > div {
   opacity: 0.8 !important;
 }
 .logoplugin .icon {
-  background-image : url('framework/bundle/mapmodule-plugin/plugin/logo/images/logo_pieni.png');
+
   display: inline-block;
   height: 25px;
   width: 25px;

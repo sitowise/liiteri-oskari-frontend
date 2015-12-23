@@ -112,9 +112,27 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundleI
 
             // Flyout exists and we can hook up the request handler
             this.requestHandlers = {
-                addTabRequestHandler: Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.request.AddTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout'])
+                addTabRequestHandler: Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.request.AddTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']),
+                selectTabRequestHandler: Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.request.SelectTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']),
+				//addTabRequestHandler: Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.request.AddTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.View'])
             };
             sandbox.addRequestHandler('PersonalData.AddTabRequest', this.requestHandlers.addTabRequestHandler);
+            sandbox.addRequestHandler('PersonalData.SelectTabRequest', this.requestHandlers.selectTabRequestHandler);
+			
+            this.userPopup = Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.UserPopup', me, sandbox);
+
+			//Add the icon to MapIconsPlugin
+			var mapIconCustomDesc = {
+                'text': 'personaldata',
+                'iconCss': 'glyphicon mapicon user-mapicon',
+				'tooltip': me.getLocalization('tooltip'),
+                'actionType': 'custom',
+                'actionHandler': function () {                    
+				    me.userPopup.toogle();
+				}
+            }
+            var mapIconRequest = sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(this, mapIconCustomDesc, this);
+            sandbox.request(this, mapIconRequest);
         },
         /**
          * @method init
@@ -149,7 +167,20 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundleI
          * @property {Object} eventHandlers
          * @static
          */
-        eventHandlers: {},
+        eventHandlers: {
+			/*'userinterface.ExtensionUpdatedEvent': function (event) {
+                var me = this,
+                    view = me.plugins['Oskari.userinterface.View'];
+                
+                if (event.getExtension().getName() !== me.getName()) {
+                    // not me -> do nothing
+                    return;
+                }
+
+                var isShown = event.getViewState() !== "close";
+                view.showMode(isShown, true);
+            }*/
+		},
 
         /**
          * @method stop
@@ -181,7 +212,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundleI
          */
         startExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.Flyout', this);
-            this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.Tile', this);
+            //this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.Tile', this);
+			//this.plugins['Oskari.userinterface.View'] = Oskari.clazz.create('Oskari.mapframework.bundle.personaldata.View', this);
         },
         /**
          * @method stopExtension
@@ -191,6 +223,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundleI
         stopExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = null;
             this.plugins['Oskari.userinterface.Tile'] = null;
+			//this.plugins['Oskari.userinterface.View'] = null;
         },
         /**
          * @method getPlugins
@@ -222,7 +255,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundleI
             var me = this;
 
             this.plugins['Oskari.userinterface.Flyout'].createUi();
-            this.plugins['Oskari.userinterface.Tile'].refresh();
+			//this.plugins['Oskari.userinterface.View'].createUi();
+            //this.plugins['Oskari.userinterface.Tile'].refresh();
         }
     }, {
         /**

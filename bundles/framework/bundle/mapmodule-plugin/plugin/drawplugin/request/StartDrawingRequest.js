@@ -34,7 +34,8 @@ function(config) {
         line : 'line',
         area : 'area',
         cut : 'cut',
-        box : 'box'
+        box : 'box',
+        circle : 'circle'
     },
 
     getDrawMode : function() {

@@ -14,6 +14,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
         this.pluginName = null;
         this._sandbox = null;
         this._map = null;
+        this._service = null;
         this._supportedFormats = {};
         this._layer = {};
     }, {
@@ -61,7 +62,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
          * Registers self as a layerPlugin to mapmodule with mapmodule.setLayerPlugin()
          */
         register: function () {
-            this.getMapModule().setLayerPlugin('arcgislayer', this);
+            //this.getMapModule().setLayerPlugin('arcgislayer', this);
         },
         /**
          * @method unregister
@@ -69,7 +70,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
          * Unregisters self from mapmodules layerPlugins
          */
         unregister: function () {
-            this.getMapModule().setLayerPlugin('arcgislayer', null);
+            //this.getMapModule().setLayerPlugin('arcgislayer', null);
         },
         /**
          * @method init
@@ -87,6 +88,8 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
             var mapLayerService = sb.getService('Oskari.mapframework.service.MapLayerService');
             if (mapLayerService) {
                 mapLayerService.registerLayerModel('arcgislayer', 'Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayer');
+                var layerModelBuilder = Oskari.clazz.create("Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayerModelBuilder", sandbox);
+                mapLayerService.registerLayerModelBuilder("arcgislayer", layerModelBuilder);
             }
         },
         /**
@@ -102,6 +105,10 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
             this._map = this.getMapModule().getMap();
 
             sandbox.register(this);
+            var service = Oskari.clazz.create('Oskari.arcgis.bundle.maparcgis.service.ArcGisService', this);
+            sandbox.registerService(service);
+            this._service = service;
+
             var p;
             for (p in this.eventHandlers) {
                 if (this.eventHandlers.hasOwnProperty(p)) {
@@ -151,18 +158,18 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
          * @static
          */
         eventHandlers: {
-            'AfterMapLayerRemoveEvent': function (event) {
-                this._afterMapLayerRemoveEvent(event);
-            },
-            'AfterChangeMapLayerOpacityEvent': function (event) {
-                this._afterChangeMapLayerOpacityEvent(event);
-            },
-            'AfterChangeMapLayerStyleEvent': function (event) {
-                //this._afterChangeMapLayerStyleEvent(event);
-            },
-            'AfterMapMoveEvent': function (event) {
-                this._afterMapMoveEvent(event);
-            }
+//            'AfterMapLayerRemoveEvent': function (event) {
+//                this._afterMapLayerRemoveEvent(event);
+//            },
+//            'AfterChangeMapLayerOpacityEvent': function (event) {
+//                this._afterChangeMapLayerOpacityEvent(event);
+//            },
+//            'AfterChangeMapLayerStyleEvent': function (event) {
+//                //this._afterChangeMapLayerStyleEvent(event);
+//            },
+//            'AfterMapMoveEvent': function (event) {
+//                this._afterMapMoveEvent(event);
+//            }
         },
 
         /**
@@ -227,22 +234,35 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
                 return;
             }
 
+            var token = this._service.getTokenForLayer(layer.getId(), layer.getLayerUrls()[0]);
+            var layerUrl = layer.getLayerUrls()[0];
+            if (token != null) {
+                layerUrl = layerUrl + "&token=" + token;
+            }
+
             var jsonp = new OpenLayers.Protocol.Script();
-            jsonp.createRequest(layer.getLayerUrls()[0], {
+            jsonp.createRequest(layerUrl, {
                 f: 'json',
                 pretty: 'true'
-            }, function initMap(layerInfo) {
+            }, function initMap(layerInfo) {                
+            	layerInfo.spatialReference = layerInfo.spatialReference || {};
                 //TODO: this fixing 3 errors
-                layerInfo.spatialReference.wkid = me._map.projection.substr(me._map.projection.indexOf(':') + 1);
-                var openLayer = new OpenLayers.Layer.ArcGISCache("arcgislayer_" + layer.getId(), layer.getLayerUrls()[0], {
-                    layerInfo: layerInfo
-                });
+            	layerInfo.spatialReference.wkid = me._map.projection.substr(me._map.projection.indexOf(':') + 1);
+                //if it is base map we need to create Base Layer, if it is not base map we need to create Overlay
+                //we set TRANSPARENT parameter for this
+            	var layerUrl = layer.getLayerUrls()[0];
+                if (token != null) {
+                    layerUrl = layerUrl + "&token=" + token;
+                }
 
+                var openLayer = new OpenLayers.Layer.ArcGIS93Rest("arcgislayer_" + layer.getId(), "", {
+                    layerInfo: layerInfo,
+                    TRANSPARENT : !isBaseMap
+                });
                 me._layer[layer.getId()] = openLayer;
 
                 openLayer.opacity = layer.getOpacity() / 100;
                 me._map.addLayer(openLayer);
-
                 if (keepLayerOnTop) {
                     me._map.setLayerIndex(openLayer, me._map.layers.length);
                 } else {

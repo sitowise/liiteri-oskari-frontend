@@ -19,7 +19,7 @@ div.admin-layerselector {
       padding: 8px 10px 8px 12px;
       font: 14pt Arial, sans-serif; }
   div.admin-layerselector .add-layer-record.capabilities .add-layer-input-area {
-    max-height: 250px;
+   /* max-height: 250px; */
     overflow: auto; }
   div.admin-layerselector .capabilities {
     /* link-like hover */
@@ -45,8 +45,7 @@ div.admin-layerselector {
       margin: 5px -10px; }
     div.admin-layerselector .capabilities li.groupTitle.closed ul {
       display: none; }
-  div.admin-layerselector .oskariTabs {
-    min-width: 480px; }
+  div.admin-layerselector .oskariTabs { }
     div.admin-layerselector .oskariTabs div.tabsHeader ul li.admin-modify-wms {
       float: right; }
   div.admin-layerselector div.tab-content div.oskarifield {
@@ -66,14 +65,13 @@ div.admin-layerselector {
     div.admin-layerselector div.layer .add-layer-input, div.admin-layerselector div.create-layer .add-layer-input {
       float: none;
       width: 140px;
-      height: 16px;
       margin: 0;
       margin-bottom: 4px; }
       div.admin-layerselector div.layer .add-layer-input.mid, div.admin-layerselector div.create-layer .add-layer-input.mid {
-        width: 217px;
+        width: 207px;
         float: left; }
       div.admin-layerselector div.layer .add-layer-input.long, div.admin-layerselector div.create-layer .add-layer-input.long {
-        width: 297px; }
+        width: 100% }
     div.admin-layerselector div.layer .layer-title, div.admin-layerselector div.create-layer .layer-title {
       margin-top: 4px; }
     div.admin-layerselector div.layer div.backendstatus-down, div.admin-layerselector div.create-layer div.backendstatus-down {
@@ -114,8 +112,6 @@ div.admin-layerselector {
       float: left;
       margin-right: 5px;
       margin-top: 3px; }
-      div.admin-layerselector div.layer input[type=checkbox], div.admin-layerselector div.create-layer input[type=checkbox] {
-        margin-top: 0; }
     div.admin-layerselector div.layer select, div.admin-layerselector div.create-layer select {
       width: 309px;
       padding: 8px 10px 8px 10px;
@@ -153,7 +149,6 @@ div.admin-layerselector {
     white-space: nowrap;
     overflow: hidden; }
   div.admin-layerselector .admin-add-layer-btn, div.admin-layerselector .admin-edit-layer-btn, div.admin-layerselector .admin-add-class-btn, div.admin-layerselector .admin-edit-class-btn, div.admin-layerselector .admin-add-org-btn, div.admin-layerselector .admin-edit-org-btn {
-    float: right;
     margin: 5px 10px; }
   div.admin-layerselector button.admin-arrange-layers {
     background-color: #eee;
@@ -176,8 +171,7 @@ div.admin-layerselector {
     position: relative; }
   div.admin-layerselector .add-layer-separation {
     margin-top: 15px; }
-  div.admin-layerselector .admin-add-layer-btn {
-    float: right; }
+  div.admin-layerselector .admin-add-layer-btn { }
   div.admin-layerselector .admin-add-layer {
     padding: 10px 0px;
     overflow: hidden;
@@ -214,7 +208,7 @@ div.admin-layerselector {
     transition-property: height; }
   div.admin-layerselector .show-add-class {
     padding: 10px 10px;
-    height: 200px;
+    /*height: 200px;*/
     width: 100%; }
   div.admin-layerselector .add-layer-wrapper, div.admin-layerselector .add-class-wrapper {
     display: block; }
@@ -259,7 +253,7 @@ div.admin-layerselector {
     margin-left: 0px;
     cursor: pointer; }
     div.admin-layerselector .icon-close.mid {
-      right: 90px; }
+      right: 110px; }
   div.admin-layerselector .input-controls:hover .icon-close, div.admin-layerselector .layer:hover button.admin-arrange-layers {
     -webkit-transition-property: opacity;
     -webkit-transition-duration: 300ms;
@@ -295,18 +289,26 @@ div.admin-layerselector {
   div.admin-layerselector #admin-select-capability {
     margin-bottom: 15px; }
   div.admin-layerselector .fetch-wms-button {
-    margin-top: 2px;
-    margin-bottom: 5px; }
+    margin-left: 5px;
 
-div.divmanazerpopup div.content div.admin-layerselector {
-  margin-right: 20px; }
-  div.divmanazerpopup div.content div.admin-layerselector div.layer {
-    padding: 0; }
-    div.divmanazerpopup div.content div.admin-layerselector div.layer div.admin-add-layer {
-      padding: 0;
-      overflow: visible;
-      /* Buttons are created in the popup, we don't need the form buttons */ }
-      div.divmanazerpopup div.content div.admin-layerselector div.layer div.admin-add-layer div.add-layer-record {
-        margin-right: 20px; }
-      div.divmanazerpopup div.content div.admin-layerselector div.layer div.admin-add-layer div.add-layer-send {
-        display: none; }
+  }
+
+
+    div.admin-layerselector .stretched input {
+        width: 100%;
+        margin-right: -40px;
+        padding: 4px 35px 2px 10px;
+    }
+
+    div.admin-layerselector .stretched .icon-close {
+        opacity: 1;
+    }
+
+    div.admin-layerselector .groupContainer {
+        position: absolute;
+        overflow: auto;
+        top: 92px;
+        bottom: 0;
+        width: 100%;
+        border-top: solid 1px #bcbcbc;
+    }

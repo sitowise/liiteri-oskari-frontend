@@ -114,6 +114,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
             me.tabPanel.setTitle(me.title);
 
             oskarifield = me.getFilterField().getField();
+            oskarifield.addClass('stretched');
 
             if (me.showSearchSuggestions) {
                 oskarifield.append(
@@ -126,19 +127,39 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                 );
             }
 
-            oskarifield.append(
-                jQuery(me.templates.shortDescription)
-                .text(me._locale.filter.shortDescription)
-            );
-
-            me._createInfoIcon(oskarifield);
+//            oskarifield.append(
+//                jQuery(me.templates.shortDescription)
+//                .text(me._locale.filter.shortDescription)
+//            );
+//
+//            me._createInfoIcon(oskarifield);
 
             me.tabPanel.getContainer().append(oskarifield);
             oskarifield.find('.spinner-text').hide();
 
+            var buttonsContainer = jQuery('<div class="actionsContainer"></div>');
+            var expandButton = jQuery('<span><i class="expand-icon"></i>' + me._locale.filter.expandAll + '</span>');
+            var collapseButton = jQuery('<span><i class="collapse-icon"></i>' + me._locale.filter.collapseAll + '</span>');
+            buttonsContainer.append(expandButton);
+            buttonsContainer.append(collapseButton);
+
+            me.tabPanel.getContainer().append(buttonsContainer);
+
             me.accordion = Oskari.clazz.create(
                 'Oskari.userinterface.component.Accordion');
+            me.accordion.addClass('layer-accordion');
             me.accordion.insertTo(me.tabPanel.getContainer());
+
+            expandButton.click(function () {
+                me.accordion.panels.forEach(function (p) {
+                    p.open();
+                });                
+            });
+            collapseButton.click(function () {
+                me.accordion.panels.forEach(function (p) {
+                    p.close();
+                });
+            });           
         },
 
         getFilterField: function () {
@@ -194,13 +215,39 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                 me._relatedKeywordsPopup(keyword, event, me);
             }
         },
-        
+
+        showLayerGroupsInGrid: function (groups) {
+            var me = this;
+            var group, i, data, layers, n, layer;
+
+            me.dataView.beginUpdate();
+            
+            for (i = 0; i < groups.length; i += 1) {
+                group = groups[i];
+                layers = group.getLayers();
+                for (n = 0; n < layers.length; n += 1) {
+                    layer = layers[n];
+                    data = {
+                        name: group.name,
+                        action: 'empty',
+                        id: group.name
+                    };
+
+                    me.dataView.addItem(data);
+                }                
+            }
+
+            me.dataView.endUpdate();
+            me.dataView.refresh();
+            me.grid.invalidateAllRows();
+            me.grid.render();
+        },        
         showLayerGroups: function (groups) {
             //"use strict";
             var me = this,
                 i,
                 group,
-                layers,
+                layers, sortedLayers,
                 groupPanel,
                 groupContainer,
                 n,
@@ -208,6 +255,18 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                 layerWrapper,
                 layerContainer,
                 selectedLayers;
+            var comparer = function(a, b) {
+                var av = a.getName();
+                var bv = b.getName();
+                return (av == bv) ? 0 : ((av > bv) ? 1 : -1);
+            }
+            var groupComparer = function(a, b) {
+                var av = a.getTitle();
+                var bv = b.getTitle();
+                return (av == bv) ? 0 : ((av > bv) ? 1 : -1);
+            }
+            
+            groups.sort(groupComparer);
 
             me.accordion.removeAllPanels();
             me.layerContainers = undefined;
@@ -216,6 +275,11 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
             for (i = 0; i < groups.length; i += 1) {
                 group = groups[i];
                 layers = group.getLayers();
+
+                //no do show group if it has no layer
+                if (layers == null || layers.length == 0)
+                    continue;
+
                 groupPanel = Oskari.clazz.create(
                     'Oskari.userinterface.component.AccordionPanel');
                 groupPanel.setTitle(group.getTitle() + ' (' + layers.length +
@@ -223,12 +287,14 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                 group.layerListPanel = groupPanel;
 
                 groupContainer = groupPanel.getContainer();
-                for (n = 0; n < layers.length; n += 1) {
-                    layer = layers[n];
+
+                sortedLayers = layers.sort(comparer);
+                for (n = 0; n < sortedLayers.length; n += 1) {
+                    layer = sortedLayers[n];
                     layerWrapper =
                         Oskari.clazz.create(
                             'Oskari.mapframework.bundle.layerselector2.view.Layer',
-                            layer, me.instance.sandbox, me.instance.getLocalization()
+                            layer, me.instance.sandbox, me.instance.getLocalization(), group.getTitle()
                     );
                     layerContainer = layerWrapper.getContainer();
                     groupContainer.append(layerContainer);
@@ -301,12 +367,16 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                         group.layerListPanel.open();
                     }
                 }
-                group.layerListPanel.setVisible(visibleLayerCount > 0);
-                if (group.layerListPanel.isVisible()) {
-                    visibleGroupCount += 1;
+                
+                //check if group is empty
+                if(typeof group.layerListPanel !== 'undefined' && group.layerListPanel !== null) {
+                    group.layerListPanel.setVisible(visibleLayerCount > 0);
+                    if (group.layerListPanel.isVisible()) {
+                        visibleGroupCount += 1;
+                    }
+                    group.layerListPanel.setTitle(group.getTitle() + ' (' +
+                        visibleLayerCount + '/' + layers.length + ')');
                 }
-                group.layerListPanel.setTitle(group.getTitle() + ' (' +
-                    visibleLayerCount + '/' + layers.length + ')');
             }
 
             // check if there are no groups visible -> show 'no matches' notification
@@ -583,6 +653,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                 layer,
                 layerId,
                 layerCont;
+				
+			this.accordion.removeMessage();
 
             for (i = 0; i < this.layerGroups.length; i += 1) {
                 group = this.layerGroups[i];
@@ -599,10 +671,20 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.LayersTab",
                         layerCont.getContainer().removeClass('odd');
                     }
                 }
-                group.layerListPanel.setVisible(true);
-                group.layerListPanel.close();
-                group.layerListPanel.setTitle(group.getTitle() + ' (' + layers.length +
-                    ')');
+
+                if (group.layerListPanel != null) {
+                    group.layerListPanel.setVisible(true);
+                    group.layerListPanel.close();
+                    group.layerListPanel.setTitle(group.getTitle() + ' (' + layers.length + ')');
+                }                
+            }
+        },
+        selectAllLayers : function(isSelected, sendEvent) {
+            for (var layerId in this.layerContainers) {
+                var layerCont = this.layerContainers[layerId];
+                if (layerCont) {
+                    layerCont.setSelected(isSelected, sendEvent);
+                }
             }
         },
         setLayerSelected: function (layerId, isSelected) {

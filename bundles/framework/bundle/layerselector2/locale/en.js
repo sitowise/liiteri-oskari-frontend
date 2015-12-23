@@ -21,14 +21,19 @@ Oskari.registerLocalization(
             "description": "Write a part of the name of the map layer, the name of the data producer or the keyword describing the map layer. The keyword search starts up when at least four characters has been written. Allowed characters are the letters a-z as well as å, ä and ö, numbers, backspaces and hyphens.",
             "inspire": "By Theme",
             "organization": "By Data Provider",
+            "servicePackage": "Service Package",
+            "userThemes" : "User themes",
             "published": "Users",
-            "didYouMean": "Did you mean:"
+            "didYouMean": "Did you mean:",
+            "expandAll": "Expand all",
+            "collapseAll" : "Collapse all"
         },
         "published": {
             "organization": "Published map layer",
             "inspire": "Published map layer"
         },
         "tooltip": {
+			"bundle": "Map Layers",
             "type-base": "Background map",
             "type-wms": "Map layer (WMS, WMTS)",
             "type-wfs": "Data product (WFS)"
@@ -60,7 +65,8 @@ Oskari.registerLocalization(
             "vk": "Coordinate concept",
             "ak": "Subordinate concept",
             "yk": "Superordinate concept"
-        }
+        },
+		"downloadLayer": "Download layer"
     }
 }
 );

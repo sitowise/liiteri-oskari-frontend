@@ -19,6 +19,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
         this.template = null;
         this.state = null;
         this.layerTabs = [];
+		this.servicePackageTab = null;
+		this.populateGroupingsTimeout = null;
     }, {
         /**
          * @method getName
@@ -54,22 +56,40 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
          */
         startPlugin: function () {
             //"use strict";
-            var me = this,
-                inspireTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').inspire),
-                orgTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').organization),
-                publishedTab;
+            var me = this,                                
+                inspireTab, orgTab, publishedTab;
 
-            me.template = jQuery('<div class="allLayersTabContent"></div>');
-            inspireTab.groupingMethod = 'getInspireName';
-            orgTab.groupingMethod = 'getOrganizationName';
+            me.template = jQuery('<div class="allLayersTabContent"></div>');            			
 
-            me.layerTabs.push(inspireTab);
-            me.layerTabs.push(orgTab);
-
+			if (me.instance.conf && me.instance.conf.showUserThemes) {
+			    this.userThemesTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').userThemes);
+			    me.layerTabs.push(this.userThemesTab);
+			}						            
+			//me.instance.conf.showInspireTab = true;
+            if (me.instance.conf && me.instance.conf.showInspireTab) {
+                inspireTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').inspire);
+                inspireTab.groupingMethod = 'getInspireName';
+                me.layerTabs.push(inspireTab);
+            }
+           //me.instance.conf.showOrganisationTab = true;
+            if (me.instance.conf && me.instance.conf.showOrganisationTab) {
+                orgTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').organization);
+                orgTab.groupingMethod = 'getOrganizationName';
+                me.layerTabs.push(orgTab);
+            }
+            
+            //me.instance.conf.showPublishedTab = true;
             // add published tab based on config
             if (me.instance.conf && me.instance.conf.showPublishedTab === true) {
                 publishedTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.PublishedLayersTab", me.instance, me.instance.getLocalization('filter').published);
                 this.layerTabs.push(publishedTab);
+            }
+
+            // add service package tab based on config
+            if (me.instance.conf && me.instance.conf.showServicePackage === true) {
+                this.servicePackageTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').servicePackage);
+                this.servicePackageTab.servicePackage = true;
+                me.layerTabs.push(this.servicePackageTab);
             }
         },
         /**
@@ -163,8 +183,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 tab = me.layerTabs[i];
                 me.tabContainer.addPanel(tab.getTabPanel());
             }
-            //me.tabContainer.addTabChangeListener(me._tabsChanged); // -> filter with same keyword when changing tabs?
+            me.tabContainer.addTabChangeListener(me._tabsChanged); // -> filter with same keyword when changing tabs?
             me.populateLayers();
+        },
+        _tabsChanged : function(oldTab, newTab) {
+        },
+        addTab: function (item) {
+            var me = this;
+            var tab = null;
+            
+            if (item.view.getTabPanel
+                && item.view.setLayerSelected
+                && item.view.updateLayerContent)
+            {
+                tab = item.view;
+            } else {
+                tab = {
+                    getTabPanel: function () {
+                        var tabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
+                        tabPanel.setTitle(item.view.getTitle());
+                        tabPanel.setContent(item.view.container);
+                        return tabPanel;
+                    },
+                    setLayerSelected: function (x, y) {
+                        return;
+                    },
+                    updateLayerContent: function (x, y) {
+                        return;
+                    }
+                }
+            }
+            
+            me.layerTabs.push(tab);
+            me.tabContainer.addPanel(tab.getTabPanel(), item.first);
         },
         populateLayers: function () {
             //"use strict";
@@ -184,9 +235,109 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                     layersCopy = layers.slice(0);
                     groups = this._getLayerGroups(layersCopy, tab.groupingMethod);
                     tab.showLayerGroups(groups);
+                } else if (tab.servicePackage) {
+					
+				}
+            }
+            //delay this a bit, otherwise it will be called many times during startup
+            //TODO: for real solution fix handleLayerRemoved and handleLayerAdded
+            if(this.populateGroupingsTimeout) {
+                window.clearTimeout(this.populateGroupingsTimeout);
+            }
+            this.populateGroupingsTimeout = window.setTimeout(this.populateGroupings, 200, this);
+        },
+        populateGroupings: function (me) {
+            if(typeof me === 'undefined') {
+                me = this;
+            }
+            me._getGroupings(function (groupings) {
+                me.populateThemes(me.userThemesTab, groupings);
+            });
+        },
+		
+        _getGroupings: function (successCb) {
+            var me = this;
+            var url = me.instance.getSandbox().getAjaxUrl() + 'action_route=GetPermittedGroupings';
+            jQuery.ajax({
+                type: "GET",
+                dataType: 'json',
+                beforeSend: function (x) {
+                    if (x && x.overrideMimeType) {
+                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                    }
+                },
+                url: url,
+                success: function (pResp) {
+                    if (successCb) {
+                        successCb(pResp.groupings);
+                    }
+                },
+                error: function (jqXHR, textStatus) {
+                    //alert('Error occurred while geting data!');
+                },
+                cache: false
+            });
+        },
+        populateThemes: function (layerTab, themesDataArray) {
+            if (themesDataArray) {
+                var groupList = [];
+
+                for (var j = 0; j < themesDataArray.length; j++) {
+
+                    if (themesDataArray[j].type == 'map_layers' && themesDataArray[j].elements) {
+
+                        var group = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", themesDataArray[j].name);
+
+                        for (var k = 0; k < themesDataArray[j].elements.length; k++) {
+                            var layer = this.instance.sandbox.findMapLayerFromAllAvailable(themesDataArray[j].elements[k].id);
+                            if (layer) {
+                                group.addLayer(layer);
+                            }
+                        }
+
+                        groupList.push(group);
+                    }
                 }
+                layerTab.showLayerGroups(groupList);
+            } else {
+                //TODO
             }
         },
+		populateLayersFromServicePackage: function(themesDataArray, cb) {		
+		    if (themesDataArray) {
+		        this.servicePackageTab.selectAllLayers(false, true);
+
+			    var groupList = [];
+			    var layers = [];
+					
+				for (var j=0; j<themesDataArray.length; j++) {
+				
+					if (themesDataArray[j].type == 'map_layers' && themesDataArray[j].elements) {
+						
+						var group = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", themesDataArray[j].name);
+						
+						for (var k = 0; k < themesDataArray[j].elements.length; k++) {
+						    var layerData = themesDataArray[j].elements[k];
+						    var layer = this.instance.sandbox.findMapLayerFromAllAvailable(layerData.id);
+							if (layer) {							    
+							    group.addLayer(layer);
+							    if (layerData.status == 'drawn')
+							        layers.push({"layer": layer, "groupName": themesDataArray[j].name});
+							}
+						}
+						
+						groupList.push(group);
+					}
+				}			    
+				this.servicePackageTab.showLayerGroups(groupList);
+
+			    if (cb)
+			        cb(layers);
+
+			} else {
+				//TODO
+			}
+		},
 
         /**
          * @method _getLayerGroups

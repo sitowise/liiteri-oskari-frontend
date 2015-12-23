@@ -39,26 +39,26 @@ Oskari.registerLocalization({
                     "classForMethod": "buffer",
                     "selected": true,
                     "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_aggregate",
-                    "label": "Aggregate",
-                    "classForPreview": "aggregate",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_union",
-                    "label": "Union",
-                    "classForPreview": "union",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_intersect",
-                    "label": "Intersect",
-                    "classForPreview": "intersect",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_layer_union",
-                    "label": "Union of analyse layers",
-                    "classForPreview": "layer_union",
-                    "tooltip": "Unifies analyse layers with the same feature fields"
+//                }, {
+//                    "id": "oskari_analyse_aggregate",
+//                    "label": "Aggregate",
+//                    "classForPreview": "aggregate",
+//                    "tooltip": ""
+//                }, {
+//                    "id": "oskari_analyse_union",
+//                    "label": "Union",
+//                    "classForPreview": "union",
+//                    "tooltip": ""
+//                }, {
+//                    "id": "oskari_analyse_intersect",
+//                    "label": "Intersect",
+//                    "classForPreview": "intersect",
+//                    "tooltip": ""
+//                }, {
+//                    "id": "oskari_analyse_layer_union",
+//                    "label": "Union of analyse layers",
+//                    "classForPreview": "layer_union",
+//                    "tooltip": "Unifies analyse layers with the same feature fields"
                 }]
             },
             "aggregate": {
@@ -88,6 +88,9 @@ Oskari.registerLocalization({
             "buffer_size": {
                 "label": "Buffer size (meters)",
                 "tooltip": "Enter buffer size"
+            },
+            "includeOriginal": {
+                "label": "Include original"
             },
             "analyse_name": {
                 "label": "Name of analysis",
@@ -210,7 +213,8 @@ Oskari.registerLocalization({
                 "Unable_to_process_aggregate_union": "Unable to process aggregate union",
                 "Unable_to_get_features_for_union": "Unable to get features for union",
                 "Unable_to_store_analysis_data": "Unable to store analysis data",
-                "Unable_to_get_analysisLayer_data": "Unable to get analysisLayer data"
+                "Unable_to_get_analysisLayer_data": "Unable to get analysisLayer data",
+				"server_error_key_limit": "The amount of user GIS datasets reached the limit."
             },
             "infos": {
                 "title": "Info",

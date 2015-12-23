@@ -34,15 +34,16 @@ function(sandbox) {
         // add object data tool
         // TODO: should propably be configurable -> maybe through wfslayerplugin conf
         // so we can disable if feature data bundle is not loaded
-        var locObjData = this.localization['object-data'];
-        var toolObjData = toolBuilder();
-        toolObjData.setName("objectData");
-        toolObjData.setTitle(locObjData);
-        toolObjData.setTooltip(locObjData);
-        toolObjData.setCallback(function() {
-            me.sandbox.postRequestByName('ShowFeatureDataRequest',[layer.getId()]);
-        });
-        layer.addTool(toolObjData);
+//Yes, this definitely should be configurable
+//        var locObjData = this.localization['object-data'];
+//        var toolObjData = toolBuilder();
+//        toolObjData.setName("objectData");
+//        toolObjData.setTitle(locObjData);
+//        toolObjData.setTooltip(locObjData);
+//        toolObjData.setCallback(function() {
+//            me.sandbox.postRequestByName('ShowFeatureDataRequest',[layer.getId()]);
+//        });
+//        layer.addTool(toolObjData);
 
         // create a default style
         var locDefaultStyle = this.localization['default-style'];
@@ -63,5 +64,7 @@ function(sandbox) {
 
         // default style for WFS is given as last parameter
         maplayerService.populateStyles(layer, mapLayerJson, defaultStyle);
+
+        layer.setWmsName(mapLayerJson.wmsName);
     }
 });

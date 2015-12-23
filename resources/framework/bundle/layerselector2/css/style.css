@@ -33,6 +33,10 @@ div.layerselector2 div.layer input {
 
 div.layerselector2 div.layer div.layer-tools {
   float: right; }
+  
+div.layerselector2 div.layer div.layer-download-service {
+  float: left;
+}
 
 div.layerselector2 div.layer div.layer-icon {
   float: left;
@@ -44,7 +48,7 @@ div.layerselector2 div.layer div.layer-info {
   width: 16px;
   height: 16px;
   margin-left: 5px;
-  float: right; }
+  float: left; }
 
 div.layerselector2 div.tab-content {
   padding: 0; }
@@ -103,7 +107,8 @@ div.layerselector2 div.layer div.layer-backendstatus-icon {
   width: 20px;
   height: 16px;
   margin-right: 4px;
-  background-repeat: no-repeat; }
+  background-repeat: no-repeat;
+  display: none; }
 
 div.layerselector2 div.layer div.backendstatus-down {
   height: 20px !important;
@@ -124,3 +129,56 @@ div.layerselector2 div.layer div.backendstatus-ok {
 div.layerselector2 div.layer div.backendstatus-unknown {
   height: 20px !important;
   margin-bottom: 2px; }
+
+div.layerselector2 div.layer.selected {
+    background-color: #fff36d;
+}
+
+div.layerselector2 div.actionsContainer {
+    margin: 10px 5px 10px 15px;
+}
+
+div.layerselector2 div.actionsContainer span {
+    margin-right: 20px;
+}
+
+div.layerselector2 div.actionsContainer span i {
+    margin-right: 5px;
+}
+
+div.layerselector2 .stretched input {
+    width: 100%;
+    margin-right: -20px;
+    padding: 4px 35px 2px 10px;
+}
+
+div.layerselector2 .stretched div.icon-close {
+    margin-bottom: 1px;
+}
+
+div.layerselector2 .expand-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/expand-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+}
+
+div.layerselector2 .collapse-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/collapse-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+}
+
+div.layer-accordion {
+    position: absolute;
+    overflow: auto;
+    top: 0;
+    bottom: 0;
+    margin-top: 140px;
+    width: 100%;
+}

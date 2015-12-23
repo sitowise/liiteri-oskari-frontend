@@ -27,7 +27,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             help: '<div class="help icon-info"></div>',
             file: '<div class="file-import">' +
                     '<form id="myplacesimport-form" method="post" enctype="multipart/form-data" target="myplacesimport-target">' +
-                        '<input type="file" name="file-import"></input>' +
+                        '<div class="import-file"><input type="file" name="file-import"></input></div>' +
+                        '<div class="info">Anna luotavan kohteen metatiedot (nimi, kuvaus ja tietolähde)</div>' +
                         '<div class="name"><label>Name</label><input type="text" name="layer-name" /></div>' +
                         '<div class="desc"><label>Description</label><input type="text" name="layer-desc" /></div>' +
                         '<div class="source"><label>Data source</label><input type="text" name="layer-source" /></div>' +
@@ -84,6 +85,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             container.append(this.getTemplate());
             /* progress */
             this.progressSpinner.insertTo(container);
+            
+            $("#myplacesimport-form :file").filestyle({ icon: false, buttonText: this.locale.file.chooseFile });
         },
         /**
          * Interface method implementation
@@ -247,7 +250,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
                 success = true;
 
             try {
-                json = JSON.parse(iframe.contents().find('pre').html());
+                json = JSON.parse(iframe.contents().find('pre').text());
 
                 if (this.__jsonError(json)) {
                     success = false;   
@@ -263,7 +266,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
                 this.instance.addUserLayer(json);
             } else {
                 title = null;
-                msg = locale.finish.failure.message;
+				if (json && json.error && locale.finish.failure[json.error]) {
+					msg = locale.finish.failure[json.error];
+				} else {
+					msg = locale.finish.failure.message;
+				}
             }
 
             this.__showMessage(title, msg);

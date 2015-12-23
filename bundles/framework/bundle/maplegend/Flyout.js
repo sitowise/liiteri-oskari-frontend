@@ -201,6 +201,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.maplegend.Flyout',
                 });
             }
 
+            //Always hide REMOVE later after fixing
+            tools.find('div.layer-description').hide();
             return layerDiv;
         },
 
@@ -212,7 +214,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.maplegend.Flyout',
             var me = this,
                 legendUrl = layer.getLegendImage ? layer.getLegendImage() : null;
             if (!(legendUrl && legendUrl !== '' && !imagesAdded[legendUrl])) {
-                return;
+                return jQuery("<div class=legendMissing>Selitettä ei saatavilla</div>");
             }
 
 

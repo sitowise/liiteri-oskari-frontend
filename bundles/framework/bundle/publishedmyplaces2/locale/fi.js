@@ -55,8 +55,8 @@ Oskari.registerLocalization({
         "noResult": "0 m"
       },
       "measurearea": {
-        "title": "Mittaa pinta-ala",
-        "tooltip": "Pinta-alan mittaus",
+        "title": "Pinta-alan mittaus",
+        "tooltip": "Mittaa pinta-ala",
         "add": "",
         "next": "",
         "edit": "Muokkaa muotoa raahaamalla reunaviivan taitepisteitä.",
@@ -275,7 +275,7 @@ Oskari.registerLocalization({
     "notification": {
       "placeAdded": {
         "title": "Kohde tallennettu",
-        "message": "Löydät kohteen Omat Tiedot -valikosta."
+        "message": "Löydät kohteen Karttatasot-valikon Omat tasot -välilehdeltä."
       },
       "categorySaved": {
         "title": "Karttataso tallennettu",

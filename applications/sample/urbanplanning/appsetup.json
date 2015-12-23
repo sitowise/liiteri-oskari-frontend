@@ -1,0 +1,113 @@
+{
+	"startupSequence" : [
+		{
+		"bundleinstancename" : "openlayers-default-theme",
+        "bundlename" : "openlayers-default-theme",
+        "en" : "OpenLayers",
+        "fi" : "OpenLayers",
+        "instanceProps" : {  },
+        "metadata" : { "Import-Bundle" : { "openlayers-default-theme" : { "bundlePath" : "/Oskari/packages/openlayers/bundle/" },
+                "openlayers-single-full" : { "bundlePath" : "/Oskari/packages/openlayers/bundle/" }
+              },
+            "Require-Bundle-Instance" : [  ]
+          },
+        "sv" : "OpenLayers",
+        "title" : "OpenLayers"
+      },
+      { "bundleinstancename" : "mapfull",
+        "bundlename" : "mapfull",
+        "en" : "mapfull",
+        "fi" : "mapfull",
+        "instanceProps" : {  },
+        "metadata" : { "Import-Bundle" : { "core-base" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "core-map" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "domain" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "event-base" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "event-map" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "event-map-layer" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "mapfull" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "mapmodule-plugin" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "oskariui" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "request-base" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "request-map" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "request-map-layer" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "sandbox-base" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "sandbox-map" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "service-base" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "service-map" : { "bundlePath" : "/Oskari/packages/framework/bundle/" },
+                "ui-components" : { "bundlePath" : "/Oskari/packages/framework/bundle/" }
+              },
+            "Require-Bundle-Instance" : [  ]
+          },
+        "sv" : "mapfull",
+        "title" : "Map"
+      },
+      { "bundleinstancename" : "divmanazer",
+        "bundlename" : "divmanazer",
+        "en" : "divmanazer",
+        "fi" : "divmanazer",
+        "instanceProps" : {  },
+        "metadata" : { "Import-Bundle" : { "divmanazer" : { "bundlePath" : "/Oskari/packages/framework/bundle/" } },
+            "Require-Bundle-Instance" : [  ]
+          },
+        "sv" : "divmanazer",
+        "title" : "Oskari DIV Manazer"
+      },
+      { "bundleinstancename" : "toolbar",
+        "bundlename" : "toolbar",
+        "en" : "toolbar",
+        "fi" : "toolbar",
+        "instanceProps" : {  },
+        "metadata" : { "Import-Bundle" : { "toolbar" : { "bundlePath" : "/Oskari/packages/framework/bundle/" } },
+            "Require-Bundle-Instance" : [  ]
+          },
+        "sv" : "toolbar",
+        "title" : "Toolbar"
+      },
+	  { 
+		"bundleinstancename" : "liiteri-ui",
+        "bundlename" : "liiteri-ui",
+        "en" : "liiteri-ui",
+        "fi" : "liiteri-ui",
+		"sv" : "liiteri-ui",
+        "instanceProps" : {  },
+        "metadata" : { 
+				"Import-Bundle" : { 					
+					"liiteri-ui" : { "bundlePath" : "/Oskari/packages/liiteri/bundle/" }
+              },
+            "Require-Bundle-Instance" : [  ]
+          },        
+        "title" : "liiteri-ui"
+      },
+      { 
+		"bundleinstancename" : "liiteri-urbanplanning",
+        "bundlename" : "liiteri-urbanplanning",
+        "en" : "liiteri-urbanplanning",
+        "fi" : "liiteri-urbanplanning",
+		"sv" : "liiteri-urbanplanning",
+        "instanceProps" : {  },
+        "metadata" : { 
+				"Import-Bundle" : { 					
+					"liiteri-urbanplanning" : { "bundlePath" : "/Oskari/packages/liiteri/bundle/" }
+              },
+            "Require-Bundle-Instance" : [  ]
+          },        
+        "title" : "liiteri-urbanplanning"
+      },      
+      { 
+		"bundleinstancename" : "liiteri-feedback",
+        "bundlename" : "liiteri-feedback",
+        "en" : "liiteri-feedback",
+        "fi" : "liiteri-feedback",
+		"sv" : "liiteri-feedback",
+        "instanceProps" : {  },
+        "metadata" : { 
+				"Import-Bundle" : { 					
+					"liiteri-feedback" : { "bundlePath" : "/Oskari/packages/liiteri/bundle/" }
+              },
+            "Require-Bundle-Instance" : [  ]
+          },        
+        "title" : "liiteri-feedback"
+      }
+    ]
+}

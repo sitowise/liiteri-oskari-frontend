@@ -21,7 +21,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
         var me = this;
         me.instance = instance;
         me.template = jQuery("<div class='startview'>" + "<div class='content'></div>" +
-            "<div class='tou'><a href='JavaScript:void(0;)'></a></div>" +
             "<div class='buttons'></div>" + "</div>");
         me.templateLayerList = jQuery("<div class='layerlist'>" + "<h4></h4>" + "<ul></ul>" + "</div>");
         me.templateListItem = jQuery("<li></li>");
@@ -47,13 +46,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             content.find('div.content').before(me.loc.text);
             container.append(content);
 
-            var touContentLink = content.find('div.tou a');
-            touContentLink.append(me.loc.touLink);
-            touContentLink.bind('click', function () {
-                me._showTermsOfUse();
-                return false;
-            });
-
             var continueButton = Oskari.clazz.create('Oskari.userinterface.component.Button');
             continueButton.addClass('primary');
             continueButton.setHandler(function () {
@@ -71,6 +63,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             cancelButton.setTitle(me.loc.buttons.cancel);
             cancelButton.setHandler(function () {
                 me.instance.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me.instance, 'close']);
+                me.instance.hideFlyout();
             });
             me.buttons.cancel = cancelButton;
 

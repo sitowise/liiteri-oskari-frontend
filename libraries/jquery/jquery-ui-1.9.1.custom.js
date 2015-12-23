@@ -5351,6 +5351,7 @@ $.widget( "ui.slider", $.ui.mouse, {
 }(jQuery));
 (function( $ ) {
 
+
 var increments = 0;
 
 function addDescribedBy( elem, id ) {

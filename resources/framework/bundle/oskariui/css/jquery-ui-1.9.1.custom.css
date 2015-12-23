@@ -75,9 +75,9 @@ body .oskariui .ui-tooltip { border-width: 2px; }
 
 /* Component containers
 ----------------------------------*/
-.oskariui .ui-widget { font-family: Segoe UI,Arial,sans-serif; font-size: 1.1em; }
+.oskariui .ui-widget { font-size: 1.1em; }
 .oskariui .ui-widget .ui-widget { font-size: 1em; }
-.oskariui .ui-widget input, .oskariui .ui-widget select, .oskariui .ui-widget textarea, .oskariui .ui-widget button { font-family: Segoe UI,Arial,sans-serif; font-size: 1em; }
+.oskariui .ui-widget input, .oskariui .ui-widget select, .oskariui .ui-widget textarea, .oskariui .ui-widget button { font-size: 1em; }
 .oskariui .ui-widget-content {  }
 .oskariui .ui-widget-content a {  }
 .oskariui .ui-widget-header {  }

@@ -241,6 +241,13 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
                         sides: 4,
                         irregular: true
                     }
+                }),
+            circle: new OpenLayers.Control.DrawFeature(me.drawLayer,
+                OpenLayers.Handler.RegularPolygon, {
+                    handlerOptions: {
+                        sides: 40,
+                        irregular: false
+                    }
                 })
         };
 

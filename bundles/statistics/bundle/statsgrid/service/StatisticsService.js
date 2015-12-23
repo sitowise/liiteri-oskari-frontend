@@ -70,7 +70,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
         _cacheStatsData: function (url, data) {
             this.cache[url] = {
                 accessed: new Date().getTime(),
-                data: data
+                data: _.clone(data, true)
             };
             this.cacheSize++;
             this._pruneCache(20);
@@ -131,11 +131,107 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
                 ret = null;
             if (cached) {
                 cached.accessed = new Date().getTime();
-                ret = cached.data;
+                ret = _.clone(cached.data, true);
             }
             return ret;
         },
+        fetchFeaturesData: function (layerId, attribute, successCb, errorCb) {
+            var url = this.sandbox.getAjaxUrl() + 'action_route=GetStatsFeatures&LAYERID=' + layerId + '&LAYERATTRIBUTE=' + attribute;
 
+            this._get(url, successCb, errorCb);
+        },
+        fetchClassificationData: function (params, successCb, errorCb) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() + 'action_route=GetStatsClassification';
+            var data = {};
+            jQuery.each(params, function (key, value) {
+                data[key.toUpperCase()] = value + "";
+            });
+            this._post(url, data, successCb, errorCb);
+        },
+        _get: function (url, successCb, errorCb) {
+            return this._ajax("GET", url, successCb, errorCb);
+        },
+        _post: function (url, data, successCb, errorCb) {
+            return this._ajax("POST", url, successCb, errorCb, data);
+        },
+        _ajax: function (method, url, successCb, errorCb, data) {
+            var params = {
+                url: url,
+                type: method,
+                dataType: 'json',
+                beforeSend: function (x) {
+                    if (x && x.overrideMimeType) {
+                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                    }
+                },
+                success: function (response) {
+                    if (typeof successCb === 'function') {
+                        successCb(response);
+                    }
+                },
+                error: function (jqXHR, textStatus) {
+                    if (typeof errorCb === 'function' && jqXHR.status !== 0) {
+                        errorCb(jqXHR, textStatus);
+                    }
+                }
+            };
+
+            if (data) {
+                params.data = data;
+            }
+
+            return jQuery.ajax(params);
+        },
+        fetchRegionData: function (successCb, errorCb, ignoreCache) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=regions&version=1.1';
+            me.fetchStatsData(url, successCb, errorCb, ignoreCache);
+        },
+        fetchRegionCategories : function(successCb, errorCb, ignoreCache) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=regionCategories&version=1.1';
+            me.fetchStatsData(url, successCb, errorCb, ignoreCache);
+        },
+        fetchIndicatorData2: function(params) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() +
+                    'action_route=GetSzopaData&action=data&version=1.0';
+            var data = {
+                        indicator: params.indicator,
+                        years: params.year,
+                        group: ((params.group == null) ? "" : params.group),
+                        geometryFilter: ((params.wktGeometry == null) ? "" : params.wktGeometry),
+                        filter : ((params.filter == null || params.filter == []) ? "" : params.filter),
+                        areaYear : params.areaYear
+            };
+            me.fetchStatsData2(url, data, params.successCb, params.errorCb, params.ignoreCache);
+        },
+        fetchIndicatorData: function (indicator, year, successCb, errorCb, ignoreCache) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=data&version=1.0&indicator=' + indicator + '&years=' + year;
+            me.fetchStatsData(url, successCb, errorCb, ignoreCache);
+        },
+        fetchTwowayIndicatorData2: function(params) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() +
+                    'action_route=GetTwowayData&action=data&version=v1';
+            var data = {
+                        type: params.type,
+                        indicator: params.indicator,
+                        years: params.year,
+                        group: params.direction + ":" + params.group,
+                        filter : ((params.filter == null || params.filter == []) ? "" : params.filter),
+                        geometryFilter : params.wktGeometry,
+                        gender: params.gender
+            };
+            me.fetchStatsData2(url, data, params.successCb, params.errorCb, params.ignoreCache);
+        },
+        fetchTwowayIndicators: function(successCb, errorCb, ignoreCache) {
+            var me = this;
+            var url = me.sandbox.getAjaxUrl() + 'action_route=GetTwowayData&action=indicators&version=v1';
+            me.fetchStatsData(url, successCb, errorCb, ignoreCache);
+        },
         /**
          * @method fetchStatsData
          * Make the AJAX call. This method helps
@@ -161,6 +257,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
             }
             jQuery.ajax({
                 type: "GET",
+                cache: false,
                 dataType: 'json',
                 beforeSend: function (x) {
                     if (x && x.overrideMimeType) {
@@ -170,6 +267,41 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
                 url: url,
                 success: function (pResp) {
                     me._cacheStatsData(url, pResp);
+                    if (successCb) {
+                        successCb(pResp);
+                    }
+                },
+                error: function (jqXHR, textStatus) {
+                    if (errorCb && jqXHR.status !== 0) {
+                        errorCb(jqXHR, textStatus);
+                    }
+                }
+            });
+        },
+        fetchStatsData2: function (url, data, successCb, errorCb, ignoreCache) {
+            var me = this;
+            var key = url + JSON.stringify(data);
+            if (!ignoreCache) {                
+                var cachedResp = me._getStatsDataFromCache(key);
+                if (cachedResp) {
+                    if (successCb) {
+                        successCb(cachedResp);
+                    }
+                    return;
+                }
+            }
+            jQuery.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: data,
+                beforeSend: function (x) {
+                    if (x && x.overrideMimeType) {
+                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                    }
+                },
+                url: url,
+                success: function (pResp) {
+                    me._cacheStatsData(key, pResp);
                     if (successCb) {
                         successCb(pResp);
                     }

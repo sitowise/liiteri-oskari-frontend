@@ -171,7 +171,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
                         imageLink: place.getImageLink(),
                         desc: place.getDescription(),
                         attention_text: place.getAttention_text(),
-                        category: place.getCategoryID()
+                        category: place.getCategoryID(),
+						onlyLabel: place.isOnlyLabel()
                     }
                 };
                 this.form.setValues(param);
@@ -183,7 +184,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
                     this.form.setMeasurementResult(drawing, 'line');
                 } else if (drawing.CLASS_NAME === 'OpenLayers.Geometry.MultiPolygon') {
                     this.form.setMeasurementResult(drawing, 'area');
-                }
+                } else if (drawing.CLASS_NAME === 'OpenLayers.Geometry.MultiPoint') {
+					this.form.showOnlyLabelCheckbox = true;
+				}
             }
 
             var content = [{
@@ -192,16 +195,16 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
                 primaryButton: loc.buttons.save,
                 actions: {}
             }];
+            // save button
+            content[0].actions[loc.buttons.save] = function () {
+                me._saveForm();
+            };
             // cancel button
             content[0].actions[loc.buttons.cancel] = function () {
                 me.cleanupPopup();
                 // ask toolbar to select default tool
                 var toolbarRequest = me.instance.sandbox.getRequestBuilder('Toolbar.SelectToolButtonRequest')();
                 me.instance.sandbox.request(me, toolbarRequest);
-            };
-            // save button
-            content[0].actions[loc.buttons.save] = function () {
-                me._saveForm();
             };
 
             var request = sandbox.getRequestBuilder('InfoBox.ShowInfoBoxRequest')(this.popupId, loc.placeform.title, content, location, true);
@@ -297,7 +300,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
 
                 var category = this.instance.getCategoryHandler().getCategoryFromFormValues(formValues.category);
 
-                var serviceCallback = function (blnSuccess, model, blnNew) {
+                var serviceCallback = function (blnSuccess, model, blnNew, responseText) {
                     if (blnSuccess) {
                         // add category as a maplayer to oskari maplayer service
                         // NOTE! added as a map layer to maplayer service through categoryhandler getting an event
@@ -309,7 +312,11 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
                         // blnNew should always be true since we are adding a category
                         var loc = me.instance.getLocalization('notification').error;
                         if (blnNew) {
-                            me.instance.showMessage(loc.title, loc.addCategory);
+							if (responseText && loc[responseText]) {
+								me.instance.showMessage(loc.title, loc[responseText]);
+							} else {
+								me.instance.showMessage(loc.title, loc.addCategory);
+							}
                         } else {
                             me.instance.showMessage(loc.title, loc.editCategory);
                         }
@@ -350,6 +357,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
             place.setDescription(values.desc);
             place.setAttention_text(values.attention_text);
             place.setCategoryID(values.category);
+			place.setOnlyLabel(values.onlyLabel);
             // fetch the latest geometry if edited after FinishedDrawingEvent
             place.setGeometry(this.drawPlugin.getDrawing());
 

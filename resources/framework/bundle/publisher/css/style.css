@@ -8,7 +8,7 @@ div.notLoggedIn {
 
 #contentMap.mapPublishMode > div.row-fluid {
   position: relative;
-  left: 212px; }
+  left: 370px; }
 
 div.publisher div.startview div.icon-info, div.basic_publisher div.icon-info {
   float: right; }
@@ -34,28 +34,49 @@ div.publisher div.startview ul {
 div.publisher div.startview div.error ul li {
   color: red; }
 
-#contentMap div.basic_publisher {
+div.basic_publisher {
   background: white;
   position: absolute;
   height: 100%;
   top: 0;
-  left: 0;
+  left: 175px;
   /* sidebar has 3, we want to open it on top of this */
   z-index: 2;
-  width: 365px; }
+  width: 365px;
+  border-right: 1px solid #9c9c9c;
+  border-left: 2px solid #9c9c9c;
+  }
+
+.basic_publisher > .content .accordion_panel > .content > div
+{
+	margin-top: 10px;
+}
 
 #contentMap div.basic_publisher div.content {
   padding: 10px; }
 
 div.basic_publisher > div.header {
-  background-color: #FDF8D9;
-  padding: 5px 10px; }
+	height: 57px;
+	margin-left: 20px;
+	font-size: 16px;
+}
 
 div.basic_publisher > div.header div.icon-close {
-  float: right; }
+  	float: right;
+	margin-right: 25px;
+	height: 16px;
+	display: inline-block;
+}
+
+div.basic_publisher > div.header div.header_title > p
+{
+	margin-top: 12px;
+}
 
 div.basic_publisher div.customsize input {
-  width: 40px; }
+  width: 60px; 
+  padding: 5px 5px 5px 5px;
+}
 
 div.basic_publisher div.customsize input.error {
   border: 1px solid red; }

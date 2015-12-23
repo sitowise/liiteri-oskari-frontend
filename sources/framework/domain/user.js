@@ -30,6 +30,7 @@ Oskari.clazz.define('Oskari.mapframework.domain.User',
             this._loginName = userData.loginName;
             this._uuid = userData.userUUID;
             this._roles = userData.roles || [];
+            this._tosAccepted = userData.tosAccepted;
             if (userData.userUUID) {
                 this._loggedIn = true;
             }
@@ -113,6 +114,10 @@ Oskari.clazz.define('Oskari.mapframework.domain.User',
          */
         getRoles: function () {
             return this._roles;
+        },
+        
+        getTosAccepted: function () {
+            return this._tosAccepted;
         },
 
         /**

@@ -1,0 +1,453 @@
+/*
+GENERAL
+*/
+#urbanPlanBundleContent {
+	font-size: 13px;	
+}
+
+#urbanPlansContainer, #urbanPlansMarkingsContainer, #urbanPlansPeopleContainer {
+	height: 100%;
+}
+
+#urbanPlansContainer .urbanPlansHeader, #urbanPlansMarkingsContainer .urbanPlansHeader, #urbanPlansPeopleContainer .urbanPlansHeader {
+	font-size: 14px;
+	color: #595959;
+	margin: 5px;
+}
+
+#urbanPlansContainer .urbanPlansHeader input.urbanPlansListToolButton {
+	margin-right: 5px;
+}
+
+#urbanPlansContainer .urbanPlansHeader input.urbanPlansListToolButton:disabled {
+	background-color: #D3D3D3;
+}
+
+.oskariui-left {
+	height: 100%;
+}
+
+.urbanPlansDialog {
+    max-width: none !important;    
+    max-height: none !important;
+    width: 750px;
+}
+/*
+FILTERS
+*/
+#urbanPlansContainer .accordion {
+    border: none;
+}
+
+#urbanPlansContainer .info-button {
+    display: inline-block;
+  font-size: 1px;
+      width: 16px;
+  height: 16px;
+  background-image: url('/Oskari/applications/sample/servlet/icons/icons.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -545px -16px !important;
+}
+
+.urbanplan-panel {
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    background-color: #fff !important; 
+    margin-bottom: 20px;
+    border: 1px solid #428bca;
+    border-radius: 4px;
+}
+
+.urbanplan-panel .header {
+    background-image: -webkit-linear-gradient(top, #428bca 0%, #357ebd 100%);
+    background-image: -o-linear-gradient(top, #428bca 0%, #357ebd 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#428bca), to(#357ebd));
+    background-image: linear-gradient(to bottom, #428bca 0%, #357ebd 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff428bca', endColorstr='#ff357ebd', GradientType=0);
+    background-repeat: repeat-x;
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca;
+    padding: 0px 0px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
+.urbanplan-panel .header .headerText {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+}
+
+.urbanplan-panel .content {
+    padding: 5px 10px !important;
+}
+
+#urbanPlansContainer div.filter-panel-container div.header {
+    display: none;
+}
+
+#urbanPlansContainer div.filter-panel-container div.filter-option select.value-select {
+    width: 100%;
+}
+
+#urbanPlansContainer .filterContainer, #urbanPlansMarkingsContainer .filterContainer, #urbanPlansPeopleContainer .filterContainer {
+	width: 320px;
+	/*background-color: #EBF5FF;*/
+	border-left: 1px #000000;
+	padding: 2px;
+	float: left;
+	overflow-y: auto;
+    height: 100%;
+    position:absolute;
+    bottom: 0;
+    top: 0;
+}
+
+#urbanPlansMarkingsContainer .filterRow, #urbanPlansPeopleContainer .filterRow{
+	padding: 0 0 0 5px;
+}
+
+#urbanPlansPeopleContainer .filterRow{
+	position: relative;
+	min-height: 35px;
+}
+
+#urbanPlansPeopleContainer .filterRow select{
+	position: absolute;
+    right: 10px;
+}
+
+
+#urbanPlansFilterContainer .buttons input, #urbanPlansMarkingsContainer .buttons input, #urbanPlansPeopleContainer .buttons input{
+	float: right;
+}
+
+#enterNameIdInput {
+}
+
+#urbanPlansFilterTimeFields {
+	overflow: auto;
+	width: 100%;
+}
+
+#urbanPlansFilterTimeFields .oskarifield  {
+	width: 150px;
+	float: left;
+}
+
+#urbanPlansFilterTimeFields .oskarifield  label {
+	margin-right: 5px;
+}
+
+#urbanPlansFilterTimeFields .oskarifield  input {
+	width: 180px;
+}
+
+#urbanPlansFilterContainer .accordion_panel {
+	
+	border-radius: 5px;
+	margin-bottom: 5px;
+}
+
+#urbanPlansFilterContainer .accordion_panel .header{	
+}
+
+#urbanPlansFilterContainer .accordion_panel .regionPanelContent{
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+#urbanPlansFilterContainer .accordion_panel div{
+	
+}
+
+.filterRow label {
+	font-weight: normal;
+	width: 100px;
+	float: left;
+}
+
+.bordered-wrapper {
+    border-top: solid 1px #111;
+}
+
+/*
+LISTS
+*/
+
+#urbanPlansContainer .listContainer, #urbanPlansMarkingsContainer .listContainer, #urbanPlansPeopleContainer .listContainer {
+    margin-right: 0px;
+    height: 100%;
+    margin-left: 320px;
+    overflow: auto;
+}
+
+.urbanPlansGrid {
+	height: 600px;
+	width: 1200px;
+	overflow-y: auto;
+}
+
+.urbanPlansGrid table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.urbanPlansGrid td, .urbanPlansGrid th {
+	border: 1px solid black;
+	padding: 3px 7px 2px;
+}
+
+.urbanPlansGrid th {
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 4px;	
+}
+
+/*
+DETAIL URBAN PLAN
+*/
+.urbanPlanDetail {
+	padding: 15px;
+}
+
+div.urbanPlanDetail div.actions {
+    margin: 10px;
+    text-align: center;
+}
+
+div.urbanPlanDetail div.actions input {
+    margin: 10px;
+}
+
+@media print {
+div.urbanPlanDetail div.actions {
+    display: none !important;
+}
+}
+
+.urbanPlanDetailHeader {
+    background-color: #0186d1;
+    color: #ffffff;
+    border-radius: 0px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 28px;
+    padding: 0px 10px;
+    margin: 0;
+}
+
+.urbanPlanDisclaimer {
+	padding-top: 15px;
+}
+
+.urbanPlanDetailContent {
+	overflow: auto;
+	position: relative;
+}
+
+.urbanPlanDetailContent dl {
+	margin-top: 10px;
+}
+
+.urbanPlanDetailContent dl.toparea {
+	position: relative;
+	width: 100%;
+	margin-bottom: 0px;
+}
+
+.urbanPlanDetailContent dl.leftcol {
+	position: relative;
+	width: 45%;
+	float: left;
+}
+
+.urbanPlanDetailContent dl.rightcol {
+	position: relative;
+	width: 45%;
+	float: left;
+}
+
+.urbanPlanDetailContent dl.bottomtable {
+    width: 100%;
+}
+
+.urbanPlanDetailContent dl.bottomtable div{
+	display: inline-block;
+	width: 100%;
+}
+
+.urbanPlanDetailContent dl.bottomtable div span{
+	width: 200px; 
+	float:left;
+}
+
+.urbanPlanDetailContent dl.bottomtable div span.longField{
+	width: 250px; 
+}
+
+.urbanPlanDetailContent dt {
+	float: left;
+	clear: left;
+	margin-right: 5px;
+	font-weight: bold;
+}
+
+.urbanPlanDetailContent dd {
+	margin-left: 0px;
+}
+
+.urbanPlanDetail table.collapsed {
+    width: 100%;
+}
+
+.urbanPlanDetail table.collapsed .col1, .urbanPlanDetail table.collapsed .col2 {
+    width: 50%;
+}
+
+.urbanPlanDetail table.bordered {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
+	border-bottom: 1px solid black;
+}
+
+.urbanPlanDetail table.bordered td, .urbanPlanDetail table.bordered th {
+	border: 1px solid black;
+	padding: 3px 7px 2px;
+}
+
+.urbanPlanDetail table.bordered th {
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 4px;	
+}
+
+.buttons {
+    text-align: left;    
+}
+
+.filterContainer button{
+	color: white;
+    margin-right: 5px;
+}
+
+.filterRow {
+    margin-bottom: 5px;
+}
+
+#urbanPlansFilterContainer .badge {
+    margin-left: 5px;
+    text-align: right;
+}
+
+#urbanPlansFilterContainer .areas {
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+#servicePackagesDropdown {
+	width: 100%;
+}
+
+#servicePackagesSelect {
+	width: 153px;
+	margin: 5px 10px 0px 10px;
+	padding: 2px 4px;
+}
+
+#urbanPlansPeopleDisclaimer {
+	position: absolute;
+	bottom: 0px;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	margin: 0 3px 0 3px;
+}
+
+span.idlink {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/*
+CSV FILES MODULE
+*/
+#urban-plans-csv-container
+{
+	width: 450px;
+}
+
+#urban-plans-csv-container .csv-format-row
+{
+	height: 40px;
+    position: relative;
+    width: 100%;
+}
+
+#urban-plans-csv-container .csv-format-select
+{
+	position: absolute;
+    right: 0;
+}
+
+#urban-plans-csv-info-container
+{
+	padding: 5px;
+}
+
+#urban-plans-csv-info-container div
+{
+	margin-bottom: 5px;
+}
+
+#urban-plans-csv-info-container p
+{
+	margin-bottom: 15px;
+}
+
+pre.no-wrap {
+    word-wrap: normal;
+}
+
+.urbanPlanDetail td.number {
+    text-align: right;
+}
+
+tr.highlight {
+    font-style: italic;
+}
+
+div.ajax-loader-big {
+    background-image: url('/Oskari/resources/liiteri/bundle/liiteri-urbanplanning/images/ajax-loader-big.gif');
+    background-repeat: no-repeat;
+    width: 66px;
+    height: 66px;
+    margin: 0 auto;
+}
+
+
+#urbanPlanBundleContent .dataTables_processing {
+  height: 66px !important;
+    background-image: url('/Oskari/resources/liiteri/bundle/liiteri-urbanplanning/images/ajax-loader-big-transparent.gif') !important;
+  background-position: 50% 50% !important;
+  background-repeat: no-repeat !important;
+  background-color: rgba(255,255,255,0.8) !important;
+ }
+
+#urbanPlansContainer .footer {
+   position:fixed;
+   bottom:0px;
+   height:60px;
+    padding: 0px 5px;
+}
+
+#urbanPlansContainer .disclaimer {
+    padding: 2px 5px;
+    text-align: justify;
+}

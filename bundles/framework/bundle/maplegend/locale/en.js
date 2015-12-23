@@ -4,7 +4,8 @@ Oskari.registerLocalization(
     "key": "maplegend",
     "value": {
         "title": "Map legends",
-        "desc": ""
+        "desc": "",
+		"tooltip": "Map legends"
     }
 }
 );

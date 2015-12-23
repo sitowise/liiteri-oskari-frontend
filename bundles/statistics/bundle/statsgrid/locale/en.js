@@ -2,14 +2,17 @@ Oskari.registerLocalization({
     "lang": "en",
     "key": "StatsGrid",
     "value": {
-        "title": "Patio",
+        "title": "Thematic maps",
         "desc": "",
         "tile": {
-            "title": "Thematic maps"
+            "title": "Thematic maps",
+            "standardStats": "Thematic maps",
+            "twoWayStats": "Two way stats"
         },
         "view": {
-            "title": "Patio",
-            "message": "patiopoc"
+            "title": "Thematic maps",
+            "message": "patiopoc",
+			"tooltip": "Statistics"
         },
         "tab": {
             "title": "Indicators",
@@ -38,16 +41,37 @@ Oskari.registerLocalization({
             "female": "women",
             "total": "total"
         },
+        "direction": "Esityssuunta",
+        "directions": {
+            "work": "Työalueittain",
+            "home": "Kotialueittain"
+        },
         "addColumn": "Get data",
+        "addColumnFromArea": "Set geometry area filter",
+        "addColumnFromRegionFilter": "Set area filter",
+        "clearColumn" : "Clear",
+        "createChart": "Create chart",
+        "errorTitle": "Error",
+        "noIndicator" : "Statistic data are not present in the table",
         "removeColumn": "Remove",
         "indicators": "Indicator",
         "cannotDisplayIndicator": "The indicator does not have values on the selected region category so it cannot be displayed in the grid.",
         "availableRegions": " The following region categories have values on the indicator: ",
+        "numberOfSelectedIndicators": "You have selected {0} indicators",
         "year": "Year",
         "buttons": {
             "ok": "OK",
             "cancel": "Cancel",
-            "filter": "Filter"
+            "filter": "Filter",
+            "save": "Save",
+            "close": "Close",
+            "finish": "Finish",
+            "saveAsMyPlace": "Save as my place",
+            "movePlaces": "Move places",
+            "deleteCategory": "Delete",
+            "deleteCategoryAndPlaces": "Delete places",
+            "changeToPublic": "Change to public",
+            "changeToPrivate": "Change to private"
         },
         "sotka": {
             "municipality": "Municipality",
@@ -61,9 +85,21 @@ Oskari.registerLocalization({
             "indicatorMetaXHRError": "Error loading sotka indicator metadata",
             "indicatorDataError": "Error in getting sotka indicator data",
             "indicatorDataXHRError": "Error loading sotka indicator data",
+            "noselection" : "There is no active selection",
             "descriptionTitle": "Description",
-            "sourceTitle": "Source"
-
+            "sourceTitle": "Source",
+            "annotationsTitle" : "Annotations",
+            "additionalInfoTitle": "Additional info",
+            "lifeCycleStateTitle": "Life cycle state",
+            "stageTitle": "Stage",
+            "unitTitle": "Unit",
+            "yearsTitle": "Years",
+            "annotations" : {
+                "year": "Year",
+                "organization": "Organization",
+                "description": "Description",
+            },
+            "privacyLimitTitle": "Privacy limits"
         },
         "classify": {
             "classify": "Classify",
@@ -82,7 +118,29 @@ Oskari.registerLocalization({
             "modes": {
                 "distinct": "Continuous",
                 "discontinuous": "Discrete"
-            }
+            },
+            "pointSize": "Point size",
+            "big": "Big",
+            "normal": "Normal",
+            "small" : "Small",
+            "visualizationmethod": "Zoning",
+            "visualizationsubmethod": "Visualization method",
+            "textOptions": "Text options",
+            "showAreaNames": "Show area names",
+            "showValues": "Show values",
+            "graduated": "Graduated",
+            "choropletic" : "Choropletic",
+            "administrative": "Administrative areas",
+            "grid250m": "250m grid",
+            "grid500m": "500m grid",
+            "grid1km": "1km grid",
+            "grid2km": "2km grid",
+            "grid5km": "5km grid",
+            "grid10km": "10km grid",
+            "grid20km": "20km grid",
+            "visualizationRow": "Visualisoitava rivi",
+            "privacyNoticeTitle": "Huomio",
+            "privacyNoticeDescription": "Valitulla tilastolla on käytössä tietosuojarajoitus. Kaikki arvoja ei näytetä teemakartalla. Tarkempi kuvaus tietosuojasta löytyy tilaston taustatiedoista."
         },
         "colorset": {
             "button": "Colors",
@@ -115,6 +173,36 @@ Oskari.registerLocalization({
                 "sum": "The total sum of the indicator values"
             }
         },
+        "additionalInfo": {
+            "copyright": "Copyright",
+            "tooltip": {
+                "copyright": "Copyright",
+            }
+        },
+		"indicatorFilters": {
+			"themeLevel0": "Theme",
+			"themeLevel1": "1. Subtheme",
+			"themeLevel2": "2. Subtheme",
+			"themeLevel3": "3. Subtheme",
+			"themeLevel4": "4. Subtheme",
+			"name": "Name",
+			"selectTheme": "[Select a value]"
+		},
+		"connectionErrors": {			
+            "errorTitle": "Error",
+            "regionDataError": "Error in getting region data.",
+            "regionDataXHRError": "Error loading region data",
+            "indicatorsDataError": "Error in getting indicators.",
+            "indicatorsDataXHRError": "Error loading indicators",
+            "indicatorMetaError": "Error in getting indicator metadata",
+            "indicatorMetaXHRError": "Error loading indicator metadata",
+            "indicatorDataError": "Error in getting indicator data",
+            "indicatorDataXHRError": "Error loading indicator data"
+		},
+        "errors" : {
+            "title": "Error",
+            "regionWithoutVisualization" : "This region has no visualization",
+        },
         "noIndicatorData": "Can not display indicator with selected region category",
         "values": "values",
         "included": "Values",
@@ -122,9 +210,23 @@ Oskari.registerLocalization({
         "selectRows": "Select rows",
         "select4Municipalities": "Select at least two areas",
         "showSelected": "Show only selected areas on the grid",
+        "toogleTable": "Table",
+        "toogleMap": "Map",
         "not_included": "Not included",
         "noMatch": "No results matched",
         "selectIndicator": "Select an indicator",
+        "selectIndicatorPlaceholder": "Select indicators",
+        "areaRestrictions": "Area restrictions",
+        "presentationLevel": "Presentation level",
+        "noAreaFilterSet": "There is no area filter set",
+        "noAreaFilterSetNoGrid": "There is no area filter set",
+        "areaFilterLimitBySelected": "Limit by selected regions",
+        "areaFilterDrawNewFromCrop": "Draw new filter from crop",
+        "areaFilterDrawNew": "Draw new filter",
+        "areaFilterRemove": "Clear filter",
+        "areaFilterDescription": "You can limit the statistics counting area either selected subjects, or draw a new area delimitation",
+        "geometryFilterSet": "Olet rajannut tilastohaun alueeksi omat alueet joita on valittuna [{0}] kappaletta",
+        "areaFilterSet": "Olet rajannut tilastohaun aluerajauksella jonka ehdot ovat: ",
         "filterTitle": "Filter out column data",
         "indicatorFilterDesc": "Filtered values are selected in the grid. You can set filtering separately for every column.",
         "filterIndicator": "Indicator:",
@@ -139,21 +241,49 @@ Oskari.registerLocalization({
         "filter": "Filter",
         "filterByValue": "By value",
         "filterByRegion": "By region",
-
+        "print": "Print",
         "selectRegionCategory": "Region categories:",
         "regionCatPlaceholder": "Choose a region category",
         "selectRegion": "Regions:",
         "chosenRegionText": "Choose regions",
         "noRegionFound": "Region not found",
+        "dataSource" : "Data source",
         "regionCategories": {
             "title": "Region categories",
-            "KUNTA": "Kunta",
+            "KUNTA": "Municipality",
             "ALUEHALLINTOVIRASTO": "Aluehallintovirasto",
-            "MAAKUNTA": "Maakunta",
+            "MAAKUNTA": "Region",
             "NUTS1": "Manner-Suomi ja Ahvenanmaa",
             "SAIRAANHOITOPIIRI": "Sairaanhoitopiiri",
-            "SEUTUKUNTA": "Seutukunta",
-            "SUURALUE": "Suuralue"
+            "SEUTUKUNTA": "Subregion",
+            "SUURALUE": "Suuralue",
+            'ELY_E' : "ELY E area",
+            'ELY_L': "ELY L area",
+            'ELY_Y': "ELY Y area",
+            'FINLAND': "Finland",
+            'URBANAREA': "Urban area",
+            'NEIGHBORHOOD': "Neighborhood",
+            'LOCALITY': "Locality",
+            "PLANNEDAREA" : "Planned area",
+            "NEIGHBORHOODTYPE" : "Neighborhood type",
+            "ADMINISTRATIVELAWAREA" : "Administrative law area",
+            "SHOPAREA" : "Shop area",
+            "CITYRURALAREATYPE": "City rural area type",
+            "URBANAREATYPE" : "Urban area type",
+            "CITYCENTRALAREA" : "City central area",
+            "CITYCENTRALTYPE" : "City central type",
+            "LOCALDENSITYTYPE": "Local density type"
+        },
+        "regionSelectorCategories": {
+            "KUNTA": "Municipality",
+            "MAAKUNTA": "Region",
+            "SEUTUKUNTA": "Subregion",
+            "SUURALUE": "Suuralue",
+            'ELY_E': "ELY E area",
+            'ELY_L': "ELY L area",
+            'ELY_Y': "ELY Y area",
+            'FINLAND': "Finland",
+            "ADMINISTRATIVELAWAREA": "Administrative law area",
         },
         "addDataButton": "Add indicator",
         "addDataTitle": "NOT TRANSLATED",
@@ -184,6 +314,99 @@ Oskari.registerLocalization({
         "connectionProblem": "We could not save the data due to connection problems",
         "parsedDataInfo": "Imported regions count",
         "parsedDataUnrecognized": "Unrecognized regions count",
-        "loginToSaveIndicator": "NOT TRANSLATED"
+        "loginToSaveIndicator": "NOT TRANSLATED",
+        "tools": {
+            "measureline": {
+                "title": "Etäisyyden mittaus",
+                "tooltip": "Mittaa etäisyys",
+                "add": "",
+                "next": "",
+                "edit": "Muokkaa viivaa raahaamalla viivan taitepisteitä.",
+                "noResult": "0 m"
+            },
+            "measurearea": {
+                "title": "Pinta-alan mittaus",
+                "tooltip": "Mittaa pinta-ala",
+                "add": "",
+                "next": "",
+                "edit": "Muokkaa muotoa raahaamalla reunaviivan taitepisteitä.",
+                "noResult": "0 m²"
+            },
+            "point": {
+                "title": "Pisteen lisäys",
+                "tooltip": "Lisää piste",
+                "add": "Lisää piste klikkaamalla karttaa.",
+                "next": "Voit tallentaa tai piirtää pisteitä samaan kohteeseen.",
+                "edit": "Siirrä pistettä raahaamalla.",
+                "save": "Tallenna sijainti"
+            },
+            "line": {
+                "title": "Viivan lisäys",
+                "tooltip": "Lisää viiva",
+                "add": "Lisää viivan taitepiste klikkaamalla karttaa. Lopeta piirto tuplaklikkauksella tai painamalla 'Lopeta piirto'.",
+                "next": "Voit tallentaa tai piirtää lisää viivoja samaan kohteeseen.",
+                "edit": "Muokkaa viivaa raahaamalla viivan taitepisteitä.",
+                "save": "Tallenna muoto",
+                "noResult": "0 m"
+            },
+            "area": {
+                "title": "Alueen lisäys",
+                "tooltip": "Lisää alue",
+                "add": "Lisää alueen taitepisteet klikkaamalla karttaa. Lopeta piirto painamalla 'Lopeta piirto'.",
+                "next": "Voit tallentaa tai piirtää lisää alueita samaan kohteeseen.",
+                "edit": "Muokkaa muotoa raahaamalla reunaviivan taitepisteitä.",
+                "save": "Tallenna muoto",
+                "noResult": "0 m²"
+            }
+        },
+        "filterForm" : {
+            "selectValue": "Select value",
+            "selectSomeOptions": "Select some options",
+            "close": "Close",
+            "clear": "Clear",
+            "and": "AND",
+            "or": "OR",
+            "selectType": "Tarkastelusuunta",
+            "typeHome": "Asuinpaikka",
+            "typeWork": "Työpaikka",
+            "validateKeyMissing": "Valitse aluetyyppi",
+            "validateValuesMissing": "Valitse alueet",
+            "validateTypeMissing": "Valitse tarkastelusuunta",
+            "validateTypeUsed": "Valitse aluerajauksille eri tarkastelusuunnat",
+            "validateOk": "Ok",
+            "infoText": "Valitse alue ja työmatkojen tarkastelusuunta. Asuinpaikka tarkoittaa työmatkojen lähtöaluetta, työpaikka työmatkojen kohdealuetta. Jos valitset ensimmäisen rajauksen suunnaksi asuinpaikan, saat tulostaulukkoon kaikki valitulla alueella asuvien työmatkojen kohdealueet. Jos valitset työpaikan, saat tulostaulukkoon kaikki valitulla alueella työssäkäyvien asuinalueet."    
+        },
+		"csv": {
+			"downloadFile": "Download file",
+			"toFile": "Download file",
+			"csvFileName": "statistics",
+			"formattingOfTheFile": "Formatting of the file",
+			"fieldSeparator": "Field separator",
+			"stringSeparator": "String separator",
+			"nullSymbolizer": "Null symbolizer",
+			"decimalSeparator": "Decimal separator",
+            "semicolon": "Semicolon",
+            "comma": "Comma",
+            "colon": "Colon",
+            "tabulator": "Tabulator",
+            "pipe": "Pipe",
+            "quotationMark": "QuotationMark",
+            "apostrophe": "Apostrophe",
+            "dash": "Dash",
+            "dashCharacter": "-",
+            "dot": "Dot",
+            "negative1": "-1",
+            "negative99": "-99",
+            "negative99999": "-99999",
+            "empty": "Empty",
+			"fileHeader": "The Living Environment Information Services Liiteri",
+			"dataSources": "Data sources"
+		},
+        "classification" : {
+            "error" : {
+                "title": "Error",
+                "general" : "There was an error during retrieving data"
+            }
+        }
     }
 });

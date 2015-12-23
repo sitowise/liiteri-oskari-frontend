@@ -41,7 +41,7 @@
         },*/
         {
           "type" : "text/javascript",
-          "src" : "../../../../libraries/OpenLayers/OpenLayers-2.12-c5bb52d-patched.js"
+          "src" : "../../../../libraries/OpenLayers/OpenLayers-2.13.1.js"
         }
       ]
     },

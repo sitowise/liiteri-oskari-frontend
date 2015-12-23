@@ -23,13 +23,14 @@ Oskari.clazz.define('Oskari.mapframework.request.common.AddMapLayerRequest',
      *            isExternal (optional, not used in paikkatietoikkuna)
      */
 
-    function (mapLayerId, keepLayersOrder, isBasemap, isExternal) {
+    function (mapLayerId, keepLayersOrder, isBasemap, isExternal, groupName) {
 
         this._creator = null;
         this._mapLayerId = mapLayerId;
         this._keepLayersOrder = (keepLayersOrder == true);
         this._isExternal = (isExternal == true);
         this._isBasemap = (isBasemap == true);
+        this._groupName = groupName;
     }, {
         /** @static @property __name request name */
         __name: "AddMapLayerRequest",
@@ -69,6 +70,13 @@ Oskari.clazz.define('Oskari.mapframework.request.common.AddMapLayerRequest',
          */
         isExternal: function () {
             return this._isExternal;
+        },
+        /**
+         * @method getGroupName
+         * @return {String} return the group name for the theme where this layer was activated, as one layer can be in multiple themes
+         */
+        getGroupName: function () {
+            return this._groupName;
         }
     }, {
         /**

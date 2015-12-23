@@ -14,14 +14,13 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
     function () {
         this.template = jQuery('<div class="accordion_panel">' +
             '<div class="header">' +
-            '<div class="headerIcon icon-arrow-right">' +
+            '<div class="headerIcon icon-arrow-right"></div>' +
+            '<div class="headerText"></div>' +
+            '<div class="headerButtonContainer"></div>' +
             '</div>' +
-            '<div class="headerText">' +
-            '</div>' +
-            '</div>' +
-            '<div class="content">' +
-            '</div>' +
+            '<div class="content"></div>' +
             '</div>');
+        this.headerButtonTemplate = jQuery('<a href="#"></a>');
         this.title = null;
         this.content = null;
         this.html = this.template.clone();
@@ -37,6 +36,9 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
         });
         this.html.find('div.content').hide();
     }, {
+        addClass: function (pClass) {
+            this.html.addClass(pClass);
+        },
         /**
          * @method setVisible
          * Shows/hides the panel
@@ -71,12 +73,20 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
          * @method open
          * Opens the panel programmatically
          */
-        open: function () {
+        open: function () {            
             this.html.addClass('open');
             var header = this.html.find('div.header div.headerIcon');
+            /* if there is more than one take first one, i.g. if there is accordionPanel in accordionPanel */
+            if (header.length > 1) {
+                header = header[0];
+                header = $(header);
+            }
             header.removeClass('icon-arrow-right');
             header.addClass('icon-arrow-down');
-            this.html.find('div.content').show();
+            this.html.children('div.content').show();
+
+            var me = this;
+            $(this).trigger("AccorionPanel.opened", [me]);
         },
         /**
          * @method close
@@ -87,7 +97,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
             var header = this.html.find('div.header div.headerIcon');
             header.removeClass('icon-arrow-down');
             header.addClass('icon-arrow-right');
-            this.html.find('div.content').hide();
+            this.html.children('div.content').hide();
         },
         /**
          * @method setTitle
@@ -106,6 +116,21 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
          */
         getTitle: function () {
             return this.title;
+        },
+        addHeaderButton: function(config) {
+            var container = this.html.find('div.header div.headerButtonContainer');
+            var button = this.headerButtonTemplate.clone();
+            if (config.cssClass)
+                button.addClass(config.cssClass);
+            if (config.text)
+                button.text(config.text);
+            if (config.handler) {
+                button.click(function(event) {
+                    config.handler(event);
+                    event.stopPropagation();
+                });
+            }
+            container.append(button);
         },
         /**
          * @method setContent

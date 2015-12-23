@@ -14,6 +14,7 @@ function() {
     this.attention_text = undefined;
     this.createDate = undefined;
     this.updateDate = undefined; 
+	this.onlyLabel = undefined;
 }, {
     /**
      * @method setId 
@@ -178,5 +179,19 @@ function() {
      */
     getUUID : function() {
         return this.uuid;
+    },
+    /**
+     * @method setOnlyLabel 
+     * @param {Boolean} value
+     */
+    setOnlyLabel : function(value) {
+        this.onlyLabel = value;
+    },
+    /**
+     * @method getOnlyLabel 
+     * @return {Boolean} 
+     */
+    isOnlyLabel : function() {
+        return this.onlyLabel;
     }
 });

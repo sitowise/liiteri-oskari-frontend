@@ -5,11 +5,11 @@ Oskari.registerLocalization({
         "title": "admin: Karttatasot",
         "desc": "",
         "flyout": {
-            "title": "admin: karttatasot",
+            "title": "Karttatasojen hallinta",
             "fetchingLayers" : "Haetaan tasoja."
         },
         "tile": {
-            "title": "A: karttatasot",
+            "title": "Karttatasot",
             "tooltip": "."
         },
         "view": {
@@ -28,7 +28,8 @@ Oskari.registerLocalization({
             "text": "Hae karttatasoja",
             "inspire": "Aiheittain",
             "organization": "Tiedontuottajittain",
-            "published": "Käyttäjät"
+            "published": "Käyttäjät",
+            "userThemes": "Teemat"
         },
         "published": {
             "organization": "Julkaistu taso",
@@ -65,7 +66,8 @@ Oskari.registerLocalization({
             "layertypes" : {
                 "wms": "WMS Taso",
                 "wfs": "WFS Taso",
-                "wmts": "WMTS Taso"
+                "wmts": "WMTS Taso",
+                "arcgislayer": "ArcGis Taso"
             },
             "selectLayer": "Valitse ylätaso",
             "selectSubLayer": "Valitse alataso",
@@ -82,14 +84,18 @@ Oskari.registerLocalization({
             "layerTypeDesc": "Tason tyyppi: WMS, WFS, WMTS",
             "type": "Tason tyyppi",
             "typePlaceholder": "Valitse tason tyyppi",
-            "normalLayer": "Normaali taso",
+            "normalLayer": "WMS-taso",
             "baseLayer": "Taustataso",
             "groupLayer": "Ryhmätaso",
+            "wfslayer": "WFS-taso",
+            "arcgisLayer": "ArcGis-taso",
             "interfaceVersion": "Rajapinnan versio",
             "interfaceVersionDesc": "Rajapinnan versio",
 //            "wmslayer": "WMS Taso",
             "wms1_1_1": "WMS 1.1.1",
             "wms1_3_0": "WMS 1.3.0",
+            "wfs1_0_0": "WFS 1.0.0",
+            "wfs1_1_0": "WFS 1.1.0",
 //            "wfslayer": "WFS Taso",
 //            "wmtslayer": "WMTS Taso",
             "getInfo": "Hae tiedot",
@@ -100,7 +106,6 @@ Oskari.registerLocalization({
             "groupName": "Ryhmätason nimi",
             "subLayers": "Alatasot",
             "addSubLayer": "Lisää alataso",
-            "editSubLayer": "Muokkaa alatasoa",
 
             "wmsInterfaceAddress": "WMS-rajapinnan osoitteet",
             "wmsUrl": "WMS-rajapinnan osoitteet",
@@ -108,11 +113,27 @@ Oskari.registerLocalization({
             "wmsServiceMetaId": "WMS metatiedon tunniste",
             "wmsServiceMetaIdDesc": "WMS-palvelun metatiedon tiedostotunniste",
             "layerNameAndDesc": "Tason nimi ja kuvaus",
+			
+			"downloadServiceUrlDesc": "Latauspalvelun osoite",
+			"downloadServiceUrl": "Latauspalvelun osoite",
+			"copyrightInfoDesc": "Tiedontuottaja",
+			"copyrightInfo": "Tiedontuottaja",
 
             "metaInfoIdDesc": "Paikkatieto&shy;hakemiston metatiedon tiedostotunniste, joka yksilöi metatiedon XML kuvailun",
             "metaInfoId": "Metatiedon tiedosto&shy;tunniste",
+            "metaInfoUrlDesc": "Metatietosivun osoite",
+            "metaInfoUrl": "Metatietosivun osoite",
             "wmsName": "WMS nimi",
             "wmsNameDesc": "WMS taso eli uniikki nimi",
+
+            "wfsusername": "Käyttäjänimi",
+            "wfspassword": "Salasana",
+            "wfsgmlversion": "GML versio",
+            "wfsgmlgeometryproperty": "GML geometria-attribuutti",
+            "wfsfeaturenamespaceURI": "Kohteen nimiavaruuden osoite (URI)",
+            "wfsfeaturenamespace": "Kohteen nimiavaruus",
+            "wfsfeatureelement": "Kohde-elementti",
+            "wfsgeometrynamespaceURI": "Geometrian nimiavaruuden osoite (URI)",
 
             "addInspireName": "Aiheen nimi",
             "addInspireNameTitle": "Aiheen nimi",
@@ -141,7 +162,6 @@ Oskari.registerLocalization({
             "legendImage": "Legenda-kuvan osoite",
             "legendImageDesc": "Legenda-kuvan osoite",
             "legendImagePlaceholder": "Legenda-kuvan osoite",
-            "gfiContent": "GFI lisäsisältö",
             "gfiResponseType": "GFI vastauksen tyyppi",
             "gfiResponseTypeDesc": "Vastauksen tyyppi eli Get Feature Info (GFI)",
             "gfiStyle": "GFI:n tyyli",
@@ -174,6 +194,11 @@ Oskari.registerLocalization({
 
             "interfaceAddress": "Rajapinnan osoite",
             "interfaceAddressDesc": "WMS&shy;-tasomäärittelyjen osoite",
+            "arcgisMapServerInterfaceAddress": "Karttapalvelimen rajapinnan osoite",
+            "arcgisMapServerAddress": "Karttapalvelimen osoite",
+            "wfsInterfaceAddress": "WFS-rajapinnan osoite",
+            "layersLabel": "Saatavissa olevat tasot",
+            "layerName": "Tason nimi",
             "viewingRightsRoles": "Katseluoikeudet rooleille",
             "metadataReadFailure": "Tason metatiedon haku epäonnistui.",
             "mandatory_field_missing": "Pakollinen tieto: ",

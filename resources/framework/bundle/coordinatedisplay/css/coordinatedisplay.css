@@ -7,7 +7,7 @@
   /*64738;*/
   border: 1px solid #c4c4c4;
   width: 120px;
-  height: 53px;
+  /*height: 53px;*/
   text-align: left; }
   .mapplugin.coordinates .cbSelection {
     color: white;
@@ -34,3 +34,6 @@
     float: right;
     padding-right: 20px;
     padding-bottom: 5px; }
+  .mapplugin.coordinates .cbRow {
+      overflow: auto;
+  }

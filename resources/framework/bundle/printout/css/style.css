@@ -21,10 +21,15 @@ div.notLoggedIn {
   top: 0;
   left: 0;
   z-index: 1500;
-  width: 255px; }
+  width: 255px;
+  border-right: 1px solid #9c9c9c;
+  border-left: 2px solid #9c9c9c;
+}
 
-#contentMap div.basic_publisher div.content {
-  padding: 10px; }
+#contentMap div.basic_printout div.accordion_panel
+{
+	background-color: #fff;
+}
 
 div.printout div.startview div.icon-info, div.basic_printout div.icon-info {
   float: right; }
@@ -33,11 +38,22 @@ div.printout div.startview div.error ul li {
   color: red; }
 
 div.basic_printout > div.header {
-  background-color: #FDF8D9;
-  padding: 5px 10px; }
+	height: 57px;
+	margin-left: 20px;
+	font-size: 16px;
+}
 
 div.basic_printout > div.header div.icon-close {
-  float: right; }
+	float: right;
+	margin-right: 25px;
+	height: 16px;
+	display: inline-block;
+}
+
+div.basic_printout > div.header div.header_title > p
+{
+	margin-top: 12px;
+}
 
 div.basic_printout div.form div.field input, div.field select {
   width: 80%;
@@ -119,3 +135,7 @@ div.basic_printout div.previewNotes {
   margin-left: 8px;
   margin-right: 8px;
   margin-bottom: 2px; }
+
+div.basic_printout label {
+    max-width: 80%;
+}
