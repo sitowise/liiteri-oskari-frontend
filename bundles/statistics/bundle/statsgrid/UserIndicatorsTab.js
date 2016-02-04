@@ -11,17 +11,21 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
      * @param {Object} localization
      *      instance's localization
      */
-
     function (instance, localization) {
         this.instance = instance;
         this.loc = localization;
-        this.visibleFields = ['name', 'description', 'organization', 'year', 'delete'];
+        this.visibleFields = [
+            'name',
+            'description',
+            'organization',
+            'year',
+            'delete'
+        ];
         this.grid = null;
         this.container = null;
         this.template = jQuery(
             '<div class="userIndicatorsList">' +
             '<div class="indicatorsGrid"></div>' +
-            //'<button id="createNewIndicator">' + this.loc.newIndicator + '</button>' +
             '</div>'
         );
 
@@ -54,7 +58,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
                 var type = event.getType(),
                     indicator = event.getIndicator();
 
-                if (type === 'create') this._addIndicatorToGrid(indicator);
+                if (type === 'create') {
+                    this._addIndicatorToGrid(indicator);
+                }
             }
         },
         /**
@@ -65,15 +71,17 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
          * @return {undefined}
          */
         init: function () {
-            var me = this;
+            var me = this,
+                service;
 
             this.bindEvents();
             this.container = this.template.clone();
             // Retrieve the indicators from the service
-            var service = this.instance.getUserIndicatorsService();
+            service = this.instance.getUserIndicatorsService();
             service.getUserIndicators(function (indicators) {
                 // success!
                 me._renderIndicators(indicators);
+                me._addDataSource(indicators);
             }, function () {
                 // error :(
                 me.showMessage(me.loc.error.title, me.loc.error.indicatorsError);
@@ -203,11 +211,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
          */
         _showUserIndicator: function (indicatorId) {
             var me = this,
-                instance = this.instance;
-            service = instance.getUserIndicatorsService();
+                instance = this.instance,
+                service = instance.getUserIndicatorsService();
 
             service.getUserIndicator(indicatorId, function (indicator) {
-                instance.addUserIndicator(me._normalizeIndicator(indicator));
+                indicator.id = ('user_' + indicator.id);
+                instance.addUserIndicator(indicator);
             }, function () {
                 // error :(
                 me.showMessage(me.loc.error.title, me.loc.error.indicatorError);
@@ -249,8 +258,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
          */
         _deleteUserIndicator: function (indicatorId) {
             var me = this,
-                instance = this.instance;
-            service = instance.getUserIndicatorsService();
+                instance = this.instance,
+                service = instance.getUserIndicatorsService();
 
             service.deleteUserIndicator(indicatorId, function () {
                 me._removeIndicatorFromGrid(indicatorId);
@@ -270,14 +279,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
             // TODO: remove the verbose code after the beef with
             // lodash/underscore has been settled.
             //
-            //_.remove(gridData, function(data) {
+            //_.remove(gridData, function (data) {
             //    return data.id === indicatorId;
             //});
             var gridModel = this.grid.getDataModel(),
                 gridData = gridModel.getData() || [],
                 i, gLen, index = null;
 
-            for (i = 0, gLen = gridData.length; i < gLen; ++i) {
+            for (i = 0, gLen = gridData.length; i < gLen; i += 1) {
                 if (gridData[i].id === indicatorId) {
                     index = i;
                     break;
@@ -316,28 +325,24 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
                 me._showAddIndicatorForm();
             });
         },
+        _addDataSource: function (indicators) {
+            var sandbox = this.instance.getSandbox(),
+                dataSourceTitle = this.instance
+                .getLocalization('tab').description,
+                reqBuilder = sandbox.getRequestBuilder('StatsGrid.AddDataSourceRequest'),
+                userIndicators = _.map(indicators, function (indicator) {
+                    indicator.ownIndicator = true;
 
-        /**
-         * Normalizes the indicator to be used like a sotkanet indicator in statsplugin.
-         *
-         * @method _normalizeIndicator
-         * @param  {Object} indicator
-         * @return {Object}
-         */
-        _normalizeIndicator: function (indicator) {
-            indicator.id = 'user_' + indicator.id;
-            indicator.ownIndicator = true;
-            indicator.gender = 'total';
-            indicator.organization = {
-                'title': indicator.organization
-            };
-            indicator.meta = {
-                'title': indicator.title
-            };
+                    return indicator;
+                }),
+                request;
 
-            return indicator;
+            if (reqBuilder) {
+                request = reqBuilder(
+                    'userIndicators', dataSourceTitle, userIndicators);
+                sandbox.request(this.instance, request);
+            }
         },
-
         /**
          * @method onEvent
          * @param {Oskari.mapframework.event.Event} event an Oskari event object
@@ -346,8 +351,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
          */
         onEvent: function (event) {
             var handler = this.eventHandlers[event.getName()];
-            if (!handler)
+            if (!handler) {
                 return;
+            }
 
             return handler.apply(this, [event]);
 

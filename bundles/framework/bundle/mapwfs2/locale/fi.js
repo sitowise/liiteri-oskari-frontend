@@ -1,20 +1,21 @@
-Oskari.registerLocalization({
-    "lang" : "fi",
-    "key" : "MapWfs2",
-    "value" : {
-        "title" : "MapWfs2",
-        "desc" : "",
+Oskari.registerLocalization(
+{
+    "lang": "fi",
+    "key": "MapWfs2",
+    "value": {
+        "title": "MapWfs2",
+        "desc": "",
         "object-data": "Kohdetiedot",
         "default-style": "Oletustyyli",
         "own-style": "Oma tyyli",
-        "tile" : {
-            "title" : "MapWfs2"
+        "tile": {
+            "title": "MapWfs2"
         },
-        "flyout" : {
-            "title" : "MapWfs2",
-            "message" : "MapWfs2"
+        "flyout": {
+            "title": "MapWfs2",
+            "message": "MapWfs2"
         },
-        "error" : {
+        "error": {
             "title": "Virhe",
             "connection_not_available": "Yhteyttä ei voitu muodostaa taustapalveluun.",
             "connection_broken": "Yhteys taustapalveluun katkesi.",
@@ -23,7 +24,7 @@ Oskari.registerLocalization({
             "arcgis_configuring_layer_failed": "REST-tason ({layer}) konfigurointi epäonnistui.",
             "wfs_request_failed": "WFS-tason ({layer}) WFS-kysely epäonnistui.",
             "arcgis_request_failed": "REST-tason ({layer}) REST-kysely epäonnistui.",
-            "features_parsing_failed": "Tason ({layer}) featureiden käsittely epäonnistui.",                       
+            "features_parsing_failed": "Tason ({layer}) featureiden käsittely epäonnistui.",
             "wfs_image_parsing_failed": "Image parsing of WFS layer {layer} failed",
             "arcgis_image_parsing_failed": "Image parsing of REST layer {layer} failed"
         },
@@ -31,7 +32,7 @@ Oskari.registerLocalization({
             "cancel": "Peruuta",
             "show": "Näytä kohteet",
             "close": "Sulje",
-            "edit" : "Muokkaa"
+            "edit": "Muokkaa"
         },
         "popup": {
             "title": "Oma tyyli",
@@ -41,4 +42,5 @@ Oskari.registerLocalization({
             }
         }
     }
-});
+}
+);

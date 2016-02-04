@@ -13,15 +13,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.event.MapPublishedEven
      * @param {Number} height height for the new map
      * @param {String} language language for the map
      */
-
-    function (mapId, width, height, language) {
-        this._id = mapId;
+    function (mapId, width, height, language, url) {
+        this._id = mapId; 
         this._width = width;
         this._height = height;
         this._language = language;
+        this._url = url;
+
     }, {
         /** @static @property __name event name */
-        __name: "Publisher.MapPublishedEvent",
+        __name: 'Publisher.MapPublishedEvent',
         /**
          * @method getName
          * Returns event name
@@ -29,6 +30,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.event.MapPublishedEven
          */
         getName: function () {
             return this.__name;
+        },
+        /**
+         * @method getUrl
+         * Returns url for the published map
+         * @return {String}
+         */
+        getUrl: function () {
+            return this._url;
         },
         /**
          * @method getId

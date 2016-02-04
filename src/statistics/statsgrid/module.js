@@ -1,25 +1,28 @@
 define([
-	"src/oskari/oskari",
+	"oskari",
 	"jquery",
 	"bundles/statistics/bundle/statsgrid/instance",
 	"bundles/statistics/bundle/statsgrid/Tile",
 	"bundles/statistics/bundle/statsgrid/StatsView",
 	"./GridModeView",
 	"bundles/statistics/bundle/statsgrid/StatsToolbar",
-    "bundles/statistics/bundle/statsgrid/AddOwnIndicatorForm",
+	"bundles/statistics/bundle/statsgrid/AddOwnIndicatorForm",
 	"./plugin/ManageClassificationPlugin",
 	"bundles/statistics/bundle/statsgrid/plugin/ManageStatsPlugin",
-	"bundles/statistics/bundle/statsgrid/event/SotkadataChangedEvent",
+	"bundles/statistics/bundle/statsgrid/event/StatsDataChangedEvent",
 	"bundles/statistics/bundle/statsgrid/event/ModeChangedEvent",
 	"bundles/statistics/bundle/statsgrid/event/ClearHilightsEvent",
 	"bundles/statistics/bundle/statsgrid/event/SelectHilightsModeEvent",
 	"bundles/statistics/bundle/statsgrid/event/IndicatorsEvent",
+	"bundles/statistics/bundle/statsgrid/event/UserIndicatorEvent",
 	"bundles/statistics/bundle/statsgrid/request/StatsGridRequest",
 	"bundles/statistics/bundle/statsgrid/request/StatsGridRequestHandler",
 	"bundles/statistics/bundle/statsgrid/request/TooltipContentRequest",
 	"bundles/statistics/bundle/statsgrid/request/TooltipContentRequestHandler",
 	"bundles/statistics/bundle/statsgrid/request/IndicatorsRequest",
 	"bundles/statistics/bundle/statsgrid/request/IndicatorsRequestHandler",
+	"bundles/statistics/bundle/statsgrid/request/AddDataSourceRequest",
+	"bundles/statistics/bundle/statsgrid/request/DataSourceRequestHandler",
 	"bundles/statistics/bundle/statsgrid/service/StatisticsService",
 	"bundles/statistics/bundle/statsgrid/service/UserIndicatorsService",
 	"bundles/statistics/bundle/statsgrid/UserIndicatorsTab",
@@ -37,8 +40,8 @@ define([
 	"libraries/slickgrid/plugins/slick.cellselectionmodel",
 	"libraries/slickgrid/plugins/slick.headermenu2",
 	"css!libraries/slickgrid/plugins/slick.headermenu2.css",
-    "libraries/slickgrid/plugins/slick.headerbuttons",
-    "css!libraries/slickgrid/plugins/slick.headerbuttons.css",
+	"libraries/slickgrid/plugins/slick.headerbuttons",
+	"css!libraries/slickgrid/plugins/slick.headerbuttons.css",
 	"libraries/slickgrid/plugins/slick.rowselectionmodel",
 	"libraries/slickgrid/plugins/slick.checkboxselectcolumn2",
 	"libraries/slickgrid/slick.grid",
@@ -51,14 +54,10 @@ define([
 	"bundles/statistics/bundle/statsgrid/locale/fi",
 	"bundles/statistics/bundle/statsgrid/locale/sv",
 	"bundles/statistics/bundle/statsgrid/locale/en"
-], function(Oskari, jQuery) {
-	return Oskari.bundleCls("statsgrid").category({
-		create: function() {
-			return Oskari.clazz.create("Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance",
-				'statsgrid');
-		},
-		update: function(manager, bundle, bi, info) {
-
-		}
-	})
+], function(Oskari,jQuery) {
+	return Oskari.bundleCls("statsgrid").category({create: function () {
+		return Oskari.clazz.create("Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance",
+			'statsgrid');
+		},update: function (manager, bundle, bi, info) {
+	}})
 });

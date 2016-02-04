@@ -3,7 +3,7 @@ Oskari.registerLocalization(
     "lang": "en",
     "key": "Publisher",
     "value": {
-        "title": "Create Map",
+        "title": "Map publishing",
         "flyouttitle": "Create Embedded Map",
         "desc": "",
         "published": {
@@ -50,6 +50,7 @@ Oskari.registerLocalization(
                 "IndexMapPlugin": "Index map",
                 "PanButtons": "Pan tool",
                 "Portti2Zoombar": "Zoom bar",
+                "MyLocationPlugin": "Center to user's location",
                 "ControlsPlugin": "Pan the map",
                 "SearchPlugin": "Addess and place name search",
                 "FeaturedataPlugin": "Feature data",
@@ -62,7 +63,7 @@ Oskari.registerLocalization(
                 "history_forward": "Move forward",
                 "measureline": "Measure distance",
                 "measurearea": "Measure area",
-                "drawTools" : "Drawing tools",
+                "drawTools": "Drawing tools",
                 "point": "Allow users to add point features.",
                 "line": "Allow users to add line features.",
                 "area": "Allow users to add area features."
@@ -143,9 +144,11 @@ Oskari.registerLocalization(
                 "small": "Small",
                 "medium": "Medium",
                 "large": "Large",
+                "fill": "Fill space",
                 "custom": "Custom size",
                 "width": "width",
-                "height": "height"
+                "height": "height",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Save",
@@ -164,8 +167,8 @@ Oskari.registerLocalization(
             },
             "layerselection": {
                 "label": "Show map layers at the menu.",
-                "info": "Select the background map levels. You can select the default background map level in the map preview.",
-                "tooltip": "The background map level is shown at the bottom layer of the map. Only one background map level can be shown at a time. The user can change the background map if there is more map layers selected to background maps. The default backgound map level can be selected in the map preview.",
+                "info": "Select the background map layer. You can select the default background map layer in the map preview.",
+                "tooltip": "The background map layer is shown at the bottom layer of the map. Only one background map layer can be shown at a time. The user can change the background map if there is more map layers selected to background maps. The default backgound map layer can be selected in the map preview.",
                 "promote": "Do you wish to show also aerial images?"
             },
             "preview": "The embedded map preview",
@@ -192,7 +195,7 @@ Oskari.registerLocalization(
             "registerUrl": "/web/en/login?p_p_id=58&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&saveLastPath=0&_58_struts_action=%2Flogin%2Fcreate_account"
         },
         "StartView": {
-            "text": "You can create the map and embed it to your own or your organisation's website.",
+            "text": "You can create the map and embed it to your own website.",
             "touLink": "Show Terms of use for Embedded maps",
             "layerlist_title": "Embeddable map layers",
             "layerlist_empty": "Selected map layers cannot be published in a embedded map. Check the rights to publish in the menu \"Selected Map Layers\" before you start creating the map.",
@@ -215,6 +218,7 @@ Oskari.registerLocalization(
             "show": "Show",
             "hide": "Hide",
             "hidden": "The map layer is temporarily hidden.",
+            "selectAsBaselayer": "",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "The map layer can be published in a embedded map.",

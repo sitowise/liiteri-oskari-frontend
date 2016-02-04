@@ -6,11 +6,19 @@
         <div class="add-layer-input-area">
             <select id="add-layer-type">
                 <option value=""><%= localization.typePlaceholder %></option>
+<<<<<<< HEAD
                 <option value="wmslayer"><%= localization.normalLayer %></option>
                 <option value="arcgislayer"><%= localization.arcgisLayer %></option>
                 <option value="wfslayer"><%= localization.wfslayer %></option>
 <!--                <option value="base"><%= localization.baseLayer %></option>-->
 <!--                <option value="groupMap"><%= localization.groupLayer %></option>-->
+=======
+        <%  _.each(supportedTypes, function(type) { %>
+                <option value="<%= type.id %>"><%= localization.layertypes[type.localeKey] %></option>
+        <% }); %>
+                <option value="base"><%= localization.baseLayer %></option>
+                <option value="groupMap"><%= localization.groupLayer %></option>
+>>>>>>> 1.27.3
             </select>
         </div>
     </div>

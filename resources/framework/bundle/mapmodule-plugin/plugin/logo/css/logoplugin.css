@@ -1,27 +1,35 @@
 .logoplugin {
-  font-size: 11px;
-  background-color: #FFF;
+  color: #FAFAFA;
   background-repeat: no-repeat;
   display: block;
   height: 31px;
-  z-index: 100000000 !important;
-  filter: alpha(opacity= 80 );
-  /* unquote for libsass bug */
-  opacity: 0.8 !important; }
+  /* Force line to fit container */
+  line-height: 15px;
+  text-align: left;
+  text-shadow: 1px 0px 3px rgba(0, 0, 0, 0.5), -1px 0px 3px rgba(0, 0, 0, 0.5), 1px 0px 1px #000, -1px 0px 1px #000;
+  z-index: 100000000 !important; }
   .logoplugin a, .logoplugin a:hover, .logoplugin a:active, .logoplugin a:visited {
-    color: #333333 !important; }
+    color: inherit; }
   .logoplugin .icon {
     margin-left: 5px;
     display: inline-block;
     height: 25px;
-    vertical-align: bottom; }
-  .logoplugin .terms {
-    display: inline-block;
-    margin: 5px; }
-  .logoplugin .data-sources {
+    vertical-align: bottom;
+    cursor: pointer; }
+  .logoplugin .data-sources, .logoplugin .terms {
     display: inline-block;
     margin: 5px;
     cursor: pointer; }
+    .logoplugin .data-sources a, .logoplugin .terms a {
+      /* Filter below requires that the element has height or smthn... */
+      display: inline-block;
+      text-decoration: none;
+      /* text-shadow replacement for IE9 */
+      filter: glow(color=#C0000000,strength=1); }
+
+.right .logoplugin {
+  /* Right-align elements so a wide sibling plugin won't push them to the left... */
+  text-align: right; }
 
 .data-sources-dialog {
   max-width: 400px; }

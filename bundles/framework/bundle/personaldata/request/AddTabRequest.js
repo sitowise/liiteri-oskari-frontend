@@ -11,11 +11,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.request.AddTabReque
  * @static
  * @param {String} viewname for the view to be saved
  */
-function (id, title, content, first) {
-    this._id = id;
+function(title, content, first, id) {
     this._title = title;
     this._content = content;
     this._first = !!first;
+    this._id = id;
 },{
     /** @static @property __name request name */
     __name : "PersonalData.AddTabRequest",
@@ -27,6 +27,13 @@ function (id, title, content, first) {
         return this.__name;
     },
     getId: function () {
+        return this._id;
+    },
+    /**
+     * @method getId
+     * @return {String} tab title
+     */
+    getId : function() {
         return this._id;
     },
     /**

@@ -4,20 +4,25 @@ Oskari.registerLocalization(
     "key": "MyPlacesImport",
     "value": {
         "title": "Datamängd importering",
-        "desc": "Du kan importera dina egna datamängder i shape-format, zip-format eller kml/kmz-format.",
-        "help": "Anna tämän toiminnon lähtöaineistoksi (Browse...) zip tiedoston nimi tai url-linkki vastaavaan tiedostoon. \nZip-tiedoston saat lataamalla koneellesi shape-siirtoformaatissa olevan aineiston \nja muodostamalla näistä tiedostoista (.shp, . shx, .dbf, .prj) zip-tiedosto \ntai lataa koneellesi Googlen kml/kmz tiedostoja. \ntai käytä tiedoston url-linkkiä. ",
+        "desc": "Du kan importera dina egna datamängder i shape-, gpx- eller mif/mid filformat i zip-paketet eller kmz filformat.",
+        "help": "Du kan importera dina egna datamängder i shape-, gpx- eller mif/mid filformat i zip-paketet eller kmz filformat.",
         "tool": {
             "tooltip": "Importera egen datamängd"
         },
         "flyout": {
             "title": "Datamängd importering",
-            "description": "Du kan importera dina egna datamängder i shape-format, zip-format eller kml/kmz-format.",
+            "description": "Du kan importera dina egna datamängder i shape-, gpx- eller mif/mid filformat i zip-paketet eller kmz filformat.",
             "actions": {
                 "cancel": "Avbryt",
                 "next": "Nästa"
             },
             "file": {
-                "submit": "Skicka"
+                "submit": "Skicka",
+                "fileOverSizeError": {
+                    "title": "Fel",
+                    "message": "Din datamängd är för stor. Datamängden kan vara högst <xx> mb.",
+                    "close": "Stäng"
+                }
             },
             "layer": {
                 "title": "Spara kartlager information:",
@@ -38,7 +43,7 @@ Oskari.registerLocalization(
                     "message": "Du hittar kartlager i \"Mina uppgifter\"."
                 },
                 "failure": {
-                    "title": "NOT TRANSLATED"
+                    "title": "Systemfel. Försök på nytt senare."
                 }
             }
         },
@@ -48,8 +53,8 @@ Oskari.registerLocalization(
                 "name": "Namn",
                 "description": "Beskrivning",
                 "source": "Datakälla",
-                "remove": "NOT TRANSLATED",
-                "removeButton": "NOT TRANSLATED"
+                "remove": "Ta bort",
+                "removeButton": "Ta bort"
             },
             "confirmDeleteMsg": "Vill du ta bort:",
             "buttons": {

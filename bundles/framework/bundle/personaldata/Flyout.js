@@ -150,7 +150,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.Flyout',
             //}
             panel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
             panel.setId(item.id);
-            panel.setTitle(item.title);
+            panel.setTitle(item.title, item.id);
             panel.setContent(item.content);
             this.tabsContainer.addPanel(panel, item.first);
         },

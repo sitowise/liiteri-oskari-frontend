@@ -1,14 +1,14 @@
 Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter', {
     __templates: {
-        "wrapper": '<div></div>',
-        "getinfoResultTable": '<table class="getinforesult_table"></table>',
-        "tableRow": '<tr></tr>',
-        "tableCell": '<td></td>',
-        "span": '<span></span>',
-        "header": '<div class="getinforesult_header"><div class="icon-bubble-left"></div>',
-        "headerTitle": '<div class="getinforesult_header_title"></div>',
-        "myPlacesWrapper": '<div class="myplaces_place">' + '<h3 class="myplaces_header"></h3>' + '<p class="myplaces_desc"></p>' + '<a class="myplaces_imglink" target="_blank"><img class="myplaces_img"></img></a>' + '<a class="myplaces_link"></a>' + '</div>',
-        "linkOutside": '<a target="_blank"></a>'
+        wrapper: '<div></div>',
+        getinfoResultTable: '<table class="getinforesult_table"></table>',
+        tableRow: '<tr></tr>',
+        tableCell: '<td></td>',
+        span: '<span></span>',
+        header: '<div class="getinforesult_header"><div class="icon-bubble-left"></div>',
+        headerTitle: '<div class="getinforesult_header_title"></div>',
+        myPlacesWrapper: '<div class="myplaces_place">' + '<h3 class="myplaces_header"></h3>' + '<p class="myplaces_desc"></p>' + '<a class="myplaces_imglink" target="_blank"><img class="myplaces_img"></img></a>' + '<br><a class="myplaces_link" target="_blank"></a>' + '</div>',
+        linkOutside: '<a target="_blank"></a>'
     },
     /**
      * Wraps the html feature fragments into a container.
@@ -35,6 +35,7 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                     titleWrapper = me.template.headerTitle.clone();
 
                 titleWrapper.append(fragmentTitle);
+                titleWrapper.attr('title', fragmentTitle);
                 headerWrapper.append(titleWrapper);
                 contentWrapper.append(headerWrapper);
 
@@ -119,6 +120,7 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
      * @return {jQuery} formatted HMTL
      */
     _formatGfiDatum: function (datum) {
+        // FIXME this function is too complicated, chop it to pieces
         if (!datum.presentationType) {
             return null;
         }
@@ -157,7 +159,7 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                 dataArray.push(rawJsonData);
             }
 
-            for (i = 0; i < dataArray.length; ++i) {
+            for (i = 0; i < dataArray.length; i += 1) {
                 jsonData = dataArray[i];
                 table = me.template.getinfoResultTable.clone();
                 for (attr in jsonData) {
@@ -165,9 +167,9 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                         value = me._formatJSONValue(jsonData[attr]);
                         if (value) {
                             row = me.template.tableRow.clone();
-                            table.append(row);
+                            // FIXME this is unnecessary, we can do this with a css selector.
                             if (!even) {
-                                row.addClass("odd");
+                                row.addClass('odd');
                             }
                             even = !even;
 
@@ -175,13 +177,14 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                             // Get localized name for attribute
                             // TODO this should only apply to omat tasot?
                             pluginLoc = this.getMapModule().getLocalization('plugin', true);
-                            myLoc = pluginLoc[this.__name];
+                            myLoc = pluginLoc[this._name];
                             localizedAttr = myLoc[attr];
                             labelCell.append(localizedAttr || attr);
                             row.append(labelCell);
                             valueCell = me.template.tableCell.clone();
                             valueCell.append(value);
                             row.append(valueCell);
+                            table.append(row);
                         }
 
                     }
@@ -190,22 +193,28 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
             }
         } else if (me._isHTML(datum.content)) {
             // html has to be put inside a container so jquery behaves
-            var parsedHTML = jQuery("<div></div>").append(datum.content);
+            var parsedHTML = jQuery('<div></div>').append(datum.content);
             // Remove stuff from head etc. that we don't need/want
-            parsedHTML.find("link, meta, script, style, title").remove();
+            parsedHTML.find('link, meta, script, style, title').remove();
             // let's not return a bunch of empty html
-            if (jQuery.trim(parsedHTML.html()) === "") {
+            if (jQuery.trim(parsedHTML.html()) === '') {
                 return null;
             }
             // Add getinforesult class etc. so the table is styled properly
-            parsedHTML.find("table").addClass('getinforesult_table');
-            parsedHTML.find("tr:even").addClass("odd");
+            parsedHTML.find('table').addClass('getinforesult_table');
+            // FIXME this is unnecessary, we can do this with a css selector.
+            parsedHTML.find('tr').removeClass('odd');
+            parsedHTML.find('tr:even').addClass('odd');
+            parsedHTML.children("br").remove();
             response.append(parsedHTML.html());
         } else {
             response.append(datum.content);
         }
         if (datum.gfiContent) {
-            response.append('\n' + datum.gfiContent);
+            var trimmed = datum.gfiContent.trim();
+            if (trimmed.length) {
+                response.append(trimmed);
+            }
         }
         return response;
     },
@@ -231,7 +240,8 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                 pluginLoc,
                 myLoc,
                 localizedAttr;
-            for (i = 0; i < pValue.length; ++i) {
+
+            for (i = 0; i < pValue.length; i += 1) {
                 obj = pValue[i];
                 for (objAttr in obj) {
                     if (obj.hasOwnProperty(objAttr)) {
@@ -240,12 +250,12 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                             // Get localized attribute name
                             // TODO this should only apply to omat tasot?
                             pluginLoc = this.getMapModule().getLocalization('plugin', true);
-                            myLoc = pluginLoc[this.__name];
+                            myLoc = pluginLoc[this._name];
                             localizedAttr = myLoc[objAttr];
                             value.append(localizedAttr || objAttr);
-                            value.append(": ");
+                            value.append(': ');
                             value.append(innerValue);
-                            value.append('<br/>');
+                            value.append('<br class="innerValueBr" />');
                         }
                     }
                 }
@@ -260,6 +270,7 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
         }
         return value;
     },
+
     /**
      * @method _formatWFSFeaturesForInfoBox
      */
@@ -269,11 +280,11 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
             isMyPlace = layer.isLayerOfType('myplaces'),
             fields = layer.getFields().slice(),
             hiddenFields = ['__fid', '__centerX', '__centerY'],
-            type = "wfslayer",
+            type = 'wfslayer',
             result,
             markup;
 
-        if (data.features == "empty" || layer === null || layer === undefined) {
+        if (data.features === 'empty' || layer === null || layer === undefined) {
             return;
         }
 
@@ -346,13 +357,13 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
             desc.remove();
         }
 
-        if (place.image_url) {
+        if (place.image_url && typeof place.image_url === 'string') {
             img.attr({
                 'href': place.image_url
             }).find('img.myplaces_img').attr({
                 'src': place.image_url
             });
-        } else if (place.imageUrl) {
+        } else if (place.imageUrl && typeof place.imageUrl === 'string') {
             img.attr({
                 'href': place.imageUrl
             }).find('img.myplaces_img').attr({
@@ -381,8 +392,9 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
      * @return {String} formatted HMTL
      */
     _json2html: function (node) {
+        // FIXME this function is too complicated, chop it to pieces
         if (node === null || node === undefined) {
-            return "";
+            return '';
         }
         var even = true,
             html = this.template.getinfoResultTable.clone(),
@@ -406,34 +418,34 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                     continue;
                 }
                 vType = (typeof value).toLowerCase();
-                valpres = "";
+                valpres = '';
                 switch (vType) {
-                case "string":
-                    if (value.indexOf("http://") === 0) {
+                case 'string':
+                    if (value.indexOf('http://') === 0) {
                         valpres = this.template.linkOutside.clone();
-                        valpres.attr("href", value);
+                        valpres.attr('href', value);
                         valpres.append(value);
                     } else {
                         valpres = value;
                     }
                     break;
-                case "undefined":
-                    valpres = "n/a";
+                case 'undefined':
+                    valpres = 'n/a';
                     break;
-                case "boolean":
-                    valpres = (value ? "true" : "false");
+                case 'boolean':
+                    valpres = (value ? 'true' : 'false');
                     break;
-                case "number":
-                    valpres = "" + value;
+                case 'number':
+                    valpres = '' + value;
                     break;
-                case "function":
-                    valpres = "?";
+                case 'function':
+                    valpres = '?';
                     break;
-                case "object":
+                case 'object':
                     // format array
                     if (jQuery.isArray(value)) {
                         valueDiv = this.template.wrapper.clone();
-                        for (i = 0; i < value.length; ++i) {
+                        for (i = 0; i < value.length; i += 1) {
                             innerTable = this._json2html(value[i]);
                             valueDiv.append(innerTable);
                         }
@@ -443,13 +455,14 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
                     }
                     break;
                 default:
-                    valpres = "";
+                    valpres = '';
                 }
                 even = !even;
 
                 row = this.template.tableRow.clone();
+                // FIXME this is unnecessary, we can do this with a css selector.
                 if (!even) {
-                    row.addClass("odd");
+                    row.addClass('odd');
                 }
 
                 keyColumn = this.template.tableCell.clone();

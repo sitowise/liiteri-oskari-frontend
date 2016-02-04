@@ -24,6 +24,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
         me.columns = null;
         me.cleanData = null;
         me.activeRole = null;
+        me.progressSpinner = Oskari.clazz.create('Oskari.userinterface.component.ProgressSpinner');
         me.dataTable = null;
         me.datatableLocaleLocation = Oskari.getSandbox().getService('Oskari.liiteri.bundle.liiteri-ui.service.UIConfigurationService').getDataTablesLocaleLocation() + locale.datatablelanguagefile;
     }, {
@@ -63,6 +64,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
          */
         startPlugin : function () {
             "use strict";
+
             this.template = jQuery(
                 '<div class="admin-layerrights">\n' +
                     '   <form method="post" id="admin-layerrights-form">' +
@@ -82,7 +84,8 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                     '   </form>' +
                     '</div>\n'
             );
-            var rightsLoc = this.instance._localization.rights;
+            var rightsLoc = this.instance._localization.rights,
+                elParent;
             this.columns = [
                 {id: "name", "name": rightsLoc.name},
                 {id: "isSelected", "name": rightsLoc.rightToPublish},
@@ -90,6 +93,9 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 {id: "isDownloadSelected", "name": rightsLoc.rightToDownload},
                 {id: "isViewPublishedSelected", "name": rightsLoc.rightToPublishView}
             ];
+
+            elParent = this.container.parentElement.parentElement;
+            jQuery(elParent).addClass('admin-layerrights-flyout');
         },
 
         /**
@@ -148,18 +154,24 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             }
             return this.state;
         },
-
+        /**
+        * @method doSave
+        * Save layer rights
+        */
         doSave : function () {
             "use strict";
             var me = this,
-                saveData = { "resource": JSON.stringify(me.extractSelections()) };
+                selections = me.extractSelections(),
+                saveData = {"resource" : JSON.stringify(selections)},
+                rightsLoc = this.instance._localization.rights,
+                dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
 
+            me.progressSpinner.start();
             jQuery.ajax({
                 type: 'POST',
                 url: ajaxUrl + 'action_route=SaveLayerPermission',
                 lang: Oskari.getLang(),
-                timestamp: new Date().getTime(),
-               
+                timestamp: new Date().getTime(),               
                 data: saveData,
                 success: function (response) {
                     if (response && response.error) {
@@ -168,10 +180,12 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                         me.instance.showMessage(me.instance.getLocalization('info').title, me.instance.getLocalization('info').success);
                     }
                     me.updatePermissionsTable(me.activeRole, "ROLE");
+                    me.progressSpinner.stop();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    var errorLoc = me.instance.getLocalization('error');                
+                    var errorLoc = me.instance.getLocalization('error');
                     me.instance.showMessage(errorLoc.title, errorLoc[errorThrown] || errorLoc.defaultErrorMessage);
+                    me.progressSpinner.stop();
                 }
             });
         },
@@ -203,7 +217,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             // Not sure if we want save on enter
             //field.bindEnterKey(doSave);
 
-            controls.append(button.getButton());
+            controls.append(button.getElement());
 
             roleSelectLabel.html(this.instance.getLocalization('selectRole'));
             container.append(content);
@@ -216,6 +230,9 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             flyout.append(container);
             // We're only supporting ROLE ATM, USER support might be added later
             me.getExternalIdsAjaxRequest("ROLE", 0);
+
+            /* progress */
+            this.progressSpinner.insertTo(container);
         },
         createLayerRightGrid2: function (columnHeaders) {
             var table = '<table class="layer-rights-table stripe hover row-border" width="100%">';
@@ -230,13 +247,77 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                     table += '</th>';
                 }
 
+        handleRoleChange: function (role, operation) {
+            var me = this,
+                select = jQuery(this.container).find('select.admin-layerrights-role'),
+                option = select.find('option[value=' + role.id +']');
+
+            if (operation == 'remove') { 
+                option.remove(); 
+            } 
+            if (operation == 'update') { 
+                option.html(role.name); 
             }
-            table += "</tr></thead>";
+            if (operation == 'add') {
+                select.append("<option value=" + role.id +">" + role.name + "</option>");
+            } 
+        },
+
+        /**
+         * @method createLayerRightGrid
+         * Creates the permissions table as a String
+         * @param {Array} columnHeaders
+         * @param {Object} layerRightsJSON
+         * @return {String} Permissions table
+         */
+        createLayerRightGrid: function (columnHeaders, layerRightsJSON) {
+            "use strict";
+            var table = '<table class="layer-rights-table">',
+                i = 0,
+                tr = 0,
+                layerRight = null,
+                header = null,
+                value = null;
+
+            table += "<thead><tr>";
+            for (i  = 0; i < columnHeaders.length; i += 1) {
+                table += '<th>' + columnHeaders[i].name + '</th>';
+            }
+            table += '</tr></thead>';
+
             table += "<tbody>";
             table += "</tbody>";
             table += "</table>";
 
-            return jQuery(table);
+                table += "<tr>";
+
+                // lets loop through header
+                for (i = 0; i < columnHeaders.length; i += 1) {
+                    header = columnHeaders[i];
+                    //select input value based on arrangement of header columns
+                    value = layerRight[header.id];
+                    var tooltip = header.name;
+
+                    if (header.id === 'name') {
+                        if(layer) {
+                            tooltip = layer.getLayerType() + '/' + layer.getInspireName() + '/' + layer.getOrganizationName();
+                            //value = '<div class="layer-icon ' + layer.getIconClassname() + '"></div> ' + value;
+                        }
+                        table += '<td><span class="layer-name" data-resource="' + layerRight.resourceName + 
+                            '" data-namespace="' + layerRight.namespace + 
+                            '" title="' + tooltip + 
+                            '">' + value + '</span></td>';
+                    } else if (value) {
+                        table += '<td><input type="checkbox" checked="checked" data-right="' + header.id + '" title="' + tooltip + '" /></td>';
+                    } else {
+                        table += '<td><input type="checkbox" data-right="' + header.id + '" title="' + tooltip + '" /></td>';
+                    }
+                }
+
+                table += "</tr>";
+            }
+            table += "</tbody></table>";
+            return table;
         },
         /**
          * @method extractSelections
@@ -315,6 +396,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
         updatePermissionsTable : function (activeRole, externalType) {
             "use strict";
             var me = this;
+            me.progressSpinner.start();
 
             jQuery.getJSON(ajaxUrl, {
                 action_route: "GetPermissionsLayerHandlers",
@@ -325,6 +407,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                //resourceType: "WMS_LAYER",
                 externalType: externalType
             }, function (result) {
+                me.progressSpinner.stop();
                 // store unaltered data so we can do a dirty check on save
                 me.cleanData = {};
                 for (var j = 0; j < result.resource.length; j++) {

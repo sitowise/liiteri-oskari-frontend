@@ -133,6 +133,11 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundleI
             }
             var mapIconRequest = sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(this, mapIconCustomDesc, this);
             sandbox.request(this, mapIconRequest);
+
+            // Personaldata available
+            var eventBuilder = sandbox.getEventBuilder('Personaldata.PersonaldataLoadedEvent');
+            var event = eventBuilder();
+            sandbox.notifyAll(event);
         },
         /**
          * @method init

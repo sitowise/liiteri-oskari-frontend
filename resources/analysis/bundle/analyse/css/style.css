@@ -1,10 +1,10 @@
+/* Mixins */
+/* SASS removes whitespace that calc requires, so unquote() whatever calculation you pass to this */
 div.notLoggedIn {
   padding: 10px; }
 
-
 #contentMap.mapAnalyseMode {
   margin-left: 384px; }
-
 #contentMap div.basic_analyse {
   background: white;
   position: absolute;
@@ -14,7 +14,6 @@ div.notLoggedIn {
   width: 384px; 
   border-right: 1px solid #bcbcbc;
 }
-
 #contentMap div.basic_publisher div.content {
   padding: 10px; }
 
@@ -35,27 +34,37 @@ div.basic_analyse .accordion_panel .content{
   
 div.basic_analyse > div.content {
   overflow: auto;
-  height: 89%; }
+  height: 89%;
+  height: -moz-calc(100% - 88px);
+  height: -webkit-calc(100% - 88px);
+  height: -o-calc(100% - 88px);
+  height: calc(100% - 88px); }
 div.basic_analyse > div.header {
-  padding: 5px 10px; }
+  padding: 5px 10px;
+  height: 37px; }
   div.basic_analyse > div.header div.icon-close {
     float: right; }
 div.basic_analyse div.analyse-select-featurelist {
   display: inline;
   margin-left: 6px; }
   div.basic_analyse div.analyse-select-featurelist a {
-    font-size: 150%;
-    color: #37B7FF;
     text-decoration: none; }
   div.basic_analyse div.analyse-select-featurelist ul {
-    font-size: 100%;
-    line-height: 100%;
     padding: 0;
     padding-top: 10px; }
     div.basic_analyse div.analyse-select-featurelist ul li {
       list-style-type: none; }
+div.basic_analyse div.analyse_difference_cont ul {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 10px; }
+  div.basic_analyse div.analyse_difference_cont ul li {
+    list-style-type: none;
+    margin: 5px; }
 div.basic_analyse div.icon-info {
   float: right;
+  cursor: help; }
+div.basic_analyse div.icon-funnel, div.basic_analyse div.icon-funnel-active {
   cursor: pointer; }
 div.basic_analyse div.icon-menu {
   margin: -5px 100px; }
@@ -67,11 +76,14 @@ div.basic_analyse div.previewNotes {
   margin-bottom: 2px; }
 div.basic_analyse div.tool {
   margin: 5px; }
+div.basic_analyse div.drawFilter {
+  margin: 5px; }
 div.basic_analyse div.icon-close.analyse-temp-feature {
   display: inline-block;
   cursor: pointer; }
 div.basic_analyse div.toolContainer {
-  margin: 5px; }
+  margin: 5px 15px 5px 5px;
+  display: inline-block; }
   div.basic_analyse div.toolContainer div.title {
     font-weight: bold;
     margin: 5px 0;}
@@ -81,15 +93,42 @@ div.basic_analyse div.toolContainer {
   div.basic_analyse div.toolContainer div.buttons {
     display: inline-block;
     float: right; }
-
-div.basic_analyse div.form div.field input, div.field select {
+div.basic_analyse div.drawFilterContainer {
+  margin: 5px;
+  display: inline-block; }
+  div.basic_analyse div.drawFilterContainer h4 {
+    padding: 0; }
+  div.basic_analyse div.drawFilterContainer div.drawFilter {
+    display: inline-block;
+    cursor: pointer; }
+    div.basic_analyse div.drawFilterContainer div.drawFilter.disabled {
+      opacity: 0.4;
+      cursor: default !important; }
+    div.basic_analyse div.drawFilterContainer div.drawFilter.selected {
+      opacity: 1.0;
+      background-color: #333438;
+      cursor: default !important; }
+  div.basic_analyse div.drawFilterContainer div.buttons {
+    display: inline-block;
+    float: right; }
+div.basic_analyse div.form div.field input, div.basic_analyse div.form div.field select {
   width: 80%;
   background-color: white;
   filter: Alpha(opacity=100) !important;
   /* unquote for libsass bug */ }
-
-div.basic_analyse div.tool input, div.basic_analyse div.analyse_settings_cont input {
+div.basic_analyse div.header-icon-info {
+  margin: 10px; }
+div.basic_analyse div.tool input, div.basic_analyse div.drawFilter input, div.basic_analyse div.analyse_settings_cont input, div.basic_analyse div.analyse_areas_and_sectors_cont input {
   margin-right: 10px; }
+div.basic_analyse div.analyse_settings_cont label {
+  margin: 5px 0; }
+  div.basic_analyse div.analyse_settings_cont label input[type=text] {
+    clear: left; }
+  div.basic_analyse div.analyse_settings_cont label select {
+    margin-top: 7px;
+    margin-bottom: 10px; }
+div.basic_analyse select.settings_buffer_units, div.basic_analyse select.settings_area_size_units {
+  width: 110px; }
 
 .analyse_radiolabel, .analyse_checklabel {
   padding: 3px 6px;
@@ -97,11 +136,16 @@ div.basic_analyse div.tool input, div.basic_analyse div.analyse_settings_cont in
   -moz-border-radius: 2px;
   -o-border-radius: 2px;
   -ms-border-radius: 2px;
-  border-radius: 2px; }
+  border-radius: 2px;
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box; }
   .analyse_radiolabel:hover, .analyse_checklabel:hover {
     background-color: #eee; }
 
+/* FIXME change these to actual labels? */
 .analyse_params_label, .analyse_title_label, .output_color_label, .columns_title_label, .settings_buffer_label, .extra_title_label, .settings_name_label {
+  /* FIXME change these to fieldset + legend? */
   font-weight: bold;
   margin: 5px 0; }
 /*
@@ -117,23 +161,29 @@ div.basic_analyse div.buttons, div.analyse div.startview div.buttons {
 label.params_checklabel {
   text-overflow: ellipsis;
   display: inline-block;
-  width: 200px;
+  width: 230px;
   white-space: nowrap;
   overflow: hidden; }
 
 table.layer-icons {
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  line-height: 18px;
-  margin: 0 0 2px;
+  margin: 0;
   width: 30%;
-  display: inline-table; }
+  display: inline-block; }
+  table.layer-icons td {
+    padding-left: 6px; }
   table.layer-icons div.icon-info {
     float: none; }
   table.layer-icons div.icon-close {
     cursor: pointer; }
 
 /* Analyse filter CSS */
+div.filter-popup-content {
+  overflow: auto;
+  max-height: 500px;
+  width: 700px;
+  margin: 0px !important;
+  padding: 10px; }
+
 div.analyse-filter-popup-content {
   padding: 8px; }
   div.analyse-filter-popup-content div.analyse-filter {
@@ -163,21 +213,58 @@ div.analyse-filter-popup-content {
 div.analyse-filter-popup-content div.filter-option {
   padding-bottom: 10px; }
   div.analyse-filter-popup-content div.filter-option div.manage-filter-option {
-    display: inline-block; }
+    display: inline-block;
+    vertical-align: middle; }
     div.analyse-filter-popup-content div.filter-option div.manage-filter-option div.add-filter-option, div.analyse-filter-popup-content div.filter-option div.manage-filter-option div.remove-filter-option {
+      cursor: pointer;
       display: inline-block;
-      font-size: 200%;
+      /* These are icons, so it's OK to have a custom font here. */
+      font-size: 48px;
       font-weight: bold;
-      cursor: pointer; }
-  div.analyse-filter-popup-content div.filter-option input[name="attribute-value"] {
-    width: 120px; }
+      margin-left: 5px;
+      min-width: 16px;
+      text-align: center; }
+  div.analyse-filter-popup-content div.filter-option.filter-option-aggregate {
+    padding-bottom: 25px; }
+    div.analyse-filter-popup-content div.filter-option.filter-option-aggregate div.attribute-value-block {
+      position: relative;
+      display: inline-block; }
+      div.analyse-filter-popup-content div.filter-option.filter-option-aggregate div.attribute-value-block div.add-link {
+        position: absolute;
+        top: 40px; }
+  div.analyse-filter-popup-content div.filter-option .filter-input-value {
+    width: 160px;
+    margin: 1px; }
   div.analyse-filter-popup-content div.filter-option input[name="case-sensitive"] {
     margin-right: 5px; }
   div.analyse-filter-popup-content div.filter-option select.attribute {
     width: 150px; }
-  div.analyse-filter-popup-content div.filter-option select.operator, div.analyse-filter-popup-content div.filter-option select.boolean {
-    width: 60px; }
-    
+  div.analyse-filter-popup-content div.filter-option select.boolean {
+    margin-top: 10px;
+    width: 65px; }
+  div.analyse-filter-popup-content div.filter-option select.operator {
+    width: 210px; }
+
+div.analyse-filter-popup-content div.analyse-filter {
+  border-bottom: none; }
+  div.analyse-filter-popup-content div.analyse-filter .input-blink {
+    border: 2px solid #217ad4;
+    margin: 0px; }
+
+div.filter-popup-multiselect {
+  border: 1px solid; }
+  div.filter-popup-multiselect div.header div.icon-close {
+    float: right;
+    margin: 10px; }
+  div.filter-popup-multiselect .oskari-formcomponent {
+    margin: 10px; }
+  div.filter-popup-multiselect .oskari-filter-with-aggregateAnalysis {
+    margin: 10px; }
+
+div.divmanazerpopup.drawfilterdialog {
+  max-width: 400px; }
+div.divmanazerpopup.analyse-draw-dialog {
+  max-width: 280px; }
 div.analyse-filter-popup-content div.analyse-filter-clicked-features input:disabled+label {
   opacity: .5;
 }

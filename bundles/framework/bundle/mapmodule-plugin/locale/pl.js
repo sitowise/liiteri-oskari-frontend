@@ -42,6 +42,7 @@ Oskari.registerLocalization({
             "SearchPlugin": {
                 "placeholder": "Znajdź miejsca",
                 "search": "Znajdź",
+                "title": "Wyniki Wyszukiwania",
                 "close": "Zamknij wyniki wyszukiwania",
                 "noresults": "Brak wyników",
                 "toomanyresults": "Ponad 100 wyników. Proszę doprecyzować zapytanie.",
@@ -68,6 +69,9 @@ Oskari.registerLocalization({
                     "line": "Pomiar odległości",
                     "area": "Pomiar powierzchni"
                 }
+            },
+            "MyLocationPlugin": {
+                "tooltip": "NOT TRANSLATED"
             }
         }
     }

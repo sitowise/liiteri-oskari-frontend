@@ -59,7 +59,7 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/plugin/ManageStatsPlugin.js"
             }, {
                 "type": "text/javascript",
-                "src": "../../../../bundles/statistics/bundle/statsgrid/event/SotkadataChangedEvent.js"
+                "src": "../../../../bundles/statistics/bundle/statsgrid/event/StatsDataChangedEvent.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/event/ModeChangedEvent.js"
@@ -117,6 +117,12 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/request/IndicatorsRequestHandler.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/request/AddDataSourceRequest.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/request/DataSourceRequestHandler.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/service/StatisticsService.js"
@@ -238,6 +244,10 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "lang": "en",
                 "type": "text/javascript",
                 "src": "../../../../bundles/statistics/bundle/statsgrid/locale/en.js"
+            }, {
+                "lang": "es",
+                "type": "text/javascript",
+                "src": "../../../../bundles/statistics/bundle/statsgrid/locale/es.js"
             }]
         },
         "bundle": {

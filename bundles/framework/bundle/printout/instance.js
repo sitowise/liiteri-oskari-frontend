@@ -140,14 +140,23 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
             
             // create the PrintService for handling ajax calls
             // and common functionality.
-            var printService = Oskari.clazz.create('Oskari.mapframework.bundle.printout.service.PrintService', me);
+            var printService = Oskari.clazz.create(
+                'Oskari.mapframework.bundle.printout.service.PrintService',
+                me
+            );
             sandbox.registerService(printService);
             this.printService = printService;
 
             var locale = me.getLocalization(),
                 mapModule = sandbox.findRegisteredModuleInstance('MainMapModule'),
                 pluginConfig = this.conf.legend,
-                legendPlugin = Oskari.clazz.create('Oskari.mapframework.bundle.printout.plugin.LegendPlugin', me, pluginConfig, locale);
+                legendPlugin = Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
+                    pluginConfig,
+                    me,
+                    locale
+                );
+
             mapModule.registerPlugin(legendPlugin);
             mapModule.startPlugin(legendPlugin);
             this.legendPlugin = legendPlugin;
@@ -473,6 +482,18 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                     }
 
                 }
+            }
+        },
+        /**
+         *  Send plotout canceled event
+         */
+        sendCanceledEvent: function (state) {
+            var me = this;
+            var eventBuilder = me.sandbox.getEventBuilder('Printout.PrintCanceledEvent');
+
+            if (eventBuilder) {
+                var event = eventBuilder(state);
+                me.sandbox.notifyAll(event);
             }
         },
         displayContent: function (isOpen) {

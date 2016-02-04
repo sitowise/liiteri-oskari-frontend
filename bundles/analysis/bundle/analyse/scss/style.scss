@@ -1,23 +1,47 @@
+/* Mixins */
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -o-border-radius: $radius;
+    -ms-border-radius: $radius;
+    border-radius: $radius;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+}
+
+/* SASS removes whitespace that calc requires, so unquote() whatever calculation you pass to this */
+@mixin calcProperty($property, $calculation) { 
+    #{$property}: -moz-calc($calculation);
+    #{$property}: -webkit-calc($calculation);
+    #{$property}: -o-calc($calculation);
+    #{$property}: calc($calculation);
+}
+
 div.notLoggedIn {
     padding: 10px;
 }
-div.analyse {
 
-}
-#contentMap.mapAnalyseMode {
-    margin-left: 384px;
-}
-#contentMap div.basic_analyse {
-    background: white;
-    position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1500;
-    width: 384px;
-}
-#contentMap div.basic_publisher div.content {
-    padding: 10px;
+#contentMap {
+    
+    &.mapAnalyseMode {
+        margin-left: 384px;
+    }
+
+    div.basic_analyse {
+        background: white;
+        position: absolute;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1500;
+        width: 384px;
+    }
+
+    div.basic_publisher div.content {
+        padding: 10px;
+    }
+
 }
 
 div.analyse {
@@ -41,11 +65,13 @@ div.basic_analyse {
     > div.content {
         overflow: auto;
         height: 89%;
+        @include calcProperty(height, unquote("100% - 88px"));
     }
 
     > div.header {
         background-color: #FDF8D9;
         padding: 5px 10px;
+        height: 37px;
 
         div.icon-close {
             float: right;
@@ -58,14 +84,10 @@ div.basic_analyse {
         margin-left: 6px;
 
         a {
-            font-size: 150%;
-            color: #37B7FF;
             text-decoration: none;
         }
 
         ul {
-            font-size: 100%;
-            line-height: 100%;
             padding: 0;
             padding-top: 10px;
 
@@ -77,8 +99,28 @@ div.basic_analyse {
 
     }
 
+    div.analyse_difference_cont {
+
+        ul {
+            margin: 0;
+            padding: 0;
+            padding-bottom: 10px;
+
+            li {
+                list-style-type: none;
+                margin: 5px;
+            }
+
+        }
+
+    }
+
     div.icon-info {
         float: right;
+        cursor: help;
+    }
+
+    div.icon-funnel, div.icon-funnel-active {
         cursor: pointer;
     }
 
@@ -94,10 +136,13 @@ div.basic_analyse {
         margin-left: 8px;
         margin-right: 8px;
         margin-bottom: 2px;
-        
     }
 
     div.tool {
+        margin: 5px;
+    }
+
+    div.drawFilter {
         margin: 5px;
     }
 
@@ -107,41 +152,113 @@ div.basic_analyse {
     }
 
     div.toolContainer {
-        margin: 5px;
+        margin: 5px 15px 5px 5px;
+        display: inline-block;
+
         h4 {
             padding: 0;
         }
+
         div.tool {
             display: inline-block;
             cursor: pointer;
         }
+
         div.buttons {
             display: inline-block;
             float: right;
         }
+
     }
 
+    div.drawFilterContainer {
+        margin: 5px;
+        display: inline-block;
 
-}
+        h4 {
+            padding: 0;
+        }
 
-div.basic_analyse div.form div.field input, div.field select {
-    width: 80%;
-    background-color: white;
-    filter:unquote("Alpha(opacity=100)") !important; /* unquote for libsass bug */
-}
+        div.drawFilter {
+            display: inline-block;
+            cursor: pointer;
 
+            &.disabled {
+                opacity: 0.4;
+                cursor: default !important;
+            }
 
-div.basic_analyse div.tool input, div.basic_analyse div.analyse_settings_cont input {
-    margin-right: 10px;
+            &.selected {
+                opacity: 1.0;
+                background-color: #333438;
+                cursor: default !important;
+            }
+
+        }
+
+        div.buttons {
+            display: inline-block;
+            float: right;
+        }
+
+    }
+
+    div.form {
+
+        div.field {
+
+            input, select {
+                width: 80%;
+                background-color: white;
+                filter:unquote("Alpha(opacity=100)") !important; /* unquote for libsass bug */
+            }
+
+        }
+
+    }
+
+    div.header-icon-info {
+        margin: 10px;
+    }
+
+    div.tool, div.drawFilter, div.analyse_settings_cont, div.analyse_areas_and_sectors_cont {
+
+        input {
+            margin-right: 10px;
+        }
+
+    }
+
+    div.analyse_settings_cont {
+
+        label {
+            margin: 5px 0;
+
+            input[type=text] {
+                clear: left;
+            }
+
+            select {
+                margin-top: 7px;
+                margin-bottom: 10px;
+            }
+
+        }
+    }
+
+    select {
+
+        &.settings_buffer_units, &.settings_area_size_units {
+            width: 110px;
+        }
+
+    }
+
 }
 
 .analyse_radiolabel, .analyse_checklabel {
     padding: 3px 6px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -o-border-radius: 2px;
-    -ms-border-radius: 2px;
-    border-radius: 2px;
+    @include border-radius(2px);
 
     &:hover {
         background-color: #eee;
@@ -149,7 +266,9 @@ div.basic_analyse div.tool input, div.basic_analyse div.analyse_settings_cont in
 
 }
 
+/* FIXME change these to actual labels? */
 .analyse_params_label, .analyse_title_label, .output_color_label, .columns_title_label, .settings_buffer_label, .extra_title_label, .settings_name_label {
+    /* FIXME change these to fieldset + legend? */
     font-weight: bold;
     margin: 5px 0;
 }
@@ -174,7 +293,7 @@ div.basic_analyse div.buttons, div.analyse div.startview div.buttons {
 label.params_checklabel {
     text-overflow: ellipsis;
     display: inline-block;
-    width: 200px;
+    width: 230px;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -182,20 +301,23 @@ label.params_checklabel {
 // for local use .icon-funnel {
 //    background-image: url("../icons/icon-funnel.png") !important;
 //    background-repeat: no-repeat !important;
-//    height: 16px;
-//    width: 16px;
+//    height: 18px !important;
+//    width: 18px !important;
 //} 
 table.layer-icons {
-    font-family: Arial,sans-serif;
-    font-size: 12px;
-    line-height: 18px;
-    margin: 0 0 2px;
+    margin: 0;
+    // FIXME percentages is no bueno
     width: 30%;
-    display: inline-table;
+    display: inline-block;
+
+    td {
+        padding-left: 6px;
+    }
 
     div.icon-info {
         float: none;
     }
+
     div.icon-close {
         cursor: pointer;
     }
@@ -203,6 +325,15 @@ table.layer-icons {
 }
 
 /* Analyse filter CSS */
+
+div.filter-popup-content {
+    overflow: auto;
+    max-height: 500px;
+    width: 700px;
+    margin: 0px !important;
+    padding: 10px;
+}
+
 div.analyse-filter-popup-content {
     padding: 8px;
 
@@ -224,6 +355,7 @@ div.analyse-filter-popup-content {
     }
 
     div.analyse-filter-clicked-features {
+
         div.clicked-features-title {
             display: inline-block;
             margin-right: 25px;
@@ -232,6 +364,7 @@ div.analyse-filter-popup-content {
         label {
             margin-left: 8px;
         }
+
     }
 
     div.bbox-title, div.bbox-radio {
@@ -258,30 +391,96 @@ div.analyse-filter-popup-content div.filter-option {
 
     div.manage-filter-option {
         display: inline-block;
+        vertical-align: middle;
 
         div.add-filter-option, div.remove-filter-option {
-            display: inline-block;
-            font-size: 200%;
-            font-weight: bold;
             cursor: pointer;
+            display: inline-block;
+            /* These are icons, so it's OK to have a custom font here. */
+            font-size: 48px;
+            font-weight: bold;
+            margin-left: 5px;
+            min-width: 16px;
+            text-align: center;
         }
         
     }
 
-    input[name="attribute-value"] {
-        width: 120px;
+    &.filter-option-aggregate {
+        padding-bottom: 25px;
+
+        div.attribute-value-block {
+            position: relative;
+            display: inline-block;
+
+            div.add-link {
+                position: absolute;
+                top: 40px;
+            }
+        }
+    }
+
+    .filter-input-value {
+        width: 160px;
+        margin: 1px;
     }
 
     input[name="case-sensitive"] {
         margin-right: 5px;
     }
 
-    select.attribute {
-        width: 150px;
+    select {
+
+        &.attribute {
+            width: 150px;
+        }
+
+        &.boolean {
+            margin-top: 10px;
+            width: 65px;
+        }
+
+        &.operator {
+            width: 210px;
+        }
+
+    }
+}
+
+div.analyse-filter-popup-content div.analyse-filter {
+    border-bottom: none;
+
+    .input-blink {
+        border: 2px solid #217ad4;
+        margin: 0px;
+    }
+}
+
+div.filter-popup-multiselect {
+    border: 1px solid;
+
+    div.header div.icon-close {
+        float: right;
+        margin: 10px;
     }
 
-    select.operator, select.boolean {
-        width: 60px;
+    .oskari-formcomponent {
+        margin: 10px;
+    }
+
+    .oskari-filter-with-aggregateAnalysis {
+        margin: 10px;
+    }
+}
+
+div.divmanazerpopup {
+
+    &.drawfilterdialog {
+        max-width: 400px;
+    }
+
+    &.analyse-draw-dialog {
+        max-width: 280px;
     }
 
 }

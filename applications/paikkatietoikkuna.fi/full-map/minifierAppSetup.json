@@ -47,6 +47,9 @@
 	                "mapuserlayers": {
 	                    "bundlePath": "../../../packages/framework/bundle/"
 	                },
+	                "maparcgis": {
+	                    "bundlePath": "../../../packages/arcgis/bundle/"
+	                },
 	                "service-base": {
 	                    "bundlePath": "../../../packages/framework/bundle/"
 	                },
@@ -465,6 +468,9 @@
                 "Import-Bundle": {
                     "analyse": {
                         "bundlePath": "../../../packages/analysis/bundle/"
+                    },
+                    "geometryeditor": {
+                        "bundlePath": "../../../packages/framework/bundle/"
                     }
                 }
             }
@@ -498,6 +504,36 @@
 		        "Require-Bundle-Instance" : []
 		    },
 		    "instanceProps" : {}
+		}, {
+		    "bundlename" : "routesearch",
+		    "bundleinstancename" : "routesearch",
+		    "metadata" : {
+		        "Import-Bundle" : {
+		            "routesearch" : {
+		                "bundlePath" : "../../../packages/framework/bundle/"
+		            }
+		        }
+		    }
+		}, {
+		    "bundlename" : "admin",
+		    "bundleinstancename" : "admin",
+		    "metadata" : {
+		        "Import-Bundle" : {
+		            "admin" : {
+		                "bundlePath" : "../../../packages/admin/bundle/"
+		            }
+		        }
+		    }
+		}, {
+			"bundlename" : "findbycoordinates",
+			"bundleinstancename" : "findbycoordinates",
+			"metadata" : {
+				"Import-Bundle" : {
+					"findbycoordinates" : {
+						"bundlePath" : "../../../packages/framework/bundle/"
+					}
+				}
+			}
 		}
 	]
 }

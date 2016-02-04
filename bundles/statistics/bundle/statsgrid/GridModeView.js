@@ -240,11 +240,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 elCenter.removeClass('span12');
                 elCenter.width(centerWidth);
                 // remove toolbar's height
-                mapModule.getMapEl().height(jQuery(window).height() - jQuery('#contentMap').find('.oskariui-menutoolbar').height());
+                var height = jQuery(window).height() - jQuery('#contentMap').find('.oskariui-menutoolbar').height();
+                mapModule.getMapEl().height(height);
                 //window resize is handled in mapfull - instance.js
                 elLeft.empty();
+                elLeft.show();
                 elLeft.removeClass('oskari-closed');
                 elLeft.width(leftWidth);
+                elLeft.height(height);
                 elLeft.resizable({
                     minWidth: 350,
                     handles: "e",
@@ -264,7 +267,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 
                 /** a hack to notify openlayers of map size change */
                 mapModule.updateSize();
-
             } else {
                 /** EXIT The Mode */
                 // Make hidden layers visible

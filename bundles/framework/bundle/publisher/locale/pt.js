@@ -141,9 +141,11 @@ Oskari.registerLocalization(
                 "small": "Pequeno",
                 "medium": "Médio",
                 "large": "Grande",
+                "fill": "NOT TRANSLATED",
                 "custom": "Dimensão à medida",
                 "width": "largura",
-                "height": "altura"
+                "height": "altura",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Guardar",
@@ -212,6 +214,7 @@ Oskari.registerLocalization(
             "show": "NOT TRANSLATED",
             "hide": "NOT TRANSLATED",
             "hidden": "NOT TRANSLATED",
+            "selectAsBaselayer": "NOT TRANSLATED",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "NOT TRANSLATED",

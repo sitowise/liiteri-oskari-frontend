@@ -2,14 +2,15 @@
  * @class Oskari.mapframework.bundle.infobox.request.ShowInfoBoxRequestHandler
  * Handles Oskari.mapframework.bundle.infobox.request.ShowInfoBoxRequest to show an info box/popup.
  */
-Oskari.clazz.define('Oskari.mapframework.bundle.infobox.request.ShowInfoBoxRequestHandler',
+Oskari.clazz.define(
+    'Oskari.mapframework.bundle.infobox.request.ShowInfoBoxRequestHandler',
     /**
-     * @method create called automatically on construction
-     * @static
+     * @static @method create called automatically on construction
+     *
      * @param {Oskari.mapframework.bundle.infobox.plugin.mapmodule.OpenlayersPopupPlugin} popupPlugin
      *          reference to plugin that handles the popups
+     *
      */
-
     function (popupPlugin) {
         this.popupPlugin = popupPlugin;
     }, {
@@ -22,7 +23,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.infobox.request.ShowInfoBoxReque
          *      request to handle
          */
         handleRequest: function (core, request) {
-
             if (request.getHidePrevious()) {
                 this.popupPlugin.close(undefined, request.getPosition());
             }
@@ -37,8 +37,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.infobox.request.ShowInfoBoxReque
         }
     }, {
         /**
-         * @property {String[]} protocol array of superclasses as {String}
-         * @static
+         * @static @property {String[]} protocol array of superclasses as {String}
          */
         protocol: ['Oskari.mapframework.core.RequestHandler']
-    });
+    }
+);

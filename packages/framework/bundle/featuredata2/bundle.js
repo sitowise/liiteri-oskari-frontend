@@ -21,12 +21,33 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundle",
     "protocol": ["Oskari.bundle.Bundle", "Oskari.mapframework.bundle.extension.ExtensionBundle"],
     "source": {
 
-        "scripts": [{
+        "scripts": [
+        /*
+         * Abstract base
+         */
+
+        {
+            "type": "text/javascript",
+            "src": "../../../../src/mapping/mapmodule/plugin/AbstractMapModulePlugin.js"
+        },
+        {
+            "type": "text/javascript",
+            "src": "../../../../src/mapping/mapmodule/plugin/BasicMapModulePlugin.js"
+        },
+
+        /*
+         * featuredata2
+         */
+
+        {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/featuredata2/instance.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/featuredata2/PopupHandler.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/bundle/featuredata2/AggregateAnalyseFilter.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/featuredata2/plugin/MapSelectionPlugin.js"
@@ -36,6 +57,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundle",
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/featuredata2/event/WFSSetFilter.js"
+        },{
+                "type": "text/javascript",
+                "src": "../../../../bundles/framework/bundle/featuredata2/event/WFSSetPropertyFilter.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/featuredata2/event/AddedFeatureEvent.js"
@@ -81,9 +105,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundle",
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/featuredata2/locale/fi.js"
         }, {
-            "lang": "gr",
+            "lang": "el",
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/featuredata2/locale/gr.js"
+            "src": "../../../../bundles/framework/bundle/featuredata2/locale/el.js"
         }, {
             "lang": "hr",
             "type": "text/javascript",

@@ -4,6 +4,6 @@ Oskari.registerLocalization({
   "value": {
     "title": "Karttaselitteet",
     "desc": "",
-	"tooltip": "Legenda"
+    "tooltip": "Legenda"
   }
 });

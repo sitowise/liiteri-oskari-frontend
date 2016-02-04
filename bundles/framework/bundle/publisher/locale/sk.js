@@ -141,9 +141,11 @@ Oskari.registerLocalization(
                 "small": "Malé",
                 "medium": "Stredné",
                 "large": "Veľké",
+                "fill": "NOT TRANSLATED",
                 "custom": "Veľkosť zadaná užívateľom",
                 "width": "šírka",
-                "height": "výška"
+                "height": "výška",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Uložiť",
@@ -212,6 +214,7 @@ Oskari.registerLocalization(
             "show": "NOT TRANSLATED",
             "hide": "NOT TRANSLATED",
             "hidden": "NOT TRANSLATED",
+            "selectAsBaselayer": "NOT TRANSLATED",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "NOT TRANSLATED",

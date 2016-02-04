@@ -1,55 +1,74 @@
+@mixin box-shadow($shadow...) {
+    -webkit-box-shadow: $shadow;
+    -moz-box-shadow: $shadow;
+    box-shadow: $shadow;
+}
+
 div.oskariTabs {
     /* tab headers */
-     div.tabsHeader {
-       background: url('/Oskari/resources/framework/bundle/divmanazer/images/tab_bg.png') repeat-x scroll center bottom; /* #FFFFFF*/
-        clear: left;
-        float: left;
-        font : 12pt Arial,sans-serif;
+    
+    .tabsHeader {
+        clear: both;
         font-weight: bold;
-        overflow: hidden;
+        margin-bottom: -1px;
         padding: 0;
-        width: 100%;
 
         ul {
-            float: left;
-            list-style: none outside none;
+            display: inline-block;
             margin: 0;
             padding: 0;
-            text-align: center;
+            white-space: nowrap;
 
             li {
-                display: block;
-                float: left;
-                list-style: none outside none;
-                margin: 10px 0 0;
+                background: none repeat scroll 0 0 #F3F3F3;
+                display: inline-block;
+                border-style: solid;
+                border-color: #999;
+                border-width: 1px 1px 0 1px;
+                margin: 0;
                 padding: 0;
-                right: 50%;
+                @include box-shadow(0 -3px 3px rgba(0, 0, 0, 0.1) inset);
 
-                &.active a {
-                    border-left: 1px solid #999999;
-                    border-right: 1px solid #999999;
-                    border-top: 1px solid #999999;
-                    border-bottom: 0px solid #999999;
-                    color: #000000;
+                &:first-of-type, &:last-of-type {
+                    -webkit-background-clip: padding-box;
+                    -moz-background-clip: padding-box;
+                    background-clip: padding-box;
+                }
+
+                &:first-of-type {
+                    -webkit-border-top-left-radius: 2px;
+                    -moz-border-radius-topleft: 2px;
+                    border-top-left-radius: 2px;
+                }
+
+                &:last-of-type {
+                    -webkit-border-top-right-radius: 2px;
+                    -moz-border-radius-topright: 2px;
+                    border-top-right-radius: 2px;
+                }
+
+                &.active {
+                    background: none repeat scroll 0 0 #FAFAFA;
+                    @include box-shadow(none);
+
+                    a {
+                        font-weight: bold;
+                        padding-bottom: 11px;
+                    }
+
                 }
 
                 &.fill a {
-                   width: 100%;
+                    width: 100%;
                 }
 
                 a {
-                    background: none repeat scroll 0 0 #FFFFFF;
-                    border-bottom: 1px solid #999999;
-                    color: #3333FF;
+                    color: inherit;
                     display: block;
-                    float: left;
-                    padding: 10px 20px;
+                    font-weight: normal;
+                    padding: 10px 15px;
                     position: relative;
                     text-decoration: none;
-                }
-
-                input[type="button"] {
-                    font-size: 0.75em;
                 }
 
                 select {
@@ -60,20 +79,27 @@ div.oskariTabs {
 
         }
 
+        .extraContent {
+            float: right;
+
+            a {
+                padding: 0 3px;
+            }
+
+        }
+
+    }
+    /* "tab" content */
+    
+    div.tabsContent {
+        border: 1px solid #999;
+        /*height: 90%;*/
     }
 
-    /* "tab" content */
-    div.tabsContent {
-        border-left: 1px solid #999999;
-        border-right: 1px solid #999999;
-        border-top: 0px solid #999999;
-        border-bottom: 1px solid #999999;
-        color: #000000;
-        height: 90%;
-    }
     div.tab-content {
-        padding : 10px;
+        padding: 10px;
         overflow: auto;
+        clear: both;
     }
 
 }

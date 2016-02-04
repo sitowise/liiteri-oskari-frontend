@@ -7,13 +7,14 @@
  * See Oskari.analysis.bundle.analyse.AnalyseBundle for bundle definition.
  *
  */
-Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
+Oskari.clazz.define(
+    'Oskari.analysis.bundle.analyse.AnalyseBundleInstance',
 
     /**
-     * @method create called automatically on construction
-     * @static
+     * @static @method create called automatically on construction
+     *
+     *
      */
-
     function () {
         this.sandbox = undefined;
         this.started = false;
@@ -31,30 +32,37 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
         this.personalDataTab = undefined;
     }, {
         /**
-         * @static
-         * @property __name
+         * @static @property __name
          */
         __name: 'Analyse',
+
         /**
-         * @method getName
+         * @public @method getName
+         *
+         *
          * @return {String} the name for the component
          */
-        "getName": function () {
+        getName: function () {
             return this.__name;
         },
+
         /**
-         * @method getSandbox
+         * @public @method getSandbox
+         *
+         *
          * @return {Oskari.mapframework.sandbox.Sandbox}
          */
         getSandbox: function () {
             return this.sandbox;
         },
+
         /**
-         * @method getLocalization
+         * @public @method getLocalization
          * Returns JSON presentation of bundles localization data for current language.
          * If key-parameter is not given, returns the whole localization data.
          *
          * @param {String} key (optional) if given, returns the value for key
+         *
          * @return {String/Object} returns single localization string or
          *      JSON object for complete data depending on localization
          *      structure and if parameter key is given
@@ -68,26 +76,29 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             }
             return this._localization;
         },
+
         /**
-         * @method start
+         * @public @method start
          * Implements BundleInstance protocol start method
+         *
+         *
          */
-        "start": function () {
-            var me = this;
+        start: function () {
+            var me = this,
+                conf = me.conf,
+                sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
+                sandbox = Oskari.getSandbox(sandboxName),
+                p;
 
             if (me.started) {
                 return;
             }
 
             me.started = true;
-            var conf = this.conf,
-                sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
-                sandbox = Oskari.getSandbox(sandboxName),
-                p;
 
             me.sandbox = sandbox;
 
-            this.localization = Oskari.getLocalization(this.getName());
+            me.localization = Oskari.getLocalization(me.getName());
 
             sandbox.register(me);
             for (p in me.eventHandlers) {
@@ -97,13 +108,23 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             }
 
             // requesthandler
-            this.analyseHandler = Oskari.clazz.create('Oskari.analysis.bundle.analyse.request.AnalyseRequestHandler', me);
-            sandbox.addRequestHandler('analyse.AnalyseRequest', this.analyseHandler);
+            me.analyseHandler = Oskari.clazz.create(
+                'Oskari.analysis.bundle.analyse.request.AnalyseRequestHandler',
+                me
+            );
+            sandbox.addRequestHandler(
+                'analyse.AnalyseRequest',
+                me.analyseHandler
+            );
+            me.analyseService = Oskari.clazz.create(
+                'Oskari.analysis.bundle.analyse.service.AnalyseService',
+                me
+            );
+            sandbox.registerService(me.analyseService);
 
-            this.analyseService = Oskari.clazz.create('Oskari.analysis.bundle.analyse.service.AnalyseService', me);
-            sandbox.registerService(this.analyseService);
-
-            this.mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
+            me.mapLayerService = sandbox.getService(
+                'Oskari.mapframework.service.MapLayerService'
+            );
 
 			// request toolbar to add buttons
             var addBtnRequestBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
@@ -128,20 +149,21 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             }
 			
             //Let's extend UI
-            var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
-            sandbox.request(this, request);
+            var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(me);
+            sandbox.request(me, request);
 
 
             // draw ui
             me._createUi();
 
             // Load analysis layers
-            this.analyseService.loadAnalyseLayers();
+            me.analyseService.loadAnalyseLayers();
 
             /* stateful */
             if (conf && conf.stateful === true) {
-                sandbox.registerAsStateful(this.mediator.bundleId, this);
+                sandbox.registerAsStateful(me.mediator.bundleId, me);
             }
+        },
 
             // Request tab to be added to personal data
             var tab = Oskari.clazz.create('Oskari.mapframework.bundle.analyse.view.PersonalDataTab', this, this.localization.personalDataTab);
@@ -153,23 +175,31 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             this.personalDataTab = tab;
         },
         /**
-         * @method init
+         * @public @method init
          * Implements Module protocol init method - does nothing atm
+         *
+         *
          */
-        "init": function () {
+        init: function () {
             return null;
         },
+
         /**
-         * @method update
+         * @public @method update
          * Implements BundleInstance protocol update method - does nothing atm
+         *
+         *
          */
-        "update": function () {
+        update: function () {
 
         },
+
         /**
-         * @method onEvent
+         * @public @method onEvent
          * Event is handled forwarded to correct #eventHandlers if found or discarded if not.
+         *
          * @param {Oskari.mapframework.event.Event} event a Oskari event object
+         *
          */
         onEvent: function (event) {
             var handler = this.eventHandlers[event.getName()];
@@ -178,32 +208,54 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             }
             return handler.apply(this, [event]);
         },
+
         /**
-         * @property {Object} eventHandlers
-         * @static
+         * @static @property {Object} eventHandlers
          */
         eventHandlers: {
-            'MapLayerVisibilityChangedEvent': function (event) {
+            'Personaldata.PersonaldataLoadedEvent': function (event) {
+                // Request tab to be added to personal data
+                var tab = Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
+                    this,
+                    this.localization.personalDataTab
+                );
+                var reqBuilder = this.sandbox.getRequestBuilder(
+                    'PersonalData.AddTabRequest'
+                );
+
+                if (reqBuilder) {
+                    this.sandbox.request(
+                        this,
+                        reqBuilder(
+                            this.localization.personalDataTab.title,
+                            tab.getContent()
+                        )
+                    );
+                }
+                this.personalDataTab = tab;
+            },
+            MapLayerVisibilityChangedEvent: function (event) {
                 if (this.analyse && this.analyse.isEnabled && this.isMapStateChanged) {
                     this.isMapStateChanged = false;
-                    this.getSandbox().printDebug("ANALYSE REFRESH");
+                    this.getSandbox().printDebug('ANALYSE REFRESH');
                     //this.analyse.refreshAnalyseData();
                 }
             },
-            'AfterMapMoveEvent': function (event) {
+            AfterMapMoveEvent: function (event) {
                 this.isMapStateChanged = true;
                 if (this.analyse && this.analyse.isEnabled) {
                     //this.analyse.refreshAnalyseData();
                 }
                 this.isMapStateChanged = true;
             },
-            'AfterMapLayerAddEvent': function (event) {
+            AfterMapLayerAddEvent: function (event) {
                 this.isMapStateChanged = true;
                 if (this.analyse && this.analyse.isEnabled) {
                     this.analyse.refreshAnalyseData(event.getMapLayer().getId());
                 }
             },
-            'AfterMapLayerRemoveEvent': function (event) {
+            AfterMapLayerRemoveEvent: function (event) {
                 this.isMapStateChanged = true;
                 if (this.analyse && this.analyse.isEnabled) {
                     this.analyse.refreshAnalyseData();
@@ -212,7 +264,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
                     this.analyse.removeFilterJson(layer.getId());
                 }
             },
-            'AfterChangeMapLayerStyleEvent': function (event) {
+            AfterChangeMapLayerStyleEvent: function (event) {
                 this.isMapStateChanged = true;
                 if (this.analyse && this.analyse.isEnabled) {
                     //this.analyse.refreshAnalyseData();
@@ -222,14 +274,13 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
              * @method MapLayerEvent
              * @param {Oskari.mapframework.event.common.MapLayerEvent} event
              */
-            'MapLayerEvent': function (event) {
+            MapLayerEvent: function (event) {
                 this._afterMapLayerEvent(event);
             },
             /**
              * @method userinterface.ExtensionUpdatedEvent
              */
             'userinterface.ExtensionUpdatedEvent': function (event) {
-
                 var me = this;
 
                 if (event.getExtension().getName() !== me.getName()) {
@@ -237,20 +288,22 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
                     return;
                 }
 
-                var isOpen = event.getViewState() !== "close";
+                var isOpen = event.getViewState() !== 'close';
 
                 me.displayContent(isOpen);
-
             }
         },
         /**
-         * @method stop
+         * @public @method stop
          * Implements BundleInstance protocol stop method
+         *
+         *
          */
-        "stop": function () {
+        stop: function () {
             var me = this,
                 sandbox = me.sandbox(),
                 p;
+
             if (me.analyse) {
                 me.analyse.destroy();
                 me.analyse = undefined;
@@ -261,7 +314,10 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
                 }
             }
 
-            sandbox.removeRequestHandler('analyse.AnalyseRequest', me.analyseHandler);
+            sandbox.removeRequestHandler(
+                'analyse.AnalyseRequest',
+                me.analyseHandler
+            );
             me.analyseHandler = null;
 
             var request = sandbox.getRequestBuilder('userinterface.RemoveExtensionRequest')(me);
@@ -271,67 +327,87 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
             me.sandbox.unregister(me);
             me.started = false;
         },
+
         /**
-         * @method startExtension
+         * @public @method startExtension
          * implements Oskari.userinterface.Extension protocol startExtension method
          * Creates a flyout
          * Oskari.analysis.bundle.analyse.Flyout
+         *
+         *
          */
         startExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = Oskari.clazz.create('Oskari.analysis.bundle.analyse.Flyout', this);
             //this.plugins['Oskari.userinterface.Tile'] = Oskari.clazz.create('Oskari.analysis.bundle.analyse.Tile', this);
         },
+
         /**
-         * @method stopExtension
+         * @public @method stopExtension
          * implements Oskari.userinterface.Extension protocol stopExtension method
          * Clears references to flyout and tile
+         *
+         *
          */
         stopExtension: function () {
             this.plugins['Oskari.userinterface.Flyout'] = null;
             //this.plugins['Oskari.userinterface.Tile'] = null;
         },
+
         /**
-         * @method getPlugins
-         * implements Oskari.userinterface.Extension protocol getPlugins method
-         * @return {Object} references to flyout and tile
+         * @public @method getPlugins
+         * Implements Oskari.userinterface.Extension protocol getPlugins method
+         *
+         *
+         * @return {Object} References to flyout and tile
          */
         getPlugins: function () {
             return this.plugins;
         },
+
         /**
-         * @method getTitle
-         * @return {String} localized text for the title of the component
+         * @public @method getTitle
+         *
+         *
+         * @return {String} Localized text for the title of the component
          */
         getTitle: function () {
             return this.getLocalization('title');
         },
+
         /**
-         * @method getDescription
-         * @return {String} localized text for the description of the component
+         * @public @method getDescription
+         *
+         *
+         * @return {String} Localized text for the description of the component
          */
         getDescription: function () {
             return this.getLocalization('desc');
         },
+
         /**
-         * @method _createUi
-         * @private
+         * @private @method _createUi
          * (re)creates the UI for "analyse" functionality
+         *
+         *
          */
         _createUi: function () {
-            var me = this;
             this.plugins['Oskari.userinterface.Flyout'].createUi();
             //this.plugins['Oskari.userinterface.Tile'].refresh();
         },
+
         /**
-         * @method setAnalyseMode
+         * @public @method setAnalyseMode
          * Starts analyse mode
          *
          * @param {Boolean} blnEnabled
+         *
          */
         setAnalyseMode: function (blnEnabled) {
             var me = this,
                 map = jQuery('#contentMap'),
-                mapmodule = me.sandbox.findRegisteredModuleInstance('MainMapModule'),
+                mapmodule = me.sandbox.findRegisteredModuleInstance(
+                    'MainMapModule'
+                ),
                 tools = jQuery('#maptools');
 
             if (blnEnabled) {
@@ -347,7 +423,11 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
 
                 // proceed with analyse view
                 if (!this.analyse) {
-                    this.analyse = Oskari.clazz.create('Oskari.analysis.bundle.analyse.view.StartAnalyse', this, this.getLocalization('AnalyseView'));
+                    this.analyse = Oskari.clazz.create(
+                        'Oskari.analysis.bundle.analyse.view.StartAnalyse',
+                        this,
+                        this.getLocalization('AnalyseView')
+                    );
                     this.analyse.render(map);
                 } else {
                     // Update data UI
@@ -373,27 +453,49 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
                     this.analyse.hide();
                 }
             }
-            mapmodule.updateSize();
-        },
-        displayContent: function (isOpen) {
-            if (isOpen) {
-                this.plugins['Oskari.userinterface.Flyout'].refresh();
+            var reqBuilder = me.sandbox.getRequestBuilder(
+                'MapFull.MapSizeUpdateRequest'
+            );
+
+            if (reqBuilder) {
+                me.sandbox.request(me, reqBuilder(true));
             }
         },
 
         /**
-         * @method setState
+         * @public @method displayContent
+         *
+         * @param {Boolean} isOpen
+         *
+         */
+        displayContent: function (isOpen) {
+            if (isOpen) {
+                this.plugins['Oskari.userinterface.Flyout'].refresh();
+            }
+            this.sandbox.postRequestByName(
+                'MapModulePlugin.ToggleFullScreenControlRequest',
+                [!isOpen]
+            );
+        },
+
+        /**
+         * @public @method setState
          * Sets the bundle state
          * bundle documentation for details.
+         *
          * @param {Object} state bundle state as JSON
+         *
          */
         setState: function (state) {
             this.state = state;
         },
+
         /**
-         * @method getState
+         * @public @method getState
          * Returns bundle state as JSON. State is bundle specific, check the
          * bundle documentation for details.
+         *
+         *
          * @return {Object}
          */
         getState: function () {
@@ -407,17 +509,28 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
         },
 
         /**
-         * @method showMessage
+         * @public @method showMessage
          * Shows user a message with ok button
+         *
          * @param {String} title popup title
          * @param {String} message popup message
+         *
          */
         showMessage: function (title, message) {
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+            var dialog = Oskari.clazz.create(
+                'Oskari.userinterface.component.Popup'
+            );
             dialog.show(title, message);
             dialog.fadeout(5000);
         },
 
+
+        /**
+         * @private @method _afterMapLayerEvent
+         *
+         * @param {Object} event
+         *
+         */
         _afterMapLayerEvent: function (event) {
             var layerId = event.getLayerId(),
                 loc = this.getLocalization('AnalyseView');
@@ -433,12 +546,19 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
                 }
             }
             // maplayers changed so update the tab content in personaldata
-            this.personalDataTab.update();
+            if (typeof this.personalDataTab !== 'undefined') {
+                this.personalDataTab.update();
+            }
         }
     }, {
         /**
-         * @property {String[]} protocol
-         * @static
+         * @static @property {String[]} protocol
          */
-        "protocol": ["Oskari.bundle.BundleInstance", 'Oskari.mapframework.module.Module', 'Oskari.userinterface.Extension', 'Oskari.userinterface.Stateful']
-    });
+        protocol: [
+            'Oskari.bundle.BundleInstance',
+            'Oskari.mapframework.module.Module',
+            'Oskari.userinterface.Extension',
+            'Oskari.userinterface.Stateful'
+        ]
+    }
+);

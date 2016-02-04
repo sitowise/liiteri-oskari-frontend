@@ -4,10 +4,6 @@ div.layerselection2 {
 		margin: 0 5px 5px 0;
 		height: unquote("70px\9"); /*IE9 */ 
 
-		&.out-of-scale, &.out-of-content, &.hidden {
-			color: #909090;
-		}
-
 		div.layer-info {
 			background-color: #FFF;
 			padding: 5px;
@@ -23,6 +19,7 @@ div.layerselection2 {
 			}
 			
 			div.layer-title {
+				cursor: move;
 				display: inline;
 
 				h4 {
@@ -103,5 +100,68 @@ div.layerselection2 {
 			position: absolute;
 			margin-left: -1.3em;
 		}
+
 	}
+
+}
+
+div.analyse-filter-popup-content div.filter-option {
+    padding-bottom: 10px;
+
+    div.manage-filter-option {
+        display: inline-block;
+        vertical-align: middle;
+
+        div.add-filter-option, div.remove-filter-option {
+            cursor: pointer;
+            display: inline-block;
+            /* These are icons, so it's OK to have a custom font here. */
+            font-size: 48px;
+            font-weight: bold;
+            margin-left: 5px;
+            min-width: 16px;
+            text-align: center;
+        }
+        
+    }
+
+    &.filter-option-aggregate {
+        padding-bottom: 25px;
+
+        div.attribute-value-block {
+            position: relative;
+            display: inline-block;
+
+            div.add-link {
+                position: absolute;
+                top: 40px;
+            }
+        }
+    }
+
+    .filter-input-value {
+        width: 160px;
+        margin: 1px;
+    }
+
+    input[name="case-sensitive"] {
+        margin-right: 5px;
+    }
+
+    select {
+
+        &.attribute {
+            width: 150px;
+        }
+
+        &.boolean {
+            margin-top: 10px;
+            width: 65px;
+        }
+
+        &.operator {
+            width: 210px;
+        }
+
+    }
 }

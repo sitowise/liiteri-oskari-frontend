@@ -5,42 +5,48 @@
             <label for="add-layer-layertype" class="add-layer-label" title="<%= instance.getLocalization('admin').layerTypeDesc %>"><%= instance.getLocalization('admin').layerType %></label>
         </div>
         <div class="add-layer-input-area">
-            <div id="add-layer-layertype" class="add-layer-text"><%= instance.getLocalization('admin').layertypes[model.getLayerType()] %></div>
+            <div class="add-layer-text"><%= instance.getLocalization('admin').layertypes[model.getLayerType()] %></div>
+            <input type="hidden" id="add-layer-layertype" value="<%= model.getLayerType() %>layer" />
         </div>
     </div>
+<% if(header) { %>
+    <%= header({
+        capabilities: capabilities, 
+        capabilitiesTemplate: capabilitiesTemplate, 
+        model: model, 
+        instance: instance, 
+        inspireThemes: inspireThemes, 
+        isSubLayer: isSubLayer }) %>
+    <% } %>
 
-    <% if(!model.getId()){ %>
     <div class="add-layer-record">
         <div class="add-layer-label-area">
-            <label for="add-layer-interface" class="add-layer-label"  title="<%= instance.getLocalization('admin').interfaceAddress %>"><%= instance.getLocalization('admin').interfaceAddress %></label>
+            <label for="add-layer-username" class="add-layer-label"
+                   title="<%= instance.getLocalization('admin').username %>"><%=instance.getLocalization('admin').username %></label>
         </div>
         <div class="add-layer-input-area">
             <div class="input-controls">
-                <input type="text" id="add-layer-interface" class="add-layer-input mid"
-                    placeholder="<%= instance.getLocalization('admin').interfaceAddress %>" 
-                    <% if(model.getWmsUrls) { %>value="<%= model.getWmsUrls().join() %>"<% } %> />
-                <div class="icon-close mid"></div>
+                <input type="text" id="add-layer-username" class="add-layer-input long"
+                       placeholder="<%= instance.getLocalization('admin').username %>"
+                       value="<%= model.getUsername() %>" />
+                <div class="icon-close"></div>
             </div>
-                    <button id="add-layer-wms-button" class="fetch-wms-button"><%= instance.getLocalization('admin').getInfo %></button>
         </div>
     </div>
-    <% } %>
 
-    <% if(capabilities) { %>
-    <div class="add-layer-record capabilities">
+    <div class="add-layer-record">
         <div class="add-layer-label-area">
-            <label class="add-layer-label"><%= instance.getLocalization('admin').capabilitiesLabel %></label>
+            <label for="add-layer-password" class="add-layer-label" title="<%= instance.getLocalization('admin').password %>"><%= instance.getLocalization('admin').password %></label>
         </div>
         <div class="add-layer-input-area">
             <div class="input-controls">
-                <%= capabilitiesTemplate({
-                    capabilities: capabilities, 
-                    capabilitiesTemplate: capabilitiesTemplate, 
-                    isSub : false }) %>
+                <input type="password" id="add-layer-password" class="add-layer-input long"
+                       placeholder="<%= instance.getLocalization('admin').password %>"
+                       value="<%= model.getPassword() %>" />
+                <div class="icon-close"></div>
             </div>
         </div>
     </div>
-    <% } %>
 
 
     <div class="add-layer-record">
@@ -90,19 +96,20 @@
 
         <% 
         var names = model.getNameLanguages();
+        var loc = Oskari.getLocalization('DivManazer').LanguageSelect.languages;
         for (var i = 0; i < names.length; i++) {
             var lang = names[i] %>
             <div class="add-layer-record">
                 <div class="add-layer-label-area">
-                    <label for="add-layer-<%= lang %>-name" class="add-layer-label" title="<%= instance.getLocalization('admin')[lang] ? instance.getLocalization('admin')[lang].title : lang %>"><%= instance.getLocalization('admin')[lang] ? instance.getLocalization('admin')[lang].lang : lang + ':' %></label>
+                    <label for="add-layer-<%= lang %>-name" class="add-layer-label" title="<%= (loc[lang] || lang) + ':' %>"><%= (loc[lang] || lang) + ':' %></label>
                 </div>
                 <div class="add-layer-input-area">
                     <div class="input-controls">
-                        <input type="text" id="add-layer-<%= lang %>-name" class="add-layer-input long" placeholder="<%= instance.getLocalization('admin')[lang] ? instance.getLocalization('admin')[lang].placeholder : instance.getLocalization('admin')['generic'].placeholder.replace('{0}', lang) %>" value="<%= model.getName(lang) %>"  />
+                        <input type="text" id="add-layer-<%= lang %>-name" class="add-layer-input long" placeholder="<%= instance.getLocalization('admin')[lang] ? instance.getLocalization('admin')[lang].placeholder : instance.getLocalization('admin')['generic'].placeholder.replace('{0}', (loc[lang] || lang)) %>" value="<%= model.getName(lang) %>"  />
                         <div class="icon-close"></div>
                     </div>
                     <div class="input-controls">
-                        <input type="text" id="add-layer-<%= lang %>-title" class="add-layer-input long" placeholder="<%= instance.getLocalization('admin')[lang] ? instance.getLocalization('admin')[lang].descplaceholder : instance.getLocalization('admin')['generic'].descplaceholder.replace('{0}', lang) %>" value="<%= model.getDescription(lang) %>" />
+                        <input type="text" id="add-layer-<%= lang %>-title" class="add-layer-input long" placeholder="<%= instance.getLocalization('admin')[lang] ? instance.getLocalization('admin')[lang].descplaceholder : instance.getLocalization('admin')['generic'].descplaceholder.replace('{0}', (loc[lang] || lang)) %>" value="<%= model.getDescription(lang) %>" />
                         <div class="icon-close"></div>
                     </div>
                 </div>
@@ -124,11 +131,11 @@
 
     <div class="add-layer-record add-layer-separation">
         <div class="add-layer-label-area">
-            <label for="add-layer-wms-id" class="add-layer-label" title="<%= instance.getLocalization('admin').wmsName %>"><%= instance.getLocalization('admin').wmsName %></label>
+            <label for="add-layer-layerName" class="add-layer-label" title="<%= instance.getLocalization('admin').wmsName %>"><%= instance.getLocalization('admin').wmsName %></label>
         </div>
         <div class="add-layer-input-area">
             <div class="input-controls">
-                <input type="text" id="add-layer-wms-id" required class="add-layer-input long" placeholder="<%= instance.getLocalization('admin').wmsName %>" value="<%= model.getWmsName() %>" />
+                <input type="text" id="add-layer-layerName" required class="add-layer-input long" placeholder="<%= instance.getLocalization('admin').wmsName %>" value="<%= model.getLayerName() %>" />
                 <div class="icon-close"></div>
             </div>
         </div>
@@ -169,7 +176,6 @@
         </div>
     </div>
 
-    <% if(model.getStyles().length > 0) { %>
     <div class="add-layer-record">
         <div class="add-layer-label-area">
             <label for="add-layer-style" class="add-layer-label" title="<%= instance.getLocalization('admin').styleDesc %>"><%= instance.getLocalization('admin').style %></label>
@@ -178,16 +184,19 @@
             <% if(model.getStyles().length > 1) { %>
             <select id="add-layer-style">
                  <% for(var i = 0; i < model.getStyles().length; i++) { %>
-                <option value="<%= model.getStyles()[i].getName() %>" 
-                    <% if(model.getCurrentStyle().getName() == model.getStyles()[i].getName() ) { %>selected<% } %> ><%= model.getStyles()[i].getTitle() %></option>
+                <option value="<%= model.getStyles()[i].getName() %>"
+                    <% if(model.getCurrentStyle().getName() === model.getStyles()[i].getName() ) {
+                         %>selected<% 
+                     } %>
+                     ><%= model.getStyles()[i].getTitle() %></option>
                 <% } %>
             </select>
-            <% } else { %>
-                <%= model.getCurrentStyle().getTitle() %>
+            <% } else if(model.getCurrentStyle().getTitle()) { %>
+                <input type="text" id="add-layer-style" class="add-layer-input long" value="<%= model.getCurrentStyle().getName() %>" />
+                <div class="icon-close"></div>
             <% } %>
         </div>
     </div>
-    <% } %>
 
     <div class="add-layer-record">
         <div class="add-layer-label-area">
@@ -213,59 +222,25 @@
         </div>
     </div>
 
-    <!-- div class="add-layer-record">
-        <div class="add-layer-label-area">
-            <label for="add-layer-srsname" class="add-layer-label" title="<%= instance.getLocalization('admin').srsName %>"><%= instance.getLocalization('admin').srsName %></label>
-        </div>
-        <div class="add-layer-input-area">
-            <div class="input-controls">
-                <input type="text" id="add-layer-srsname" class="add-layer-input long" placeholder="<%= instance.getLocalization('admin').srsNamePlaceholder %>" <% if(model && model.admin) { %>value="<%= model.admin.epsg %>"<% } %> required />
-                <div class="icon-close"></div>
-            </div>
-        </div>
-    </div -->
-
     <div class="add-layer-record">
         <div class="add-layer-label-area">
             <label for="add-layer-legendImage" class="add-layer-label" title="<%= instance.getLocalization('admin').legendImageDesc %>"><%= instance.getLocalization('admin').legendImage %></label>
         </div>
         <div class="add-layer-input-area">
             <div class="input-controls">
-                <textarea rows="3" cols="50" id="add-layer-legendImage" class="add-layer-input long"><% if(model) { %><%= model.getLegendImage() %><% } %></textarea>
+                <textarea rows="3" cols="50" id="add-layer-legendImage" class="add-layer-input long"><% if(model) { %><%= model.getLegendUrl() %><% } %></textarea>
             </div>
         </div>
     </div>
     
-    <div class="add-layer-record">
-        <div class="add-layer-label-area">
-            <label for="add-layer-responsetype" class="add-layer-label" title="<%= instance.getLocalization('admin').gfiResponseTypeDesc %>">
-                <%= instance.getLocalization('admin').gfiResponseType %>
-            </label>
-        </div>
-        <div class="add-layer-input-area">
-            <% if(model.getAvailableQueryFormats().length > 1) { %>
-            <select id="add-layer-responsetype">
-                 <% for(var i = 0; i < model.getAvailableQueryFormats().length; i++) { %>
-                <option value="<%= model.getAvailableQueryFormats()[i] %>" 
-                    <% if(model.getQueryFormat() == model.getAvailableQueryFormats()[i] ) { %>selected<% } %> ><%= model.getAvailableQueryFormats()[i] %></option>
-                <% } %>
-            </select>
-            <% } else { %>
-                <div id="add-layer-responsetype"><%= model.getQueryFormat() %></div>
-            <% } %>
-        </div>
-    </div>
+<% if(footer) { %> 
+<%= footer({
+    model: model, 
+    instance: instance, 
+    inspireThemes: inspireThemes, 
+    isSubLayer: isSubLayer }) %>
+<% } %>
 
-    <div class="add-layer-record">
-        <div class="add-layer-label-area">
-            <label for="add-layer-xslt" class="add-layer-label" title="<%= instance.getLocalization('admin').gfiStyleDesc %>"><%= instance.getLocalization('admin').gfiStyle %></label>
-        </div>
-        <div class="add-layer-input-area">
-            <div class="input-controls">
-                <textarea rows="3" cols="50" id="add-layer-xslt" class="add-layer-input long"><%= model.getGfiXslt() %></textarea>
-            </div>
-        </div>
-    </div>
 
     <div class="add-layer-record">
         <div class="add-layer-label-area">
@@ -315,11 +290,13 @@
     <div class="add-layer-send">
         <div class="add-layer-button-area">
             <div class="input-controls">
-                <button class="add-layer-btn <%= isSubLayer ? 'admin-add-sublayer-ok' : 'admin-add-layer-ok' %>"
-                    title="<%= instance.getLocalization('admin').addNewLayer %>" ><%= instance.getLocalization('add') %></button>
-                <% if(model.getId()) { %>
-                <button class="add-layer-btn <%= isSubLayer ? 'admin-remove-sublayer' : 'admin-remove-layer' %>"
-                    title="<%= instance.getLocalization('delete') %>"><%= instance.getLocalization('delete') %></button>
+                <% if(!model.getId()) { %>
+                    <button class="add-layer-btn <%= isSubLayer ? 'admin-add-sublayer-ok' : 'admin-add-layer-ok' %>"
+                        title="<%= instance.getLocalization('admin').addNewLayer %>" ><%= instance.getLocalization('add') %></button>
+                <% } else { %>
+                    <button class="add-layer-btn <%= isSubLayer ? 'admin-add-sublayer-ok' : 'admin-add-layer-ok' %>"><%= instance.getLocalization('save') %></button>
+                    <button class="add-layer-btn <%= isSubLayer ? 'admin-remove-sublayer' : 'admin-remove-layer' %>"
+                        title="<%= instance.getLocalization('delete') %>"><%= instance.getLocalization('delete') %></button>
                 <% } %>
                 <button class="add-layer-btn <%= isSubLayer ? 'admin-add-sublayer-cancel' : 'admin-add-layer-cancel' %>"
                     title="<%= instance.getLocalization('cancel') %>"><%= instance.getLocalization('cancel') %></button>

@@ -3,8 +3,6 @@ div.layerselection2 .layer.selected {
   margin: 5px 5px 0px 5px;
   height: 70px9;
   /*IE9 */ }
-  div.layerselection2 .layer.selected.out-of-scale, div.layerselection2 .layer.selected.out-of-content, div.layerselection2 .layer.selected.hidden {
-    color: #909090; }
   div.layerselection2 .layer.selected div.layer-info {
     background-color: #FFF;
     padding: 5px; }
@@ -17,6 +15,7 @@ div.layerselection2 .layer.selected {
       width: 16px;
       background-repeat: no-repeat; }
     div.layerselection2 .layer.selected div.layer-info div.layer-title {
+      cursor: move;
       display: inline; }
       div.layerselection2 .layer.selected div.layer-info div.layer-title h4 {
         font: 14pt;
@@ -64,3 +63,38 @@ div.layerselection2 ul.selectedLayersList {
   div.layerselection2 ul.selectedLayersList span {
     position: absolute;
     margin-left: -1.3em; }
+
+div.analyse-filter-popup-content div.filter-option {
+  padding-bottom: 10px; }
+  div.analyse-filter-popup-content div.filter-option div.manage-filter-option {
+    display: inline-block;
+    vertical-align: middle; }
+    div.analyse-filter-popup-content div.filter-option div.manage-filter-option div.add-filter-option, div.analyse-filter-popup-content div.filter-option div.manage-filter-option div.remove-filter-option {
+      cursor: pointer;
+      display: inline-block;
+      /* These are icons, so it's OK to have a custom font here. */
+      font-size: 48px;
+      font-weight: bold;
+      margin-left: 5px;
+      min-width: 16px;
+      text-align: center; }
+  div.analyse-filter-popup-content div.filter-option.filter-option-aggregate {
+    padding-bottom: 25px; }
+    div.analyse-filter-popup-content div.filter-option.filter-option-aggregate div.attribute-value-block {
+      position: relative;
+      display: inline-block; }
+      div.analyse-filter-popup-content div.filter-option.filter-option-aggregate div.attribute-value-block div.add-link {
+        position: absolute;
+        top: 40px; }
+  div.analyse-filter-popup-content div.filter-option .filter-input-value {
+    width: 160px;
+    margin: 1px; }
+  div.analyse-filter-popup-content div.filter-option input[name="case-sensitive"] {
+    margin-right: 5px; }
+  div.analyse-filter-popup-content div.filter-option select.attribute {
+    width: 150px; }
+  div.analyse-filter-popup-content div.filter-option select.boolean {
+    margin-top: 10px;
+    width: 65px; }
+  div.analyse-filter-popup-content div.filter-option select.operator {
+    width: 210px; }

@@ -142,9 +142,11 @@ Oskari.registerLocalization(
                 "small": "Малък",
                 "medium": "Среден",
                 "large": "Голям",
+                "fill": "NOT TRANSLATED",
                 "custom": "Обичаен размер",
                 "width": "ширина",
-                "height": "височина"
+                "height": "височина",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Запазване",
@@ -213,6 +215,7 @@ Oskari.registerLocalization(
             "show": "NOT TRANSLATED",
             "hide": "NOT TRANSLATED",
             "hidden": "NOT TRANSLATED",
+            "selectAsBaselayer": "NOT TRANSLATED",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "NOT TRANSLATED",

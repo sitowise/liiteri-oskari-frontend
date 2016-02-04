@@ -141,9 +141,11 @@ Oskari.registerLocalization(
                 "small": "Majhen",
                 "medium": "Srednji",
                 "large": "Velik",
+                "fill": "NOT TRANSLATED",
                 "custom": "Velikost po meri",
                 "width": "širina",
-                "height": "višina"
+                "height": "višina",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Shrani",
@@ -212,6 +214,7 @@ Oskari.registerLocalization(
             "show": "NOT TRANSLATED",
             "hide": "NOT TRANSLATED",
             "hidden": "NOT TRANSLATED",
+            "selectAsBaselayer": "NOT TRANSLATED",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "NOT TRANSLATED",

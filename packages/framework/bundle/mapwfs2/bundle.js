@@ -55,7 +55,7 @@ function() {
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/event/WFSFeaturesSelectedEvent.js"
-        }, {
+        },{
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/event/WFSFeatureGeometriesEvent.js"
         }, {
@@ -70,6 +70,12 @@ function() {
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ShowOwnStyleRequestHandler.js"
+        }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ActivateHighlightRequest.js"
+        }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ActivateHighlightRequestHandler.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/mapwfs2/request/ChangeMapLayerOwnStyleRequest.js"

@@ -1,4 +1,5 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "en",
     "key": "StatsGrid",
     "value": {
@@ -16,17 +17,18 @@ Oskari.registerLocalization({
         },
         "tab": {
             "title": "Indicators",
+            "description": "Own indicators",
             "grid": {
                 "name": "Title",
                 "description": "Description",
                 "organization": "Data source",
                 "year": "Year",
-                "delete": " "
+                "delete": "Delete"
             },
-            "deleteTitle": "Deleting indicator",
+            "deleteTitle": "Delete indicator",
             "destroyIndicator": "Delete",
             "cancelDelete": "Cancel",
-            "confirmDelete": "Are you sure you want to delete indicator ",
+            "confirmDelete": "Are you sure you want to delete indicator",
             "newIndicator": "New indicator",
             "error": {
                 "title": "Error",
@@ -55,8 +57,8 @@ Oskari.registerLocalization({
         "noIndicator" : "Statistic data are not present in the table",
         "removeColumn": "Remove",
         "indicators": "Indicator",
-        "cannotDisplayIndicator": "The indicator does not have values on the selected region category so it cannot be displayed in the grid.",
-        "availableRegions": " The following region categories have values on the indicator: ",
+        "cannotDisplayIndicator": "The indicator does not have values on the selected regional classification. So it cannot be displayed in the grid.",
+        "availableRegions": "Values are found for the following regional classifications:",
         "numberOfSelectedIndicators": "You have selected {0} indicators",
         "year": "Year",
         "buttons": {
@@ -73,18 +75,18 @@ Oskari.registerLocalization({
             "changeToPublic": "Change to public",
             "changeToPrivate": "Change to private"
         },
-        "sotka": {
+        "stats": {
             "municipality": "Municipality",
             "code": "Code",
             "errorTitle": "Error",
-            "regionDataError": "Error in getting sotka region data.",
-            "regionDataXHRError": "Error loading sotka region data",
-            "indicatorsDataError": "Error in getting sotka indicators.",
-            "indicatorsDataXHRError": "Error loading sotka indicators",
-            "indicatorMetaError": "Error in getting sotka indicator metadata",
-            "indicatorMetaXHRError": "Error loading sotka indicator metadata",
-            "indicatorDataError": "Error in getting sotka indicator data",
-            "indicatorDataXHRError": "Error loading sotka indicator data",
+            "regionDataError": "The municipal data could not be found. Try again later.",
+            "regionDataXHRError": "The indicator could not be loaded. Try again later.",
+            "indicatorsDataError": "The indicator could not be found. Try again later.",
+            "indicatorsDataXHRError": "The indicator could not be loaded. Try again later.",
+            "indicatorMetaError": "Metadata for the indicator could not be found. Try again later.",
+            "indicatorMetaXHRError": "The indicator could not be loaded. Try again later.",
+            "indicatorDataError": "Data for the indicator could not be found. Try again later.",
+            "indicatorDataXHRError": "The indicator could not be loaded. Try again later.",
             "noselection" : "There is no active selection",
             "descriptionTitle": "Description",
             "sourceTitle": "Source",
@@ -102,19 +104,19 @@ Oskari.registerLocalization({
             "privacyLimitTitle": "Privacy limits"
         },
         "classify": {
-            "classify": "Classify",
-            "classifymethod": "Method",
+            "classify": "Classification",
+            "classifymethod": "Classification method",
             "classes": "Classes",
-            "jenks": "Jenks ranges",
-            "quantile": "Quantile ranges",
-            "eqinterval": "Eqinterval",
-            "manual": "Manual breaks",
+            "jenks": "Natural breaks",
+            "quantile": "Quantiles",
+            "eqinterval": "Equal intervals",
+            "manual": "Own classes",
             "manualPlaceholder": "Input numbers separated with a comma.",
-            "manualRangeError": "There should be at least {min} and at most {max} numbers!",
-            "nanError": "A value was not a number!",
-            "infoTitle": "Manual breaks",
-            "info": "Input manual breaks separated with a comma. Period works as a decimal separator. First enter the lower bound, then the class bounds and finally the upper bound. E.g. by entering \"0, 10.5, 24, 30.2, 57, 73.1\" you'll get five classes with lower and upper bounds set to 0 and 73,1 and class bounds between those. Values left outside the bounds will be excluded.",
-            "mode": "Class limits",
+            "manualRangeError": "The class breaks should be numbers between {min} and {max}. Input numbers separated with a comma.  Decimal are separated with a dot.",
+            "nanError": "The given value is not a number. Input class breaks again as numbers separated with a comma. Decimal are separated with a dot.",
+            "infoTitle": "Own classes",
+            "info": "Input class breaks again as numbers separated with a comma. Decimal are separated with a dot. For example by inputting \"\"0, 10.5, 24, 30.2, 57, 73.1\" you get five classes which have values between  \"0-10,5\", \"10,5-24\", \"24-30,2\", \"30,2-57\" ja \"57-73,1\". The indicator's values smaller than the minimum value (0) or larger than the maximum value (73,1) are not shown on the map. The class breaks should be numbers between {min} and {max}.",
+            "mode": "Class breaks",
             "modes": {
                 "distinct": "Continuous",
                 "discontinuous": "Discrete"
@@ -147,12 +149,11 @@ Oskari.registerLocalization({
             "flipButton": "Flip colors",
             "themeselection": "Color theme selection",
             "setselection": "Color set selection",
-            "sequential": "Sequential",
-            "qualitative": "qualitative",
-            "divergent": "Divergent",
-            "info2": "Color range selection - ",
-            "cancel": "Exit"
-
+            "sequential": "Quantitative",
+            "qualitative": "Qualitative",
+            "divergent": "Divisible",
+            "info2": "Select the colors by clicking the color group",
+            "cancel": "Cancel"
         },
         "statistic": {
             "title": "Statistical variables",
@@ -164,13 +165,13 @@ Oskari.registerLocalization({
             "std": "Standard deviation",
             "sum": "Sum",
             "tooltip": {
-                "avg": "Average value of the indicator",
-                "max": "Largest value of the indicator",
-                "mde": "Most common value of the indicator",
-                "mdn": "Middle value of the indicator",
-                "min": "Smallest value of the indicator",
-                "std": "Standard deviation of the indicator",
-                "sum": "The total sum of the indicator values"
+                "avg": "The average value of the values in the indicator.",
+                "max": "The largest value of the values in the indicator.",
+                "mde": "The most common value of the values in the indicator.",
+                "mdn": "The middle value of of the values in the indicator after sorting them by a value.",
+                "min": "The smallest value of the values in the indicator.",
+                "std": "The standard deviation of the values in the indicator.",
+                "sum": "The total sum of the values in the indicator."
             }
         },
         "additionalInfo": {
@@ -208,8 +209,8 @@ Oskari.registerLocalization({
         "included": "Values",
         "municipality": "Municipalities",
         "selectRows": "Select rows",
-        "select4Municipalities": "Select at least two areas",
-        "showSelected": "Show only selected areas on the grid",
+        "select4Municipalities": "Select at least two areas.",
+        "showSelected": "Show only selected areas on the grid.",
         "toogleTable": "Table",
         "toogleMap": "Map",
         "not_included": "Not included",
@@ -286,27 +287,27 @@ Oskari.registerLocalization({
             "ADMINISTRATIVELAWAREA": "Administrative law area",
         },
         "addDataButton": "Add indicator",
-        "addDataTitle": "NOT TRANSLATED",
-        "openImportDialogTip": "Import data from clipboard",
+        "addDataTitle": "Add a new indicator.",
+        "openImportDialogTip": "Import data from the clipboard.",
         "openImportDataButton": "Import data",
         "addDataMetaTitle": "Title",
         "addDataMetaTitlePH": "Indicator's title",
-        "addDataMetaSources": "Source",
-        "addDataMetaSourcesPH": "Data source",
+        "addDataMetaSources": "Data source",
+        "addDataMetaSourcesPH": "Data source for the indicator",
         "addDataMetaDescription": "Description",
         "addDataMetaDescriptionPH": "Description",
-        "addDataMetaReferenceLayer": "Reference layer",
+        "addDataMetaReferenceLayer": "Regional classification",
         "addDataMetaYear": "Year",
-        "addDataMetaYearPH": "Year",
+        "addDataMetaYearPH": "Data has been produced in the year",
         "addDataMetaPublicity": "Publishable",
         "municipalityHeader": "Municipalities",
-        "dataRows": "NOT TRANSLATED",
+        "dataRows": "Indicator values by region",
         "municipalityPlaceHolder": "Give value",
-        "formEmpty": "NOT TRANSLATED",
+        "formEmpty": "Clear",
         "formCancel": "Cancel",
         "formSubmit": "Submit",
         "cancelButton": "Cancel",
-        "clearImportDataButton": "NOT TRANSLATED",
+        "clearImportDataButton": "Clear the data rows",
         "importDataButton": "Add",
         "popupTitle": "Import data",
         "importDataDescription": "You can bring region value duples by copying them to the textarea. \nPlace every municipality to their own row. You can separate the values with tabulator, colon or comma. \nExample 1: Alajärvi, 1234 \nExample 2: 009    2100",
@@ -409,4 +410,5 @@ Oskari.registerLocalization({
             }
         }
     }
-});
+}
+);

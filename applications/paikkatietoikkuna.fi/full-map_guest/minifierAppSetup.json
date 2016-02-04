@@ -41,6 +41,12 @@
 	                "mapanalysis": {
 	                    "bundlePath": "../../../packages/framework/bundle/"
 	                },
+	                "maparcgis": {
+	                    "bundlePath": "../../../packages/arcgis/bundle/"
+	                },
+		            "mapuserlayers" : {
+		                "bundlePath" : "../../../packages/framework/bundle/"
+		            },
 	                "service-base": {
 	                    "bundlePath": "../../../packages/framework/bundle/"
 	                },
@@ -393,6 +399,26 @@
 					},
 					"geostats": {
 						"bundlePath": "../../../packages/libraries/bundle/"
+					}
+				}
+			}
+		}, {
+		    "bundlename" : "routesearch",
+		    "bundleinstancename" : "routesearch",
+		    "metadata" : {
+		        "Import-Bundle" : {
+		            "routesearch" : {
+		                "bundlePath" : "../../../packages/framework/bundle/"
+		            }
+		        }
+		    }
+		}, {
+			"bundlename" : "findbycoordinates",
+			"bundleinstancename" : "findbycoordinates",
+			"metadata" : {
+				"Import-Bundle" : {
+					"findbycoordinates" : {
+						"bundlePath" : "../../../packages/framework/bundle/"
 					}
 				}
 			}

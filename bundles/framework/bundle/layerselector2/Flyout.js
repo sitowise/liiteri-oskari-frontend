@@ -22,6 +22,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
 		this.servicePackageTab = null;
 		this.populateGroupingsTimeout = null;
     }, {
+
         /**
          * @method getName
          * @return {String} the name for the component
@@ -30,6 +31,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //"use strict";
             return 'Oskari.mapframework.bundle.layerselector2.Flyout';
         },
+
         /**
          * @method setEl
          * @param {Object} el
@@ -56,10 +58,27 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
          */
         startPlugin: function () {
             //"use strict";
-            var me = this,                                
-                inspireTab, orgTab, publishedTab;
+            var me = this,
+                inspireTab = Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.layerselector2.view.LayersTab',
+                    me.instance,
+                    me.instance.getLocalization('filter').inspire,
+                    'oskari_layerselector2_tabpanel_inspiretab'
+                ),
+                orgTab = Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.layerselector2.view.LayersTab',
+                    me.instance,
+                    me.instance.getLocalization('filter').organization,
+                    'oskari_layerselector2_tabpanel_orgtab'
+                ),
+                publishedTab,
+                elParent,
+                elId;
 
-            me.template = jQuery('<div class="allLayersTabContent"></div>');            			
+
+            me.template = jQuery('<div class="allLayersTabContent"></div>');
+            inspireTab.groupingMethod = 'getInspireName';
+            orgTab.groupingMethod = 'getOrganizationName';
 
 			if (me.instance.conf && me.instance.conf.showUserThemes) {
 			    this.userThemesTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.LayersTab", me.instance, me.instance.getLocalization('filter').userThemes);
@@ -81,7 +100,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //me.instance.conf.showPublishedTab = true;
             // add published tab based on config
             if (me.instance.conf && me.instance.conf.showPublishedTab === true) {
-                publishedTab = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.view.PublishedLayersTab", me.instance, me.instance.getLocalization('filter').published);
+                publishedTab = Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.layerselector2.view.PublishedLayersTab',
+                    me.instance,
+                    me.instance.getLocalization('filter').published
+                );
                 this.layerTabs.push(publishedTab);
             }
 
@@ -91,7 +114,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 this.servicePackageTab.servicePackage = true;
                 me.layerTabs.push(this.servicePackageTab);
             }
+
+            elParent = this.container.parentElement.parentElement;
+        	elId = jQuery(elParent).find('.oskari-flyouttoolbar .oskari-flyouttools .oskari-flyouttool-close');
+        	elId.attr('id', 'oskari_layerselector2_flyout_oskari_flyouttool_close');
         },
+
         /**
          * @method stopPlugin
          *
@@ -100,6 +128,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
         stopPlugin: function () {
             //"use strict";
         },
+
         /**
          * @method getTitle
          * @return {String} localized text for the title of the flyout
@@ -108,6 +137,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //"use strict";
             return this.instance.getLocalization('title');
         },
+
         /**
          * @method getDescription
          * @return {String} localized text for the description of the flyout
@@ -116,6 +146,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //"use strict";
             return this.instance.getLocalization('desc');
         },
+
         /**
          * @method getOptions
          * Interface method implementation, does nothing atm
@@ -123,6 +154,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
         getOptions: function () {
             //"use strict";
         },
+
         /**
          * @method setState
          * @param {String} state
@@ -133,6 +165,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //"use strict";
             this.state = state;
         },
+
         setContentState: function (state) {
             //"use strict";
             var i,
@@ -150,6 +183,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 }
             }
         },
+
         getContentState: function () {
             //"use strict";
             var state = {},
@@ -164,6 +198,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             }
             return state;
         },
+
         /**
          * @method createUi
          * Creates the UI for a fresh start
@@ -175,17 +210,44 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 cel = jQuery(this.container),
                 i,
                 tab;
+
             cel.empty();
 
-            me.tabContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer');
+            me.tabContainer = Oskari.clazz.create(
+                'Oskari.userinterface.component.TabContainer'
+            );
             me.tabContainer.insertTo(cel);
             for (i = 0; i < me.layerTabs.length; i += 1) {
                 tab = me.layerTabs[i];
                 me.tabContainer.addPanel(tab.getTabPanel());
             }
             me.tabContainer.addTabChangeListener(me._tabsChanged); // -> filter with same keyword when changing tabs?
+            me.tabContainer.addTabChangeListener(
+                function (previousTab, newTab) {
+                    // Make sure this fires only when the flyout is open
+                    if (!cel.parents('.oskari-flyout.oskari-closed').length) {
+                        var searchInput = newTab.getContainer().find('input[type=text]');
+                        if (searchInput) {
+                            searchInput.focus();
+                        }
+                    }
+                }
+            );
             me.populateLayers();
         },
+
+        /**
+         * @public @method focus
+         * Focuses the first panel's search field (if available)
+         *
+         *
+         */
+        focus: function () {
+            if (this.layerTabs) {
+                this.layerTabs[0].focus();
+            }
+        },
+
         _tabsChanged : function(oldTab, newTab) {
         },
         addTab: function (item) {
@@ -221,7 +283,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //"use strict";
             var sandbox = this.instance.getSandbox(),
                 // populate layer list
-                mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService'),
+                mapLayerService = sandbox.getService(
+                    'Oskari.mapframework.service.MapLayerService'
+                ),
                 layers = mapLayerService.getAllLayers(),
                 i,
                 tab,
@@ -233,7 +297,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 // populate tab if it has grouping method
                 if (tab.groupingMethod) {
                     layersCopy = layers.slice(0);
-                    groups = this._getLayerGroups(layersCopy, tab.groupingMethod);
+                    groups = this._getLayerGroups(
+                        layersCopy,
+                        tab.groupingMethod
+                    );
                     tab.showLayerGroups(groups);
                 } else if (tab.servicePackage) {
 					
@@ -365,7 +432,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 }
                 groupAttr = layer[groupingMethod]();
                 if (!group || group.getTitle() !== groupAttr) {
-                    group = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", groupAttr);
+                    group = Oskari.clazz.create(
+                        'Oskari.mapframework.bundle.layerselector2.model.LayerGroup',
+                        groupAttr
+                    );
                     groupList.push(group);
                 }
                 group.addLayer(layer);
@@ -468,6 +538,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //var layerListContainer = jQuery(this.container).find('div.layerList');
             //this._populateLayerList(layerListContainer);
         },
+
         /**
          * @method handleLayerRemoved
          * @param {String} layerId
@@ -484,9 +555,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             //this._populateLayerList(layerListContainer);
         }
     }, {
+
         /**
          * @property {String[]} protocol
          * @static
          */
-        'protocol': ['Oskari.userinterface.Flyout']
+        protocol: ['Oskari.userinterface.Flyout']
     });

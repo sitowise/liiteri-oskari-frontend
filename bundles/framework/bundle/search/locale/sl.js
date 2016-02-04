@@ -1,11 +1,10 @@
-Oskari.registerLocalization(
-{
+Oskari.registerLocalization({
     "lang": "sl",
     "key": "Search",
     "value": {
         "title": "Iskanje lokacije",
         "desc": "",
-        "contentErrorMsg": "NOT TRANSLATED",
+        "invalid_characters": "NOT TRANSLATED",
         "searchDescription": "Išči po imenu kraja, naslovu ali po identifikatorju enote nepremičnine.",
         "searchButton": "Išči",
         "searchResultCount": "Rezultati iskanja",
@@ -14,7 +13,7 @@ Oskari.registerLocalization(
         "searchResultDescriptionOrdering": "Iskalne rezultate lahko tudi razvrstiš s klikom na vrh stolpca",
         "searchResults": "Rezultati:",
         "searchResultsDescription": "rezultati iskanja",
-        "searchservice_search_alert_title": "Napaka:",
+        "searchservice_search_alert_title": "Napaka",
         "searchservice_search_not_found_anything_text": "Iskanje ni vrnilo rezultatov.",
         "too_short": "Iskalni pojem je prekratek.",
         "cannot_be_empty": "Iskalni pojem ne sme biti prazen",
@@ -29,5 +28,4 @@ Oskari.registerLocalization(
             "title": "Rezultati iskanja"
         }
     }
-}
-);
+});

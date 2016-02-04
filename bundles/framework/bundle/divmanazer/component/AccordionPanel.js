@@ -10,7 +10,6 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
      * TODO: close/open methods?
      * @static
      */
-
     function () {
         this.template = jQuery('<div class="accordion_panel">' +
             '<div class="header">' +
@@ -27,6 +26,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
 
         var me = this,
             header = me.html.find('div.header');
+
         header.click(function () {
             if (me.isOpen()) {
                 me.close();
@@ -34,6 +34,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
                 me.open();
             }
         });
+
         this.html.find('div.content').hide();
     }, {
         addClass: function (pClass) {
@@ -59,7 +60,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
          */
         isVisible: function () {
             // checking since we dont assume param is boolean
-            return this.html.is(":visible");
+            return this.html.is(':visible');
         },
         /**
          * @method isOpen
@@ -133,6 +134,15 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
             container.append(button);
         },
         /**
+         * @method setId
+         * Sets the panel header id
+         * @param {String} id id for the panel
+         */
+        setId: function (id) {
+            var header = this.html.find('div.header');
+            header.attr('id', id);
+        },
+        /**
          * @method setContent
          * Sets the panel content.
          * This can be also done with #getContainer()
@@ -148,6 +158,9 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
          * Destroys the panel/removes it from document
          */
         destroy: function () {
+            if( !this.html){ 
+              return;
+            }
             this.html.remove();
         },
         /**
@@ -159,7 +172,15 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
         getContainer: function () {
             return this.html.find('div.content');
         },
-
+        /**
+         * Returns the header of the panel.
+         * 
+         * @method getHeader
+         * @return {jQuery} refrence to this panels header DOM element
+         */
+        getHeader: function () {
+            return this.html.find('div.header');
+        },
         /**
          * @method insertTo
          * Adds this panel to given container.

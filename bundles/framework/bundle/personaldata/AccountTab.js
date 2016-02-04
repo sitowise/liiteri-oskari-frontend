@@ -14,7 +14,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.AccountTab',
     function (instance, localization) {
         this.conf = instance.conf;
         this.instance = instance;
-        this.template = jQuery('<div class="account"><div class="info"></div><div class="bottomlinks"></div></div>');
+        this.template = jQuery('<div class="account"><table class="info oskari-grid"></table><div class="bottomlinks"></div></div>');
         this.loc = localization;
     }, {
         getTitle: function () {
@@ -29,7 +29,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.AccountTab',
         _createAccountTab: function (container) {
             var me = this,
                 sandbox = me.instance.getSandbox(),
-                fieldTemplate = jQuery('<div class="dataField"><div class="label"></div><div class="value"></div><br clear="all" /></div>'),
+                fieldTemplate = jQuery('<tr class="dataField"><th class="label"></th><td class="value"></td></tr>'),
                 user = sandbox.getUser(),
                 localization = this.loc,                
                 infoContainer = container.find('div.info'),
@@ -56,13 +56,19 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.AccountTab',
                     value: user.getNickName()
                 }, {
                     label: localization.email,
-                    value: user.getLoginName()
+                    value: user.getEmail()
                 }, {
                     label: localization.roles,
                     value: stringRoles.join(", ")
-                }
-            ];
-
+                }],
+                infoContainer = container.find('.info'),
+                i,
+                data,
+                fieldContainer,
+                bottomLinks,
+                bottomLinksContainer,
+                link,
+                changeInfoUrl = null;
             for (i = 0; i < accountData.length; i += 1) {
                 data = accountData[i];
                 fieldContainer = fieldTemplate.clone();

@@ -82,7 +82,16 @@ define([
                 // removing layer from the main collection
                 // layer groups monitor the main collection and update 
                 // their state based on changes to the main collection
-                this.instance.models.layers.removeLayer(layerId);
+                var models = this.instance.models.layers;
+                var layer = models.get(layerId);
+                models.removeLayer(layerId);
+                // trigger change for sublayers parent so changes reflect on UI
+                if(layer.getParentId() !== -1) {
+                    var parent = models.get(layer.getParentId());
+                    if(parent) {
+                        parent.trigger('change', parent);
+                    }
+                }
             },
             addToCollection: function (layerList) {
                 if(!this.instance.models || !this.instance.models.layers) {
@@ -91,6 +100,16 @@ define([
                 var models = this.instance.models.layers;
                 // merge updates existing
                 models.add(layerList, {merge: true});
+                _.each(layerList, function(layer) {
+                    if(layer.getParentId() === -1) {
+                        return;
+                    }
+                    // trigger change for sublayers parent so changes reflect on UI
+                    var parent = models.get(layer.getParentId());
+                    if(parent) {
+                        parent.trigger('change', parent);
+                    }
+                });
                 return true;
             },
             /**
@@ -107,35 +126,20 @@ define([
                 // clear everything
                 this.el.html(this.appTemplate);
 
-//                // create tabModel for inspire classes
-//                this.inspireTabModel = new LayersTabModel({
-//                    layers: collection,
-//                    type: 'inspire',
-//                    baseUrl : this.instance.getSandbox().getAjaxUrl() + '&action_route=',
-//                    actions : {
-//                        load : "GetInspireThemes",
-//                        save : "Not implemented",
-//                        remove : "Not implemented"
-//                    },
-//                    title: this.instance.getLocalization('filter').inspire
-//                });
-//                // render inspire classes
-//                this._renderLayerGroups(this.inspireTabModel, 'inspire');
-//
-//                // create tabModel for organization
-//                this.organizationTabModel = new LayersTabModel({
-//                    layers: collection,
-//                    type: 'organization',
-//                    baseUrl : this.instance.getSandbox().getAjaxUrl() + '&action_route=',
-//                    actions : {
-//                        load : "GetMapLayerGroups",
-//                        save : "SaveOrganization",
-//                        remove : "DeleteOrganization"
-//                    },
-//                    title: this.instance.getLocalization('filter').organization
-//                });
-//                // render organizations
-//                this._renderLayerGroups(this.organizationTabModel, 'organization');
+                // create tabModel for inspire classes
+                this.inspireTabModel = new LayersTabModel({
+                    layers: collection,
+                    type: 'inspire',
+                    baseUrl : this.instance.getSandbox().getAjaxUrl() + '&action_route=',
+                    actions : {
+                        load : "InspireThemes",
+                        save : "InspireThemes",
+                        remove : "InspireThemes"
+                    },
+                    title: this.instance.getLocalization('filter').inspire
+                });
+                // render inspire classes
+                this._renderLayerGroups(this.inspireTabModel, 'inspire');
 
                 // create tabModel for user themes
                 this.userThemesTabModel = new UserThemesTabModel({

@@ -32,6 +32,12 @@ Oskari.clazz.define("Oskari.userinterface.bundle.ui.ComponentsBundle", function(
          */
         "scripts" : [{
             "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/divmanazer/component/Component.js"
+        }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/bundle/divmanazer/component/FormComponent.js"
+        }, {
+            "type" : "text/javascript",
             "src" : "../../../../bundles/framework/bundle/divmanazer/component/Accordion.js"
         }, {
             "type" : "text/javascript",
@@ -98,7 +104,7 @@ Oskari.clazz.define("Oskari.userinterface.bundle.ui.ComponentsBundle", function(
             "src" : "../../../../bundles/framework/bundle/divmanazer/component/visualization-form/DotForm.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../libraries/raphaeljs/raphael.min.js"
+            "src" : "../../../../libraries/raphaeljs/raphael_export_icons.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../libraries/jquery/plugins/jquery-placeholder/jquery.placeholder.js"

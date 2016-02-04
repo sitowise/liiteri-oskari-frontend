@@ -1,48 +1,54 @@
 div.oskariTabs {
   /* tab headers */
   /* "tab" content */ }
-  div.oskariTabs div.tabsHeader {
-    background: url('/Oskari/resources/framework/bundle/divmanazer/images/tab_bg.png') repeat-x scroll center bottom;
-    /* #FFFFFF*/
-    clear: left;
-    float: left;
-    overflow: hidden;
-    padding: 0 20px 0 20px;
-    width: 100%; }
-    div.oskariTabs div.tabsHeader ul {
-      float: left;
-      list-style: none outside none;
+  div.oskariTabs .tabsHeader {
+    clear: both;
+    font-weight: bold;
+    margin-bottom: -1px;
+    padding: 0; }
+    div.oskariTabs .tabsHeader ul {
+      display: inline-block;
       margin: 0;
       padding: 0;
-      text-align: center; }
-      div.oskariTabs div.tabsHeader ul li {
-        display: block;
-        float: left;
-        list-style: none outside none;
-        margin: 10px 0 0;
+      white-space: nowrap; }
+      div.oskariTabs .tabsHeader ul li {
+        background: none repeat scroll 0 0 #F3F3F3;
+        display: inline-block;
+        border-style: solid;
+        border-color: #999;
+        border-width: 1px 1px 0 1px;
+        margin: 0;
         padding: 0;
-        right: 50%; 
-
-      }
-        div.oskariTabs div.tabsHeader ul li.active a {
-            background-color: #fff;
-            border-bottom: 1px solid #fff;
-            padding: 8px 10px 4px 10px;
-            margin-top: 0px;
-        }
-        div.oskariTabs div.tabsHeader ul li.fill a {
+        -webkit-box-shadow: 0 -3px 3px rgba(0, 0, 0, 0.1) inset;
+        -moz-box-shadow: 0 -3px 3px rgba(0, 0, 0, 0.1) inset;
+        box-shadow: 0 -3px 3px rgba(0, 0, 0, 0.1) inset; }
+        div.oskariTabs .tabsHeader ul li:first-of-type, div.oskariTabs .tabsHeader ul li:last-of-type {
+          -webkit-background-clip: padding-box;
+          -moz-background-clip: padding-box;
+          background-clip: padding-box; }
+        div.oskariTabs .tabsHeader ul li:first-of-type {
+          -webkit-border-top-left-radius: 2px;
+          -moz-border-radius-topleft: 2px;
+          border-top-left-radius: 2px; }
+        div.oskariTabs .tabsHeader ul li:last-of-type {
+          -webkit-border-top-right-radius: 2px;
+          -moz-border-radius-topright: 2px;
+          border-top-right-radius: 2px; }
+        div.oskariTabs .tabsHeader ul li.active {
+          background: none repeat scroll 0 0 #FAFAFA;
+          -webkit-box-shadow: none;
+          -moz-box-shadow: none;
+          box-shadow: none; }
+          div.oskariTabs .tabsHeader ul li.active a {
+            font-weight: bold;
+            padding-bottom: 11px; }
+        div.oskariTabs .tabsHeader ul li.fill a {
           width: 100%; }
-        div.oskariTabs div.tabsHeader ul li a {
-            background-color: #fbfbfb;          
-          border-left: 1px solid #999999;
-          border-right: 1px solid #999999;
-          border-top: 1px solid #999999;
-          border-bottom: 1px solid #999999;
-          color: #000000;
+        div.oskariTabs .tabsHeader ul li a {
+          color: inherit;
           display: block;
-          float: left;
-          padding: 4px 10px 4px 10px;
-            margin-top: 4px;
+          font-weight: normal;
+          padding: 10px 15px;
           position: relative;
           text-decoration: none;
             -webkit-border-top-left-radius: 5px;
@@ -52,17 +58,16 @@ div.oskariTabs {
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
-        div.oskariTabs div.tabsHeader ul li input[type="button"] {
-          font-size: 0.75em; }
-        div.oskariTabs div.tabsHeader ul li select {
+        div.oskariTabs .tabsHeader ul li select {
           margin-right: 10px; }
+    div.oskariTabs .tabsHeader .extraContent {
+      float: right; }
+      div.oskariTabs .tabsHeader .extraContent a {
+        padding: 0 3px; }
   div.oskariTabs div.tabsContent {
-    border-left: 0px solid #999999;
-    border-right: 0px solid #999999;
-    border-top: 0px solid #999999;
-    border-bottom: 0px solid #999999;
-    color: #000000;
-    height: 90%; }
+    border: 1px solid #999;
+    /*height: 90%;*/ }
   div.oskariTabs div.tab-content {
     padding: 10px;
-    overflow: auto; }
+    overflow: auto;
+    clear: both; }

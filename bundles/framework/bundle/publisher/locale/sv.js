@@ -2,7 +2,7 @@ Oskari.registerLocalization({
     "lang": "sv",
     "key": "Publisher",
     "value": {
-        "title": "Definiera karta",
+        "title": "Kartpublicering",
         "flyouttitle": "Definiera karta",
         "desc": "",
         "published": {
@@ -49,6 +49,7 @@ Oskari.registerLocalization({
                 "IndexMapPlugin": "Indexkarta",
                 "PanButtons": "Panoreringsverktyg",
                 "Portti2Zoombar": "Skalans glidreglage",
+                "MyLocationPlugin": "Centrera kartan på användarens position",
                 "ControlsPlugin": "Panorering på",
                 "SearchPlugin": "Adress- och ortnamnssökning",
                 "FeaturedataPlugin": "Objektuppgifter",
@@ -143,9 +144,11 @@ Oskari.registerLocalization({
                 "small": "Liten",
                 "medium": "Medelstor",
                 "large": "Stor",
+                "fill": "Fyll utrymmet",
                 "custom": "Definiera storlek",
                 "width": "bredd",
-                "height": "höjd"
+                "height": "höjd",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Lagra",
@@ -191,7 +194,7 @@ Oskari.registerLocalization({
             "registerUrl": "/web/sv/login?p_p_id=58&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&saveLastPath=0&_58_struts_action=%2Flogin%2Fcreate_account"
         },
         "StartView": {
-            "text": "Du kan inbädda den kartvy som du definierat här på din egen eller din arbetsgivares webbplats.",
+            "text": "Du kan inbädda den kartvy som du har definierat här på din egen webbplats.",
             "touLink": "Vis användningsvillkor till kartinbäddningen",
             "layerlist_title": "Kartlager som kan inbäddas",
             "layerlist_empty": "Kartlagren som du valt kan inte avskiljas. Menyn Valda kartlager visar vilka kartlager kan avskiljas.",
@@ -214,6 +217,7 @@ Oskari.registerLocalization({
             "show": "Visa",
             "hide": "Göm",
             "hidden": "Kartan är tillfälligt gömd.",
+            "selectAsBaselayer": "Bakgrundskartlager",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "Får publiceras",

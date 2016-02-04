@@ -7,15 +7,14 @@
  * See Oskari.mapframework.bundle.metadatacatalogue.MetadataCatalogueBundle for bundle definition.
  *
  */
-Oskari.clazz
-    .define("Oskari.catalogue.bundle.metadatacatalogue.MetadataCatalogueBundleInstance",
+Oskari.clazz.define(
+    'Oskari.catalogue.bundle.metadatacatalogue.MetadataCatalogueBundleInstance',
 
     /**
      * @method create called automatically on construction
      * @static
      */
-
-        function () {
+    function () {
         this.sandbox = null;
         this.started = false;
         this.plugins = {};
@@ -37,12 +36,20 @@ Oskari.clazz
             title: '',
             prop: 'remove'
         }];
-        this.lastSearch = "";
+        this.lastSearch = '';
         // last search result is saved so we can sort it in client
         this.lastResult = null;
         // last sort parameters are saved so we can change sort direction
         // if the same column is sorted again
         this.lastSort = null;
+        this.drawCoverage = false;
+        // Action status object.
+        this.actionStatus = {
+            actionElement: null,
+            actionTextElement: null,
+            callback: null,
+            bindCallbackTo: null            
+        };
     }, {
         /**
          * @static
@@ -55,33 +62,82 @@ Oskari.clazz
          */
         templates: {
             metadataTab: jQuery('<div class="metadataCatalogueContainer"></div>'),
-            optionPanel: jQuery('<div class="main metadataOptions">' +
-                '<div class="metadataCatalogueDescription"></div>' +
-                '<div class="controls"></div>'+
-                '<div class="moreLess"></div>'+
-                '<div class="advanced"></div>'+
-                '</div>'),
+            optionPanel: jQuery(
+                '<div class="main metadataOptions">' +
+                '  <div class="metadataCatalogueDescription"></div>' +
+                '  <div class="controls"></div>' +
+                '  <div class="moreLess"></div>' +
+                '  <div class="advanced"></div>' +
+                '</div>'
+            ),
             moreLessLink: jQuery('<a href="JavaScript:void(0);" class="moreLessLink"></a>'),
             advanced: jQuery('<div class="advanced"></div>'),
-            metadataCheckbox: jQuery('<div class="metadataType"><label class="metadataTypeText"><input type="checkbox" class="metadataMultiDef"></label></div>'),
-            metadataDropdown: jQuery('<div class="metadataType"><select class="metadataDef"></select></div>'),
+            metadataCheckbox: jQuery(
+                '<div class="metadataType">' +
+                '  <label class="metadataTypeText">' +
+                '    <input type="checkbox" class="metadataMultiDef">' +
+                '  </label>' +
+                '</div>'
+            ),
+            metadataDropdown: jQuery(
+                '<div class="metadataType">' +
+                '  <select class="metadataDef"></select>' +
+                '</div>'
+            ),
+            metadataButton: jQuery(
+                '<div class="metadataType">' +
+                '  <input id="metadataCoverageButton" class="metadataCoverageDef" type="button"></input>' +
+                '</div>'
+            ),
             dropdownOption: jQuery('<option></option>'),
-            checkboxRow: jQuery('<div class="metadataRow checkboxRow"><div class="rowLabel"></div class=""><div class="checkboxes"></div></div></div>'),
-            dropdownRow: jQuery('<div class="metadataRow dropdownRow"><div class="rowLabel"></div></div>'),
+            checkboxRow: jQuery(
+                '<div class="metadataRow checkboxRow">' +
+                '  <div class="rowLabel"></div>' +
+                '  <div class="checkboxes"></div>' +
+                '</div>'
+            ),
+            dropdownRow: jQuery(
+                '<div class="metadataRow dropdownRow">' +
+                '  <div class="rowLabel"></div>' +
+                '</div>'
+            ),
+            buttonRow: jQuery(
+                '<div class="metadataRow buttonRow">' +
+                '  <div class="rowLabel"></div>' +
+                '</div>'
+            ),
             searchPanel: jQuery('<div class="main metadataSearching"></div>'),
             resultPanel: jQuery('<div class="main metadataResults"></div>'),
-            resultHeader: jQuery('<div class="metadataResultHeader">'
-                + '<div class="panelHeader resultTitle"></div>'
-                + '<div class="panelHeader resultLinks">'
-                + '<a href="JavaScript:void(0);" class="showLink"></a>'
-                + '<a href="JavaScript:void(0);" class="modifyLink"></a>'
-                + '</div>'
-                + '</div>'),
-            resultTable: jQuery('<div class="resultTable"><table class="metadataSearchResult">' + '<thead><tr></tr></thead>' + '<tbody></tbody>' + '</table></div>'),
+            resultHeader: jQuery(
+                '<div class="metadataResultHeader">' +
+                '  <div class="panelHeader resultTitle"></div>' +
+                '  <div class="panelHeader resultLinks">' +
+                '    <a href="JavaScript:void(0);" class="showLink"></a>' +
+                '    <a href="JavaScript:void(0);" class="modifyLink"></a>' +
+                '  </div>' +
+                '</div>'
+            ),
+            resultTable: jQuery(
+                '<div class="resultTable">' +
+                '  <table class="metadataSearchResult">' +
+                '    <thead><tr></tr></thead>' +
+                '    <tbody></tbody>' +
+                '  </table>' +
+                '</div>'
+            ),
             resultTableHeader: jQuery('<th><a href="JavaScript:void(0);"></a></th>'),
-            resultTableRow: jQuery('<tr class="spacerRow"><td class="spacer"></td></tr><tr class="resultRow">'
-                + '<td></td>' + '<td></td>' + '<td><div class="layerInfo icon-info"></div></td>'
-                + '<td><div class="resultRemove icon-close"></div></td>' + '</tr>'),
+            resultTableRow: jQuery(
+                '<tr class="spacerRow">' +
+                '  <td class="spacer"></td>' +
+                '</tr>' +
+                '<tr class="resultRow">' +
+                '  <td></td>' +
+                '  <td></td>' +
+                '  <td><div class="actionPlaceholder"></div></td>' +
+                '  <td><div class="layerInfo icon-info"></div></td>' +
+                '  <td><div class="resultRemove icon-close"></div></td>' +
+                '</tr>'
+            ),
             layerList: jQuery('<ul class="layerList"></ul>'),
             layerListItem: jQuery('<li></li>'),
             layerLink: jQuery('<a href="JavaScript:void(0);" class="layerLink"></a>')
@@ -90,7 +146,7 @@ Oskari.clazz
          * @method getName
          * @return {String} the name for the component
          */
-        "getName": function () {
+        getName: function () {
             return this.__name;
         },
         /**
@@ -137,7 +193,7 @@ Oskari.clazz
          * @method start
          * implements BundleInstance protocol start method
          */
-        "start": function () {
+        start: function () {
             var me = this;
 
             if (me.started) {
@@ -146,40 +202,40 @@ Oskari.clazz
 
             me.started = true;
 
-            var conf = this.conf;
-            var sandboxName = (conf ? conf.sandbox : null) || 'sandbox';
-            var sandbox = Oskari.getSandbox(sandboxName);
+            var conf = me.conf,
+                sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
+                sandbox = Oskari.getSandbox(sandboxName);
 
             me.sandbox = sandbox;
 
-            this.localization = Oskari.getLocalization(this.getName());
+            me.localization = Oskari.getLocalization(me.getName());
 
             var optionAjaxUrl = null;
-            if (this.conf && this.conf.optionUrl) {
-                optionAjaxUrl = this.conf.optionUrl;
+            if (me.conf && me.conf.optionUrl) {
+                optionAjaxUrl = me.conf.optionUrl;
             } else {
                 optionAjaxUrl = sandbox.getAjaxUrl() + 'action_route=GetMetadataSearchOptions';
             }
 
             var searchAjaxUrl = null;
-            if (this.conf && this.conf.searchUrl) {
-                searchAjaxUrl = this.conf.searchUrl;
+            if (me.conf && me.conf.searchUrl) {
+                searchAjaxUrl = me.conf.searchUrl;
             } else {
                 searchAjaxUrl = sandbox.getAjaxUrl() + 'action_route=GetMetadataSearch';
             }
 
             // Default tab priority
-            if (this.conf && typeof this.conf.priority === 'number') {
-                this.tabPriority = this.conf.priority;
+            if (me.conf && typeof me.conf.priority === 'number') {
+                me.tabPriority = me.conf.priority;
             }
 
             var optionServName =
                 'Oskari.catalogue.bundle.metadatacatalogue.service.MetadataOptionService';
-            this.optionService = Oskari.clazz.create(optionServName, optionAjaxUrl);
+            me.optionService = Oskari.clazz.create(optionServName, optionAjaxUrl);
 
             var searchServName =
                 'Oskari.catalogue.bundle.metadatacatalogue.service.MetadataSearchService';
-            this.searchService = Oskari.clazz.create(searchServName, searchAjaxUrl);
+            me.searchService = Oskari.clazz.create(searchServName, searchAjaxUrl);
 
             sandbox.register(me);
             var p;
@@ -189,15 +245,25 @@ Oskari.clazz
                 }
             }
 
+            this.addSearchResultActionRequestHandler = Oskari.clazz.create(
+                'Oskari.catalogue.bundle.metadatacatalogue.request.AddSearchResultActionRequestHandler',
+                sandbox,
+                me
+            );
+            sandbox.addRequestHandler(
+                'AddSearchResultActionRequest',
+                this.addSearchResultActionRequestHandler
+            );
+
+
             // draw ui
             me.createUi();
-
         },
         /**
          * @method init
          * implements Module protocol init method - does nothing atm
          */
-        "init": function () {
+        init: function () {
             return null;
         },
         /**
@@ -205,7 +271,7 @@ Oskari.clazz
          * implements BundleInstance protocol update method - does
          * nothing atm
          */
-        "update": function () {
+        update: function () {
 
         },
         /**
@@ -229,14 +295,55 @@ Oskari.clazz
          * @property {Object} eventHandlers
          * @static
          */
-        eventHandlers: {},
+        eventHandlers: {
+
+            /**
+             * @method FeatureData.FinishedDrawingEvent
+             */
+            'MetaData.FinishedDrawingEvent': function (event) {
+                var me = this,
+                    coverageFeature;
+
+                coverageFeature = this.selectionPlugin.getFeaturesAsGeoJSON();
+
+                this.coverageButton.val(me.getLocalization('deleteArea'));
+                this.coverageButton[0].data = JSON.stringify(coverageFeature);
+                this.drawCoverage = false;
+
+                document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
+            },
+
+            'userinterface.ExtensionUpdatedEvent': function (event) {
+                var me = this,
+                    isShown = event.getViewState() !== 'close';
+
+                // ExtensionUpdateEvents are fired a lot, only let metadatacatalogue extension event to be handled when enabled
+                if (event.getExtension().getName() !== 'Search') {
+                    // wasn't me or disabled -> do nothing
+                    return;
+                } else if (!isShown && me.drawCoverage === false) {
+                    if (me.selectionPlugin) {
+                        me.selectionPlugin.stopDrawing();
+                    }
+                    if (me.coverageButton) {
+                        me.coverageButton.val(me.getLocalization('delimitArea'));
+                    }
+                    me.drawCoverage = true;
+                    document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
+                    var emptyData = {};
+                    if (me.coverageButton) {
+                        me.coverageButton[0].data = '';
+                    }
+                }
+            }
+        },
 
         /**
          * @method stop
          * implements BundleInstance protocol stop method
          */
-        "stop": function () {
-            var sandbox = this.sandbox(),
+        stop: function () {
+            var sandbox = this.sandbox,
                 p;
             for (p in this.eventHandlers) {
                 if (this.eventHandlers.hasOwnProperty(p)) {
@@ -244,9 +351,9 @@ Oskari.clazz
                 }
             }
 
-            var reqName = 'userinterface.RemoveExtensionRequest';
-            var reqBuilder = sandbox.getRequestBuilder(reqName);
-            var request = reqBuilder(this);
+            var reqName = 'userinterface.RemoveExtensionRequest',
+                reqBuilder = sandbox.getRequestBuilder(reqName),
+                request = reqBuilder(this);
 
             sandbox.request(this, request);
 
@@ -274,27 +381,28 @@ Oskari.clazz
          * (re)creates the UI for "metadata catalogue" functionality
          */
         createUi: function () {
-            var me = this;
+            var me = this,
+                metadataCatalogueContainer = me.templates.metadataTab.clone();
+            me.optionPanel = me.templates.optionPanel.clone();
+            me.searchPanel = me.templates.searchPanel.clone();
+            me.resultPanel = me.templates.resultPanel.clone();
+            metadataCatalogueContainer.append(me.optionPanel);
+            metadataCatalogueContainer.append(me.searchPanel);
+            metadataCatalogueContainer.append(me.resultPanel);
+            me.searchPanel.hide();
+            me.searchPanel.append(me.getLocalization('searching'));
+            me.resultPanel.hide();
 
-            var metadataCatalogueContainer = this.templates.metadataTab.clone();
-            var optionPanel = this.templates.optionPanel.clone();
-            var searchPanel = this.templates.searchPanel.clone();
-            var resultPanel = this.templates.resultPanel.clone();
-            metadataCatalogueContainer.append(optionPanel);
-            metadataCatalogueContainer.append(searchPanel);
-            metadataCatalogueContainer.append(resultPanel);
-            searchPanel.hide();
-            searchPanel.append(me.getLocalization('searching'));
-            resultPanel.hide();
-
-            var metadataCatalogueDescription = metadataCatalogueContainer.find('div.metadataCatalogueDescription');
-            metadataCatalogueDescription.html(me.getLocalization('metadataCatalogueDescription'));
+            var metadataCatalogueDescription = metadataCatalogueContainer.find(
+                'div.metadataCatalogueDescription'
+            );
+            metadataCatalogueDescription.html(
+                me.getLocalization('metadataCatalogueDescription')
+            );
 
             var field = Oskari.clazz.create('Oskari.userinterface.component.FormInput');
             field.setPlaceholder(me.getLocalization('assistance'));
-
-            // var regex = /[\s\w\d\.\,\?\!\-äöåÄÖÅ]*\*?$/;
-            // field.setContentCheck(true, me.getLocalization('contentErrorMsg'), regex);
+            field.setIds('oskari_metadatacatalogue_forminput', 'oskari_metadatacatalogue_forminput_searchassistance');
 
             field.bindChange(function (event) {
                 if (me.state === null) {
@@ -308,51 +416,66 @@ Oskari.clazz
                     resultList.empty();
                 }
             });
-            field.addClearButton();
+            field.addClearButton('oskari_metadatacatalogue_forminput_clearbutton');
 
-            var button = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            button.setTitle(me.getLocalization('metadataCatalogueButton'));
+            var button = Oskari.clazz.create(
+                'Oskari.userinterface.component.buttons.SearchButton'
+            );
+            button.setId('oskari_metadatacatalogue_button_search');
 
             var doMetadataCatalogue = function () {
-                metadataCatalogueContainer.find(".metadataOptions").hide();
-                metadataCatalogueContainer.find(".metadataSearching").show();
-                var search = {search: field.getValue()};
+                metadataCatalogueContainer.find('.metadataOptions').hide();
+                metadataCatalogueContainer.find('.metadataSearching').show();
+                var search = {
+                    search: field.getValue()
+                };
                 // Collect the advanced search options
                 if (moreLessLink.html() === me.getLocalization('showLess')) {
                     // Checkboxes
-                    var checkboxRows = metadataCatalogueContainer.find(".checkboxRow");
-                    for (var i=0; i<checkboxRows.length; i++) {
-                        var checkboxDefs = jQuery(checkboxRows[i]).find(".metadataMultiDef");
-                        if (checkboxDefs.length == 0) {
+                    var checkboxRows = metadataCatalogueContainer.find('.checkboxRow'),
+                        i,
+                        checkboxDefs,
+                        values,
+                        j,
+                        coverageButton,
+                        checkboxDef,
+                        dropdownDef,
+                        dropdownRows,
+                        dropdownRow;
+                    for (i = 0; i < checkboxRows.length; i += 1) {
+                        checkboxDefs = jQuery(checkboxRows[i]).find('.metadataMultiDef');
+                        if (checkboxDefs.length === 0) {
                             continue;
                         }
-                        var values = [];
-                        for (var j=0; j<checkboxDefs.length; j++) {
-                            var checkboxDef = jQuery(checkboxDefs[j]);
-                            if (checkboxDef.is(":checked")) {
+                        values = [];
+                        for (j = 0; j < checkboxDefs.length; j += 1) {
+                            checkboxDef = jQuery(checkboxDefs[j]);
+                            if (checkboxDef.is(':checked')) {
                                 values.push(checkboxDef.val());
                             }
                         }
-                        search[jQuery(checkboxDefs[0]).attr("name")] = values.join();
+                        search[jQuery(checkboxDefs[0]).attr('name')] = values.join();
                     }
                     // Dropdown lists
-                    var dropdownRows = metadataCatalogueContainer.find(".dropdownRow");
-                    for (var i=0; i<dropdownRows.length; i++) {
-                        var dropdownDef = jQuery(dropdownRows[i]).find(".metadataDef");
-                        search[dropdownDef.attr("name")] = dropdownDef.find(":selected").val();
+                    dropdownRows = metadataCatalogueContainer.find('.dropdownRow');
+                    for (i = 0; i < dropdownRows.length; i += 1) {
+                        dropdownDef = jQuery(dropdownRows[i]).find('.metadataDef');
+                        search[dropdownDef.attr('name')] = dropdownDef.find(':selected').val();
                     }
+                    // Coverage geometry
+                    search[me.coverageButton.attr('name')] = me.coverageButton[0].data;
                 }
                 me.lastSearch = field.getValue();
-                me.searchService.doSearch(search,function(data) {
-                    me._showResults(metadataCatalogueContainer,data);
-                }, function(data) {
-                    searchPanel.hide();
-                    optionPanel.show();
-                    var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-                    var okBtn = dialog.createCloseButton('OK');
-                    var title = me.getLocalization('metadatasearchservice_alert_title');
-                    var msg = me.getLocalization('metadatasearchservice_not_found_anything_text');
-                    dialog.show(title, msg, [okBtn]);
+
+                me.searchService.doSearch(search, function (data) {
+                    me._showResults(metadataCatalogueContainer, data);
+                }, function (data) {
+                    var key = field.getValue();
+                    if (key === null || key === undefined || key.length === 0) {
+                        me._showError(me.getLocalization('cannot_be_empty'));
+                    } else {
+                        me._showError(me.getLocalization('metadatasearchservice_not_found_anything_text'));
+                    }
                 });
             };
 
@@ -361,21 +484,24 @@ Oskari.clazz
 
             var controls = metadataCatalogueContainer.find('div.controls');
             controls.append(field.getField());
-            controls.append(button.getButton());
+            controls.append(button.getElement());
 
             // Metadata catalogue tab
-            var title = me.getLocalization('tabTitle');
-            var content = metadataCatalogueContainer;
-            var priority = this.tabPriority;
-            var reqName = 'Search.AddTabRequest';
-            var reqBuilder = me.sandbox.getRequestBuilder(reqName);
-            var req = reqBuilder(title, content, priority);
+
+            var title = me.getLocalization('tabTitle'),
+                content = metadataCatalogueContainer,
+                priority = this.tabPriority,
+                id = 'oskari_metadatacatalogue_tabpanel_header',
+                reqName = 'Search.AddTabRequest',
+                reqBuilder = me.sandbox.getRequestBuilder(reqName),
+                req = reqBuilder(title, content, priority, id);
+
             me.sandbox.request(me, req);
 
             // Link to advanced search
             var moreLessLink = this.templates.moreLessLink.clone();
             moreLessLink.html(me.getLocalization('showMore'));
-            moreLessLink.click(function() {
+            moreLessLink.click(function () {
                 var advancedContainer = metadataCatalogueContainer.find('div.advanced');
                 if (moreLessLink.html() === me.getLocalization('showMore')) {
                     // open advanced/toggle link text
@@ -401,70 +527,131 @@ Oskari.clazz
             });
             metadataCatalogueContainer.find('div.moreLess').append(moreLessLink);
         },
-        _createAdvancedPanel : function(data, advancedContainer, moreLessLink) {
+
+        _showError: function (error) {
             var me = this;
-            var dataFields = data.fields;
-            for (var i=0; i < dataFields.length; i++) {
-                var dataField = dataFields[i];
+            me.searchPanel.hide();
+            me.optionPanel.show();
+            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                okButton = dialog.createCloseButton('OK');
+
+            dialog.setId('oskari_search_error_popup');
+
+            dialog.show(
+                this.getLocalization('metadataoptionservice_alert_title'),
+                error, [okButton]
+            );
+        },
+        _createAdvancedPanel: function (data, advancedContainer, moreLessLink) {
+            var me = this,
+                dataFields = data.fields,
+                i,
+                dataField,
+                newRow,
+                newLabel,
+                j,
+                value,
+                text,
+                newCheckbox,
+                newCheckboxDef,
+                newDropdown,
+                button,
+                icon,
+                dropdownDef,
+                emptyOption,
+                newOption,
+                checkboxChange = function () {
+                    me._updateOptions(advancedContainer);
+                };
+
+            for (i = 0; i < dataFields.length; i += 1) {
+                dataField = dataFields[i];
                 if (dataField.values.length === 0) {
                     // no options to show -> skip
                     continue;
                 }
-                var newRow = null;
-                var newLabel = me.getLocalization(dataField.field);
+                newRow = null;
+                newLabel = me.getLocalization(dataField.field);
                 // Continue gracefully also without localization
-                if (typeof newLabel !== "string") {
+                if (typeof newLabel !== 'string') {
                     newLabel = dataField.field;
                 }
                 // Checkbox
                 if (dataField.multi) {
                     newRow = me.templates.checkboxRow.clone();
                     newRow.find('div.rowLabel').text(newLabel);
-                    for (var j=0; j < dataField.values.length; j++) {
-                        var value = dataField.values[j];
-                        var text = me._getOptionLocalization(value);
-                        var newCheckbox = me.templates.metadataCheckbox.clone();
-                        var newCheckboxDef = newCheckbox.find(":checkbox");
-                        newCheckboxDef.attr("name",dataField.field);
-                        newCheckboxDef.attr("value",value.val);
-                        newCheckbox.find("label.metadataTypeText").append(text);
-                        newCheckbox.change(function(){
-                            me._updateOptions(advancedContainer);
-                        });
-                        newRow.find(".checkboxes").append(newCheckbox);
+                    for (j = 0; j < dataField.values.length; j += 1) {
+                        value = dataField.values[j];
+                        text = me._getOptionLocalization(value);
+                        newCheckbox = me.templates.metadataCheckbox.clone();
+                        newCheckboxDef = newCheckbox.find(':checkbox');
+                        newCheckboxDef.attr('name', dataField.field);
+                        newCheckboxDef.attr('value', value.val);
+                        newCheckbox.find('label.metadataTypeText').append(text);
+                        newCheckbox.change(checkboxChange);
+                        newRow.find('.checkboxes').append(newCheckbox);
                     }
                     // Dropdown list
                 } else {
                     newRow = me.templates.dropdownRow.clone();
-                    newRow.find("div.rowLabel").append(newLabel);
-                    var newDropdown = me.templates.metadataDropdown.clone();
-                    var dropdownDef = newDropdown.find(".metadataDef");
-                    dropdownDef.attr("name",dataField.field);
-                    var emptyOption = me.templates.dropdownOption.clone();
-                    emptyOption.attr("value", '');
+                    newRow.find('div.rowLabel').append(newLabel);
+                    newDropdown = me.templates.metadataDropdown.clone();
+                    dropdownDef = newDropdown.find('.metadataDef');
+                    dropdownDef.attr('name', dataField.field);
+                    emptyOption = me.templates.dropdownOption.clone();
+                    emptyOption.attr('value', '');
                     emptyOption.text(me.getLocalization('emptyOption'));
                     dropdownDef.append(emptyOption);
-                    for (var j=0; j < dataField.values.length; j++) {
-                        var value = dataField.values[j];
-                        var text = me._getOptionLocalization(value);
-                        var newOption = me.templates.dropdownOption.clone();
-                        newOption.attr("value",value.val);
+                    for (j = 0; j < dataField.values.length; j += 1) {
+                        value = dataField.values[j];
+                        text = me._getOptionLocalization(value);
+                        newOption = me.templates.dropdownOption.clone();
+                        newOption.attr('value', value.val);
                         newOption.text(text);
                         dropdownDef.append(newOption);
                     }
-                    newDropdown.find(".metadataDef").change(function(){
-                        me._updateOptions(advancedContainer);
-                    });
+                    newDropdown.find('.metadataDef').change(checkboxChange);
                     newRow.append(newDropdown);
                 }
                 // Conditional visibility
-                if ((typeof dataField.shownIf !== "undefined")&&(dataField.shownIf.length > 0)) {
-                    me.conditions.push({field: dataField.field, shownIf: dataField.shownIf});
+                if ((typeof dataField.shownIf !== 'undefined') && (dataField.shownIf.length > 0)) {
+                    me.conditions.push({
+                        field: dataField.field,
+                        shownIf: dataField.shownIf
+                    });
                     newRow.hide();
                 }
                 newRow.addClass(dataField.field);
                 advancedContainer.append(newRow);
             }
+
+            newRow = me.templates.buttonRow.clone();
+            newLabel = me.getLocalization('searchArea');
+            newRow.find('div.rowLabel').append(newLabel);
+
+            var newButton = me.templates.metadataButton.clone();
+            this.coverageButton = newButton.find('.metadataCoverageDef');
+            this.coverageButton.attr('value', me.getLocalization('delimitArea'));
+            this.coverageButton.attr('name', 'coverage');
+            this.drawCoverage = true;
+
+            this.coverageButton.on('click', function () {
+                if (me.drawCoverage === true) {
+                    me._getCoverage();
+                } else {
+                    me.selectionPlugin.stopDrawing();
+                    me.coverageButton.val(me.getLocalization('delimitArea'));
+                    me.drawCoverage = true;
+                    document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
+                    var emptyData = {};
+                    me.coverageButton[0].data = '';
+                }
+            });
+
+            newRow.append(newButton);
+            
+            advancedContainer.append(newRow);
+
             me._updateOptions(advancedContainer);
         },
 
@@ -472,45 +659,72 @@ Oskari.clazz
          * @method _getOptionLocalization
          * Generates localization for option values
          */
-        _getOptionLocalization: function(value) {
-            var me = this;
+        _getOptionLocalization: function (value) {
+            var me = this,
+                text;
             // Localization available?
-            if (typeof value.locale !== "undefined") {
+            if (typeof value.locale !== 'undefined') {
                 text = value.locale;
             } else {
                 text = me.getLocalization(value.val);
-                if (typeof text !== "string") {
+                if (typeof text !== 'string') {
                     text = value.val;
                 }
             }
             return text;
         },
 
+        _getCoverage: function () {
+            var me = this;
+            var mapModule = this.sandbox.findRegisteredModuleInstance('MainMapModule');
+
+            var config = {
+                id: 'MetaData',
+                enableTransform: true
+            };
+
+            this.selectionPlugin = Oskari.clazz.create('Oskari.mapframework.bundle.featuredata2.plugin.MapSelectionPlugin', config);
+            mapModule.registerPlugin(this.selectionPlugin);
+            mapModule.startPlugin(this.selectionPlugin);
+            this.selectionPlugin.startDrawing({drawMode: 'square'});
+        },
+
         /**
-         * @method showResults
+         * @method _updateOptions
          * Updates availability of the options
          */
-        _updateOptions: function(container) {
-            var me = this;
-            for (var i = 0; i < me.conditions.length; i++) {
-                var condition = me.conditions[i];
-                var row = container.find("."+condition.field);
-                for (var j = 0; j < condition.shownIf.length; j++) {
-                    var ref = condition.shownIf[j];
-                    for (var refItem in ref) {
-                        var value = condition.shownIf[j][refItem];
-                        var refRow = container.find(".metadataRow."+refItem);
-                        if (refRow.hasClass("checkboxRow")) {
-                            // Check box
-                            if (!refRow.find("input:checkbox[value="+value+"]").is(':checked')) {
-                                row.hide();
-                                return;
-                            }
-                        } else if (refRow.hasClass("dropdownRow")) {
-                            var selectedOption = refRow.find(".metadataDef option:selected").val();
-                            if (value !== selectedOption) {
-                                row.hide();
-                                return;
+        _updateOptions: function (container) {
+            var me = this,
+                i,
+                condition,
+                row,
+                j,
+                ref,
+                refItem,
+                value,
+                refRow,
+                selectedOption;
+            for (i = 0; i < me.conditions.length; i += 1) {
+                condition = me.conditions[i];
+                row = container.find('.' + condition.field);
+                for (j = 0; j < condition.shownIf.length; j += 1) {
+                    ref = condition.shownIf[j];
+                    for (refItem in ref) {
+                        if (ref.hasOwnProperty(refItem)) {
+                            value = condition.shownIf[j][refItem];
+                            refRow = container.find('.metadataRow.' + refItem);
+                            if (refRow.hasClass('checkboxRow')) {
+                                // Check box
+                                if (!refRow.find('input:checkbox[value=' + value + ']').is(':checked')) {
+                                    row.hide();
+                                    return;
+                                }
+                            } else if (refRow.hasClass('dropdownRow')) {
+                                selectedOption = refRow.find('.metadataDef option:selected').val();
+                                if (value !== selectedOption) {
+                                    row.hide();
+                                    return;
+                                }
                             }
                         }
                     }
@@ -523,46 +737,55 @@ Oskari.clazz
          * @method showResults
          * Displays metadata search results
          */
-        _showResults: function(metadataCatalogueContainer,data) {
+        _showResults: function (metadataCatalogueContainer, data) {
             var me = this;
+
             me.lastResult = data.results;
-            var resultPanel = metadataCatalogueContainer.find(".metadataResults");
-            var searchPanel = metadataCatalogueContainer.find(".metadataSearching");
-            var optionPanel = metadataCatalogueContainer.find(".metadataOptions");
+            var resultPanel = metadataCatalogueContainer.find('.metadataResults'),
+                searchPanel = metadataCatalogueContainer.find('.metadataSearching'),
+                optionPanel = metadataCatalogueContainer.find('.metadataOptions');
 
             // Hide other panels, if visible
             searchPanel.hide();
             optionPanel.hide();
             // Create header
             var resultHeader = me.templates.resultHeader.clone();
-            resultHeader.find(".resultTitle").text(me.getLocalization('metadataCatalogueResults'));
-            var showLink = resultHeader.find(".showLink");
+            resultHeader.find('.resultTitle').text(me.getLocalization('metadataCatalogueResults'));
+            var showLink = resultHeader.find('.showLink');
             showLink.hide();
             showLink.html(me.getLocalization('showSearch'));
-            showLink.click(function() {
-                jQuery("table.metadataSearchResult tr").show();
+            showLink.click(function () {
+                jQuery('table.metadataSearchResult tr').show();
                 showLink.hide();
             });
-            var modifyLink = resultHeader.find(".modifyLink");
+            var modifyLink = resultHeader.find('.modifyLink');
             modifyLink.html(me.getLocalization('modifySearch'));
-            modifyLink.click(function() {
+            modifyLink.click(function () {
                 resultPanel.empty();
                 optionPanel.show();
             });
 
+            if (data.results.length === 0) {
+                resultPanel.append(resultHeader);
+                resultPanel.append(me.getLocalization('searchservice_search_not_found_anything_text'));
+                resultPanel.show();
+                return;
+            }
+
             // render results
-            var table = me.templates.resultTable.clone();
-            var tableHeaderRow = table.find('thead tr');
-            var tableBody = table.find('tbody');
+            var table = me.templates.resultTable.clone(),
+                tableHeaderRow = table.find('thead tr'),
+                tableBody = table.find('tbody');
             tableBody.empty();
             // header reference needs some closure magic to work here
             var headerClosureMagic = function (scopedValue) {
                 return function () {
                     // save hidden results
-                    var hiddenRows = tableBody.find('tr.resultRow:hidden');
-                    var hiddenResults = [];
-                    for (var i=0; i<hiddenRows.length; i++) {
-                        hiddenResults.push(jQuery(hiddenRows[i]).data("resultId"));
+                    var hiddenRows = tableBody.find('tr.resultRow:hidden'),
+                        hiddenResults = [],
+                        i;
+                    for (i = 0; i < hiddenRows.length; i += 1) {
+                        hiddenResults.push(jQuery(hiddenRows[i]).data('resultId'));
                     }
 
                     // clear table for sorted results
@@ -580,10 +803,12 @@ Oskari.clazz
                     me._populateResultTable(tableBody);
 
                     // hide hidden results
-                    var newRows = tableBody.find('tr');
-                    for (var i=0; i<newRows.length; i++) {
-                        var resultId = jQuery(newRows[i]).data("resultId");
-                        for (var j = 0; j < hiddenResults.length; j++) {
+                    var newRows = tableBody.find('tr'),
+                        resultId,
+                        j;
+                    for (i = 0; i < newRows.length; i += 1) {
+                        resultId = jQuery(newRows[i]).data('resultId');
+                        for (j = 0; j < hiddenResults.length; j += 1) {
                             if (resultId === hiddenResults[j]) {
                                 jQuery(newRows[i]).hide();
                             }
@@ -605,13 +830,13 @@ Oskari.clazz
             var i,
                 header,
                 link;
-            for (i = 0; i < me.resultHeaders.length; ++i) {
+            for (i = 0; i < me.resultHeaders.length; i += 1) {
                 header = me.templates.resultTableHeader.clone();
                 header.addClass(me.resultHeaders[i].prop);
                 link = header.find('a');
                 link.append(me.resultHeaders[i].title);
                 // Todo: Temporarily only the first column is sortable
-                if (i===0)  {
+                if (i === 0) {
                     link.bind('click', headerClosureMagic(me.resultHeaders[i]));
                 }
                 tableHeaderRow.append(header);
@@ -625,8 +850,8 @@ Oskari.clazz
         },
 
         _populateResultTable: function (resultsTableBody) {
-            var me = this;
-            var results = me.lastResult;
+            var me = this,
+                results = me.lastResult;
             // row reference needs some closure magic to work here
             var closureMagic = function (scopedValue) {
                 return function () {
@@ -634,8 +859,9 @@ Oskari.clazz
                     return false;
                 };
             };
-            var selectedLayers = me.sandbox.findAllSelectedMapLayers();
-            for (var i = 0; i < results.length; ++i) {
+            var selectedLayers = me.sandbox.findAllSelectedMapLayers(),
+                i;
+            for (i = 0; i < results.length; i += 1) {
                 if ((!results[i].name) || (results[i].name.length === 0)) {
                     continue;
                 }
@@ -646,18 +872,19 @@ Oskari.clazz
                         cells,
                         titleText,
                         layers,
+                        newLayers,
                         row,
                         mapLayerService,
                         layerList;
                     row = results[i];
                     resultContainer = me.templates.resultTableRow.clone();
-                    resultContainer.addClass("res"+ i);
-                    resultContainer.data("resultId",row.id);
+                    resultContainer.addClass('res' + i);
+                    resultContainer.data('resultId', row.id);
                     cells = resultContainer.find('td').not('.spacer');
                     titleText = row.name;
                     // Include organization information if available
                     if ((row.organization) && (row.organization.length > 0)) {
-                        titleText = titleText + ", " + row.organization;
+                        titleText = titleText + ', ' + row.organization;
                     }
                     // Add title
                     jQuery(cells[0]).append(titleText);
@@ -665,38 +892,109 @@ Oskari.clazz
                     if ((row.id) && (row.id.length > 0)) {
                         mapLayerService = me.sandbox.getService('Oskari.mapframework.service.MapLayerService');
                         layers = mapLayerService.getLayersByMetadataId(row.id);
-                        layerList = me.templates.layerList.clone();
+
+                        // Optional complementary layers
+                        if ((row.uuid) && (row.uuid.length > 0)) {
+                            row_loop: for (j = 0; j < row.uuid.length; j += 1) {
+                                // Check for duplicates
+                                if (row.uuid[j] === row.id) {
+                                    continue;
+                                }
+                                for (k = 0; k < j; k += 1) {
+                                    if (row.uuid[k] === row.uuid[j]) {
+                                        continue row_loop;
+                                    }
+                                }
+                                newLayers = mapLayerService.getLayersByMetadataId(row.uuid[j]);
+                                if ((newLayers) && (newLayers.length > 0)) {
+                                    layers = layers.concat(newLayers);
+                                }
+                            }
+                        }
+                        // Check for duplicates
+                        j = 0;
+                        layer_loop: while (j < layers.length) {
+                            for (k = 0; k < j; k += 1) {
+                                if (layers[k].getId() === layers[j].getId()) {
+                                    layers.splice(j, 1);
+                                    continue layer_loop;
+                                }
+                            }
+                            j = j + 1;
+                        }
+
                         // Add layer links
-                        for (var j = 0; j < layers.length; ++j) {
+                        layerList = me.templates.layerList.clone();
+                        for (j = 0; j < layers.length; j += 1) {
                             me._addLayerLinks(layers[j], layerList);
                         }
+
                         jQuery(cells[0]).append(layerList);
                         // Todo: real rating
-                        //jQuery(cells[1]).append("*****");
+                        // jQuery(cells[1]).append("*****");
                         jQuery(cells[1]).addClass(me.resultHeaders[1].prop);
-                        jQuery(cells[2]).addClass(me.resultHeaders[2].prop);
-                        jQuery(cells[2]).find('div.layerInfo').click(function () {
-                            var rn = 'catalogue.ShowMetadataRequest';
-                            me.sandbox.postRequestByName(rn, [
-                                {
-                                    uuid: row.id
+
+                        // Action link
+                        if(me._isAction() == true) {
+                            var actionElement = me.actionStatus.actionElement.clone(),
+                                callbackElement = null,
+                                actionTextEl = null;
+                            
+                            // Set action callback
+                            if(me.actionStatus.callback && typeof me.actionStatus.callback == 'function') {
+                                // Bind action click to bindCallbackTo if bindCallbackTo param exist
+                                if(me.actionStatus.bindCallbackTo) {
+                                    callbackElement = licenseElement.find(me.actionStatus.bindCallbackTo);
                                 }
-                            ]);
+                                // Bind action click to root element if bindCallbackTo is null
+                                else {
+                                    callbackElement =  actionElement.first();
+                                }
+                                callbackElement.css({'cursor':'pointer'}).bind('click', {metadata: row}, function(event){
+                                   me.actionStatus.callback(event.data.metadata);
+                                });
+                            }
+
+                            // Set action text
+                            if(me.actionStatus.actionTextElement) {
+                                actionTextEl = actionElement.find(me.actionStatus.actionTextElement);
+                            } else {
+                                actionTextEl = actionElement.first();
+                            }
+                            if(actionTextEl.is('input') ||
+                                actionTextEl.is('select') ||
+                                actionTextEl.is('button') ||
+                                actionTextEl.is('textarea')){
+                                actionTextEl.val(me.getLocalization('licenseText'));
+                            }
+                            else {                                
+                                actionTextEl.html(me.getLocalization('licenseText'));
+                            }
+
+                            jQuery(cells[2]).find('div.actionPlaceholder').append(actionElement);                            
+                        }
+
+                        jQuery(cells[3]).addClass(me.resultHeaders[2].prop);
+                        jQuery(cells[3]).find('div.layerInfo').click(function () {
+                            var rn = 'catalogue.ShowMetadataRequest';
+                            me.sandbox.postRequestByName(rn, [{
+                                uuid: row.id
+                            }]);
                         });
-                        jQuery(cells[3]).addClass(me.resultHeaders[3].prop);
-                        jQuery(cells[3]).find('div.resultRemove').click(function () {
-                            jQuery("table.metadataSearchResult tr.res"+i).hide();
-                            jQuery("div.metadataResultHeader a.showLink").show();
+                        jQuery(cells[4]).addClass(me.resultHeaders[3].prop);
+                        
+                        jQuery(cells[4]).find('div.resultRemove').click(function () {
+                            jQuery('table.metadataSearchResult tr.res' + i).hide();
+                            jQuery('div.metadataResultHeader a.showLink').show();
                         });
                     }
                     resultsTableBody.append(resultContainer);
                 })(i);
             }
         },
-
-        _addLayerLinks : function(layer,layerList) {
-            var me = this;
-            var selectedLayers,
+        _addLayerLinks: function (layer, layerList) {
+            var me = this,
+                selectedLayers,
                 selectedLayer,
                 layerSelected,
                 showText,
@@ -706,9 +1004,10 @@ Oskari.clazz
                 request,
                 layerListItem,
                 layerLink;
+
             layerSelected = false;
             selectedLayers = me.sandbox.findAllSelectedMapLayers();
-            for (var k = 0; k < selectedLayers.length; ++k) {
+            for (var k = 0; k < selectedLayers.length; k += 1) {
                 selectedLayer = selectedLayers[k];
                 if (layer.getId() === selectedLayer.getId()) {
                     layerSelected = true;
@@ -716,18 +1015,18 @@ Oskari.clazz
                 }
             }
             layerLink = me.templates.layerLink.clone();
-            showText = me.getLocalization("show"),
-                hideText = me.getLocalization("hide");
+            showText = me.getLocalization('show');
+            hideText = me.getLocalization('hide');
 
             // Check if layer is already selected and visible
-            if ((layerSelected)&&(layer.isVisible())) {
+            if ((layerSelected) && (layer.isVisible())) {
                 layerLink.html(hideText);
             } else {
                 layerLink.html(showText);
             }
 
             // Click binding
-            layerLink.click(function() {
+            layerLink.click(function () {
                 visibilityRequestBuilder = me.sandbox.getRequestBuilder('MapModulePlugin.MapLayerVisibilityRequest');
                 // Hide layer
                 if (jQuery(this).html() === hideText) {
@@ -759,7 +1058,7 @@ Oskari.clazz
             });
             layerListItem = me.templates.layerListItem.clone();
             layerListItem.text(layer.getName());
-            layerListItem.append("&nbsp;&nbsp;");
+            layerListItem.append('&nbsp;&nbsp;');
             layerListItem.append(layerLink);
             layerList.append(layerListItem);
         },
@@ -799,10 +1098,9 @@ Oskari.clazz
          * @param {Boolean} pDescending true if sort direction is descending
          */
         _searchResultComparator: function (a, b, pAttribute, pDescending) {
-            var nameA = a[pAttribute].toLowerCase();
-            var nameB = b[pAttribute].toLowerCase();
-
-            var value = 0;
+            var nameA = a[pAttribute].toLowerCase(),
+                nameB = b[pAttribute].toLowerCase(),
+                value = 0;
             if (nameA === nameB) {
                 nameA = a.id;
                 nameB = b.id;
@@ -816,6 +1114,33 @@ Oskari.clazz
                 value = value * -1;
             }
             return value;
+        },
+        /**
+        * @method addSearchResultAction
+        * Add search result action.
+        * @public
+        * @param {jQuery} actionElement jQuery action element
+        * @param {Function} callback the callback function
+        * @param {String} bindCallbackTo the jQuery selector where to bind click operation
+        * @param {String} actionTextElement action text jQuery selector. If it's null then text showed on main element
+        */
+        addSearchResultAction: function(actionElement, actionTextElement, callback, bindCallbackTo){
+            var me = this;
+            me.actionStatus = {
+                actionElement: actionElement,
+                actionTextElement: actionTextElement,
+                callback: callback,
+                bindCallbackTo: bindCallbackTo
+            };
+        },
+        /**
+        * @method _isAction
+        * @private
+        * @return {Boolean} is action
+        */
+        _isAction: function(){
+            var me = this;
+            return me.actionStatus.actionElement !== null;
         },
         /**
          * @method setState
@@ -836,7 +1161,7 @@ Oskari.clazz
          * @property {String[]} protocol
          * @static
          */
-        "protocol": [
+        protocol: [
             'Oskari.bundle.BundleInstance',
             'Oskari.mapframework.module.Module'
         ]

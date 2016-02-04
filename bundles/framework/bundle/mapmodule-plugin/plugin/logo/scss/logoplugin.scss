@@ -1,17 +1,16 @@
 .logoplugin {
-
-	$logoOpacity: 0.8;
-
-	background-color: #FFF;
+	color: #FAFAFA;
 	background-repeat: no-repeat;
 	display: block;
 	height: 25px;
+	/* Force line to fit container */
+    line-height: 15px;
+    text-align: left;
+	text-shadow: 1px 0px 3px rgba(0, 0, 0, 0.5), -1px 0px 3px rgba(0, 0, 0, 0.5), 1px 0px 1px #000, -1px 0px 1px #000;
 	z-index: 100000000 !important;
-	filter: unquote("alpha(opacity=")$logoOpacity * 100 unquote(")"); /* unquote for libsass bug */
-	opacity: $logoOpacity !important;
 	
 	a, a:hover, a:active, a:visited {
-		color: #333333 !important;
+		color: inherit;
 	}
   
 	.icon {
@@ -19,27 +18,44 @@
 		height: 25px;
 		width: 25px;
 		vertical-align: bottom;
-	}
-	
-	.terms {
-		display: inline-block;
-		margin: 5px;
-	}
-
-	.data-sources {
-		display: inline-block;
-		margin: 5px;
-		text-decoration: underline;
 		cursor: pointer;
 	}
 
+	.data-sources, .terms {
+		display: inline-block;
+		margin: 5px;
+		cursor: pointer;
+
+		a {
+			/* Filter below requires that the element has height or smthn... */
+			display: inline-block;
+			text-decoration: none;
+			/* text-shadow replacement for IE9 */
+			filter: unquote("glow(color=#C0000000,strength=1)");
+		}
+
+	}
+
 }
+
+.right .logoplugin {
+	/* Right-align elements so a wide sibling plugin won't push them to the left... */
+	text-align: right;
+}
+
 .data-sources-dialog {
 	max-width: 400px;
-	.layers h4, .indicators h4 {
-		padding-bottom: 5px;
+
+	.layers, .indicators {
+
+		h4 {
+			padding-bottom: 5px;
+		}
+
 	}
+
 	.indicators {
 		margin-top: 10px;
 	}
+
 }

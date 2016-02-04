@@ -22,7 +22,7 @@ Oskari.registerLocalization(
         "plugin": {
             "LogoPlugin": {
                 "terms": "Terms of Use",
-                "dataSources": "Data sources",
+                "dataSources": "Data Sources",
                 "layersHeader": "Map Layers",
                 "indicatorsHeader": "Indicators",
                 "emptyDataSource": "Empty",
@@ -45,6 +45,7 @@ Oskari.registerLocalization(
             "SearchPlugin": {
                 "placeholder": "Search location",
                 "search": "Search",
+                "title": "Search Results",
                 "close": "Close search results.",
                 "noresults": "No results found. Please refine your search.",
                 "toomanyresults": "Over 100 results found. Please refine your search.",
@@ -71,6 +72,41 @@ Oskari.registerLocalization(
                     "line": "Measure a distance",
                     "area": "Measure an area"
                 }
+            },
+            "MarkersPlugin": {
+                "buttons": {
+                    "add": "Map marker",
+                    "clear": "Delete all markers"
+                },
+                "form": {
+                    "title": "Point feature style",
+                    "tooltip": "",
+                    "symbol": {
+                        "label": "Icon"
+                    },
+                    "size": {
+                        "label": "Size"
+                    },
+                    "color": {
+                        "label": "Colour",
+                        "labelOr": "or",
+                        "labelCustom": "Custom colour (RGB 0-255)"
+                    },
+                    "preview": {
+                        "label": "Preview"
+                    },
+                    "message": {
+                        "label": "The text on the map",
+                        "hint": "Write a message"
+                    }
+                },
+                "dialog": {
+                    "title": "Map marker",
+                    "message": "Select a new location for the marker by clicking the map."
+                }
+            },
+            "MyLocationPlugin": {
+                "tooltip": "Center map to your location"
             }
         }
     }

@@ -16,16 +16,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
      * @param {Object} localization
      *      localization data in JSON format
      */
-
     function (instance, localization) {
         var me = this;
         me.instance = instance;
-        me.template = jQuery("<div class='startview'>" + "<div class='content'></div>" +
-            "<div class='buttons'></div>" + "</div>");
-        me.templateLayerList = jQuery("<div class='layerlist'>" + "<h4></h4>" + "<ul></ul>" + "</div>");
-        me.templateListItem = jQuery("<li></li>");
+        me.template = jQuery('<div class="startview">' + '<div class="content"></div>' +
+            '<div class="tou"><a href="JavaScript:void(0;)""></a></div>' +
+            '<div class="buttons"></div>' + '</div>');
+        me.templateLayerList = jQuery('<div class="layerlist">' + '<h4></h4>' + '<ul></ul>' + '</div>');
+        me.templateListItem = jQuery('<li></li>');
         me.templateError = jQuery('<div class="error"><ul></ul></div>');
-        me.templateInfo = jQuery("<div class='icon-info'></div>");
+        me.templateInfo = jQuery('<div class="icon-info"></div>');
         me.loc = localization;
         me.content = undefined;
         me.buttons = {};
@@ -57,7 +57,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             });
             me.buttons['continue'] = continueButton;
             me._updateContinueButton();
-            continueButton.insertTo(content.find('div.buttons'));
+            continueButton.insertTo(content.find('div.buttons')[0]);
 
             var cancelButton = Oskari.clazz.create('Oskari.userinterface.component.Button');
             cancelButton.setTitle(me.loc.buttons.cancel);
@@ -85,7 +85,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             // empty any current lists
             var me = this,
                 container = me.content.find('div.content'),
-                layers = [], // resolve layers
+                layers = [],
                 deniedLayers = [],
                 selectedLayers = me.instance.sandbox.findAllSelectedMapLayers(),
                 i,
@@ -130,7 +130,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
                     container.append(deniedLayersList);
                 }
             } else {
-                // write a message that
                 var errorsList = me.templateError.clone(),
                     error = me.templateListItem.clone();
                 error.append(me.loc.layerlist_empty);
@@ -142,6 +141,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             }
 
         },
+
         /**
          * Renders an UI listing for given set of layers.
          *
@@ -163,7 +163,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
                 layer = list[i];
                 item = this.templateListItem.clone();
                 if (layer.getId().toString().indexOf('myplaces_') > -1) {
-                    item.append(layer.getName() + " (" + this.loc.myPlacesDisclaimer + ")");
+                    item.append(layer.getName() + ' (' + this.loc.myPlacesDisclaimer + ')');
                 } else {
                     item.append(layer.getName());
                 }
@@ -171,6 +171,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             }
             return layerList;
         },
+
         /**
          * Clears previous layer listing and renders a new one to the view.
          *
@@ -179,6 +180,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
         handleLayerSelectionChanged: function () {
             this._renderLayerLists();
         },
+
         /**
          * Show Terms of Use to the user
          *
@@ -210,13 +212,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
             var dlg = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 closeBtn = dlg.createCloseButton(me.loc.buttons.close);
 
-            closeBtn.setHandler(function() {
+            closeBtn.setHandler(function () {
                 dlg.close(true);
                 me.dialog = null;
-            })
+            });
             dlg.show(me.termsOfUse.title, me.termsOfUse.body, [closeBtn]);
             me.dialog = dlg;
         },
+
         /**
          * Checks if the user has accepted terms of use and sets hasAcceptedTou property
          *
@@ -237,7 +240,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
                 },
                 beforeSend: function (x) {
                     if (x && x.overrideMimeType) {
-                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                        x.overrideMimeType('application/j-son;charset=UTF-8');
                     }
                 },
                 success: function (resp) {
@@ -246,6 +249,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
                 }
             });
         },
+
         /**
          * Updates the text on continue button depending if user has
          * accepted the Terms of Use or not
@@ -256,6 +260,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
         _updateContinueButton: function () {
             this.buttons['continue'].setTitle(this.hasAcceptedTou ? this.loc.buttons['continue'] : this.loc.buttons.continueAndAccept);
         },
+
         /**
          * Requests that the backend mark the current logged in user as having
          * accepted the Terms of Use
@@ -277,7 +282,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.StartView',
                 },
                 beforeSend: function (x) {
                     if (x && x.overrideMimeType) {
-                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                        x.overrideMimeType('application/j-son;charset=UTF-8');
                     }
                 },
                 success: function (resp) {

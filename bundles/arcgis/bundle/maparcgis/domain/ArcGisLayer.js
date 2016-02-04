@@ -1,7 +1,7 @@
 /**
  * @class Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayer
  *
- * MapLayer of type Stats
+ * MapLayer of type Arcgis
  */
 Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayer',
 

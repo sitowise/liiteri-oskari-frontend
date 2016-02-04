@@ -60,10 +60,12 @@ if (!Function.prototype.bind) {
                 var me = this;
                 var sortFunction = me._getPropertyComparatorFor('title');
                 capabilities.layers.sort(sortFunction);
-                capabilities.groups.sort(sortFunction);
-                _.each(capabilities.groups, function(group) {
-                    me._sortCapabilities(group);
-                });
+                if(capabilities.groups) {
+                    capabilities.groups.sort(sortFunction);
+                    _.each(capabilities.groups, function (group) {
+                        me._sortCapabilities(group);
+                    }); 
+                }
             },
             _getPropertyComparatorFor : function(property) {
                 return function(a, b) {
@@ -80,21 +82,70 @@ if (!Function.prototype.bind) {
             _setupFromCapabilitiesValues : function(capabilitiesNode) {
                 var sb = Oskari.getSandbox();
                 sb.printDebug("Found:", capabilitiesNode);
-                var mapLayerService = sb.getService('Oskari.mapframework.service.MapLayerService');
-                var mapLayer = mapLayerService.createMapLayer(capabilitiesNode);
+                var mapLayerService = sb.getService('Oskari.mapframework.service.MapLayerService'),
+                    mapLayer = mapLayerService.createMapLayer(capabilitiesNode),
+                    dataToKeep = null;
                 // clear existing values
                 var capabilities = this.get("capabilities");
-                this.clear({silent : true});
-                this.set(mapLayer, {silent : true});
+                var adminBlock = this.get("_admin");
+
+                var typeFunction = this._typeHandlers[mapLayer.getLayerType()];
+                if(typeFunction) {
+                    dataToKeep = typeFunction.apply(this);
+                }
+                this.clear({
+                    silent: true
+                });
+
+                if(dataToKeep && typeFunction) {
+                    typeFunction.apply(this, [dataToKeep, mapLayer]);
+                }
+                // move credentials for maplayer data
+                if(adminBlock && mapLayer._admin) {
+                    mapLayer._admin.username = adminBlock.username;
+                    mapLayer._admin.password = adminBlock.password;
+                }
+                this.set(mapLayer, {
+                    silent: true
+                });
+
                 // this will trigger change so the previous can be done silently
                 this.setCapabilitiesResponse(capabilities);
             },
             /**
-             * Recursive function to search capabilities by wmsName.
+             * Append wfsconfiguration to capabilities adminblock.
+             * @param  {Object} GetWfsLayerconfiguration response from server
+             */
+            setWfsConfigurationResponse: function (resp) {
+                var adminBlock = this.get("_admin");
+                if(adminBlock) {
+                    adminBlock.passtrough = resp;
+                }
+            },
+            /**
+             * Extra handling per layertype. If data is not given assume getter, otherwise setup data.
+             * @type {Object}
+             */
+            _typeHandlers : {
+                "wmts" : function(data, mapLayer) {
+                    if(!data) {
+                        return {
+                            tileMatrix : this.getOriginalMatrixSetData()
+                        };  
+                    }
+                    else {
+                        mapLayer.setOriginalMatrixSetData(data.tileMatrix);
+                    }
+                }
+
+            },
+            /**
+             * Recursive function to search capabilities by layerName.
              * Recursion uses the second parameter internally, but it's optional.
              * If not set, it will be fetched from models attributes.
-             * @param  {String} wmsName      name to search for
+             * @param  {String} layerName      name to search for
              * @param  {Object} capabilities (optional capabilities object)
+             * @param  {String} additionalId additional id used for searching (optional)
              * @return {Boolean}             true if name was found
              */
             setupCapabilities : function(wmsName, capabilities) {
@@ -129,9 +180,39 @@ if (!Function.prototype.bind) {
                 if(!found) {
                   found = me.setupCapabilities(wmsName, group);
                 }
-              });
-              }
-              return found;
+                // layer node
+                if (capabilities.layerName == layerName) {
+                    if(!additionalId) {
+                        me._setupFromCapabilitiesValues(capabilities);
+                        return true;
+
+                    } else if(capabilities.additionalId == additionalId) {
+                        me._setupFromCapabilitiesValues(capabilities);
+                        return true;
+                    }
+                }
+                // group node
+                if (capabilities.self && capabilities.self.layerName == layerName) {
+                    me._setupFromCapabilitiesValues(capabilities.self);
+                    return true;
+                }
+                var found = false;
+
+                // check layers directly under this 
+                _.each(capabilities.layers, function (layer) {
+                    if (!found) {
+                        found = me.setupCapabilities(layerName, layer, additionalId);
+                    }
+                });
+                // if not found, check any groups under this 
+                if (!found && capabilities.groups) {
+                    _.each(capabilities.groups, function (group) {
+                        if (!found) {
+                            found = me.setupCapabilities(layerName, group, additionalId);
+                        }
+                    });
+                }
+                return found;
             },
 
 
@@ -140,19 +221,56 @@ if (!Function.prototype.bind) {
              * @return {String} xslt
              */
             getGfiXslt : function() {
-                var adminBlock = this.get('admin');
+                var adminBlock = this.getAdmin();
                 if(adminBlock) {
                     return adminBlock.xslt;
                 }
                 return null;
             },
+
+            /**
+             * Returns username if defined or null if not
+             * @return {String} username
+             */
+            getUsername: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.username;
+                }
+                return null;
+            },
+
+            /**
+             * Returns password if defined or null if not
+             * @return {String} password
+             */
+            getPassword: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.password;
+                }
+                return null;
+            },
+
+            /**
+             * Returns interface url
+             * @return {String} url
+             */
+            getInterfaceUrl: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.url;
+                }
+                return this.getLayerUrls().join();
+            },
+
             /**
              * Returns organization or inspire id based on type
              * @param  {String} type ['organization' | 'inspire']
              * @return {Number} group id
              */
             getGroupId : function(type) {
-                var adminBlock = this.get('admin');
+                var adminBlock = this.getAdmin();
                 if(adminBlock) {
                     // inspireId or organizationId
                     return adminBlock[type + 'Id'];
@@ -175,6 +293,15 @@ if (!Function.prototype.bind) {
                 // TODO: maybe cache result?
                 return this._getLanguages(this.get('_description'));
             },
+
+            /**
+             * Returns legend url
+             * @returns {String} legend url
+             */
+            getLegendUrl: function() {
+                return this.getCurrentStyle().getLegend();
+            },
+
             /**
              * Returns defined language codes or default language if not set
              * @method  _getLanguages

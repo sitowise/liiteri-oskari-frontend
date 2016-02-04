@@ -1,22 +1,32 @@
-Oskari.registerLocalization({
-    "lang" : "fi",
-    "key" : "admin-layerrights",
-    "value" : {
-        "title" : "Oikeudet",
-        "desc" : "NOT TRANSLATED",
-        "tile" : {
-            "title" : "Tasojen Oikeudet"
+Oskari.registerLocalization(
+{
+    "lang": "fi",
+    "key": "admin-layerrights",
+    "value": {
+        "title": "Tasojen oikeudet",
+        "desc": "kuv",
+        "tile": {
+            "title": "Tasojen oikeudet"
         },
         "flyout" : {
             "title": "Tasojen Oikeuksien Hallinta",
             "datatablelanguagefile": "Finnish.json",
+            "message": "NOT TRANSLATED"
         },
-        "rights" : {
-            "name"              : "Nimi",
-            "rightToPublish"    : "Julkaisuoikeus",
-            "rightToView"       : "Katseluoikeus",
-            "rightToDownload"   : "Latausoikeus",
-            "rightToPublishView": "Katseluoikeus julkaistussa kartassa"
+        "rights": {
+            "name": "Karttataso",
+            "rightToPublish": "Julkaisuoikeus",
+            "rightToView": "Katseluoikeus",
+            "rightToDownload": "Latausoikeus",
+            "rightToPublishView": "Katseluoikeus upotetussa kartassa",
+            "success" : {
+                "title" : "Oikeudet on päivitetty",
+                "message" : "Oikeuksien tallentaminen onnistui."
+            },
+            "error" : {
+                "title" : "Oikeuksia ei ole päivitetty",
+                "message" : "Oikeuksien tallentaminen ei onnistunut."
+            }
         },
         "save" : "Tallenna",
         "selectRole": "Rooli",
@@ -30,4 +40,5 @@ Oskari.registerLocalization({
             "success": "Oikeudet on päivitetty"
         }
     }
-});
+}
+);

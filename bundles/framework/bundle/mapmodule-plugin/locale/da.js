@@ -43,6 +43,7 @@ Oskari.registerLocalization(
             "SearchPlugin": {
                 "placeholder": "Find steder",
                 "search": "Find",
+                "title": "Søgeresultater",
                 "close": "Luk søgeresultater",
                 "noresults": "Ingen resultater fundet",
                 "toomanyresults": "Over 100 resultater blev fundet, specificer din søgning yderligere",
@@ -69,6 +70,9 @@ Oskari.registerLocalization(
                     "line": "NOT TRANSLATED",
                     "area": "NOT TRANSLATED"
                 }
+            },
+            "MyLocationPlugin": {
+                "tooltip": "NOT TRANSLATED"
             }
         }
     }

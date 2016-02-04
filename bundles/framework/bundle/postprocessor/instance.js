@@ -64,7 +64,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                     okBtn.setHandler(function () {
                         dialog.close();
                     });
-                    dialog.show('Virhe', 'Haettua asemakaava-aluetta ei l√∂ytynyt', [okBtn]);
+                    dialog.show('Virhe', 'Haettua asemakaava-aluetta ei lˆytynyt', [okBtn]);
                     this.completed = true;
                 }
             }
@@ -94,12 +94,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                     okBtn.setHandler(function () {
                         dialog.close();
                     });
-                    dialog.show('Virhe', 'Haetun asemakaava-alueen n√§ytt√§minen ei onnistunut.', [okBtn]);
+                    dialog.show('Virhe', 'Haetun asemakaava-alueen n‰ytt‰minen ei onnistunut.', [okBtn]);
                     this.completed = true;
                 };
 
                 var mapLayerService = this.sandbox.getService('Oskari.mapframework.service.MapLayerService');
-                if (!mapLayerService) {
+                if (!mapLayerService || featureIdList.length === 0) {
                     // service not found - should never happen
                     showError();
                     return;

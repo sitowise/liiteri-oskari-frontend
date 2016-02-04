@@ -6,140 +6,212 @@
 Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
     /**
-     * @method create called automatically on construction
-     * @static
+     * @static @method create called automatically on construction
+     *
      * @param {Oskari.mapframework.bundle.publisher.PublisherBundleInstance} instance
-     *      reference to component that created this view
+     * Reference to component that created this view
      * @param {Object} localization
-     *      localization data in JSON format
+     * Localization data in JSON format
+     *
      */
-
     function (instance, localization, data) {
-
         var me = this;
         me.data = data;
 
         me.instance = instance;
-        me.template = jQuery('<div class="basic_publisher">' +
-            '<div class="header">' +
-            '<div class="icon-close">' +
-            '</div>' +
-            '<div class="header_title"><p></p></div>' +
-            '</div>' +
-            '<div class="content">' +
-            '</div>' +
+        me.template = jQuery(
+            '<div class="basic_publisher">' +
+            '  <div class="header">' +
+            '    <div class="icon-close">' +
+            '    </div>' +
+            '    <h3></h3>' +
+            '  </div>' +
+            '  <div class="content">' +
+            '  </div>' +
             '</div>');
 
         me.templates = {
-            "publishedGridTemplate": '<div class="publishedgrid"></div>'
+            publishedGridTemplate: '<div class="publishedgrid"></div>'
         };
 
         me.templateButtonsDiv = jQuery('<div class="buttons"></div>');
         me.templateHelp = jQuery('<div class="help icon-info"></div>');
-        me.templateLayout = jQuery('<div class="tool "><label><input type="radio" name="toolLayout" /><span></span></label></div>');
-        me.templateData = jQuery('<div class="data ">' +
-            '<input class="show-grid" type="checkbox"/>' +
-            '<label class="show-grid-label"></label>' + '<br />' +
-            '<input class="allow-classification" type="checkbox"/>' +
-            '<label class="allow-classification-label"></label>' +
+        me.templateLayout = jQuery(
+            '<div class="tool ">' +
+            '  <label>' +
+            '    <input type="radio" name="toolLayout" /><span></span>' +
+            '  </label>' +
+            '</div>'
+        );
+        me.templateData = jQuery(
+            '<div class="data ">' +
+            '  <input class="show-grid" type="checkbox"/>' +
+            '  <label class="show-grid-label"></label>' + '<br />' +
+            '  <input class="allow-classification" type="checkbox"/>' +
+            '  <label class="allow-classification-label"></label>' +
             '</div>');
-        me.templateSizeOptionTool = jQuery('<div class="tool ">' + '<label><input type="radio" name="size" />' + '<span></span></label></div>');
-        me.templateCustomSize = jQuery('<div class="customsize">' + '<input type="text" name="width" ' +
-            'placeholder="' + localization.sizes.width + '"/> x ' +
-            '<input type="text" name="height" placeholder="' + localization.sizes.height + '"/></div>');
 
-        this.normalMapPlugins = [];
+        me.normalMapPlugins = [];
 
+        // These define where and what with plugins can be dropped in
         me.toolDropRules = {
-            "Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin": {
-                "allowedLocations": ['bottom left', 'bottom right'],
-                "allowedSiblings": ["Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin", "Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin"],
-                "groupedSiblings": false
+            'Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin': {
+                allowedLocations: ['bottom left', 'bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin',
+                    'Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin'
+                ],
+                groupedSiblings: false
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin": {
-                "allowedLocations": ['bottom left', 'bottom right'],
-                "allowedSiblings": ["Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin", "Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin"],
-                "groupedSiblings": false
+            'Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin': {
+                // FIXME this should be moved to the left in righthanded layout
+                allowedLocations: ['bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin'
+                ],
+                groupedSiblings: false
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin": {
-                "allowedLocations": ['bottom left', 'bottom right'],
-                "allowedSiblings": ["Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin", "Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin"],
-                "groupedSiblings": false
+            'Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin': {
+                allowedLocations: ['bottom left', 'bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
+                    'Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin'
+                ],
+                groupedSiblings: false
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.PanButtons": {
-                "allowedLocations": ['top left', 'top right', 'bottom left', 'bottom right'],
-                "allowedSiblings": ["Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar"],
-                "groupedSiblings": true
+            'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin': {
+                allowedLocations: ['bottom left', 'bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.mapmodule.plugin.IndexMapPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.ScaleBarPlugin',
+                    'Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin'
+                ],
+                groupedSiblings: false
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar": {
-                "allowedLocations": ['top left', 'top right', 'bottom left', 'bottom right'],
-                "allowedSiblings": ["Oskari.mapframework.bundle.mapmodule.plugin.PanButtons"],
-                "groupedSiblings": true
+            'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin': {
+                // Disabled for now, need to fix config reading first allowedLocations: ['top left', 'top right', 'bottom left', 'bottom right'],
+                allowedLocations: ['top right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.PanButtons',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin'
+                ],
+                groupedSiblings: true
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin": {
-                "allowedLocations": ['top left', 'top center', 'top right'],
-                "allowedSiblings": ['Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin', 'Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin'],
-                "groupedSiblings": false
+            'Oskari.mapframework.bundle.mapmodule.plugin.PanButtons': {
+                allowedLocations: ['top left', 'top right', 'bottom left', 'bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.MyLocationPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar'
+                ],
+                groupedSiblings: true
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin": {
-                "allowedLocations": ['top left', 'top center', 'top right'],
-                "allowedSiblings": ['Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin', 'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin'],
-                "groupedSiblings": false
+            'Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar': {
+                allowedLocations: ['top left', 'top right', 'bottom left', 'bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.MyLocationPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.PanButtons'
+                ],
+                groupedSiblings: true
             },
 
-            "Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin": {
-                "allowedLocations": ['top left', 'top center', 'top right'],
-                "allowedSiblings": ['Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin', 'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin'],
-                "groupedSiblings": false
+            'Oskari.mapframework.bundle.mapmodule.plugin.MyLocationPlugin': {
+                allowedLocations: ['top left', 'top right', 'bottom left', 'bottom right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.PanButtons',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar',
+                ],
+                groupedSiblings: true
+            },
+
+            'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin': 
+{               allowedLocations: ['top left', 'top center', 'top right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin'
+                ],
+                groupedSiblings: false
+            },
+
+            'Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin': {
+                allowedLocations: ['top left', 'top center', 'top right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin'
+                ],
+                groupedSiblings: false
+            },
+
+            'Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin': {
+                allowedLocations: ['top left', 'top center', 'top right'],
+                allowedSiblings: [
+                    'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin'
+                ],
+                groupedSiblings: false
             }
         };
 
         // TODO see if this and layerselection could be moved to tools...
         // just ignore them on ui creation or smthn
         me.logoPluginClasses = {
-            "lefthanded": "bottom left",
-            "righthanded": "bottom right",
-            "classes": "bottom left"
+            lefthanded: 'bottom left',
+            righthanded: 'bottom right',
+            classes: 'bottom left'
         };
 
         // Not sure where this should be...
         me.layerSelectionClasses = {
-            "lefthanded": "top right",
-            "righthanded": "top left",
-            "classes": "top right"
+            lefthanded: 'top right',
+            righthanded: 'top left',
+            classes: 'top right'
         };
 
-        me.toolLayouts = ["lefthanded", "righthanded", "userlayout"];
+        me.toolLayouts = ['lefthanded', 'righthanded', 'userlayout'];
 
-        me.activeToolLayout = "lefthanded";
+        me.activeToolLayout = 'lefthanded';
 
         me.sizeOptions = [{
-            "id": "small",
-            "width": 580,
-            "height": 387
+            id: 'small',
+            width: 580,
+            height: 387
         }, {
-            "id": "medium",
-            "width": 700,
-            "height": 525,
-            "selected": true // default option
+            id: 'medium',
+            width: 700,
+            height: 525,
+            selected: true // default option
         }, {
-            "id": "large",
-            "width": 1240,
-            "height": 700
+            id: 'large',
+            width: 1240,
+            height: 700
         }, {
-            "id": "custom",
-            //width : 'max 4000',
-            //height : 2000,
-            "minWidth": 30,
-            "minHeight": 20,
-            "maxWidth": 4000,
-            "maxHeight": 2000
+            id: 'fill',
+            width: '',
+            height: ''
+        }, {
+            id: 'custom',
+            minWidth: 30,
+            minHeight: 20,
+            maxWidth: 4000,
+            maxHeight: 2000
         }];
 
         me.grid = {};
@@ -154,10 +226,24 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
             // setup initial size
             var sizeIsSet = false,
-                initWidth = me.data.state.mapfull.config.size.width,
-                initHeight = me.data.state.mapfull.config.size.height,
+                initWidth,
+                initHeight,
                 option,
                 i;
+
+            if (me.data.state.mapfull.config.size) {
+                initWidth = me.data.state.mapfull.config.size.width;
+                initHeight = me.data.state.mapfull.config.size.height;
+            }
+
+            if (initWidth === null || initWidth === undefined) {
+                initWidth = '';
+            }
+
+            if (initHeight === null || initHeight === undefined) {
+                initHeight = '';
+            }
+
             for (i = 0; i < me.sizeOptions.length; i += 1) {
                 option = me.sizeOptions[i];
                 if (initWidth === option.width && initHeight === option.height) {
@@ -180,13 +266,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
         me.maplayerPanel = null;
         me.mainPanel = null;
-        me.logoPlugin = Oskari.clazz.create('Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin', {
-            "location": {
-                "classes": me.logoPluginClasses.classes
+        me.logoPlugin = Oskari.clazz.create(
+            'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
+            {
+                location: {
+                    classes: me.logoPluginClasses.classes
+                }
             }
-        });
+        );
         me.latestGFI = null;
-        me.urlBase = instance.conf.urlPrefix + "/web/";
     }, {
         /**
          * @method render
@@ -202,17 +290,23 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
             container.append(content);
             var contentDiv = content.find('div.content'),
-                accordion = Oskari.clazz.create('Oskari.userinterface.component.Accordion');
+                accordion = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Accordion'
+                );
             me.accordion = accordion;
 
-            var form = Oskari.clazz.create('Oskari.mapframework.bundle.publisher.view.PublisherLocationForm', me.loc, me);
+            var form = Oskari.clazz.create(
+                'Oskari.mapframework.bundle.publisher.view.PublisherLocationForm',
+                me.loc,
+                me
+            );
             me.locationForm = form;
             if (me.data) {
                 content.find('div.header > div.header_title > p').append(me.loc.titleEdit);
                 form.init({
-                    "domain": me.data.domain,
-                    "name": me.data.name,
-                    "lang": me.data.lang
+                    domain: me.data.domain,
+                    name: me.data.name,
+                    lang: me.data.lang
                 });
             } else {
                 content.find('div.header > div.header_title > p').append(me.loc.title);
@@ -229,18 +323,22 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 selectedLayers = sandbox.findAllSelectedMapLayers(),
                 showStats = false,
                 i,
-                layer;
+                layer,
+                mapModule = sandbox.findRegisteredModuleInstance(
+                    'MainMapModule'
+                );
+
+            me.mapModule = mapModule;
+
             for (i = 0; i < selectedLayers.length; i += 1) {
                 layer = selectedLayers[i];
-                if (layer.getLayerType() === "stats") {
+                if (layer.getLayerType() === 'stats') {
                     showStats = true;
                 }
             }
+
             if (showStats) {
                 me.showStats = true;
-                // Find the map module.
-                var mapModule = sandbox.findRegisteredModuleInstance('MainMapModule');
-                me.mapModule = mapModule;
 
                 // The container where the grid will be rendered to.
                 me.statsContainer = jQuery(me.templates.publishedGridTemplate);
@@ -253,6 +351,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
             // 3rd panel: size panel
             accordion.addPanel(me._createSizePanel());
+
             // 4th panel: tools panel
             accordion.addPanel(me._createToolsPanel());
 
@@ -262,11 +361,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 me.layerSelectionClasses.classes = me.data.hasLayerSelectionPlugin.location.classes;
             }
 
-            me.maplayerPanel = Oskari.clazz.create('Oskari.mapframework.bundle.publisher.view.PublisherLayerForm', me.loc, me.instance, {
-                "location": {
-                    "classes": me.layerSelectionClasses.classes
-                }
-            }, me);
+            me.maplayerPanel = Oskari.clazz.create(
+                'Oskari.mapframework.bundle.publisher.view.PublisherLayerForm',
+                me.loc,
+                me.instance,
+                {
+                    location: {
+                        classes: me.layerSelectionClasses.classes
+                    }
+                },
+                me
+            );
             me.maplayerPanel.init();
 
             // Add the layout panel to the accordion.
@@ -284,70 +389,254 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
             // buttons
             // close
-            container.find('div.header div.icon-close').bind('click', function () {
-                me.instance.setPublishMode(false);
-            });
+            container.find('div.header div.icon-close').bind(
+                'click',
+                function () {
+                    me.instance.setPublishMode(false);
+                }
+            );
             contentDiv.append(me._getButtons());
 
             var inputs = me.mainPanel.find('input[type=text]');
             inputs.focus(function () {
-                me.instance.sandbox.postRequestByName('DisableMapKeyboardMovementRequest');
+                me.instance.sandbox.postRequestByName(
+                    'DisableMapKeyboardMovementRequest'
+                );
             });
             inputs.blur(function () {
-                me.instance.sandbox.postRequestByName('EnableMapKeyboardMovementRequest');
+                me.instance.sandbox.postRequestByName(
+                    'EnableMapKeyboardMovementRequest'
+                );
             });
 
+            /* Disabled as none of the help tags work?
             // bind help tags
-            var helper = Oskari.clazz.create('Oskari.userinterface.component.UIHelper', me.instance.sandbox);
-            helper.processHelpLinks(me.loc.help, content, me.loc.error.title, me.loc.error.nohelp);
-
+            var helper = Oskari.clazz.create(
+                'Oskari.userinterface.component.UIHelper',
+                me.instance.sandbox
+            );
+            helper.processHelpLinks(
+                me.loc.help,
+                content,
+                me.loc.error.title,
+                me.loc.error.nohelp
+            );*/
         },
+
         /**
-         * @method _setSelectedSize
-         * @private
-         * Adjusts the map size according to publisher selection
+         * @private @method _getActiveMapSize
+         * Returns an object containing the active map size.
+         * This will differ from selected size if selected size is invalid.
+         *
+         * @return {Object} size
          */
-        _setSelectedSize: function () {
+        _getActiveMapSize: function () {
+            var mapDiv = this.mapModule.getMapEl(),
+                width = mapDiv.width(),
+                height = mapDiv.height();
+
+            return {
+                width: width,
+                height: height
+            };
+        },
+
+        /**
+         * @private @method _getSelectedMapSize
+         * Returns an object containing the user seleted/set map size and the corresponding size option
+         *
+         * @return {Object} size
+         */
+        _getSelectedMapSize: function () {
             var me = this,
-                widthInput = this.mainPanel.find('div.customsize input[name=width]'),
-                heightInput = this.mainPanel.find('div.customsize input[name=height]'),
-                mapModule = this.instance.sandbox.findRegisteredModuleInstance('MainMapModule'),
-                i,
-                option,
-                mapElement;
-            widthInput.removeClass('error');
-            heightInput.removeClass('error');
-            for (i = 0; i < me.sizeOptions.length; i += 1) {
-                option = me.sizeOptions[i];
-                if (option.selected) {
-                    // reference to openlayers map.div
-                    mapElement = jQuery(mapModule.getMap().div);
-                    if (option.id === "custom") {
-                        var width = widthInput.val();
-                        if (this._validateNumberRange(width, option.minWidth, option.maxWidth)) {
-                            mapElement.width(width);
-                            me.adjustDataContainer();
-                        } else {
-                            widthInput.addClass('error');
-                        }
-                        var height = heightInput.val();
-                        if (this._validateNumberRange(height, option.minHeight, option.maxHeight)) {
-                            mapElement.height(height);
-                        } else {
-                            heightInput.addClass('error');
-                        }
-                        break;
-                    } else {
-                        mapElement.width(option.width);
-                        mapElement.height(option.height);
-                        me.adjustDataContainer();
-                    }
-                    break;
+                option = me.sizeOptions.filter(function (el) {
+                    return el.selected;
+                })[0],
+                width = option.width,
+                height = option.height,
+                validWidth = true,
+                validHeight = true;
+
+            if (option.id === 'custom') {
+                width = parseInt(me.mainPanel.find('.customsize input[name=width]').val(), 10);
+                height = parseInt(me.mainPanel.find('.customsize input[name=height]').val(), 10);
+                validWidth = me._validateNumberRange(width, option.minWidth, option.maxWidth);
+                validHeight = me._validateNumberRange(height, option.minHeight, option.maxHeight);
+            }
+
+            return {
+                valid: validWidth && validHeight,
+                width: width,
+                validWidth: validWidth,
+                height: height,
+                validHeight: validHeight,
+                option: option
+            };
+        },
+
+        /**
+         * @private @method _updateMapSize
+         * Adjusts the map size according to publisher selection
+         *
+         *
+         */
+        _updateMapSize: function () {
+            var me = this,
+                mapDiv = me.mapModule.getMapEl(),
+                size = me._getSelectedMapSize(),
+                customsize = me.mainPanel.find('.customsize'),
+                widthInput = customsize.find('input[name=width]'),
+                heightInput = customsize.find('input[name=height]');
+
+            if (size.option.id === 'custom') {
+                customsize.prop('disabled', false);
+                widthInput.prop('disabled', false);
+                heightInput.prop('disabled', false);
+                // Only custom option can have invalid values
+                widthInput.toggleClass('error', !size.validWidth);
+                heightInput.toggleClass('error', !size.validHeight);
+            } else {
+                customsize.prop('disabled', true);
+                widthInput.prop('disabled', true);
+                heightInput.prop('disabled', true);
+                // Update selected size to custom size fields, it's a decent
+                // starting point and it avoids error states...
+                if (!isNaN(size.width) && typeof size.width === 'number') {
+                    widthInput.val(size.width);
+                    widthInput.removeClass('error');
+                }
+                if (!isNaN(size.height) && typeof size.height === 'number') {
+                    heightInput.val(size.height);
+                    heightInput.removeClass('error');
                 }
             }
-            // notify openlayers that size has changed
-            mapModule.updateSize();
+
+            if (size.valid) {
+                // Adjust map and grid sizes
+                me._adjustDataContainer();
+            }
         },
+
+        _parseIntFromPxValue: function (value) {
+            var ret = null;
+            if (value && value.length) {
+                ret = parseInt(value.split('px')[0], 10);
+            }
+            return ret;
+        },
+
+        _updateMapModuleSize: function () {
+            var sandbox = Oskari.getSandbox('sandbox'),
+                reqBuilder = sandbox.getRequestBuilder(
+                    'MapFull.MapSizeUpdateRequest'
+                );
+
+            if (reqBuilder) {
+                sandbox.request(this.instance, reqBuilder());
+            }
+        },
+
+        /**
+         * @private @method _adjustDataContainer
+         * This horrific thing is what sets the statsgrid, container and map size.
+         */
+        _adjustDataContainer: function () {
+            /*
+            Structure:
+            - content
+                - dataContainer
+                    - grid
+                - mapContainer
+                    - mapDiv
+            */
+            var me = this,
+                selectedSize = me._getSelectedMapSize(),
+                size = selectedSize.valid ? selectedSize : me._getActiveMapSize(),
+                content = jQuery('#contentMap'),
+                container = content.find('.row-fluid'),
+                dataContainer = container.find('.oskariui-left'),
+                gridWidth = me._calculateGridWidth(),
+                gridHeight = 0,
+                mapContainer = container.find('.oskariui-center'),
+                mapDiv = me.mapModule.getMapEl(),
+                mapWidth,
+                mapHeight,
+                totalWidth = size.width,
+                totalHeight = size.height;
+
+            if (totalWidth === null || totalWidth === undefined || totalWidth === '') {
+                // Ugly hack, container has a nasty habit of overflowing the viewport...
+                totalWidth = jQuery(window).width() - container.offset().left;
+            }
+            if (totalHeight === null || totalHeight === undefined || totalHeight === '') {
+                totalHeight = jQuery(window).height();
+            }
+
+            dataContainer.toggleClass('oskari-closed', !me.isDataVisible);
+
+            if (me.isDataVisible) {
+                dataContainer.removeClass('oskari-closed');
+                gridHeight = totalHeight;
+            } else {
+                dataContainer.addClass('oskari-closed');
+                gridWidth = 0;
+            }
+
+            mapWidth = (totalWidth - gridWidth) + 'px';
+            mapHeight = totalHeight + 'px';
+            gridWidth = gridWidth + 'px';
+            gridHeight = gridHeight + 'px';
+
+            dataContainer.css({
+                'width': gridWidth,
+                'height': gridHeight,
+                'float': 'left'
+            }).addClass('published-grid-left');
+
+            mapContainer.css({
+                'width': mapWidth,
+                'height': mapHeight,
+                'float': 'left'
+            }).addClass('published-grid-center');
+
+            mapDiv.width(mapWidth);
+            mapDiv.height(mapHeight);
+
+            if (me.statsContainer) {
+                me.statsContainer.height(mapHeight);
+            }
+
+            if (me.gridPlugin) {
+                me.gridPlugin.setGridHeight();
+            }
+            // notify map module that size has changed
+            me._updateMapModuleSize();
+        },
+
+        /**
+         * @private @method _calculateGridWidth
+         * Calculates a sensible width for statsgrid (but doesn't set it...)
+         */
+        _calculateGridWidth: function () {
+            var sandbox = Oskari.getSandbox('sandbox'),
+                columns,
+                statsGrid = sandbox.getStatefulComponents().statsgrid, // get state of statsgrid
+                width = 160;
+
+            if (statsGrid &&
+                statsGrid.state &&
+                statsGrid.state.indicators !== null &&
+                statsGrid.state.indicators !== undefined) {
+
+                //indicators + municipality (name & code)
+                columns = statsGrid.state.indicators.length + 2;
+                //slickgrid column width is 80 by default
+                width = columns * 80;
+            }
+            // Width + scroll bar width, but 400 at most.
+            return Math.min((width + 20), 400);
+        },
+
         /**
          * @method _createSizePanel
          * @private
@@ -356,67 +645,79 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
          */
         _createSizePanel: function () {
             var me = this,
-                panel = Oskari.clazz.create('Oskari.userinterface.component.AccordionPanel');
-            panel.setTitle(this.loc.size.label);
-            var contentPanel = panel.getContainer(),
-                tooltipCont = this.templateHelp.clone(); // tooltip
-            tooltipCont.attr('title', this.loc.size.tooltip);
-            contentPanel.append(tooltipCont);
-            // content
-            var closureMagic = function (tool) {
-                return function () {
-                    var size = contentPanel.find('input[name=size]:checked').val(),
-                        i;
-                    // reset previous setting
-                    for (i = 0; i < me.sizeOptions.length; i += 1) {
-                        me.sizeOptions[i].selected = false;
-                    }
-                    tool.selected = true;
-                    me._setSelectedSize();
+                panel = Oskari.clazz.create(
+                    'Oskari.userinterface.component.AccordionPanel'
+                ),
+                radioButtonGroup = Oskari.clazz.create(
+                    'Oskari.userinterface.component.RadioButtonGroup'
+                ),
+                widthInput = Oskari.clazz.create(
+                    'Oskari.userinterface.component.TextInput'
+                ),
+                heightInput = Oskari.clazz.create(
+                    'Oskari.userinterface.component.TextInput'
+                ),
+                contentPanel = panel.getContainer(),
+                customOption = me.sizeOptions.filter(function (option) {
+                    return option.id === 'custom';
+                })[0],
+                customSizes = document.createElement('fieldset'),
+                selectedOption = me.sizeOptions.filter(function (option) {
+                    return option.selected;
+                })[0],
+                tooltipCont = me.templateHelp.clone(),
+                selectionHandler = function (value) {
+                    me.sizeOptions.forEach(function (option) {
+                        option.selected = option.id === value;
+                    });
+                    me._updateMapSize();
                 };
-            };
-            var initCustomSize = false,
-                i,
-                option,
-                toolContainer,
-                label;
-            for (i = 0; i < this.sizeOptions.length; i += 1) {
-                option = this.sizeOptions[i];
-                toolContainer = this.templateSizeOptionTool.clone();
-                label = this.loc.sizes[option.id];
-                if (option.width && option.height && "custom" !== option.id) {
-                    label = me._getSizeLabel(label, option);
+
+            panel.setTitle(me.loc.size.label);
+            tooltipCont.attr('title', me.loc.size.tooltip);
+            contentPanel.append(tooltipCont);
+            radioButtonGroup.setName('size');
+            radioButtonGroup.setOptions(me.sizeOptions.map(function (option) {
+                var title = me.loc.sizes[option.id];
+                if ('custom' !== option.id && 'fill' !== option.id) {
+                    title = me._getSizeLabel(title, option);
                 }
-                toolContainer.find('span').addClass('sizeoption_' + option.id).append(label);
-                if (option.selected) {
-                    toolContainer.find('input').attr('checked', 'checked');
-                    if ("custom" === option.id) {
-                        initCustomSize = true;
-                    }
-                }
-                contentPanel.append(toolContainer);
-                toolContainer.find('input').attr('value', option.id);
-                toolContainer.find('input').change(closureMagic(option));
-            }
-            var customSizes = this.templateCustomSize.clone(),
-                inputs = customSizes.find('input');
-            inputs.focus(function () {
-                var radio = contentPanel.find('input[name=size][value=custom]');
-                radio.attr('checked', 'checked');
-                radio.trigger('change');
+                return {
+                    title: title,
+                    value: option.id
+                };
+            }));
+            radioButtonGroup.setHandler(selectionHandler);
+            radioButtonGroup.insertTo(contentPanel);
+
+            customSizes.className = 'customsize';
+
+            widthInput.setName('width');
+            widthInput.setPlaceholder(me.loc.sizes.width);
+            widthInput.setValue(selectedOption.width);
+            widthInput.setHandler(function () {
+                me._updateMapSize();
             });
-            inputs.bind('keyup', function () {
-                me._setSelectedSize();
+            widthInput.insertTo(customSizes);
+
+            customSizes.appendChild(
+                document.createTextNode(me.loc.sizes.separator)
+            );
+
+            heightInput.setName('height');
+            heightInput.setPlaceholder(me.loc.sizes.height);
+            heightInput.setValue(selectedOption.height);
+            heightInput.setHandler(function () {
+                me._updateMapSize();
             });
-            if (initCustomSize) {
-                var widthInput = customSizes.find('input[name=width]'),
-                    heightInput = customSizes.find('input[name=height]');
-                widthInput.val(option.width);
-                heightInput.val(option.height);
-            }
+            heightInput.insertTo(customSizes);
             contentPanel.append(customSizes);
+
+            radioButtonGroup.setValue(selectedOption.id);
+
             return panel;
         },
+
         /**
          * Gets the label text for a size option. It changes based on grid visibility.
          *
@@ -424,44 +725,50 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
          * @private
          */
         _getSizeLabel: function (label, option) {
-            var gridWidth = (this.isDataVisible ? this._calculateGridWidth() : 0);
-            return (label + ' (' + (option.width + gridWidth) + ' x ' + option.height + 'px)');
+            //var gridWidth = (this.isDataVisible ? this._calculateGridWidth() : 0);
+            return (label + ' (' + option.width + ' x ' + option.height + 'px)');
         },
+
         /**
+         * @private @method _setSizeLabels
          * Sets the size label in size accordion panel in UI.
          *
-         * @method _setSizeLabels
-         * @private
+         *
          */
         _setSizeLabels: function () {
             var i,
                 option,
                 span,
                 label;
+
             for (i = 0; i < this.sizeOptions.length; i += 1) {
                 option = this.sizeOptions[i];
                 span = jQuery('span.sizeoption_' + option.id);
                 label = this.loc.sizes[option.id];
-                if (option.width && option.height && "custom" !== option.id) {
+                if (option.width && option.height && 'custom' !== option.id && 'fill' !== option.id) {
                     label = this._getSizeLabel(label, option);
                 }
                 span.text(label);
             }
         },
+
         /**
-         * @method _createToolsPanel
-         * @private
+         * @private @method _createToolsPanel
          * Creates the tool selection panel for publisher
+         *
+         *
          * @return {jQuery} Returns the created panel
          */
         _createToolsPanel: function () {
-            var me = this,
-                enabledPlugins = null;
+            var i,
+                me = this,
+                enabledPlugins = null,
+                plugins;
             // setup initial plugins if available (move this... somewhere)
-            if (me.data && me.data.state && me.data.state.mapfull && me.data.state.mapfull.config && me.data.state.mapfull.config.plugins) {
-                var i,
-                    plugins = me.data.state.mapfull.config.plugins,
-                    plugin;
+            if (me.data && me.data.state && me.data.state.mapfull &&
+                me.data.state.mapfull.config &&
+                me.data.state.mapfull.config.plugins) {
+                plugins = me.data.state.mapfull.config.plugins;
 
                 enabledPlugins = {};
                 // set enabled plugins
@@ -478,11 +785,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 me,
                 enabledPlugins
             );
-            // Why do we copy these around? it's confusing.
-            //me.tools = me.toolsPanel.getTools();
+
             me.toolsPanel.init();
             return me.toolsPanel.getPanel(me.data);
         },
+
+        /**
+         * @private @method _changeToolLayout
+         *
+         * @param {string} layout
+         * @param {Object} event
+         *
+         */
         _changeToolLayout: function (layout, event) {
             // iterate plugins
             var me = this,
@@ -493,7 +807,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 button;
             // store location so we have easy access to it on save
             me.activeToolLayout = layout;
-            if (layout !== "userlayout") {
+            if (layout !== 'userlayout') {
                 // make sure we're not in edit mode
                 if (me.toolLayoutEditMode) {
                     me._editToolLayoutOff();
@@ -509,10 +823,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                             tool.config.location = {};
                         }
                         tool.config.location.classes = tool[layout];
-                        if (tool.plugin) {
-                            if (tool.plugin.setLocation) {
-                                tool.plugin.setLocation(tool.config.location.classes);
-                            }
+                        if (tool.plugin && tool.plugin.setLocation) {
+                            tool.plugin.setLocation(tool.config.location.classes);
                         }
                     }
                 }
@@ -541,6 +853,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 }
             }
         },
+
+        /**
+         * @private @method _createToolLayoutPanel
+         *
+         *
+         */
         _createToolLayoutPanel: function () {
             var me = this,
                 panel = Oskari.clazz.create('Oskari.userinterface.component.AccordionPanel'),
@@ -555,16 +873,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                     }
                 };
 
-            panel.setTitle(this.loc.toollayout.label);
+            panel.setTitle(me.loc.toollayout.label);
 
 
-            tooltipCont.attr('title', this.loc.toollayout.tooltip);
+            tooltipCont.attr('title', me.loc.toollayout.tooltip);
             contentPanel.append(tooltipCont);
 
             // content
             for (i = 0; i < me.toolLayouts.length; i += 1) {
                 layoutContainer = me.templateLayout.clone();
-                input = layoutContainer.find("input");
+                input = layoutContainer.find('input');
                 input.val(me.toolLayouts[i]).change(changeListener);
                 // FIXME default to 0 index if activeToolLayout is not found
                 // First choice is active unless we have an active layout
@@ -575,31 +893,40 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 } else if (i === 0) {
                     input.attr('checked', 'checked');
                 }
-                layoutContainer.find("span").html(this.loc.toollayout[me.toolLayouts[i]] || me.toolLayouts[i]);
+                layoutContainer.find('span').html(
+                    me.loc.toollayout[me.toolLayouts[i]] || me.toolLayouts[i]
+                );
                 contentPanel.append(layoutContainer);
-                if (me.toolLayouts[i] === "userlayout") {
-                    var editBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+                if (me.toolLayouts[i] === 'userlayout') {
+                    var editBtn = Oskari.clazz.create(
+                        'Oskari.userinterface.component.Button'
+                    );
                     editBtn.setTitle(me.loc.toollayout.usereditmode);
                     // FIXME create function outside loop
                     editBtn.setHandler(function () {
                         // user is in edit mode
-                        if (jQuery(editBtn.getButton()).val() === me.loc.toollayout.usereditmodeoff) {
+                        if (jQuery(editBtn.getElement()).val() === me.loc.toollayout.usereditmodeoff) {
                             // remove edit mode
                             me._editToolLayoutOff();
                         } else {
                             me._editToolLayoutOn();
                         }
                     });
-                    editBtn.setEnabled(me.activeToolLayout === "userlayout");
-                    editBtn.getButton().attr('id', 'editModeBtn');
+                    editBtn.setEnabled(me.activeToolLayout === 'userlayout');
+                    jQuery(editBtn.getElement()).attr('id', 'editModeBtn');
                     editBtn.insertTo(layoutContainer);
                 }
             }
 
             return panel;
-
         },
 
+        /**
+         * @private @method _makeDraggable
+         *
+         * @param {jQuery} draggables
+         *
+         */
         _makeDraggable: function (draggables) {
             var me = this;
             return draggables.draggable({
@@ -611,19 +938,28 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 snap: true,
                 start: function (event, ui) {
                     // drag start, see which droppables are valid
-                    me._showDroppable(ui.helper.attr('data-clazz'), ui.helper.parents(".mapplugins"));
+                    me._showDroppable(
+                        ui.helper.attr('data-clazz'),
+                        ui.helper.parents('.mapplugins')
+                    );
                 },
                 stop: me._hideDroppable,
-                revert: "invalid"
+                revert: 'invalid'
             });
         },
 
+        /**
+         * @private @method _togglePluginUIControls
+         *
+         * @param {Boolean} enable
+         *
+         */
         _togglePluginUIControls: function (enable) {
             var i,
                 tool,
                 tools;
 
-            for (i = 0; i < this.tools.length; i++) {
+            for (i = 0; i < this.tools.length; i += 1) {
                 tool = tools[i];
                 if (tool.plugin && tool.plugin.toggleUIControls) {
                     tool.plugin.toggleUIControls(enable);
@@ -631,60 +967,84 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
         },
 
+        /**
+         * @private @method _editToolLayoutOn
+         *
+         *
+         */
         _editToolLayoutOn: function () {
             var me = this,
                 sandbox = Oskari.getSandbox('sandbox');
+
+            if (me.toolLayoutEditMode) {
+                return;
+            }
+
             me.toolLayoutEditMode = true;
             jQuery('#editModeBtn').val(me.loc.toollayout.usereditmodeoff);
+            jQuery('.mapplugins').show();
             jQuery('.mapplugin').addClass('toollayoutedit');
             // TODO create droppables on _showDroppable, destroy them on _hideDroppable
             var draggables = me._makeDraggable(jQuery('.mapplugin')),
                 droppables = jQuery('.mappluginsContent').droppable({
                     // TODO see if this can be done in hover? Would it even be wanted behaviour?
                     drop: function (event, ui) {
-                        var pluginClazz = ui.draggable.attr("data-clazz"),
+                        var pluginClazz = ui.draggable.attr('data-clazz'),
                             plugin = me._getPluginByClazz(pluginClazz),
-                            source = ui.draggable.parents(".mapplugins"),
+                            source = ui.draggable.parents('.mapplugins'),
                             target = jQuery(this);
-                        me._moveSiblings(pluginClazz, source, target) ;
+
+                        me._moveSiblings(pluginClazz, source, target);
                         if (plugin && plugin.setLocation) {
                             plugin.setLocation(jQuery(this).parents('.mapplugins').attr('data-location'));
                             // Reset draggable's inline css... couldn't find a cleaner way to do this.
                             // Can't be removed as that breaks draggable, has to be zeroed because we're changing containers
-                            plugin.element.css({
-                                "top": "0px",
-                                "left": "0px"
+                            plugin.getElement().css({
+                                'top': '0px',
+                                'left': '0px'
                             });
                         }
                         // draggable.stop doesn't fire if dropped to a droppable so we have to do this here as well...
                         me._hideDroppable();
                     },
-                    hoverClass: "ui-state-highlight",
-                    tolerance: "pointer" // bit of a compromise, we'd need a combination of pointer and intersect
+                    hoverClass: 'ui-state-highlight',
+                    tolerance: 'pointer' // bit of a compromise, we'd need a combination of pointer and intersect
                 });
 
             var event = sandbox.getEventBuilder('LayerToolsEditModeEvent')(true);
             sandbox.notifyAll(event);
 
             // remove map controls when editing tool layout
-            var controlsPluginTool = me.toolsPanel.getToolById("Oskari.mapframework.mapmodule.ControlsPlugin");
+            var controlsPluginTool = me.toolsPanel.getToolById(
+                'Oskari.mapframework.mapmodule.ControlsPlugin'
+            );
             if (controlsPluginTool) {
                 me.isMapControlActive = controlsPluginTool && controlsPluginTool.selected;
                 me.toolsPanel.activatePreviewPlugin(controlsPluginTool, false);
             }
         },
 
+        /**
+         * @private @method _editToolLayoutOff
+         *
+         *
+         */
         _editToolLayoutOff: function () {
             var me = this,
                 sandbox = Oskari.getSandbox('sandbox');
+
+            if (!me.toolLayoutEditMode) {
+                return;
+            }
+
             me.toolLayoutEditMode = false;
             jQuery('#editModeBtn').val(me.loc.toollayout.usereditmode);
             jQuery('.mapplugin').removeClass('toollayoutedit');
 
             var draggables = jQuery('.mapplugin.ui-draggable');
-            draggables.css("position", "");
-            draggables.draggable("destroy");
-            jQuery('.mappluginsContent.ui-droppable').droppable("destroy");
+            draggables.css('position', '');
+            draggables.draggable('destroy');
+            jQuery('.mappluginsContent.ui-droppable').droppable('destroy');
 
             var event = sandbox.getEventBuilder('LayerToolsEditModeEvent')(false);
             sandbox.notifyAll(event);
@@ -692,27 +1052,42 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             // Set logoplugin and layerselection as well
             // FIXME get this from logoPlugin's config, no need to traverse the DOM
             if (me.logoPlugin) {
-                me.logoPluginClasses.classes = me.logoPlugin.element.parents('.mapplugins').attr('data-location');
-                me.logoPlugin.element.css("position", "");
+                me.logoPluginClasses.classes = me.logoPlugin.getElement().parents('.mapplugins').attr('data-location');
+                me.logoPlugin.getElement().css('position', '');
                 //me.logoPlugin.setLocation(me.logoPluginClasses.classes);
             }
-            if (me.maplayerPanel.plugin && me.maplayerPanel.plugin.element) {
-                me.layerSelectionClasses.classes = me.maplayerPanel.plugin.element.parents('.mapplugins').attr('data-location');
+            if (me.maplayerPanel.plugin && me.maplayerPanel.plugin.getElement()) {
+                me.layerSelectionClasses.classes = me.maplayerPanel.plugin.getElement().parents('.mapplugins').attr('data-location');
                 //me.maplayerPanel.plugin.setLocation(me.layerSelectionClasses.classes);
-                me.maplayerPanel.plugin.element.css("position", "");
+                me.maplayerPanel.plugin.getElement().css('position', '');
             }
 
             // set map controls back to original settings after editing tool layout
-            var controlsPluginTool = me.toolsPanel.getToolById("Oskari.mapframework.mapmodule.ControlsPlugin");
+            var controlsPluginTool = me.toolsPanel.getToolById('Oskari.mapframework.mapmodule.ControlsPlugin');
             if (controlsPluginTool) {
                 me.toolsPanel.activatePreviewPlugin(controlsPluginTool, me.isMapControlActive);
                 delete me.isMapControlActive;
             }
+
+            // Hide unneeded containers
+            var container;
+            jQuery('.mapplugins').each(function () {
+                container = jQuery(this);
+                if (container.find('.mappluginsContent').children().length === 0) {
+                    container.css('display', 'none');
+                }
+            });
         },
 
+        /**
+         * @private @method _createDataPanel
+         *
+         *
+         */
         _createDataPanel: function () {
             var me = this,
                 panel = Oskari.clazz.create('Oskari.userinterface.component.AccordionPanel');
+
             panel.setTitle(me.loc.data.label);
             var contentPanel = panel.getContainer(),
                 tooltipCont = me.templateHelp.clone(); // tooltip
@@ -720,106 +1095,67 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             contentPanel.append(tooltipCont);
 
             var dataContainer = me.templateData.clone();
-            dataContainer.find('input.show-grid').attr('id', 'show-grid-checkbox').change(function (e) {
+            dataContainer.find('input.show-grid').attr(
+                'id',
+                'show-grid-checkbox'
+            ).change(function (e) {
                 var checkbox = jQuery(e.target),
                     isChecked = checkbox.is(':checked');
+
                 me.isDataVisible = isChecked;
-                me.adjustDataContainer();
+                me._adjustDataContainer();
                 // Update the size labels
                 me._setSizeLabels();
             });
-            dataContainer.find('label.show-grid-label').attr('for', 'show-grid-checkbox').append(me.loc.data.grid);
+            dataContainer.find('label.show-grid-label').attr(
+                'for',
+                'show-grid-checkbox'
+            ).append(me.loc.data.grid);
 
-            dataContainer.find('input.allow-classification').attr('id', 'allow-classification-checkbox').change(function (e) {
+            dataContainer.find('input.allow-classification').attr(
+                'id',
+                'allow-classification-checkbox'
+            ).change(function (e) {
                 var checkbox = jQuery(e.target),
                     isChecked = checkbox.is(':checked');
+
                 me.classifyPlugin.showClassificationOptions(isChecked);
             });
-            dataContainer.find('label.allow-classification-label').attr('for', 'allow-classification-checkbox').append(me.loc.data.allowClassification);
+            dataContainer.find(
+                'label.allow-classification-label'
+            ).attr('for', 'allow-classification-checkbox').append(
+                me.loc.data.allowClassification
+            );
 
             if (me.grid.selected) {
-                dataContainer.find('input#show-grid-checkbox').attr('checked', 'checked');
+                dataContainer.find('input#show-grid-checkbox').attr(
+                    'checked',
+                    'checked'
+                );
                 me.isDataVisible = me.grid.selected;
-                me.adjustDataContainer();
+                me._adjustDataContainer();
             }
             contentPanel.append(dataContainer);
 
             return panel;
         },
-        adjustDataContainer: function () {
-            if (!this.statsContainer) {
-                return;
-            }
-            var me = this,
-                content = jQuery('#contentMap'),
-                contentWidth = content.width(),
-                marginWidth = content.css('margin-left').split('px')[0],
-                maxContentWidth = jQuery(window).width() - marginWidth - 40,
-                mapDiv = me.mapModule.getMapEl(),
-                mapWidth = mapDiv.width(),
-                mapHeight = mapDiv.height();
 
-            // how many columns * 80px
-            var gridWidth = me._calculateGridWidth(), //maxContentWidth - mapWidth;
-                gridHeight = mapHeight,
-                elLeft = jQuery('.oskariui-left'),
-                elCenter = jQuery('.oskariui-center');
-
-            if (me.isDataVisible) {
-                if (gridWidth > 400) {
-                    gridWidth = 400;
-                }
-                elLeft.removeClass('oskari-closed');
-                jQuery('#contentMap').width('');
-
-                gridWidth = gridWidth + 'px';
-                gridHeight = gridHeight + 'px';
-                mapWidth = mapWidth + 'px';
-            } else {
-                elLeft.addClass('oskari-closed');
-                jQuery('#contentMap').width('');
-
-                gridWidth = '0px';
-                gridHeight = '0px';
-                contentWidth = '100%';
-            }
-            elLeft.css({
-                'width': gridWidth,
-                'height': gridHeight,
-                'float': 'left'
-            }).addClass('published-grid-left');
-            elCenter.css({
-                'width': mapWidth,
-                'float': 'left'
-            }).addClass('published-grid-center');
-            me.statsContainer.height(mapHeight);
-
-            if (me.gridPlugin) {
-                me.gridPlugin.setGridHeight();
-            }
-        },
-        _calculateGridWidth: function () {
-            var sandbox = Oskari.getSandbox('sandbox'),
-                width,
-                statsGrid = sandbox.getStatefulComponents().statsgrid; // get state of statsgrid
-            if (statsGrid &&
-                    statsGrid.state &&
-                    statsGrid.state.indicators !== null && statsGrid.state.indicators !== undefined) {
-
-                //indicators + municipality (name & code)
-                var columns = statsGrid.state.indicators.length + 2;
-                //slickgrid column width is 80 by default
-                width = columns * 80;
-            } else {
-                width = 160;
-            }
-            // Width + scroll bar width.
-            return (width + 20);
-        },
-
+        /**
+         * @method getDataContainer
+         *
+         *
+         * @return {jQuery} Data container
+         */
         getDataContainer: function () {
             return jQuery('.oskariui-left');
         },
+
+        /**
+         * @method addDataGrid
+         *
+         * @param {} grid
+         *
+         */
         addDataGrid: function (grid) {
             this.getDataContainer.html(grid);
         },
@@ -827,34 +1163,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         /**
          * @method handleMapMoved
          * Does nothing currently.
+         *
+         *
          */
         handleMapMoved: function () {
-
-            var mapVO = this.instance.sandbox.getMap(),
+            /*var mapVO = this.instance.sandbox.getMap(),
                 lon = mapVO.getX(),
                 lat = mapVO.getY(),
-                zoom = mapVO.getZoom();
+                zoom = mapVO.getZoom();*/
             //this.mainPanel.find('div.locationdata').html('N: ' + lat + ' E: ' + lon + ' ' + this.loc.zoomlevel + ': ' + zoom);
         },
+
         /**
-         * @method _getButtons
-         * @private
+         * @private @method _getButtons
          * Renders publisher buttons to DOM snippet and returns it.
+         *
+         *
          * @return {jQuery} container with buttons
          */
         _getButtons: function () {
             var me = this,
                 buttonCont = me.templateButtonsDiv.clone(),
-                cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            cancelBtn.setTitle(me.loc.buttons.cancel);
+                cancelBtn = Oskari.clazz.create(
+                    'Oskari.userinterface.component.buttons.CancelButton'
+                );
+
             cancelBtn.setHandler(function () {
                 me._editToolLayoutOff();
                 me.instance.setPublishMode(false);
             });
 
-            var saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            saveBtn.setTitle(me.loc.buttons.save);
-            saveBtn.addClass('primary');
+            var saveBtn = Oskari.clazz.create(
+                'Oskari.userinterface.component.buttons.SaveButton'
+            );
 
             if (me.data) {
                 var save = function () {
@@ -872,7 +1213,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 });
                 saveBtn.insertTo(buttonCont);
 
-                var replaceBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+                var replaceBtn = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Button'
+                );
                 replaceBtn.setTitle(me.loc.buttons.replace);
                 replaceBtn.addClass('primary');
                 replaceBtn.setHandler(function () {
@@ -898,14 +1241,19 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
-         * @method _showReplaceConfirm
-         * @private
+         * @private @method _showReplaceConfirm
          * Shows a confirm dialog for replacing published map
+         *
          * @param {Function} continueCallback function to call if the user confirms
+         *
          */
         _showReplaceConfirm: function (continueCallback) {
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
-                okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+            var dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                ),
+                okBtn = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Button'
+                );
             okBtn.setTitle(this.loc.buttons.replace);
             okBtn.addClass('primary');
             okBtn.setHandler(function () {
@@ -913,21 +1261,30 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 continueCallback();
             });
             var cancelBtn = dialog.createCloseButton(this.loc.buttons.cancel);
-            dialog.show(this.loc.confirm.replace.title, this.loc.confirm.replace.msg, [cancelBtn, okBtn]);
+            dialog.show(
+                this.loc.confirm.replace.title,
+                this.loc.confirm.replace.msg,
+                [cancelBtn, okBtn]
+            );
         },
+
         /**
-         * @method _showValidationErrorMessage
-         * @private
+         * @private @method _showValidationErrorMessage
          * Takes an error array as defined by Oskari.userinterface.component.FormInput validate() and
          * shows the errors on a  Oskari.userinterface.component.Popup
+         *
          * @param {Object[]} errors validation error objects to show
+         *
          */
         _showValidationErrorMessage: function (errors) {
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+            var dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                ),
                 okBtn = dialog.createCloseButton(this.loc.buttons.ok),
                 content = jQuery('<ul></ul>'),
                 i,
                 row;
+
             for (i = 0; i < errors.length; i += 1) {
                 row = jQuery('<li></li>');
                 row.append(errors[i].error);
@@ -935,11 +1292,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
             dialog.show(this.loc.error.title, content, [okBtn]);
         },
+
         /**
-         * @method _gatherSelections
-         * @private
+         * @private @method _gatherSelections
          * Gathers publisher selections and returns them as JSON object
-         * @return {Object}
+         *
+         *
+         * @return {Object} selections
          */
         _gatherSelections: function () {
             var me = this,
@@ -947,8 +1306,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 sandbox = me.instance.getSandbox(),
                 errors = me.locationForm.validate(),
                 values = me.locationForm.getValues(),
-                size = container.find('input[name=size]:checked').val(),
-                gridWidth = me._calculateGridWidth(),
+                size = me._getSelectedMapSize(),
                 selections = {
                     domain: values.domain,
                     name: values.name,
@@ -957,8 +1315,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                     bundles: []
                 },
                 i,
-                j,
-                tmpTool,
                 option,
                 classes;
 
@@ -969,32 +1325,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             selections.layout = me.activeToolLayout;
             me.toolsPanel.addValues(selections);
 
-            if (size === 'custom') {
-                var width = container.find('div.customsize input[name=width]').val(),
-                    height = container.find('div.customsize input[name=height]').val();
-                if (me._validateSize(width, height)) {
+            if (size.valid) {
+                if (size.option.id !== 'fill') {
                     selections.size = {
-                        width: width,
-                        height: height
+                        width: size.width,
+                        height: size.height
                     };
-                } else {
-                    errors.push({
-                        field: 'size',
-                        error: this.loc.error.size
-                    });
                 }
             } else {
-
-                for (i = 0; i < me.sizeOptions.length; i += 1) {
-                    option = me.sizeOptions[i];
-                    if (option.id === size) {
-                        selections.size = {
-                            width: option.width,
-                            height: option.height
-                        };
-                        break;
-                    }
-                }
+                errors.push({
+                    field: 'size',
+                    error: this.loc.error.size
+                });
             }
 
             // if maplayer plugin is enabled
@@ -1002,24 +1344,23 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             if (layerValues.layerSelection) {
                 // Add tool location classes
                 layerValues.layerSelection.location = {
-                    "classes": me.layerSelectionClasses.classes
+                    classes: me.layerSelectionClasses.classes
                 };
                 selections.plugins.push(layerValues.layerSelection);
                 selections.defaultBase = layerValues.defaultBase;
                 selections.baseLayers = layerValues.baseLayers;
             }
             // add logoplugin
+            var layoutOptions = me.layoutPanel.getValues();
             var logoPlugin = {
-                "id": "Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin",
-                "config": {
-                    "location": {
-                        "classes": me.logoPluginClasses.classes
+                id: 'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
+                config: {
+                    font: layoutOptions.font,
+                    location: {
+                        classes: me.logoPluginClasses.classes
                     }
                 }
             };
-            // setup logoplugin font
-            var layoutOptions = me.layoutPanel.getValues();
-            logoPlugin.config.font = layoutOptions.font;
             selections.plugins.push(logoPlugin);
 
             // if data grid is enabled
@@ -1044,8 +1385,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             // adds possible feature data bundle
             if (this.toolsPanel.hasFeatureDataBundle()) {
                 selections.featuredata2 = {
+                    /* TODO enable this when it's actually read somewhere...
+                    location: {
+                        classes: this.toolsPanel.getFeatureDataPlugin().plugin.getLocation()
+                    },*/
                     selectionTools: false
-                }
+                };
             }
 
             if (errors.length > 0) {
@@ -1058,40 +1403,53 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
-         * @method _publishMap
-         * @private
+         * @private @method _publishMap
          * Sends the gathered map data to the server to save them/publish the map.
+         *
          * @param {Object} selections map data as returned by _gatherSelections()
+         *
          */
         _publishMap: function (selections) {
             var me = this,
                 sandbox = me.instance.getSandbox(),
-                url = sandbox.getAjaxUrl();
-            // Total width for map and grid. Used to calculate the iframe size.
-            var totalWidth = (me.isDataVisible ? (selections.size.width + me._calculateGridWidth()) : selections.size.width),
+                url = sandbox.getAjaxUrl(),
+                totalWidth = '100%',
+                totalHeight = '100%',
                 errorHandler = function () {
                     var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                         okBtn = dialog.createCloseButton(me.loc.buttons.ok);
                     dialog.show(me.loc.error.title, me.loc.error.saveFailed, [okBtn]);
                 };
 
+            if (selections.size) {
+                totalWidth = selections.size.width + 'px';
+                totalHeight = selections.size.height + 'px';
+            }
+
             // make the ajax call
             jQuery.ajax({
                 url: url + '&action_route=Publish',
                 type: 'POST',
-                dataType: "json",
+                dataType: 'json',
                 data: {
                     pubdata: JSON.stringify(selections)
                 },
                 beforeSend: function (x) {
                     if (x && x.overrideMimeType) {
-                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                        x.overrideMimeType('application/j-son;charset=UTF-8');
                     }
                 },
                 success: function (response) {
                     if (response.id > 0) {
-                        var event = sandbox.getEventBuilder('Publisher.MapPublishedEvent')(response.id,
-                            totalWidth, selections.size.height, selections.language);
+                        var event = sandbox.getEventBuilder(
+                            'Publisher.MapPublishedEvent'
+                        )(
+                            response.id,
+                            totalWidth,
+                            totalHeight,
+                            response.lang,
+                            sandbox.createURL(response.url)
+                        );
                         sandbox.notifyAll(event);
                     } else {
                         errorHandler();
@@ -1100,16 +1458,20 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 error: errorHandler
             });
         },
+
         /**
-         * @method _validateNumberRange
-         * @private
+         * @private @method _validateNumberRange
+         * Validates number in range
+         *
          * @param {Object} value number to validate
          * @param {Number} min min value
          * @param {Number} max max value
-         * Validates number range
+         *
+         * @return {Boolean} Number validity
          */
         _validateNumberRange: function (value, min, max) {
             var ret = true;
+
             if (isNaN(parseInt(value, 10))) {
                 ret = false;
             } else if (!isFinite(value)) {
@@ -1119,33 +1481,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
             return ret;
         },
-        /**
-         * @method _validateSize
-         * @private
-         * @param {Number} width value from width field
-         * @param {Number} height value from height field
-         * Validates size for custom size option
-         */
-        _validateSize: function (width, height) {
-            var custom = null,
-                i,
-                option;
-            for (i = 0; i < this.sizeOptions.length; i += 1) {
-                option = this.sizeOptions[i];
-                if (option.id === 'custom') {
-                    custom = option;
-                    break;
-                }
-            }
-            var isOk = this._validateNumberRange(width, custom.minWidth, custom.maxWidth) && this._validateNumberRange(height, custom.minHeight, custom.maxHeight);
-            return isOk;
-        },
+
         /**
          * @method setEnabled
          * "Activates" the published map preview when enabled
          * and returns to normal mode on disable
+         *
          * @param {Boolean} isEnabled true to enable preview, false to disable
          * preview
+         *
          */
         setEnabled: function (isEnabled) {
             if (isEnabled) {
@@ -1154,14 +1498,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 this._disablePreview();
             }
         },
+
         /**
-         * @method _enablePreview
-         * @private
+         * @private @method _enablePreview
          * Modifies the main map to show what the published map would look like
+         *
+         *
          */
         _enablePreview: function () {
             var me = this,
-                mapModule = me.instance.sandbox.findRegisteredModuleInstance('MainMapModule'),
+                mapModule = me.instance.sandbox.findRegisteredModuleInstance(
+                    'MainMapModule'
+                ),
                 plugins = mapModule.getPluginInstances(),
                 tools = me.toolsPanel.getTools(),
                 p,
@@ -1193,7 +1541,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 me.maplayerPanel.useConfig(me.data.hasLayerSelectionPlugin);
             }
 
-            me._setSelectedSize();
+            me._updateMapSize();
 
             for (i = 0; i < tools.length; i += 1) {
                 if (tools[i].selected) {
@@ -1202,19 +1550,21 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
             me.toolsPanel.activateFeatureDataPlugin(true);
 
-             mapModule.registerPlugin(me.logoPlugin);
+            mapModule.registerPlugin(me.logoPlugin);
             this.logoPlugin.startPlugin(me.instance.sandbox);
         },
+
         /**
-         * @method _disablePreview
-         * @private
+         * @private @method _disablePreview
          * Returns the main map from preview to normal state
+         *
+         *
          */
         _disablePreview: function () {
             var me = this,
                 tools = me.toolsPanel.getTools(),
+                mapElement,
                 mapModule = me.instance.sandbox.findRegisteredModuleInstance('MainMapModule'),
-                plugins = mapModule.getPluginInstances(),
                 plugin,
                 i;
             
@@ -1236,17 +1586,30 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             me.layoutPanel.stop();
 
             // return map size to normal
-            var mapElement = jQuery(mapModule.getMap().div);
+            mapElement = jQuery(mapModule.getMap().div);
             // remove width definition to resume size correctly
             mapElement.width('');
             mapElement.height(jQuery(window).height());
 
             // notify openlayers that size has changed
-            mapModule.updateSize();
+            me._updateMapModuleSize();
+            //mapModule.updateSize();
 
             // stop our logoplugin
             mapModule.unregisterPlugin(me.logoPlugin);
             me.logoPlugin.stopPlugin(me.instance.sandbox);
+
+            // stop our classify plugin
+            if (me.classifyPlugin) {
+                mapModule.unregisterPlugin(me.classifyPlugin);
+                me.classifyPlugin.stopPlugin(me.instance.sandbox);
+            }
+
+            // stop our grid plugin
+            if (me.gridPlugin) {
+                mapModule.unregisterPlugin(me.gridPlugin);
+                me.gridPlugin.stopPlugin(me.instance.sandbox);
+            }
 
             // resume normal plugins
             for (i = 0; i < me.normalMapPlugins.length; i += 1) {
@@ -1257,20 +1620,32 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             // reset listing
             me.normalMapPlugins = [];
         },
+
         /**
          * @method destroy
-         * Destroyes/removes this view from the screen.
+         * Destroys/removes this view from the screen.
+         *
+         *
          */
         destroy: function () {
             this.mainPanel.remove();
         },
+
         /**
          * @method setPluginLanguage
          * Changes system language with Oskari.setLang and stops/starts plugins to make
          * them rewrite their UI with the new language.
-         * @param {String} lang language code
+         *
+         * @param {string} lang language code
+         *
          */
         setPluginLanguage: function (lang) {
+            if (lang === null || lang === undefined) {
+                throw new TypeError(
+                    'Oskari.mapframework.bundle.publisher.view.BasicPublisher' +
+                    '.setPluginLanguage: missing language'
+                );
+            }
             Oskari.setLang(lang);
             var me = this,
                 i,
@@ -1292,12 +1667,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             me.logoPlugin.stopPlugin(this.instance.sandbox);
             me.logoPlugin.startPlugin(this.instance.sandbox);
         },
+
         /**
-         * @method _resetLayerSelectionPlugin
+         * @private @method _resetLayerSelectionPlugin
          * Changes system language with Oskari.setLang and stops/starts plugins to make
          * them rewrite their UI with the new language.
-         * @param {String} lang language code
-         * @private
+         *
+         * @param {string} lang language code
+         *
          */
         _resetLayerSelectionPlugin: function () {
             // stop and start if enabled to change language
@@ -1319,8 +1696,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
         },
 
+        /**
+         * @method initGrid
+         *
+         * @param {string} layer Layer id
+         *
+         */
         initGrid: function (layer) {
-
             var me = this,
                 conf = me.conf,
                 locale = Oskari.getLocalization('StatsGrid'), // Let's use statsgrid's locale files.
@@ -1328,25 +1710,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 sandboxName = 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName),
                 statsGridState;
+
             me.sandbox = sandbox;
             sandbox.register(me.instance);
 
-            me.statsService = sandbox.getService('Oskari.statistics.bundle.statsgrid.StatisticsService');
+            // Create the StatisticsService for handling ajax calls and common functionality.
+            // Used in both plugins below.
+            var statsService = Oskari.clazz.create(
+                'Oskari.statistics.bundle.statsgrid.StatisticsService',
+                me
+            );
+            sandbox.registerService(statsService);
+            me.statsService = statsService;
 
             // Fetch the state of the statsgrid bundle and create the UI based on it.
             // TODO: get the saved state from the published map.
             var statsGrid = me.sandbox.getStatefulComponents().statsgrid;
+
             if (statsGrid && statsGrid.state && showGrid) {
                 //me.createUI(statsGrid.state);
                 //me.publisher.
                 statsGridState = me._filterIndicators(_.clone(statsGrid.state, true));
+
                 // Register grid plugin to the map.
                 var gridConf = {
                     'published': true,
                     'layer': layer,
                     'state': statsGridState
                 };
-                var gridPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin', gridConf, locale);
+                var gridPlugin = Oskari.clazz.create(
+                    'Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin',
+                    gridConf,
+                    locale
+                );
                 me.mapModule.registerPlugin(gridPlugin);
                 me.mapModule.startPlugin(gridPlugin);
                 me.gridPlugin = gridPlugin;
@@ -1354,7 +1750,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 // Register classification plugin to the map.
                 gridConf.state.allowClassification = false;
 
-                var classifyPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin', gridConf, locale);
+                var classifyPlugin = Oskari.clazz.create(
+                    'Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin',
+                    gridConf,
+                    locale
+                );
                 me.mapModule.registerPlugin(classifyPlugin);
                 me.mapModule.startPlugin(classifyPlugin);
                 me.classifyPlugin = classifyPlugin;
@@ -1369,16 +1769,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
+         * @private @method _filterIndicators
          * Filters out user's indicators which aren't allowed to be published.
          *
-         * @method _filterIndicators
          * @param  {Object} statsGridState
+         *
          * @return {Object} filtered state
          */
         _filterIndicators: function (statsGridState) {
             statsGridState.indicators = _.filter(statsGridState.indicators, function (indicator) {
                 return (
-                    // sotka indicators
+                    // indicators
                     (!indicator.ownIndicator) ||
                     // own indicators
                     (indicator.ownIndicator && indicator.public)
@@ -1387,19 +1788,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             return statsGridState;
         },
 
-
-
         /**
+         * @method changeToolStyles
          * Changes the style of each tool, if the tool's plugin supports it.
          *
-         * @method changeToolStyles
          * @param {Object} style
+         *
          */
         changeToolStyles: function (style) {
             if (!style) {
                 return;
             }
-
 
             var me = this,
                 styleConfig,
@@ -1451,7 +1850,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
-         * @method _setLayerSelectionStyle
+         * @private @method _setLayerSelectionStyle
+         *
+         * @param {string} styleName Name of the style
+         *
          */
         _setLayerSelectionStyle: function (styleName) {
             var mlp = this.maplayerPanel;
@@ -1462,17 +1864,19 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
+         * @method changeColourScheme
          * Changes the colour scheme of the getinfo plugin and layer selection plugin.
          *
-         * @method changeColourScheme
          * @param {Object} colourScheme
+         *
          */
         changeColourScheme: function (colourScheme) {
             var infoPlugin = this._getGetInfoPlugin(),
                 mlp = this.maplayerPanel;
             if (infoPlugin) {
-                infoPlugin.config = infoPlugin.config || {};
-                infoPlugin.config.colourScheme = colourScheme;
+                var conf = infoPlugin.config;
+                conf.colourScheme = colourScheme;
+                infoPlugin.config = conf;
             }
 
             mlp.pluginConfig.colourScheme = colourScheme;
@@ -1482,16 +1886,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
+         * @method changeFont
          * Changes the font of each tool (has to be done separately for each one)
          * if the plugin supports it.
          *
-         * @method changeFont
-         * @param {String} font the id of the font
+         * @param {string} font the id of the font
+         *
          */
         changeFont: function (font) {
             if (!font) {
                 return;
             }
+
             var me = this,
                 i,
                 tool,
@@ -1520,13 +1926,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             // Change the font of the info plugin
             var infoPlugin = me._getGetInfoPlugin();
             if (infoPlugin) {
-                infoPlugin.config = infoPlugin.config || {};
-                infoPlugin.config.font = font;
+                var conf = infoPlugin.config;
+                conf.font = font;
+                infoPlugin.config = conf;
             }
         },
 
         /**
-         * @method _setLayerSelectionStyle
+         * @private @method _setLayerSelectionStyle
+         *
+         * @param {string} font the id of the font
+         *
          */
         _setLayerSelectionFont: function (font) {
             var mlp = this.maplayerPanel;
@@ -1537,46 +1947,63 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
-         * @method _getGetInfoPlugin
+         * @private @method _getGetInfoPlugin
+         *
+         *
+         * @return Infoplugin instance
          */
         _getGetInfoPlugin: function () {
-            return this.toolsPanel.getToolById('Oskari.mapframework.mapmodule.GetInfoPlugin');
+            return this.toolsPanel.getToolById(
+                'Oskari.mapframework.mapmodule.GetInfoPlugin'
+            );
         },
         /**
-         * @method _getPreferredPluginLocation
+         * @private @method _getPreferredPluginLocation
+         *
+         * @param {Object} plugin
+         * @param {string} defaultLocation
+         *
+         * @return {string} Default location
          */
         _getPreferredPluginLocation: function (plugin, defaultLocation) {
             var me = this,
                 location = defaultLocation,
-                dropzoneSelector = "div.mapplugins." + location.split(" ").join(".");
+                dropzoneSelector = 'div.mapplugins.' + location.split(' ').join('.');
+
             if (location === null || this._siblingsAllowed(plugin.getClazz(), null, jQuery(dropzoneSelector)) === 0) {
                 // try to find a container that's allowed
                 var allowedLocations = me.toolDropRules[plugin.getClazz()].allowedLocations;
                 // TODO once grouped siblings is implemented:
                 // if plugin has groupedSiblings, return a container with an allowedSibling if available
                 // we invert the order because bottom containers are before the top ones in the DOM
-                jQuery(jQuery("div.mapplugins").get().reverse()).each(function () {
+                jQuery(jQuery('div.mapplugins').get().reverse()).each(function () {
                     var target = jQuery(this),
                         allowedLocation = me._locationAllowed(allowedLocations, target);
-                    if (allowedLocation) {
-                        if (me._siblingsAllowed(plugin.getClazz(), null, target) === 2) {
-                            location = allowedLocation;
-                            return false;
-                        }
+                    if (allowedLocation && me._siblingsAllowed(plugin.getClazz(), null, target) === 2) {
+                        location = allowedLocation;
+                        return false;
                     }
                 });
             }
             return location;
         },
+
         /**
-         * @method _getInitialPluginLocation
+         * @private @method _getInitialPluginLocation
+         *
+         * @param {Object} data
+         * @param {string} pluginName
+         *
+         * @return Initial plugin location
          */
         _getInitialPluginLocation: function (data, pluginName) {
             var plugins = this.data.state.mapfull.config.plugins,
                 plugin,
                 i;
-            for (i = 0; i < plugins.length; i++) {
+
+            for (i = 0; i < plugins.length; i += 1) {
                 plugin = plugins[i];
+
                 if (plugin.id === pluginName && plugin.config && plugin.config.location) {
                     return plugin.config.location.classes;
                 }
@@ -1602,8 +2029,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
          *     }
          * }
          *
-         * @method _getInitialLayoutData
+         * @private @method _getInitialLayoutData
+         *
          * @param  {Object} data
+         *
          * @return {Object} returns the config for layout
          */
         _getInitialLayoutData: function (data) {
@@ -1641,38 +2070,55 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
             return layoutConf;
         },
+
         /**
-         * vmethod _getPluginByClazz Returns plugin object of given plugin class
-         * @param  {String} pluginClazz      Plugin class
-         * @return {Object}                  Plugin object of given plugin class, null if not found
+         * @private @method _getPluginByClazz
+         * Returns plugin object of given plugin class
+         *
+         * @param  {string} pluginClazz
+         * Plugin class
+         *
+         * @return {Object}
+         * Plugin object of given plugin class, null if not found
          */
         _getPluginByClazz: function (pluginClazz) {
             var me = this,
                 tool,
                 plugin = null;
+
             tool = me.toolsPanel.getToolById(pluginClazz);
-            if (tool &&  tool.plugin) {
+            if (tool && tool.plugin) {
                 plugin = tool.plugin;
             } else {
-                if (pluginClazz === "Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin") {
+                if (pluginClazz === 'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin') {
                     plugin = me.logoPlugin;
-                } else if (pluginClazz === "Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin") {
+                } else if (pluginClazz === 'Oskari.mapframework.bundle.mapmodule.plugin.LayerSelectionPlugin') {
                     plugin = me.maplayerPanel.plugin;
+                } else if (pluginClazz === 'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin') {
+                    plugin = me.toolsPanel.getFeatureDataPlugin();
+                    if (plugin) {
+                        plugin = plugin.plugin;
+                    }
                 }
             }
             return plugin;
         },
         /**
-         * @method _getActivePlugins Returns all active plugins in the whitelist
-         * @param  {Array} whitelist Array of plugin classes to examine
-         * @return {Array}           Array of plugin classes
+         * @private @method _getActivePlugins
+         * Returns all active plugins in the whitelist
+         *
+         * @param  {string[]} whitelist
+         * Array of plugin classes to examine
+         *
+         * @return {string[]}
+         * Array of plugin classes
          */
         _getActivePlugins: function (whitelist) {
             var ret = [],
-                clazz,
-                i;
-            jQuery(".mapplugins .mapplugin").each(function () {
-                clazz = jQuery(this).attr("data-clazz");
+                clazz;
+
+            jQuery('.mapplugins .mapplugin').each(function () {
+                clazz = jQuery(this).attr('data-clazz');
                 if (jQuery.inArray(clazz, whitelist) > -1) {
                     ret.push(clazz);
                 }
@@ -1681,31 +2127,41 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
-         * @method _getDraggedPlugins   Returns all plugins that should be included in the drag, including original dragged plugin
-         * @param  {String} pluginClazz Plugin class
-         * @return {Array}              Array of plugin classes
+         * @private @method _getDraggedPlugins
+         * Returns all plugins that should be included in the drag, including
+         * original dragged plugin.
+         *
+         * @param  {string} pluginClazz
+         * Plugin class
+         * @return {string[]}
+         * Array of plugin classes
          */
         _getDraggedPlugins: function (pluginClazz) {
             var ret = [];
+
             if (this.toolDropRules[pluginClazz].groupedSiblings) {
                 ret = this._getActivePlugins(this.toolDropRules[pluginClazz].allowedSiblings);
-                
             }
             ret.push(pluginClazz);
             return ret;
         },
 
         /**
-         * @method _getDropzonePlugins Returns all active plugins in given dropzone
-         * @param  {Object} dropzone   jQuery object of the dropzone
-         * @return {Array}             Array of plugin classes
+         * @private @method _getDropzonePlugins
+         * Returns all active plugins in given dropzone
+         *
+         * @param  {jQuery} dropzone
+         * jQuery object of the dropzone
+         * @return {string[]}
+         * Array of plugin classes
          */
         _getDropzonePlugins: function (dropzone) {
             var ret = [],
                 clazz;
-            dropzone.find(".mapplugin").each(function () {
+
+            dropzone.find('.mapplugin').each(function () {
                 // ignore undefined...
-                clazz = jQuery(this).attr("data-clazz");
+                clazz = jQuery(this).attr('data-clazz');
                 if (clazz) {
                     ret.push(clazz);
                 }
@@ -1714,19 +2170,26 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         },
 
         /**
-         * @method _locationAllowed           Is the dropzone in the plugin's allowed locations
-         * @param  {Array}   allowedLocations Array of allowed locations for the plugin
-         * @param  {Object}  dropzone         jQuery object of the dropzone
-         * @return {String}                   Allowed location string if allowed, null if not.
+         * @private @method _locationAllowed
+         * Is the dropzone in the plugin's allowed locations
+         *
+         * @param  {string[]}   allowedLocations
+         * Array of allowed locations for the plugin
+         * @param  {jQuery}  dropzone
+         * jQuery object of the dropzone
+         *
+         * @return {string}
+         * Allowed location string if allowed, null if not.
          */
         _locationAllowed: function (allowedLocations, dropzone) {
             var isAllowedLocation,
                 i;
+
             if (!allowedLocations || !dropzone) {
                 return false;
             }
-            for (i = 0; i < allowedLocations.length; i++) {
-                isAllowedLocation = dropzone.is("." + allowedLocations[i].split(' ').join("."));
+            for (i = 0; i < allowedLocations.length; i += 1) {
+                isAllowedLocation = dropzone.is('.' + allowedLocations[i].split(' ').join('.'));
                 if (isAllowedLocation) {
                     return allowedLocations[i];
                 }
@@ -1734,45 +2197,69 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             return null;
         },
 
-
         /**
-         * @method _moveSiblings        Moves unallowed siblings to source so plugin can be moved to target
-         * @param  {String} pluginClazz Plugin clazz
-         * @param  {Object} source      jQuery object for source dropzone (optional)
-         * @param  {Object} target      jQuery object for target dropzone
+         * @private @method _moveSiblings
+         * Moves unallowed siblings to source so plugin can be moved to target
+         *
+         * @param  {string} pluginClazz
+         * Plugin clazz
+         * @param  {jQuery} source
+         * jQuery object for source dropzone (optional)
+         * @param  {jQuery} target
+         * jQuery object for target dropzone
+         *
          **/
         _moveSiblings: function (pluginClazz, source, target) {
             var me = this,
+                sibling,
                 siblings = this._getDropzonePlugins(target),
                 i;
-            for (i = 0; i < siblings.length; i++) {
+
+            for (i = 0; i < siblings.length; i += 1) {
                 if (jQuery.inArray(siblings[i], me.toolDropRules[pluginClazz].allowedSiblings) < 0) {
                     // Unallowed sibling, move to source
-                    me._getPluginByClazz(siblings[i]).setLocation(source.attr("data-location"));
+                    sibling = me._getPluginByClazz(siblings[i]);
+                    if (sibling) {
+                        sibling.setLocation(source.attr('data-location'));
+                    } else {
+                        me.sandbox.printWarn(
+                            'BasicPublisher._moveSiblings(): Couldn\'t find sibling',
+                            siblings[i]
+                        );
+                    }
                 }
             }
         },
 
         /**
-         * @method _siblingsAllowed         Checks if plugins in dropzone are allowed siblings for given plugin
-         * @param  {String} pluginClazz     Plugin clazz
-         * @param  {Object} source          jQuery object for source dropzone (optional)
-         * @param  {Object} target          jQuery object for target dropzone
-         * @param  {String} excludedSibling Plugin clazz for plugin that should be ignored in sibling check (optional)
-         * @return {Number}                 0 = no, 1 = siblings can be moved out of the way, 2 = yes
+         * @private @method _siblingsAllowed
+         * Checks if plugins in dropzone are allowed siblings for given plugin
+         *
+         * @param  {string} pluginClazz
+         * Plugin clazz
+         * @param  {jQuery} source
+         * jQuery object for source dropzone (optional)
+         * @param  {jQuery} target
+         * jQuery object for target dropzone
+         * @param  {string} excludedSibling
+         * Clazz for plugin that should be ignored in sibling check (optional)
+         *
+         * @return {Number}
+         * 0 = no, 1 = siblings can be moved out of the way, 2 = yes
          */
         _siblingsAllowed: function (pluginClazz, source, target, excludedSibling) {
             var me = this,
                 siblings = this._getDropzonePlugins(target),
                 i,
                 ret = 2;
-            for (i = 0; i < siblings.length; i++) {
+
+            for (i = 0; i < siblings.length; i += 1) {
                 if (!excludedSibling || siblings[i] !== excludedSibling) {
                     // sibling is not ignored, see if it's an allowed sibling
                     if (jQuery.inArray(siblings[i], me.toolDropRules[pluginClazz].allowedSiblings) < 0 && pluginClazz !== siblings[i]) {
                         // not an allowed sibling, see if we can move it out of the way (don't pass a source, it'd cause an infinite loop)
                         // only accept 2/yes as a result, moving source plugins out of the way would get too weird
-                        if ( source && me._locationAllowed(this.toolDropRules[siblings[i]].allowedLocations, source) && me._siblingsAllowed(siblings[i], null, source, pluginClazz) == 2) {
+                        if (source && me._locationAllowed(this.toolDropRules[siblings[i]].allowedLocations, source) && me._siblingsAllowed(siblings[i], null, source, pluginClazz) === 2) {
                             // sibling can be moved to source
                             ret = 1;
                         } else {
@@ -1788,14 +2275,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
         /**
          * @method _showDroppable       Shows dropzones where the given plugin can be dropped in green
-         * @param  {String} pluginClazz Plugin class
+         * @param  {string} pluginClazz Plugin class
          * @param  {Object} source      jQuery object for source dropzone
+         * @private
          */
         _showDroppable: function (pluginClazz, source) {
             var me = this,
                 allowedLocation,
-                target,
-                i;
+                target;
+
             if (!pluginClazz) {
                 return;
             }
@@ -1808,23 +2296,28 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                     // show allowed-if-we-move-some-siblings-out-of-the-way as allowed for now
                     if (allowedLocation) {
                         // paint it green, plugin can be dropped here
-                        target.find(".mappluginsContent").addClass("allowed").droppable("enable");
+                        target.find('.mappluginsContent').addClass('allowed').droppable('enable');
                     } else {
                         // paint it red, plugins already in the dropzone aren't allowed siblings for this plugin
                         // we could also try to move them somewhere?
-                        target.find(".mappluginsContent").addClass("disallowed").droppable("disable");
+                        target.find('.mappluginsContent').addClass('disallowed').droppable('disable');
                     }
                 } else {
                     // paint it red, this isn't an allowed dropzone for the plugin
-                    target.find(".mappluginsContent").addClass("disallowed").droppable("disable");
+                    target.find('.mappluginsContent').addClass('disallowed').droppable('disable');
                 }
             });
         },
 
         /**
+         * @private @method _hideDroppable
          * Hides dropzones
+         *
+         *
          */
         _hideDroppable: function () {
-            jQuery('div.mapplugins .mappluginsContent').removeClass("allowed").removeClass("disallowed");
+            jQuery(
+                'div.mapplugins .mappluginsContent'
+            ).removeClass('allowed').removeClass('disallowed');
         }
     });

@@ -11,7 +11,6 @@ function createMergedJsScript() {
 	
 	return result;
 }
-
 function createMergedCssScript() {
     var sources = getLoadedCssElements();
     var ix, source;

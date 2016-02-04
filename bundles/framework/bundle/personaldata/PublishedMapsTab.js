@@ -5,13 +5,13 @@
 Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
 
     /**
-     * @method create called automatically on construction
-     * @static
-     * @param {Oskari.mapframework.bundle.personaldata.PersonalDataBundleInstance}
-     * instance
-     *      reference to component that created the tab
+     * @static @method create called automatically on construction
+     *
+     * @param {Oskari.mapframework.bundle.personaldata.PersonalDataBundleInstance} instance
+     * Reference to component that created the tab
+     * @param {Object} localization
+     *
      */
-
     function (instance, localization) {
         this.instance = instance;
         this.template = jQuery('<div class="viewsList volatile"></div>');
@@ -20,30 +20,35 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
         this.container = null;
     }, {
         /**
-         * Returns module name. Needed because we fake to be module for listening to
-         * events (getName and onEvent methods are needed for this)
-         *
          * @method getName
-         * @return {String}
+         * Returns module name. Needed because we fake to be module for
+         * listening to events (getName and onEvent methods are needed for this)
+         *
+         *
+         * @return {string}
          */
         getName: function () {
             return 'PersonalData.PublishedMapsTab';
         },
+
         /**
+         * @method getTitle
          * Returns tab title
          *
-         * @method getTitle
-         * @return {String}
+         *
+         * @return {string}
          */
         getTitle: function () {
             return this.loc.title;
         },
+
         /**
+         * @method addTabContent
          * Writes the tab content to the given container
          *
-         * @method addTabContent
          * @param {jQuery} container reference to a container
          * where the tab should be added
+         *
          */
         addTabContent: function (container) {
             var me = this,
@@ -52,12 +57,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
             container.append(content);
             me._refreshViewsList();
         },
+
         /**
+         * @private @method _renderViewsList
          * Renders given views list. Removes previous listing.
          *
-         * @method _renderViewsList
          * @param {Object[]} views object array as returned by backend service
-         * @private
+         *
          */
         _renderViewsList: function (views) {
             if (!views) {
@@ -73,11 +79,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
         },
 
         /**
+         * @private @method _refreshViewsList
          * Fetches views from backend and renders the response.
          * Shows an error message on failure
          *
-         * @method _refreshViewsList
-         * @private
+         *
          */
         _refreshViewsList: function () {
             var me = this,
@@ -92,40 +98,47 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
         },
 
         /**
+         * @private @method _getViewById
          * Finds view object matching given id.
          * Shows an error message if no matches found.
          *
-         * @method _getViewById
          * @param {Number} id view id
+         *
          * @return {Object} matching view object or undefined if not found
-         * @private
          */
         _getViewById: function (id) {
-            var i;
-            for (i = 0; i < this.viewData.length; ++i) {
-                // found what we were looking for
-                // FIXME make sure these are of the same type and use ===
-                if (this.viewData[i].id == id) {
-                    return this.viewData[i];
+            var me = this,
+                i;
+            for (i = 0; i < me.viewData.length; i += 1) {
+                if (me.viewData[i].id === id) {
+                    // found what we were looking for
+                    return me.viewData[i];
                 }
             }
             // couldn't find view -> show an error
-            this._showErrorMessage(this.loc.error.generic);
+            me._showErrorMessage(me.loc.error.generic);
         },
+
         /**
+         * @private @method _confirmSetState
          * Shows a confirmation dialog for opening a problematic view
          *
-         * @method _confirmSetState
-         * @param {Function} callback function for ok button
-         * @param {Boolean} blnMissing, true if we have determined that the layer is no longer available,
-         *  false if layer might not be loaded yet.
-         * @private
+         * @param {Function} cb
+         * Callback function for ok button
+         * @param {Boolean}  blnMissing
+         * True if we have determined that the layer is no longer available,
+         * false if layer might not be loaded yet.
+         *
          */
         _confirmSetState: function (cb, blnMissing) {
-            var me = this;
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-            var okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            okBtn.setTitle(this.loc.button.ok);
+            var me = this,
+                dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                ),
+                okBtn = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Button'
+                );
+            okBtn.setTitle(me.loc.button.ok);
             okBtn.addClass('primary');
 
             okBtn.setHandler(function () {
@@ -134,11 +147,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                     cb();
                 }
             });
-            var cancelBtn = dialog.createCloseButton(this.loc.button.cancel);
+            var cancelBtn = dialog.createCloseButton(me.loc.button.cancel);
             if (blnMissing) {
-                dialog.show(me.loc.popup.showErrorTitle, me.loc.popup.showConfirmMissing, [cancelBtn, okBtn]);
+                dialog.show(
+                    me.loc.popup.showErrorTitle,
+                    me.loc.popup.showConfirmMissing, [cancelBtn, okBtn]
+                );
             } else {
-                dialog.show(me.loc.popup.showErrorTitle, me.loc.popup.showConfirmNotLoaded, [cancelBtn]);
+                dialog.show(
+                    me.loc.popup.showErrorTitle,
+                    me.loc.popup.showConfirmNotLoaded, [cancelBtn]
+                );
             }
             dialog.makeModal();
         },
@@ -151,32 +170,39 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
          * @private
          */
         _confirmDelete: function (view) {
-            var me = this;
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-            var okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            okBtn.setTitle(this.loc['delete']);
+            var me = this,
+                dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                ),
+                okBtn = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Button'
+                ),
+                sandbox = me.instance.sandbox;
+            okBtn.setTitle(me.loc['delete']);
             okBtn.addClass('primary');
-
-            var sandbox = this.instance.sandbox;
             okBtn.setHandler(function () {
                 me._deleteView(view);
                 dialog.close();
             });
-            var cancelBtn = dialog.createCloseButton(this.loc.button.cancel);
-            dialog.show(me.loc.popup.deletetitle, me.loc.popup.deletemsg, [cancelBtn, okBtn]);
+            var cancelBtn = dialog.createCloseButton(me.loc.button.cancel);
+            dialog.show(
+                me.loc.popup.deletetitle,
+                me.loc.popup.deletemsg, [cancelBtn, okBtn]
+            );
             dialog.makeModal();
         },
+
         /**
-         * Calls backend to delete the given view. Reloads the view listing on success and
-         * shows an error message on fail
+         * @private @method _deleteView
+         * Calls backend to delete the given view. Reloads the view listing on
+         * success and shows an error message on fail
          *
-         * @method _deleteView
          * @param {Object} view data object
-         * @private
+         *
          */
         _deleteView: function (view) {
-            var me = this;
-            var service = me.instance.getViewService();
+            var me = this,
+                service = me.instance.getViewService();
             service.deleteView(view, function (isSuccess) {
                 if (isSuccess) {
                     me._refreshViewsList();
@@ -185,15 +211,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                 }
             });
         },
+
         /**
+         * @private @method _showErrorMessage
          * Shows an error dialog to the user with given message
          *
-         * @method _showErrorMessage
          * @param {String} msg message to show on popup
-         * @private
+         *
          */
         _showErrorMessage: function (msg) {
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+            var dialog = Oskari.clazz.create(
+                'Oskari.userinterface.component.Popup'
+            );
             // delete failed
             var button = dialog.createCloseButton(this.loc.button.ok);
             button.addClass('primary');
@@ -201,28 +230,32 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
         },
 
         /**
-         * Wraps backends views object data array to Oskari.userinterface.component.GridModel
+         * @private @method _getGridModel
+         * Wraps backends views object data array to
+         * Oskari.userinterface.component.GridModel
          *
-         * @method _getGridModel
-         * @param {Object[]} views array of view data objects as returned by backend
+         * @param {Object[]} views
+         * Array of view data objects as returned by backend
+         *
          * @return {Oskari.userinterface.component.GridModel}
-         * @private
          */
         _getGridModel: function (views) {
-
-            var gridModel = Oskari.clazz.create('Oskari.userinterface.component.GridModel'),
+            var gridModel = Oskari.clazz.create(
+                    'Oskari.userinterface.component.GridModel'
+                ),
                 i,
                 view,
                 isPublic,
                 data;
             gridModel.setIdField('id');
-            for (i = 0; i < views.length; ++i) {
+            for (i = 0; i < views.length; i += 1) {
                 view = views[i];
                 isPublic = (view.isPublic === true);
                 data = {
                     'id': view.id,
                     'state': view.state,
                     'name': view.name,
+                    'url': view.url,
                     'domain': view.pubDomain,
                     'lang': view.lang,
                     'isPublic': isPublic,
@@ -236,31 +269,52 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
             }
             return gridModel;
         },
+
         /**
-         * Creates Oskari.userinterface.component.Grid and populates it with given model
+         * @private @method _getGrid
+         * Creates Oskari.userinterface.component.Grid and populates it with
+         * given model
          *
-         * @method _getGrid
-         * @param {Oskari.userinterface.component.GridModel} model to populate the grid with
+         * @param {Oskari.userinterface.component.GridModel}
+         * Model to populate the grid with
+         *
          * @return {Oskari.userinterface.component.Grid}
-         * @private
          */
         _getGrid: function (model) {
-            var me = this;
-            var instance = this.instance;
-            var sandbox = instance.getSandbox();
-            var visibleFields = ['name', 'domain', 'publish', 'show', 'html', 'edit', 'delete'];
-            var grid = Oskari.clazz.create('Oskari.userinterface.component.Grid');
+            var me = this,
+                instance = this.instance,
+                sandbox = instance.getSandbox(),
+                visibleFields = [
+                    'name',
+                    'domain',
+                    'publish',
+                    'show',
+                    'html',
+                    'edit',
+                    'delete'
+                ],
+                grid = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Grid'
+                );
             grid.setDataModel(model);
             grid.setVisibleFields(visibleFields);
 
             // set up the link from name field
             var nameRenderer = function (name, data) {
+                var url = sandbox.createURL(data.url);
+                if(!url) {
+                    // no url, no link just plain text
+                    return name;
+                }
+                // create link
                 var link = me.templateLink.clone();
                 link.append(name);
                 link.bind('click', function () {
-                    var publishedMapUrl = sandbox.getLocalizedProperty(me.instance.conf.publishedMapUrl);
-                    window.open(publishedMapUrl + data.id,
-                        "Published", "location=1,status=1,scrollbars=yes,width=850,height=800");
+                    window.open(
+                        url,
+                        'Published',
+                        'location=1,status=1,scrollbars=yes,width=850,height=800'
+                    );
                     return false;
                 });
                 return link;
@@ -269,8 +323,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
 
             var service = instance.getViewService();
             var setMapState = function (data, forced, confirmCallback) {
-                var setStateRequestBuilder = sandbox.getRequestBuilder('StateHandler.SetStateRequest');
-                // error handling: check if the layers referenced in view are loaded 
+                var setStateRequestBuilder = sandbox.getRequestBuilder(
+                    'StateHandler.SetStateRequest'
+                );
+                // error handling: check if the layers referenced in view are
+                // loaded 
                 var resp = service.isViewLayersLoaded(data, sandbox);
                 if (resp.status || forced === true) {
                     if (setStateRequestBuilder) {
@@ -301,29 +358,36 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
             grid.setColumnValueRenderer('show', showRenderer);
 
             var editRequestSender = function (data) {
-                var publishMapEditorRequestBuilder = sandbox.getRequestBuilder('Publisher.PublishMapEditorRequest');
+                var publishMapEditorRequestBuilder = sandbox.getRequestBuilder(
+                    'Publisher.PublishMapEditorRequest'
+                );
                 if (publishMapEditorRequestBuilder) {
                     var req = publishMapEditorRequestBuilder(data);
                     sandbox.request(instance, req);
                 }
-                var closeFlyoutRequestBuilder = sandbox.getRequestBuilder('userinterface.UpdateExtensionRequest');
+                var closeFlyoutRequestBuilder = sandbox.getRequestBuilder(
+                    'userinterface.UpdateExtensionRequest'
+                );
                 if (closeFlyoutRequestBuilder) {
-                    var closeFlyoutRequest = closeFlyoutRequestBuilder(me.instance, 'close', me.instance.getName());
+                    var closeFlyoutRequest = closeFlyoutRequestBuilder(
+                        me.instance,
+                        'close',
+                        me.instance.getName()
+                    );
                     sandbox.request(me.instance.getName(), closeFlyoutRequest);
                 }
             };
 
-            //sending a request to publisher for editing view
+            // show a popup with the iframe code of the embedded map
             var htmlRenderer = function (name, data) {
+                var url = sandbox.createURL(data.url);
                 var link = me.templateLink.clone();
                 link.append(name);
                 link.bind('click', function () {
-                    var publishedMapUrl = sandbox.getLocalizedProperty(me.instance.conf.publishedMapUrl, data.lang),
-                        url = 'http://' + window.location.host + publishedMapUrl + data.id,
-                        view = me._getViewById(data.id),
+                    var view = me._getViewById(data.id),
                         size = view ? view.state.mapfull.config.size : {
-                            height: 525,
-                            width: 700
+                            height: '525px',
+                            width: '700px'
                         };
                     me._showIframeCodePopup(url, size, view.name);
                 });
@@ -331,16 +395,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
             };
             grid.setColumnValueRenderer('html', htmlRenderer);
 
-
             //sending a request to publisher for editing view
             var editRenderer = function (name, data) {
                 var link = me.templateLink.clone();
                 link.append(name);
                 link.bind('click', function () {
                     if (setMapState(data, false, function () {
-                        setMapState(data, true);
-                        editRequestSender(data);
-                    })) {
+                            setMapState(data, true);
+                            editRequestSender(data);
+                        })) {
                         editRequestSender(data);
                     }
                     return false;
@@ -373,21 +436,28 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                     var view = me._getViewById(data.id);
                     if (view) {
                         var newState = !view.isPublic;
-                        service.makeViewPublic(data.id, newState, function (isSuccess) {
-                            if (isSuccess) {
-                                view.isPublic = newState;
-                                if (view.isPublic) {
-                                    data.publish = me.loc.unpublish;
+                        service.makeViewPublic(
+                            data.id,
+                            newState,
+                            function (isSuccess) {
+                                if (isSuccess) {
+                                    view.isPublic = newState;
+                                    if (view.isPublic) {
+                                        data.publish = me.loc.unpublish;
+                                    } else {
+                                        data.publish = me.loc.publish;
+                                    }
+                                    link.html(data.publish);
+                                } else if (newState) {
+                                    me._showErrorMessage(
+                                        me.loc.error.makePublic
+                                    );
                                 } else {
-                                    data.publish = me.loc.publish;
+                                    me._showErrorMessage(
+                                        me.loc.error.makePrivate
+                                    );
                                 }
-                                link.html(data.publish);
-                            } else if (newState) {
-                                me._showErrorMessage(me.loc.error.makePublic);
-                            } else {
-                                me._showErrorMessage(me.loc.error.makePrivate);
-                            }
-                        });
+                            });
                     }
                     return false;
                 });
@@ -399,7 +469,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
             var i,
                 key,
                 coluiname;
-            for (i = 0; i < visibleFields.length; ++i) {
+
+            for (i = 0; i < visibleFields.length; i += 1) {
                 key = visibleFields[i];
                 coluiname = 'grid.' + key;
                 if (this.loc &&
@@ -410,18 +481,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                 grid.setColumnUIName(key, coluiname);
             }
 
-
             return grid;
         },
 
         /**
+         * @method bindEvents
          * Register tab as eventlistener
          *
-         * @method bindEvents
+         *
          */
         bindEvents: function () {
-            var instance = this.instance;
-            var sandbox = instance.getSandbox(),
+            var instance = this.instance,
+                sandbox = instance.getSandbox(),
                 p;
             // faking to be module with getName/onEvent methods
             for (p in this.eventHandlers) {
@@ -430,13 +501,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                 }
             }
         },
+
         /**
-         * Unregister tab as eventlistener
          * @method unbindEvents
+         * Unregister tab as eventlistener
+         *
+         *
          */
         unbindEvents: function () {
-            var instance = this.instance;
-            var sandbox = instance.getSandbox(),
+            var instance = this.instance,
+                sandbox = instance.getSandbox(),
                 p;
             // faking to be module with getName/onEvent methods
             for (p in this.eventHandlers) {
@@ -445,9 +519,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                 }
             }
         },
+
         /**
-         * @property {Object} eventHandlers
-         * @static
+         * @static @property {Object} eventHandlers
          */
         eventHandlers: {
             /**
@@ -457,35 +531,57 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
                 this._refreshViewsList();
             }
         },
+
         /**
          * @method onEvent
+         *
          * @param {Oskari.mapframework.event.Event} event a Oskari event object
-         * Event is handled forwarded to correct #eventHandlers if found or discarded
-         * if not.
+         * Event is handled forwarded to correct #eventHandlers if found or
+         * discarded if not.
+         *
          */
         onEvent: function (event) {
-
             var handler = this.eventHandlers[event.getName()];
             if (!handler) {
                 return;
             }
 
             return handler.apply(this, [event]);
-
         },
+
+        /**
+         * @private @method _showIframeCodePopup
+         * Shows a popup with the given url in a textarea
+         *
+         * @param {String} url
+         * @param size
+         * @param {String} name
+         *
+         */
         _showIframeCodePopup: function (url, size, name) {
             var loc = this.loc,
-                dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                ),
                 okBtn = dialog.createCloseButton(loc.button.ok),
                 iframeCode,
                 textarea,
-                content;
+                content,
+                width = size ? size.width + 'px' : '100%',
+                height = size ? size.height + 'px' : '100%';
+
             okBtn.addClass('primary');
 
-            iframeCode = '<iframe src="' + url + '" width="' + size.width +
-                '" height="' + size.height + '"></iframe>';
+            iframeCode = '<iframe src="' + url + '" style="border: none;';
+            if (width !== null && width !== undefined) {
+                iframeCode += ' width: ' + width + ';';
+            }
+            if (height !== null && height !== undefined) {
+                iframeCode += ' height: ' + height + ';';
+            }
+            iframeCode += '"></iframe>';
             textarea =
-                '<textarea rows="3" cols="80">' +
+                '<textarea rows="3" cols="77">' +
                 iframeCode +
                 '</textarea>';
             content = loc.published.desc + '<br/>' + textarea;
@@ -493,6 +589,5 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.PublishedMapsTab',
             dialog.makeModal();
             dialog.stopKeydownPropagation();
             dialog.show(name, content, [okBtn]);
-
         }
     });

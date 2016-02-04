@@ -35,6 +35,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.search.SearchBundle", function (
             "src": "../../../../bundles/framework/bundle/search/Tile.js"
         }, {
             "type": "text/javascript",
+            "src": "../../../../bundles/framework/bundle/search/event/TabChangedEvent.js"
+        }, {
+            "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/search/request/AddTabRequest.js"
         }, {
             "type": "text/javascript",
@@ -54,9 +57,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.search.SearchBundle", function (
         }],
 
         "locales": [{
-            "lang": "am",
+            "lang": "hy",
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/search/locale/am.js"
+            "src": "../../../../bundles/framework/bundle/search/locale/hy.js"
         }, {
             "lang": "bg",
             "type": "text/javascript",
@@ -118,9 +121,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.search.SearchBundle", function (
             "type": "text/javascript",
             "src": "../../../../bundles/framework/bundle/search/locale/ro.js"
         }, {
-            "lang": "rs",
+            "lang": "sr",
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/search/locale/rs.js"
+            "src": "../../../../bundles/framework/bundle/search/locale/sr.js"
         }, {
             "lang": "sl",
             "type": "text/javascript",

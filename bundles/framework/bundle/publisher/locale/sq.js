@@ -141,9 +141,11 @@ Oskari.registerLocalization(
                 "small": "E vogël",
                 "medium": "E mesme",
                 "large": "E madhe",
+                "fill": "NOT TRANSLATED",
                 "custom": "Madhësia e zakonshme",
                 "width": "gjerësia",
-                "height": "gjetësia"
+                "height": "gjetësia",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Ruaj",
@@ -212,6 +214,7 @@ Oskari.registerLocalization(
             "show": "NOT TRANSLATED",
             "hide": "NOT TRANSLATED",
             "hidden": "NOT TRANSLATED",
+            "selectAsBaselayer": "NOT TRANSLATED",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "NOT TRANSLATED",

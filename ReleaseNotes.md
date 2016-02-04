@@ -1,5 +1,501 @@
 # Release Notes
 
+## 1.27.3
+
+GetInfoPlugin now handles it's config correctly again.
+
+## 1.27.2
+
+Fixed statistics classification plugin so that it is shown only when statistic layers are shown.
+
+## 1.27.1
+
+Fixed a broken locale file: bundles/framework/bundle/layerselection2/locale/fi.js had an extra comma.
+
+## 1.27
+
+### admin-layerselector
+
+Fixed JavaScript alerts and confirm dialogs to use Oskari.userinterface.component.Popup.
+
+### core/user
+
+User loginName has been renamed as email. User.getLoginName() is still available and if user object doesn't get the email property, loginName is used instead. However loginName should be considered deprecated and email should be preferred.
+
+### findbycoordinates
+
+*New bundle!* Creates a service and a user interface for searching nearest address on a map and adds a button to the toolbar for reverse geocode search. Requires server side functionality.
+
+### featuredata
+
+Fixed feature selection popup to show only one popup when clicking tool again.
+
+### featuredata2
+
+Fixed feature selection popup to show only one popup when clicking tool again.
+
+### metadatacatalogue
+
+Metadatacatalogue can now be show extra action element in search results list. This functionality need to be actived AddSearchResultActionRequest.
+
+### metadatacatalogue/AddSearchResultActionRequest
+
+Added support to show extra action element in metadatacatalogue search results list. 
+
+Action element can be added via requests as follows:
+
+```javascript
+var reqBuilder = this.sandbox.getRequestBuilder('AddSearchResultActionRequest');
+if (reqBuilder) {
+    var data = {
+        actionElement: jQuery('<a href="javascript:void(0)"></a>'),
+        callback: function(metadata) {
+            console.log('Get license information');
+            console.log(metadata);
+        },
+        bindCallbackTo: null,
+        actionTextElement: null
+    };
+    var request = reqBuilder(data);
+    this.sandbox.request(this.getName(), request);
+}
+```
+
+### mapwfs2/WfsLayerPlugin
+
+Highlighting of border features is fixed in map move event.
+Ctrl-select of Wfs features is fixed (no duplicate features allowed any more)
+
+
+## 1.26.1
+
+### statistics
+
+Fixed statistical variable functionality in the drop-down list.
+
+## 1.26
+
+### core
+
+Oskari now prints a warning to console if a requesthandler will be overwritten.
+
+### mapmodule-plugin/DrawPlugin
+
+DrawPlugin can now be configured to NOT register (and unregister) requests. This helps when there are multiple DrawPlugins on map.
+For now start the plugin with { requests : false } config if you have more than one. Otherwise the latest will receive all requests.
+Better solution should be developed for this.
+
+### search
+
+Now prefers zoomScale over zoomLevel on result items.
+
+### mapmodule-plugin/MapMoveRequest
+
+Added support to zoom to a scale. MapMoveRequests zoom parameter can be given as an Object with scale property:
+
+```javascript
+    { scale : 10000 }
+```
+
+### mapwmts
+
+WmtsLayers can now use options and params on layer JSON to override default layer parameters.
+
+### toolbar
+
+Sending enabled = false in Toolbar.AddToolButtonRequest now automatically disabled the button when added.
+Removed handling of disabled = true so we are consistent with enabled-flag. If you used disabled = true, 
+please update the code to use enabled = false instead. 
+Disabled = true just made the visual disabling, not actual clickhandler disabling anyway.
+
+### publisher
+
+Semi-configurable URL (conf.urlPrefix) used in GFI-preview functionality has been changed to use window.location.
+The configuration is no longer needed/used.
+
+### metadatacatalogue
+
+Metadata search has now advances search option Search area which enables metadata searching by limiting the search area on the map. 
+
+### Openlayers
+
+OpenLayers.Control.TransformFeature was added to Openlayers full-map.js to enable transformations of drawn feature.
+
+## 1.25.5
+
+### Core
+
+Fixed logging functions so they won't be called if they don't have .apply (i.e. don't break IE9).
+
+## 1.25.4
+
+### Publisher
+
+Fixed editing old published maps
+
+## 1.25.3
+
+### statistics
+
+Fixed issue with filtering button not working
+
+## 1.25.2
+
+### publisher
+
+Fixed issues with editing embedded maps
+
+## 1.25.1
+
+### mapmodule/LogoPlugin
+
+Clicking the logo now sends the mapstate as parameters as it was before.
+
+## 1.25
+
+### personaldata
+
+No longer uses publishedMapUrl from config. GetViews JSON now includes URLs to views. Checkout oskari-server release notes for more details.
+
+### publisher
+
+No longer uses publishedMapUrl from config. Publish JSON now includes URL to published view. Checkout oskari-server release notes for more details.
+
+### core/sandbox
+
+Now has a convenience method createURL(baseUrl) that fills in protocol/host/path if missing from baseUrl.
+
+### catalogue/metadataflyout
+
+Rewritten to use JSON backend, any code relying on the old implementation is likely to break.
+New implementation has full localization.
+
+### analysis/analyse
+
+New spatial join method is available in analysis methods (join attributes of two layers)
+Field naming and styling of difference-method is changed 
+
+### integration/admin-layerselector
+
+Management of WFS-type maplayers in Oskari maplayer configuration
+Inserting/editing/removing WFS-layers in admin-layer UI.
+
+## 1.24.7
+
+### mapfull
+
+Additional check for existance when referencing DOM element properties so size setting is compatible with published.jsp in oskari-server.
+
+## 1.24.6
+
+### publisher
+
+Fixed map sizing, .oskariui-left is now always floated left. If you have a customized version of applications/yourapp/css/portal.css please make sure you include:
+
+```javascript
+.oskariui-left {
+  float: left;
+}
+```
+
+## 1.24.5
+
+### publishedstatehandler
+
+Fixed state handling (history tools) for published map. Notice that 'publishedstatehandler' needs to be part of the startupSequence for 
+published map that has history tools enabled on toolbar.
+
+### publisher
+
+Fill screen option is now again available in size options. Map size handling is now more consistent when thematic maps are enabled.
+
+## 1.24.4
+
+### publishedmyplaces2
+
+Now checks if Toolbar.ToolButtonStateRequest is present before trying to send one.
+
+### myplacesimport
+
+Changed translations to not reference "Paikkatietoikkuna"
+
+### publisher
+
+Fixed typo in finnish translations
+
+## 1.24.3
+
+### applications/elf
+
+Typo fixed in index.js
+
+## 1.24.2
+
+###  featuredata2 / Flyout
+
+Implemented clickable links in the grid. Improved table header style. Fixed a nested table issue with My places data.
+
+###  mapmodule-plugin / GetFeatureInfoFormatter
+
+Modified image position.
+
+## 1.24.1
+
+### mapmodule/LogoPlugin
+
+Fixed link binding for terms-of-use. It's now more specific instead of binding to all a-tags in plugin content.
+
+## 1.24
+
+### bundles/bundle.js
+
+A bit of a rewrite, if your code touches bundle.js internals, it might break.
+
+* added documentation
+* added type checks to arguments
+* backported cleaned up version from O2
+* dead code elimination
+* linted
+* marked private functions
+* reordered functions
+* sensible/descriptive naming
+
+### divmanazer
+
+Added a bunch of form component classes:
+* Component
+* Container
+* EmailInput
+* FormComponent
+* LanguageSelect
+* MultiLevelSelect
+* NumberInput
+* PasswordInput
+* RadioButtonGroup
+* SearchForm
+* SearchInput
+* Select
+* TextAreaInput
+* TextInput
+* UrlInput
+
+Extended some of the old component classes from new 'abstract' classes for code reuse.
+Hopefully this won't break anything, but if something related to Button, Form, FormInput or the likes fails, this is thew likely cause.
+
+### integration/admin-layerselector
+
+Added username and password support to the layer admin flyout.
+
+Adding/editing/removing sublayers now updates UI correctly.
+
+### mapwfs2/WfsLayerPlugin
+
+Now treats port configuration as number correctly.
+
+###  featuredata2/MapSelectionPlugin
+
+Disabled rotation of rectangular selection.
+
+### myplacesimport
+
+Updated flyout for GPX and MIF/MID format import, which was implemented in the oskari-server backend.
+
+Now disables button for guest users.
+
+### OpenLayers
+
+Patched Oskari's OpenLayers 2 to make My Places work in IE 11. See https://github.com/bartvde/openlayers/commit/821975c1f500e26c6663584356db5d65b57f70d9
+
+Openlayers full-map.js changed so that text selection is possible also when the map is moved or zoomed. See https://github.com/nls-oskari/oskari/commit/9bfa97541c67
+
+## 1.23
+
+### mapmodule/LogoPlugin
+
+The default logo image has been changed
+
+### statistics / StatsGrid
+
+Statsgrid is refactored to use stats instead of sotka. All filenames and classes named sotka are now renamed as stats.
+
+NOTE! StatsGrid.SotkadataChangedEvent has changed to StatsGrid.StatsDataChangedEvent.
+getSotkaIndicators has been renamed as getStatsIndicators.
+getSotkaRegionData has been renamed as getStatsRegionData.
+getSotkaIndicators has been renamed as getStatsIndicators.
+getSotkaIndicatorMeta has been renamed as getStatsIndicatorMeta.
+getSotkaIndicatorData has been renamed as getStatsIndicatorData.
+getSotkaIndicatorsMeta has been renamed as getStatsIndicatorsMeta.
+getSotkaIndicatorsData has been renamed as getStatsIndicatorsData.
+
+### divmanazer / DefaultExtension
+
+An injected empty conf no longer overwrites the basic functionality (default tile/flyout setting). getConfiguration() function should be preferred over referencing conf-property directly to ensure there's no issues with the config.
+
+DefaultTile now has methods setEnabled(bln) and isEnabled() for disabling/enabling the tile.
+
+### arcgis / ArcGisLayer
+
+Layers of type arcgis now respect layer order properly. 
+
+NOTE! The layertype in JSON/domain has changed from 'arcgislayer' to 'arcgis'
+
+### core / MapLayerService
+
+Now has a function hasSupportForLayerType(type) which can be used to check if given layer type is supported by the plugins loaded in particular setup.
+
+### admin-layerselector bundle
+
+It is now possible to add/edit/delete inspire themes. 
+
+Uses PUT/DELETE HTTP methods for insert/delete with fallback to POST and 'X-HTTP-Method-Override' header if server responds with 'Method not allowed'.
+
+Refactored layertype support validation. 
+
+Added initial support for ArcGIS layertype.
+
+### divmanazer/Grid
+
+Implemented expandable/collapsible subtables. Improved export permission handling.
+
+### divmanazer/Popup
+
+Implemented popup.onClose(callback) which can be used to register listeners that will be called when the popup closes. Note that listeners aren't removed on close 
+and need to be manually cleared using popup.clearListeners() if reusing the component reference in another context.
+
+### mapmodule/ControlsPlugin - touch controls
+
+Major changes in mouse/touch controls handling. PorttiMouse has been removed and OskariNavigation is now used in it's place. 
+OskariNavigation extends OpenLayers.Control.Navigation and hooks Oskari events to appropriate places. It also uses an extended version
+of OpenLayer.Control.PinchZoom (OskariPinchZoom) which hooks Oskari event to pinchDone.
+
+Also changed hasUI to return true so ControlsPlugin works correctly with publisher-bundle.
+
+### mapmyplaces/MyPlacesLayerPlugin
+
+Labels and clustering of My places points are now produced by GeoServer instead of frontend JavaScript. In addition to
+increased stability and efficiency, they are now available also in printouts and published maps. MyPlacesLayerPlugin is
+currently deprecated.
+
+### search
+
+More special characters are allowed by default. Strict filter can be enabled through config.
+
+### userguide
+
+The code is cleaned so that all the unnecessary parts have been removed.
+
+NOTE! UserGuideService.js no longer exists
+
+## 1.22
+
+### integration/admin-layerselector
+
+Now has initial support for WMTS layers.
+
+### core/MapLayerService
+
+Now parses generic layerName and url properties from layerJSON to AbstractLayers setLayerName() and setLayerUrls() methods.
+
+### analysis/analyse
+
+Added an option to select the measurement unit (meters or kilometers) for buffer size.
+
+### divmanazer/Grid
+
+Implemented front-end based CSV export and some UI polishing.
+
+## 1.21
+
+### core/sandbox/Layers
+
+`sandbox.getRequestBuilder('RequestName')` now returns `undefined` if either request or request handler is missing. Previously only returned `undefined` if request was missing. This solves some timing issues with minified code.
+
+AbstractLayer now has set/getLayerName() as it's a common field for most layers. LayerName is functional configurations while name is for UI.
+
+WmsLayer now forwards calls for wmsUrl/wmsName methods to AbstractLayers layerUrl/layerName methods. The API remains the same and urls can be accessed with both ways. 
+WmtsLayer does the same for wmtsUrl/wmtsName.
+
+### MaplayerService
+
+Now returns null if trying to create unrecognized layer type instead of throwing an error. Also logs a mention in console if this happens.
+
+### admin-layerselector
+
+Previously didn't startup correctly with small number of layer (under 30), this has now been fixed.
+
+### search
+
+The default UI for search can now be disabled through config:
+
+```javascript
+{
+    "disableDefault": true
+}
+```
+
+### mapmodule-plugin/MarkersPlugin
+
+New marker functionality:
+
+Dynamic point symbol visualizations are now available also for markers. They can be created by url parameters or set on the map by the user.
+
+Marker handling is removed from map-module.js. Instead, new markers can be added via requests as follows:
+
+```javascript
+var reqBuilder = this.sandbox.getRequestBuilder('MapModulePlugin.AddMarkerRequest');
+if (reqBuilder) {
+    var data = {
+        x: lonlat.lon,
+        y: lonlat.lat,
+        msg: null,
+        color: "ff0000",
+        shape: 3,
+        size: 3
+    };
+    var request = reqBuilder(data);
+    this.sandbox.request(this.getName(), request);
+}
+```
+
+### elf-language-selector
+
+Opens the language selector in a Flyout
+
+### elf-geolocator
+
+*New bundle!* Creates a service and a user interface for ELF Geolocator search API. Creates an UI for search bundle to perform text searches and adds a button to the toolbar for reverse geocode search.
+
+### analysis/analyse
+
+Existing WFS area and line features can now be cut with a new geometry editor bundle and used as analysis source features.
+
+The drawing of a new feature as well as editing one has been moved to a new accordion panel.
+
+### statistics/statsgrid
+
+The toolbar from the top has been removed and the tool added to the side toolbar when going to stats mode.
+
+Data source select has been added (only two options now - SOTKAnet and user indicators).
+
+### /Oskari/bundles/mapframework/bundle/mapwfs2/plugin/WFSLayerPlugin
+
+New optional plugin config setting to defer setLocation calls from AfterMapMoveEvent to MapLayerVisibilityChangedEvent
+to drop some WFS queries to backend servers.
+
+
+```javascript
+{
+   "id": "Oskari.mapframework.bundle.mapwfs2.plugin.WfsLayerPlugin",
+   "config": {
+      "deferSetLocation" : true
+   }
+}
+```
+
+### divmanazer
+
+Added a new function `getHeader` to `component/AccordionPanel.js`
+
 ## 1.20
 
 ### analysis/analyse
@@ -44,6 +540,10 @@ Removed underscore from comp.js
 ### backendstatus
 
 Sends a new event - `BackendStatus.BackendStatusChangedEvent` instead of `MapLayerEvent` now. Also, if the amount of changed layers exceeds 100 a so called bulk update event is sent instead of single events for each changed layer. It's basically the same event without any params.
+
+### mapmodule-plugin
+
+Now has getState/getStateParameters/setState-functions and forwards calls to these methods to any registered plugins that have the same methods. GetState gathers and object with properties named after plugins and setState assumes to get the same kind of Object as parameter.
 
 ## 1.19.3
 

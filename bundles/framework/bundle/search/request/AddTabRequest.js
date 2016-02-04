@@ -10,10 +10,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.search.request.AddTabRequest',
  * @method create called automatically on construction
  * @static
  */
-function(title, content, priority) {
+function(title, content, priority, id) {
     this._title = title;
     this._content = content;
     this._priority = priority;
+    this._id = id;
 },{
     /** @static @property __name request name */
     __name : "Search.AddTabRequest",
@@ -28,22 +29,29 @@ function(title, content, priority) {
      * @method getTitle
      * @return {String} tab title
      */
-   getTitle : function() {
+    getTitle : function() {
        return this._title;
-   },
+    },
     /**
      * @method getContent
      * @return {String} content for the tab to be added
      */
-  getContent : function() {
+    getContent : function() {
        return this._content;
-  },
+    },
     /**
      * @method isFirst
      * @return {Integer} tab order priority
      */
     getPriority : function() {
         return this._priority;
+    },
+    /**
+     * @method getId
+     * @return {String} tabheader id
+     */
+    getId : function() {
+        return this._id;
     }
 }, {
     /**

@@ -134,11 +134,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.ButtonHandler",
                 tool,
                 measureTool;
             sandbox.register(me);
-            for (p in me.eventHandlers) {
-                if (me.eventHandlers.hasOwnProperty(p)) {
-                    sandbox.registerForEventByName(me, p);
-                }
-            }
 
             // request toolbar to add buttons
             var reqBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest');
@@ -184,6 +179,13 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.ButtonHandler",
             if (!user.isLoggedIn()) {
                 // disable toolbar buttons for guests
                 this.disableButtons();
+            } else {
+                // logged in user -> listen to events as normal
+                for (p in me.eventHandlers) {
+                    if (me.eventHandlers.hasOwnProperty(p)) {
+                        sandbox.registerForEventByName(me, p);
+                    }
+                }
             }
         },
         /**
@@ -249,8 +251,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.ButtonHandler",
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
             this.dialog = dialog;
             var buttons = [],
-                cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            cancelBtn.setTitle(locBtns.cancel);
+                cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.CancelButton');
+            //cancelBtn.setTitle(locBtns.cancel);
             cancelBtn.setHandler(function () {
                 // ask toolbar to select default tool
                 var toolbarRequest = me.instance.sandbox.getRequestBuilder('Toolbar.SelectToolButtonRequest')();
@@ -270,10 +272,20 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.ButtonHandler",
             buttons.push(finishBtn);
             buttons.push(cancelBtn);
 
+<<<<<<< HEAD
             if (me.instance.sandbox.getUser().isLoggedIn()) {
                 cancelBtn.setTitle(locBtns.close);
                 finishBtn.setTitle(locBtns.saveAsMyPlace);
             }
+=======
+            // for logged-in-user: add line & area buttons
+            /*if (me.instance.sandbox.getUser().isLoggedIn()) {
+                if (drawMode === 'line' || drawMode === 'area') {
+                    cancelBtn.setTitle(locBtns.close);
+                    finishBtn.setTitle(locBtns.saveAsMyPlace);
+                }
+            }*/
+>>>>>>> 1.27.3
 
 
             var content = this.templateHelper.clone();

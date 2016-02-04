@@ -15,6 +15,7 @@ Oskari.clazz.define('Oskari.userinterface.component.Accordion',
         this.templateMsg = jQuery('<div class="accordionmsg"></div>');
         this.panels = [];
         this.ui = this.template.clone();
+        this.hasMessage = false;
     }, {
         addClass: function(className) {
             this.ui.addClass(className);
@@ -27,10 +28,10 @@ Oskari.clazz.define('Oskari.userinterface.component.Accordion',
         addPanel: function (panel) {
             // clear any message before adding panel
             this.removeMessage();
-
             this.panels.push(panel);
             panel.insertTo(this.ui);
         },
+
         /**
          * @method removePanel
          * Removes panel from this accordion
@@ -53,35 +54,44 @@ Oskari.clazz.define('Oskari.userinterface.component.Accordion',
             }
             return false;
         },
+
         removeAllPanels: function () {
             this.ui.empty();
             this.panels = [];
         },
+
         removeMessage: function () {
-            var msgContainer = this.ui.find("div.accordionmsg");
-            if (msgContainer.length > 0) {
-                msgContainer.remove();
+            if (this.hasMessage) {
+                this.hasMessage = false;
+                var msgContainer = this.ui.find('div.accordionmsg');
+                if (msgContainer.length > 0) {
+                    msgContainer.remove();
+                }
             }
         },
-        showMessage: function (message) {
-            this.removeMessage();
 
+        showMessage: function (message) {
             var msgContainer = this.templateMsg.clone();
+            this.removeMessage();
+            this.hasMessage = true;
             msgContainer.append(message);
             this.ui.append(msgContainer);
         },
+
         showPanels: function () {
-            var i = 0;
+            var i;
             for (i = 0; i < this.panels.length; i += 1) {
                 this.panels[i].setVisible(true);
             }
         },
+
         hidePanels: function () {
-            var i = 0;
+            var i;
             for (i = 0; i < this.panels.length; i += 1) {
                 this.panels[i].setVisible(false);
             }
         },
+
         /**
          * @method insertTo
          * Adds this accordion to given container.
@@ -90,7 +100,16 @@ Oskari.clazz.define('Oskari.userinterface.component.Accordion',
         insertTo: function (container) {
             container.append(this.ui);
         },
+
         getContainer: function () {
             return this.ui;
+        },
+
+        destroy: function () {
+            var i;
+            for (i = 0; i < this.panels.length; i += 1) {
+                this.panels[i].destroy();
+            }
+            this.ui.remove();
         }
     });

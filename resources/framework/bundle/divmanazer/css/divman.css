@@ -1,3 +1,4 @@
+/* Mixins */
 /* setup document body so flyouts will not make scrollbars to browser window */
 
 @media screen {
@@ -37,11 +38,11 @@ body {
   margin-top: 12px;
   height: 20px;
   display: inline-block; }
-
-.oskari-flyout-title p {
-  margin: 0;
-  padding: 0;
-  font: 16px/20px "Open Sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  .oskari-flyout-title p {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    line-height: 20px; }
 
 /** flyout toolbar tools and tool states  */
 .oskari-flyouttools {
@@ -88,10 +89,8 @@ body {
 
 .oskari-minimized .oskari-flyouttool-restore {
   display: inline-block; }
-
 .oskari-minimized .oskari-flyouttool-attach {
   display: none; }
-
 .oskari-minimized .oskari-flyouttool-detach {
   display: none; }
 
@@ -132,8 +131,7 @@ body {
 .oskari-flyoutcontent {
   margin: 0;
   padding: 0;
-  border: 0;
-  /*overflow: auto;*/ }
+  border: 0; }
 
 /** tile */
 /* tile states */
@@ -143,17 +141,27 @@ body {
 .oskari-tile-detached {
   border-top: 1px solid #484846;
   border-bottom: 1px solid #212121;
-  background-color: white; }
+  background-color: #FFF; }
 
-.oskari-tile-minimized {
+.oskari-tile-closed, .oskari-tile-minimized {
   border-top: 1px solid #484846;
   border-bottom: 1px solid #212121;
-  background-color: #2d2d2d; }
-
-.oskari-tile-closed {
-  border-top: 1px solid #484846;
-  border-bottom: 1px solid #212121;
-  background-color: #0186d1; }
+  background-color: #2d2d2d;
+  background: -webkit-gradient(linear, left top, left bottom, from(#30302e), to(#2a2a2c));
+  background: -moz-linear-gradient(top, #30302e, #2a2a2c);
+  background: -ms-linear-gradient(top, #30302e, #2a2a2c);
+  /* For some reason sass didn't like this in one line... */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#30302e', endColorstr='#2a2a2c');
+  background: linear-gradient(top, #30302e, #2a2a2c); }
+  .oskari-tile-closed:hover, .oskari-tile-minimized:hover {
+    border-top: 1px solid #585856;
+    background-color: #3d3d3d;
+    background: -webkit-gradient(linear, left top, left bottom, from(#40403e), to(#3a3a3c));
+    background: -moz-linear-gradient(top, #40403e, #3a3a3c);
+    background: -ms-linear-gradient(top, #40403e, #3a3a3c);
+    /* For some reason sass didn't like this in one line... */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#40403e', endColorstr='#3a3a3c');
+    background: linear-gradient(top, #40403e, #3a3a3c); }
 
 .oskari-tile-container {
   margin: 0; }
@@ -163,27 +171,26 @@ body {
   margin: 0;
   padding: 0;
   cursor: pointer;
-  width: 180px;
-  border-top: 0 solid #484846;
-  border-bottom: 0 solid #212121;
-  min-height: 37px; }
+  min-height: 31px;
+  width: 153px;
+  border-top: 1px solid #484846;
+  border-bottom: 1px solid #212121;
+  /* Used to set the tile height, doesn't conflict with the styleguide */
+  line-height: 17px; }
   .oskari-tile.disabled {
     opacity: 0.25;
-    filter: alpha(opacity=25);
-    /* For IE8 and earlier, unquote for libsass bug */
     cursor: default; }
 
 .oskari-tile-title {
  display: inline-block;
-  margin: 0;
-  padding-top: 2px;
-  margin-left: 16px;
+  margin: 7px 0 7px 16px;
   padding: 0;
   width: 112px;
-  font-weight: normal;
+  /* This is not in the styleguide, but it's a must-have... */
+  font-weight: bold;
+  font-size: 11px;
   text-align: left;
-  line-height: 17px;
-  /*color: white;*/ }
+  text-transform: uppercase; }
   
 #footer-nav .oskari-tile-title {
 	font-size: 11px;
@@ -207,7 +214,8 @@ body {
 .oskari-tile-status {
   text-align: center;
   display: inline-block;
-  font-size: 10px;
+  /* This is not in the styleguide, but it's a must-have... */
+  font-size: 11px;
   font-weight: bold;
   height: 19px !important;
   line-height: 19px;
@@ -224,6 +232,9 @@ body {
 /** media queries */
 
 @media screen {
+  .oskari-attached {
+    min-width: 520px;
+    max-width: 840px; }
             
     #oskari-flyout-admin-layerrights, #oskari-flyout-liiteri-groupings
     {
@@ -352,6 +363,7 @@ body {
     overflow: auto;
     height: auto; } }
 /* IE8 TEMP fixes */
+/* FIXME remove these, check that IE9+ doesn't blow up */
 .oskari-flyoutcontentcontainer_IE_400_599 {
   width: 100%;
   height: 100%;

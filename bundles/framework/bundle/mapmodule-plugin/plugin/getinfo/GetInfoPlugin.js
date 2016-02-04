@@ -11,22 +11,20 @@
  * See
  * http://www.oskari.org/trac/wiki/DocumentationBundleMapModulePluginGetInfoPlugin
  */
-Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
+Oskari.clazz.define(
+    'Oskari.mapframework.mapmodule.GetInfoPlugin',
 
     /**
-     * @method create called automatically on construction
-     * @static
+     * @static @method create called automatically on construction
+     *
+     *
      */
-
-    function (config, locale) {
+    function () {
         var me = this;
-        me.config = config;
-        me._locale = locale;
-        me.mapModule = null;
-        me.pluginName = null;
-        me._sandbox = null;
-        me._map = null;
-        me.enabled = true;
+        me._clazz =
+            'Oskari.mapframework.mapmodule.GetInfoPlugin';
+        me._name = 'GetInfoPlugin';
+
         me.infoboxId = 'getinforesult';
         me._pendingAjaxQuery = {
             busy: false,
@@ -44,150 +42,80 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
             }
         }
     }, {
-        /** @static @property __name plugin name */
-        __name: 'GetInfoPlugin',
 
         /**
-         * @method getName
-         * @return {String} plugin name
-         */
-        getName: function () {
-            return this.pluginName;
-        },
-        /**
-         * @method getMapModule
-         * @return {Oskari.mapframework.ui.module.common.MapModule}
-         * reference to map
-         * module
-         */
-        getMapModule: function () {
-            return this.mapModule;
-        },
-        /**
-         * @method setMapModule
-         * @param {Oskari.mapframework.ui.module.common.MapModule}
-         * reference to map
-         * module
-         */
-        setMapModule: function (mapModule) {
-            this.mapModule = mapModule;
-            if (mapModule) {
-                this.pluginName = mapModule.getName() + this.__name;
-            }
-        },
-        /**
-         * @method hasUI
-         * This plugin has an UI so always returns true
-         * @return {Boolean} true
-         */
-        hasUI: function () {
-            return true;
-        },
-        /**
-         * @method init
+         * @private @method _initImpl
          *
          * Interface method for the module protocol
          *
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
-         *          reference to application sandbox
+         *
          */
-        init: function (sandbox) {
+        _initImpl: function () {
             var me = this;
-
-            me._sandbox = sandbox;
-            me._sandbox.printDebug("[GetInfoPlugin] init");
-            me.getGFIHandler = Oskari.clazz.create('Oskari.mapframework.bundle.mapmodule.getinfo.GetFeatureInfoHandler', me);
+            me.getSandbox().printDebug('[GetInfoPlugin] init');
         },
-        /**
-         * @method register
-         * Interface method for the plugin protocol
-         */
-        register: function () {
 
-        },
-        /**
-         * @method unregister
-         * Interface method for the plugin protocol
-         */
-        unregister: function () {
+        _destroyControlElement: function () {
+            // Slight misuse of the function, but I don't want to override
+            // _stopPluginImpl.
 
-        },
-        /**
-         * @method startPlugin
-         * Interface method for the plugin protocol
-         *
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
-         *          reference to application sandbox
-         */
-        startPlugin: function (sandbox) {
-            var me = this,
-                p;
-            if (sandbox && sandbox.register) {
-                me._sandbox = sandbox;
-            }
-            me._map = me.getMapModule().getMap();
-
-            me._sandbox.register(me);
-            for (p in me.eventHandlers) {
-                if (me.eventHandlers.hasOwnProperty(p)) {
-                    me._sandbox.registerForEventByName(me, p);
-                }
-            }
-            me._sandbox.addRequestHandler('MapModulePlugin.GetFeatureInfoRequest', me.getGFIHandler);
-            me._sandbox.addRequestHandler('MapModulePlugin.GetFeatureInfoActivationRequest', me.getGFIHandler);
-        },
-        /**
-         * @method stopPlugin
-         * Interface method for the plugin protocol
-         *
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
-         *          reference to application sandbox
-         */
-        stopPlugin: function (sandbox) {
-            var me = this,
-                p;
             // hide infobox if open
-            me._closeGfiInfo();
-
-            if (sandbox && sandbox.register) {
-                me._sandbox = sandbox;
-            }
-            for (p in me.eventHandlers) {
-                if (me.eventHandlers.hasOwnProperty(p)) {
-                    me._sandbox.unregisterFromEventByName(me, p);
-                }
-            }
-            me._sandbox.unregister(me);
-            me._map = null;
-            me._sandbox = null;
-            me.clickLocation = null;
+            this._closeGfiInfo();
+            this.clickLocation = null;
         },
-        /**
-         * @method start
-         * Interface method for the module protocol
-         *
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
-         *          reference to application sandbox
-         */
-        start: function (sandbox) {},
-        /**
-         * @method stop
-         * Interface method for the module protocol
-         *
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
-         *          reference to application sandbox
-         */
-        stop: function (sandbox) {},
-        /**
-         * @method setEnabled
-         * Enables or disables gfi functionality
-         * @param {Boolean} blnEnabled
-         *          true to enable, false to disable
-         */
-        setEnabled: function (blnEnabled) {
-            this.enabled = (blnEnabled === true);
-            // close existing if disabled
-            if (!this.enabled) {
+
+        _createEventHandlers: function () {
+            return {
+                EscPressedEvent: function (evt) {
+                    this._closeGfiInfo();
+                },
+                MapClickedEvent: function (evt) {
+                    if (!this.isEnabled()) {
+                        // disabled, do nothing
+                        return;
+                    }
+                    this.clickLocation = {
+                        lonlat: evt.getLonLat()
+                    };
+                    this.handleGetInfo(this.clickLocation.lonlat);
+                },
+                AfterMapMoveEvent: function (evt) {
+                    this._cancelAjaxRequest();
+                },
+                AfterMapLayerRemoveEvent: function (evt) {
+                    this._refreshGfiInfo('remove', evt.getMapLayer().getId());
+                },
+                AfterMapLayerAddEvent: function (evt) {
+                    this._refreshGfiInfo();
+                },
+                'InfoBox.InfoBoxEvent': function (evt) {
+                    this._handleInfoBoxEvent(evt);
+                },
+                GetInfoResultEvent: function (evt) {
+                    if (this.isEnabled()) {
+                        this._handleInfoResult(evt.getData());
+                    }
+                },
+                'Realtime.RefreshLayerEvent': function (evt) {
+                    this._refreshGfiInfo('update', evt.getMapLayer().getId());
+                }
+            };
+        },
+
+        _createRequestHandlers: function () {
+            var handler =
+                Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.mapmodule.getinfo.GetFeatureInfoHandler',
+                    this
+                );
+            return {
+                'MapModulePlugin.GetFeatureInfoRequest': handler,
+                'MapModulePlugin.GetFeatureInfoActivationRequest': handler
+            };
+        },
+
+        _toggleUIControls: function (enabled) {
+            if (!enabled) {
                 this._closeGfiInfo();
             }
         },
@@ -255,7 +183,9 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
             if (!jqhr) {
                 return;
             }
-            this._sandbox.printDebug("[GetInfoPlugin] Abort jqhr ajax request");
+            this.getSandbox().printDebug(
+                '[GetInfoPlugin] Abort jqhr ajax request'
+            );
             jqhr.abort();
             jqhr = null;
             me._pendingAjaxQuery.busy = false;
@@ -263,22 +193,21 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
 
         /**
          * Constructs a layer list for valid layers for info queries
-         * 
+         *
          * @method _buildLayerIdList
          * @private
+         * @param {Oskari.Layer[]} layers to build the list from (optional)
          * @return
          * {Oskari.mapframework.domain.WmsLayer[]/Oskari.mapframework.domain.WfsLayer[]/Oskari.mapframework.domain.VectorLayer[]/Mixed}
          */
-        _buildLayerIdList: function () {
+        _buildLayerIdList: function (layers) {
             var me = this,
-                selected = me._sandbox.findAllSelectedMapLayers(),
-                layerIds;
-
-            layerIds = _.chain(selected)
-                .filter(function(layer) {
+                selected = layers || me.getSandbox().findAllSelectedMapLayers(),
+                layerIds = _.chain(selected)
+                .filter(function (layer) {
                     return me._isQualified(layer);
                 })
-                .map(function(layer) {
+                .map(function (layer) {
                     return layer.getId();
                 })
                 .value()
@@ -286,26 +215,29 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
 
             return layerIds || null;
         },
-        _isQualified: function(layer) {
+
+        _isQualified: function (layer) {
             return (!this._isIgnoredLayerType(layer) &&
-                    layer.getQueryable &&
-                    layer.getQueryable() &&
-                    layer.isInScale(this._sandbox.getMap().getScale()) &&
-                    layer.isVisible());
+                layer.getQueryable &&
+                layer.getQueryable() &&
+                layer.isInScale(this.getSandbox().getMap().getScale()) &&
+                layer.isVisible());
         },
+
         /**
          * Checks if layer's type is ignored
-         * 
+         *
          * @method _isIgnoredLayerType
          * @private
          * @param {Oskari.mapframework.domain.AbstractLayer} layer
          * @return {Boolean} true if layer's type is ignored
          */
         _isIgnoredLayerType: function (layer) {
-            return _.any((this.config || {}).ignoredLayerTypes, function(type) {
+            return _.any((this._config || {}).ignoredLayerTypes, function (type) {
                 return layer.isLayerOfType(type);
             });
         },
+
         /**
          * @method _startAjaxRequest
          * @private
@@ -317,6 +249,7 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
             this._pendingAjaxQuery.timestamp = dteMs;
 
         },
+
         /**
          * @method _finishAjaxRequest
          * @private
@@ -326,15 +259,20 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
         _finishAjaxRequest: function () {
             this._pendingAjaxQuery.busy = false;
             this._pendingAjaxQuery.jqhr = null;
-            this._sandbox.printDebug("[GetInfoPlugin] finished jqhr ajax request");
+            this.getSandbox().printDebug(
+                '[GetInfoPlugin] finished jqhr ajax request'
+            );
         },
+
         /**
          * @method _notifyAjaxFailure
          * @private
          * Prints debug about ajax call failure.
          */
         _notifyAjaxFailure: function () {
-            this._sandbox.printDebug("[GetInfoPlugin] GetFeatureInfo AJAX failed");
+            this.getSandbox().printDebug(
+                '[GetInfoPlugin] GetFeatureInfo AJAX failed'
+            );
         },
 
         /**
@@ -357,20 +295,26 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
          * @param {OpenLayers.LonLat}
          *            lonlat coordinates
          */
-        handleGetInfo: function (lonlat) {
+        handleGetInfo: function (lonlat, layers) {
             var me = this,
                 dteMs = (new Date()).getTime(),
-                layerIds = me._buildLayerIdList(),
-                ajaxUrl = this._sandbox.getAjaxUrl(),
-                mapVO = me._sandbox.getMap(),
-                olMap = me.mapModule.getMap(),
+                layerIds = me._buildLayerIdList(layers || this.getSandbox().findAllSelectedMapLayers()),
+                ajaxUrl = this.getSandbox().getAjaxUrl(),
+                mapVO = me.getSandbox().getMap(),
+                olMap = me.getMapModule().getMap(),
                 px = olMap.getViewPortPxFromLonLat(lonlat);
 
-            if (!layerIds) return;
+            if (!layerIds) {
+                return;
+            }
+
             if (me._pendingAjaxQuery.busy &&
                 me._pendingAjaxQuery.timestamp &&
                 dteMs - me._pendingAjaxQuery.timestamp < 500) {
-                me._sandbox.printDebug("[GetInfoPlugin] GetFeatureInfo NOT SENT (time difference < 500ms)");
+                me.getSandbox().printDebug(
+                    '[GetInfoPlugin] GetFeatureInfo NOT SENT ' +
+                    '(time difference < 500ms)'
+                );
                 return;
             }
 
@@ -381,12 +325,12 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
                 beforeSend: function (x) {
                     me._pendingAjaxQuery.jqhr = x;
                     if (x && x.overrideMimeType) {
-                        x.overrideMimeType("application/j-son;charset=UTF-8");
+                        x.overrideMimeType('application/j-son;charset=UTF-8');
                     }
                 },
                 success: function (resp) {
                     if (me._isAjaxRequestBusy()) {
-                        _.each(resp.data, function(datum) {                            
+                        _.each(resp.data, function (datum) {
                             me._handleInfoResult({
                                 features: [datum],
                                 lonlat: lonlat,
@@ -409,7 +353,7 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
                 },
                 data: {
                     layerIds: layerIds,
-                    projection: me.mapModule.getProjection(),
+                    projection: me.getMapModule().getProjection(),
                     x: Math.round(px.x),
                     y: Math.round(px.y),
                     lon: lonlat.lon,
@@ -425,14 +369,15 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
                 url: ajaxUrl + 'action_route=GetFeatureInfoWMS'
             });
         },
+
         /**
          * Formats the given data and sends a request to show infobox.
-         * 
+         *
          * @method _handleInfoResult
          * @private
          * @param  {Object} data
          */
-        _handleInfoResult: function(data) {
+        _handleInfoResult: function (data) {
             var content = [],
                 contentData = {},
                 fragments = [],
@@ -454,101 +399,134 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.GetInfoPlugin',
 
             this._showGfiInfo(content, data.lonlat);
         },
+
         /**
          * Closes the infobox with GFI data
-         * 
+         *
          * @method _closeGfiInfo
          * @private
          */
         _closeGfiInfo: function () {
-            var reqBuilder = this._sandbox.getRequestBuilder("InfoBox.HideInfoBoxRequest"),
+            var reqBuilder = this.getSandbox().getRequestBuilder(
+                    'InfoBox.HideInfoBoxRequest'
+                ),
                 request;
 
             if (reqBuilder) {
                 request = reqBuilder(this.infoboxId);
-                this._sandbox.request(this, request);
+                this.getSandbox().request(this, request);
             }
         },
+
         /**
          * Shows given content in given location using infobox bundle
-         * 
+         *
          * @method _showGfiInfo
          * @private
          * @param {Object[]} content infobox content array
          * @param {OpenLayers.LonLat} lonlat location for the GFI data
          */
         _showGfiInfo: function (content, lonlat) {
-            var pluginLoc = this.getMapModule().getLocalization('plugin', true),
-                infoboxLoc = pluginLoc[this.__name],
-                reqBuilder = this._sandbox.getRequestBuilder("InfoBox.ShowInfoBoxRequest"),
-                request, colourScheme, font;
+            var reqBuilder = this.getSandbox().getRequestBuilder(
+                    'InfoBox.ShowInfoBoxRequest'
+                ),
+                request,
+                colourScheme,
+                font;
 
-            if (_.isObject(this.config)) {
-                colourScheme = this.config.colourScheme;
-                font = this.config.font;
+            if (_.isObject(this._config)) {
+                colourScheme = this._config.colourScheme;
+                font = this._config.font;
             }
 
             if (reqBuilder) {
                 request = reqBuilder(
                     this.infoboxId,
-                    infoboxLoc.title,
+                    this._loc.title,
                     content,
                     lonlat,
                     true,
                     colourScheme,
                     font
                 );
-                this._sandbox.request(this, request);
+                this.getSandbox().request(this, request);
             }
         },
+
         /**
          * Sends a request to refresh infobox content.
-         * 
+         *
          * @method _refreshGfiInfo
          * @private
          * @param  {String} operation currently only 'remove' supported (optional)
          * @param  {String} contentId (optional)
          */
-        _refreshGfiInfo: function(operation, contentId) {
+        _refreshGfiInfo: function (operation, contentId) {
+            var reqB,
+                req;
+
             if (this.clickLocation) {
-                var reqB = this._sandbox.getRequestBuilder('InfoBox.RefreshInfoBoxRequest'),
-                    req;
+                reqB = this.getSandbox().getRequestBuilder(
+                    'InfoBox.RefreshInfoBoxRequest'
+                );
 
                 if (reqB) {
                     req = reqB(this.infoboxId, operation, contentId);
-                    this._sandbox.request(this, req);
+                    this.getSandbox().request(this, req);
                 }
             }
         },
+
         /**
          * Sends a 'MapClickEvent' if there's an infobox opened by this plugin.
          * Effectively refreshes all the content of the infobox with added layers.
-         * 
+         *
          * @method _handleInfoBoxEvent
          * @private
          * @param  {Object} evt
          */
-        _handleInfoBoxEvent: function(evt) {
-            var me = this,
+        _handleInfoBoxEvent: function (evt) {
+            var sandbox = this.getSandbox(),
                 clickLoc = this.clickLocation,
-                clickEventB, clickEvent;
+                contentId = evt.getContentId(),
+                contentLayer,
+                clickEventB,
+                clickEvent;
 
             if (evt.getId() === this.infoboxId &&
                 evt.isOpen() &&
                 _.isObject(clickLoc)) {
-                clickEventB = this._sandbox.getEventBuilder('MapClickedEvent');
-                clickEvent = clickEventB(clickLoc.lonlat);
-                // Timeout needed since the layer plugins haven't
-                // necessarily done their job of adding the layer yet.
-                setTimeout(function() {
-                    me._sandbox.notifyAll(clickEvent);
-                }, 0);
+                if (contentId) {
+                    // If there's a specific layer id and it's selected
+                    // we can directly get info for that
+                    contentLayer = sandbox.findMapLayerFromSelectedMapLayers(
+                        contentId
+                    );
+                    if (contentLayer) {
+                        this.handleGetInfo(clickLoc.lonlat, [contentLayer]);
+                    }
+                } else {
+                    // Otherwise, we need to actually send `MapClickedEvent`
+                    // and not just call `handleGetInfo` since then
+                    // we'd only get the WMS feature info.
+                    clickEventB = sandbox.getEventBuilder('MapClickedEvent');
+                    clickEvent = clickEventB(clickLoc.lonlat);
+                    // Timeout needed since the layer plugins haven't
+                    // necessarily done their job of adding the layer yet.
+                    setTimeout(function () {
+                        sandbox.notifyAll(clickEvent);
+                    }, 0);
+                }
             }
         }
     }, {
+        extend: ['Oskari.mapping.mapmodule.plugin.BasicMapModulePlugin'],
         /**
-         * @property {Object} protocol
-         * @static
+         * @static @property {string[]} protocol array of superclasses
          */
-        'protocol': ["Oskari.mapframework.module.Module", "Oskari.mapframework.ui.module.common.mapmodule.Plugin"]
-    });
+        protocol: [
+            'Oskari.mapframework.module.Module',
+            'Oskari.mapframework.ui.module.common.mapmodule.Plugin'
+        ]
+    }
+);

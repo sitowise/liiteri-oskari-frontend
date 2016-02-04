@@ -141,9 +141,11 @@ Oskari.registerLocalization(
                 "small": "Mazs",
                 "medium": "Vidējs",
                 "large": "Liels",
+                "fill": "NOT TRANSLATED",
                 "custom": "Pielāgots izmērs",
                 "width": "Platums",
-                "height": "Augstums"
+                "height": "Augstums",
+                "separator": "x"
             },
             "buttons": {
                 "save": "Saglabāt",
@@ -212,6 +214,7 @@ Oskari.registerLocalization(
             "show": "NOT TRANSLATED",
             "hide": "NOT TRANSLATED",
             "hidden": "NOT TRANSLATED",
+            "selectAsBaselayer": "NOT TRANSLATED",
             "rights": {
                 "can_be_published_map_user": {
                     "label": "NOT TRANSLATED",

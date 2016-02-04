@@ -2,14 +2,14 @@ Oskari.registerLocalization({
     "lang": "en",
     "key": "admin-layerselector",
     "value": {
-        "title": "admin: Map layers",
+        "title": "Map Layer Administration",
         "desc": "",
         "flyout": {
-            "title": "admin: Map layers",
-            "fetchingLayers" : "Fetching layers."
+            "title": "Map Layer Administration",
+            "fetchingLayers": "Fetching the map layers."
         },
         "tile": {
-            "title": "A: Map layers",
+            "title": "Map Layer Administration",
             "tooltip": "."
         },
         "view": {
@@ -19,38 +19,40 @@ Oskari.registerLocalization({
         },
         "errors": {
             "title": "Error!",
-            "generic": "There was an error in the system. Try again later.",
-            "loadFailed": "Error loading map layers. Reload the page and choose admin map layers.",
-            "noResults": "The search found no results.."
+            "generic": "A system error occurred. Please try again later.",
+            "loadFailed": "An error occurred while loading map layers. Please reload the page and choose map layers again.",
+            "noResults": "The search returned no results.",
+            "layerTypeNotSupported": "The map layer type is not yet supported:",
+            "not_empty": "There are map layers associated to the theme you're trying to remove. Please select another theme for the map layers and try again."
         },
         "loading": "Loading...",
         "filter": {
             "text": "Search map layers",
             "inspire": "By theme",
-            "organization": "By data providers",
+            "organization": "By data provider",
             "published": "Users",
             "userThemes" : "User themes"
         },
         "published": {
-            "organization": "Published layers",
-            "inspire": "Published layer"
+            "organization": "Published map layer",
+            "inspire": "Published map layer"
         },
         "tooltip": {
-            "type-base": "Base",
+            "type-base": "Background map",
             "type-wms": "Map layer",
             "type-wfs": "Data product"
         },
         "backendStatus": {
             "OK": {
-                "tooltip": "Map layer is currently available.",
+                "tooltip": "The map layer is currently available.",
                 "iconClass": "backendstatus-ok"
             },
             "DOWN": {
-                "tooltip": "Map layer is currently not available.",
+                "tooltip": "The map layer is currently not available.",
                 "iconClass": "backendstatus-down"
             },
             "MAINTENANCE": {
-                "tooltip": "Interruptions in the availability of map levels is expected during the next few days.",
+                "tooltip": "There will be short breaks in the map layer's availability during the next few days.",
                 "iconClass": "backendstatus-maintenance"
             },
             "UNKNOWN": {
@@ -59,34 +61,33 @@ Oskari.registerLocalization({
             }
         },
         "admin": {
-            "capabilitiesLabel" : "WMSCapabilities",
-            "confirmResourceKeyChange" : "By changing the values of wmsname and url the layer permissions will reset. Continue?",
-            "confirmDeleteLayerGroup" : "Delete layer group. Continue?",
-            "confirmDeleteLayer" : "Delete layer. Continue?",
-            "layertypes" : {
+            "capabilitiesLabel": "Capabilities",
+            "confirmResourceKeyChange": "You have changed the unique name or  the interface address for this map layer. For security reasons the user rights for this map layer will be removed and you must set them again. Do you want to continue?",
+            "confirmDeleteLayerGroup": "This map layer group will be deleted. Do you want to continue?",
+            "confirmDeleteLayer": "This map layer will be deleted. Do you want to continue?",
+            "layertypes": {
                 "wms": "WMS layer",
                 "wfs": "WFS layer",
                 "wmts": "WMTS layer",
+                "arcgis": "ArcGIS layer",
                 "arcgislayer": "ArcGis layer"
             },
-            "selectLayer": "Select layer",
-            "selectSubLayer": "Select sublayer",
-
-            "addOrganization": "Add organization",
-            "addOrganizationDesc": "Add organization i.e. new content producer",
-            "addInspire": "Add class",
-            "addInspireDesc": "Add class i.e. a new Inspire theme",
-            "addLayer": "Add layer",
-            "addLayerDesc": "Add layer into this Inspire theme",
+            "selectLayer": "Select a map layer.",
+            "selectSubLayer": "Select a sublayer for this map layer.",
+            "addOrganization": "Add an organization",
+            "addOrganizationDesc": "Add a new data producer / organization.",
+            "addInspire": "Add a theme",
+            "addInspireDesc": "Add a new INSPIRE theme.",
+            "addLayer": "Add a map layer",
+            "addLayerDesc": "Add a map layer to this theme.",
             "edit": "Edit",
-            "editDesc": "Edit name",
+            "editDesc": "Edit map layer's name.",
             "layerType": "Layer type",
-            "layerTypeDesc": "Layer type: WMS, WFS, WMTS",
+            "layerTypeDesc": "Select a layer type. The current options are WMS (Web Map Service), WFS (Web Feature Service) and WMTS (Web Map Tile Service).",
             "type": "Layer type",
             "typePlaceholder": "Choose layer type",
-            "normalLayer": "WMS layer",
-            "baseLayer": "Base layer",
-            "groupLayer": "Group layer",
+            "baseLayer": "Background map layer",
+            "groupLayer": "Map layer group",
             "wfslayer" : "WFS layer",
             "arcgisLayer": "ArcGis layer",
             "interfaceVersion": "Interface version",
@@ -96,11 +97,11 @@ Oskari.registerLocalization({
             "wfs1_0_0": "WFS 1.0.0",
             "wfs1_1_0": "WFS 1.1.0",
             "getInfo": "Get info",
-            "selectClass": "Select class",
-            "selectClassDesc": "Select Inspire theme",
-
-            "baseName": "Base layer name",
-            "groupName": "Group layer name",
+            "editWfs": "Edit WFS",
+            "selectClass": "Select a theme",
+            "selectClassDesc": "Select a Inspire theme",
+            "baseName": "Background layer name",
+            "groupName": "Map layer group name",
             "subLayers": "Sublayers",
             "addSubLayer": "Add sublayer",
 
@@ -135,55 +136,55 @@ Oskari.registerLocalization({
             "addInspireName": "Class name",
             "addInspireNameTitle": "Name of the Inspire class",
             "addOrganizationName": "Organization",
-            "addOrganizationNameTitle": "Name of the organization",
-            "addNewClass": "Add new class",
-            "addNewLayer": "Add new layer",
-            "addNewGroupLayer": "Add new group layer",
-            "addNewBaseLayer": "Add new base layer",
-            "addNewOrganization": "Add new organization",
-            "addInspireThemes": "Add class",
-            "addInspireThemesDesc": "Add classes (Inspire themes)",
+            "addOrganizationNameTitle": "Name of the organization producing the map layer.",
+            "addNewClass": "Add a new theme",
+            "addNewLayer": "Add a new map layer",
+            "addNewGroupLayer": "Add a new map layer group",
+            "addNewBaseLayer": "Add a new background map layer",
+            "addNewOrganization": "Add a new organization",
+            "addInspireTheme": "Theme",
+            "addInspireThemeDesc": "Select a new INSPIRE theme.",
             "opacity": "Opacity",
-            "opacityDesc": "Layer opacity (0% will make the layer transparent)",
+            "opacityDesc": "Define the layer opacity. If the setting is 0%, the layer will be completely transparent.",
             "style": "Default style",
             "styleDesc": "Default style",
-
             "minScale": "Minimum scale",
-            "minScaleDesc": "Layer's minimum scale",
-            "minScalePlaceholder": "Layer's minimum scale",
+            "minScaleDesc": "Minimum scale",
+            "minScalePlaceholder": "Minimum scale",
             "maxScale": "Maximum scale",
-            "maxScaleDesc": "Layer's maximum scale",
-            "maxScalePlaceholder": "Layer's maximum scale",
+            "maxScaleDesc": "Maximum scale",
+            "maxScalePlaceholder": "Maximum scale",
             "srsName": "Coordinate system",
             "srsNamePlaceholder": "Coordinate system",
-            "legendImage": "Legenda image",
-            "legendImageDesc": "URL for legenda image",
-            "legendImagePlaceholder": "URL for legenda image",
+            "legendImage": "Map legend URL",
+            "legendImageDesc": "The URL address of the map legend describing the map layer.",
+            "legendImagePlaceholder": "Give the URL address of the map legend.",
+            "gfiContent": "Additional content for \"Get Feature Info\"-dialog.",
             "gfiResponseType": "GFI response type",
             "gfiResponseTypeDesc": "Response type for Get Feature Info (GFI)",
-            "gfiStyle": "GFI style",
+            "gfiStyle": "GFI style (XSLT)",
             "gfiStyleDesc": "GFI style (XSLT)",
+            "matrixSetId": "WMTS TileMatrixSet ID",
+            "matrixSetIdDesc": "The identifier for WMTS TileMatrixSet",
+            "matrixSet": "JSON for WMTS layer",
+            "matrixSetDesc": "JSON content for WMTS layer",
             "realtime": "Real time layer",
             "refreshRate": "Refresh rate (in seconds)",
-
             "generic": {
                 "placeholder": "Name in {0}",
                 "descplaceholder": "Description in {0}"
             },
             "en": {
-                "lang": "English:",
                 "title": "En",
                 "placeholder": "Name in English",
                 "descplaceholder": "Description in English"
             },
             "fi": {
-                "lang": "Finnish:",
                 "title": "Fi",
                 "placeholder": "Name in Finnish",
                 "descplaceholder": "Description in Finnish"
             },
             "sv": {
-                "lang": "Swedish:",
                 "title": "Sv",
                 "placeholder": "Name in Swedish",
                 "descplaceholder": "Description in Swedish"
@@ -198,13 +199,24 @@ Oskari.registerLocalization({
             "interfaceAddressDesc": "URL for WMS layer definitions",
             "viewingRightsRoles": "Viewing Rights roles",
             "metadataReadFailure": "Fetching layer metadata failed.",
-            "mandatory_field_missing": "Field is required: ",
-            "invalid_field_value": "Invalid value: ",
-            "operation_not_permitted_for_layer_id": "Operation not permitted for layer ",
-            "no_layer_with_id": "Layer not found with id "
+            "permissionFailure": "Invalid username or password.",
+            "mandatory_field_missing": "Field is required:",
+            "invalid_field_value": "Invalid value:",
+            "operation_not_permitted_for_layer_id": "You don't have privileges to change layer data or add a layer",
+            "no_layer_with_id": "The layer doesn't exist.",
+            "success": "Success.",
+            "errorRemoveLayer": "Removing layer did not work.",
+            "errorInsertAllreadyExists": "Inserted a new layer but a layer with same id already existed!!",
+            "errorRemoveGroupLayer": "Removing group failed.",
+            "errorSaveGroupLayer": "Failed to save grouplayer.",
+            "errorTitle": "Error",
+            "warningTitle": "Warning",
+            "successTitle": "Saved"
         },
         "cancel": "Cancel",
         "add": "Add",
-        "delete": "Remove"
+        "save": "Save",
+        "delete": "Remove",
+        "ok": "OK"
     }
 });

@@ -1,4 +1,5 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "fi",
     "key": "StatsGrid",
     "value": {
@@ -16,12 +17,13 @@ Oskari.registerLocalization({
         },
         "tab": {
             "title": "Tilastot",
+            "description": "Omat indikaattorit",
             "grid": {
                 "name": "Otsikko",
                 "description": "Kuvaus",
                 "organization": "Tietolähde",
                 "year": "Vuosi",
-                "delete": " "
+                "delete": "Poista"
             },
             "deleteTitle": "Tilaston poistaminen",
             "destroyIndicator": "Poista",
@@ -57,7 +59,7 @@ Oskari.registerLocalization({
         "removeColumn": "Poista",
         "indicators": "Taulu",
         "cannotDisplayIndicator": "Tilastolla ei ole arvoja valitsemallasi aluejaolla, joten sitä ei voida näyttää taulukossa.",
-        "availableRegions": " Arvot löytyvät seuraaville aluejaoille: ",
+        "availableRegions": "Arvot löytyvät seuraaville aluejaoille:",
         "numberOfSelectedIndicators": "Olet valinnut {0} tilastoa.",
         "year": "Vuosi",
         "createIntersection": "Muodosta valittujen toiminnallisten alueiden leikkaus (valitse vain kaksi aluetta)",
@@ -75,18 +77,18 @@ Oskari.registerLocalization({
             "changeToPublic": "Muuta julkiseksi",
             "changeToPrivate": "Muuta yksityiseksi"
         },
-        "sotka": {
+        "stats": {
             "municipality": "Kunta",
             "code": "Koodi",
             "errorTitle": "Virhe",
-            "regionDataError": "Virhe kuntatietojen haussa SOTKAnetistä.",
-            "regionDataXHRError": "Kuntatietojen haku: virhe yhteydessä SOTKAnettiin.",
-            "indicatorsDataError": "Virhe indikaattorien haussa SOTKAnetistä.",
-            "indicatorsDataXHRError": "Indikaattorien haku: virhe yhteydessä SOTKAnettiin.",
-            "indicatorMetaError": "Virhe indikaattorien metadatan haussa SOTKAnetistä",
-            "indicatorMetaXHRError": "Indikaattorin metadata: virhe yhteydessä SOTKAnettiin.",
-            "indicatorDataError": "Virhe indikaattorien datan haussa SOTKAnetistä",
-            "indicatorDataXHRError": "Indikaattorin data: virhe yhteydessä SOTKAnettiin.",
+            "regionDataError": "Kuntatietojen haussa tapahtui virhe. Yritä myöhemmin uudelleen.",
+            "regionDataXHRError": "Aineistoon ei saatu yhteyttä. Yritä myöhemmin uudelleen.",
+            "indicatorsDataError": "Indikaattorin haussa tapahtui virhe. Yritä myöhemmin uudelleen.",
+            "indicatorsDataXHRError": "Aineistoon ei saatu yhteyttä. Yritä myöhemmin uudelleen.",
+            "indicatorMetaError": "Indikaattorin metatietojen haussa tapahtu virhe. Yritä myöhemmin uudelleen.",
+            "indicatorMetaXHRError": "Aineistoon ei saatu yhteyttä. Yritä myöhemmin uudelleen.",
+            "indicatorDataError": "Indikaattorin tietojen haussa tapahtui virhe. Yritä myöhemmin uudelleen.",
+            "indicatorDataXHRError": "Aineistoon ei saatu yhteyttä. Yritä myöhemmin uudelleen.",
             "noselection": "There is no active selection",
             "descriptionTitle": "Kuvaus",
             "sourceTitle": "Tietolähde",
@@ -109,15 +111,15 @@ Oskari.registerLocalization({
             "classifymethod": "Luokittelutapa",
             "classes": "Luokkajako",
             "jenks": "Luonnolliset välit",
-            "eqinterval": "Tasavälit",
             "quantile": "Kvantiilit",
+            "eqinterval": "Tasavälit",
             "manual": "Luokittelu käsin",
-            "manualPlaceholder": "Syötä lukuja pilkulla erotettuna.",
-            "manualRangeError": "Lukuja tulee olla vähintään {min} ja enintään {max}!",
-            "nanError": "Syöttämäsi arvo ei ole luku!",
+            "manualPlaceholder": "Erota luvut pilkuilla.",
+            "manualRangeError": "Luokkarajojen tulee olla lukuja välillä {min} - {max}.  Anna luokkarajat uudelleen pilkulla erotettuina lukuina. Desimaalierottimena toimii piste.",
+            "nanError": "Antamasi arvo ei ole luku. Anna luokkarajat uudelleen pilkulla erotettuina lukuina. Desimaalierottimena toimii piste.",
             "infoTitle": "Luokittelu käsin",
-            "info": "Voit syöttää oman luokittelun pilkuilla erotettuna. Desimaalierottimena toimii piste. Syötä ensin alaraja, sitten luokkarajat ja lopuksi yläraja. Esimerkiksi syöttämällä \"0, 10.5, 24, 30.2, 57, 73.1\" saat viisi luokkaa, jonka ylä- ja alarajat ovat 0 ja 73,1 ja luokkarajat väliin jäävät arvot. Rajojen ulkopuolelle jäävät arvot jätetään huomiotta.",
-            "mode": "Luokkarajat",
+            "info": "Anna luokkarajat lukuina erotettuna pilkulla toisistaan. Desimaalierottimena toimii piste. Esimerkiksi syöttämällä \"0, 10.5, 24, 30.2, 57, 73.1\" saat viisi luokkaa, joiden arvot ovat välillä \"0-10,5\", \"10,5-24\", \"24-30,2\", \"30,2-57\" ja \"57-73,1\". Indikaattorin arvoja, jotka ovat pienempiä kuin alin luokkaraja (esimerkissä 0) tai suurempia kuin ylin luokkaraja (73,1), ei näytetä kartalla. Luokkarajojen on oltava indikaattorin pienimmän ja suurimman arvon välillä.",
+            "mode": "Luokkarajojen jatkuvuus",
             "modes": {
                 "distinct": "Jatkuva",
                 "discontinuous": "Epäjatkuva"
@@ -148,24 +150,23 @@ Oskari.registerLocalization({
         "colorset": {
             "button": "Värit",
             "flipButton": "Käännä värit",
-            "themeselection": "Väriteeman valinta",
-            "setselection": "Värisetin valinta",
+            "themeselection": "Luokkien värien valinta",
+            "setselection": "Jakauman tyyppi",
             "sequential": "Kvantitatiivinen",
             "qualitative": "Kvalitatiivinen",
             "divergent": "Jakautuva",
-            "info2": "Värivalinta - valitse osoittimella väriskaalasta värijakso",
+            "info2": "Valitse värit klikkaamalla hiirellä haluamaasi väriryhmää",
             "cancel": "Poistu"
-
         },
         "statistic": {
-            "title": "Tilastomuuttujat",
+            "title": "Tunnusluvut",
             "avg": "Keskiarvo",
             "max": "Suurin arvo",
             "mde": "Moodi",
             "mdn": "Mediaani",
             "min": "Pienin arvo",
             "std": "Keskihajonta",
-            "sum": "Yhteensä",
+            "sum": "Summa",
             "tooltip": {
                 "avg": "Tilaston keskiarvo",
                 "max": "Suurin indikaattorissa esiintyvä arvo",
@@ -210,9 +211,8 @@ Oskari.registerLocalization({
         "values": "arvoa",
         "included": "Arvot",
         "municipality": "Kunnat",
-        "not_included": "Poistettu laskuista",
         "selectRows": "Valitse rivit",
-        "select4Municipalities": "Valitse vähintään kaksi aluetta tarkasteluun",
+        "select4Municipalities": "Valitse vähintään kaksi aluetta tarkasteluun.",
         "showSelected": "Näytä vain valitut alueet taulukossa",
         "toogleTable": "Taulukko",
         "toogleMap": "Kartta",
@@ -237,11 +237,11 @@ Oskari.registerLocalization({
         "filterIndicator": "Muuttuja:",
         "filterCondition": "Ehto:",
         "filterSelectCondition": "Valitse ehto",
-        "filterGT": "Suurempi (>)",
-        "filterGTOE": "Suurempi tai yhtäsuuri (>=)",
-        "filterE": "Yhtäsuuri (=)",
-        "filterLTOE": "Pienempi tai yhtäsuuri (<=)",
-        "filterLT": "Pienempi (<)",
+        "filterGT": "Suurempi kuin (>)",
+        "filterGTOE": "Suurempi tai yhtäsuuri kuin (>=)",
+        "filterE": "Yhtäsuuri kuin (=)",
+        "filterLTOE": "Pienempi tai yhtäsuuri kuin (<=)",
+        "filterLT": "Pienempi kuin (<)",
         "filterBetween": "Arvoväli (poissulkeva)",
         "filter": "Suodata",
         "filterByValue": "Arvoilla",
@@ -255,6 +255,8 @@ Oskari.registerLocalization({
         "dataSource": "Tietolähde",
         "regionCategories": {
             "title": "Aluejaot",
+            "ERVA": "ERVA-alueet",
+            "ELY-KESKUS": "ELY-alueet",
             "KUNTA": "Kunta",
             "ALUEHALLINTOVIRASTO": "Aluehallintovirasto",
             "MAAKUNTA": "Maakunta",
@@ -294,7 +296,7 @@ Oskari.registerLocalization({
         "baseInfoTitle": "Tunnistetiedot",
         "dataTitle": "Aineisto",
         "addDataButton": "Lisää uusi",
-        "addDataTitle": "Lisää uusi aineisto",
+        "addDataTitle": "Lisää uusi indikaattori",
         "openImportDialogTip": "Tuo arvot leikepöydältä.",
         "openImportDataButton": "Tuo arvot",
         "addDataMetaTitle": "Otsikko",
@@ -305,10 +307,10 @@ Oskari.registerLocalization({
         "addDataMetaDescriptionPH": "Kuvaus",
         "addDataMetaReferenceLayer": "Aluejako",
         "addDataMetaYear": "Vuosi",
-        "addDataMetaYearPH": "Data on vuodelta",
+        "addDataMetaYearPH": "Tiedot ovat vuodelta",
         "addDataMetaPublicity": "Julkaistavissa",
         "municipalityHeader": "Kunnat",
-        "dataRows": "Aineistorivit",
+        "dataRows": "Indikaattorin arvot alueittain",
         "municipalityPlaceHolder": "Anna arvo",
         "formEmpty": "Tyhjennä",
         "formCancel": "Peruuta",
@@ -417,4 +419,5 @@ Oskari.registerLocalization({
             }
         }
     }
-});
+}
+);

@@ -39,13 +39,22 @@ define([
                 me.template = _.template(ViewTemplate);
                 me.subLayerTemplate = _.template(SubLayerTemplate);
                 // listenTo will remove dead listeners, use it instead of on()
-                this.listenTo(this.model, 'add', this.render);
-                this.listenTo(this.model, 'change', this.render);
-                this.listenTo(this.model, 'remove', this.render);
+                this.listenTo(this.model, 'add', function() {
+                    //console.log('layerView add', arguments);
+                    me.render();
+                });
+                this.listenTo(this.model, 'change', function() {
+                    //console.log('layerView change', arguments);
+                    me.render();
+                });
+                this.listenTo(this.model, 'remove', function() {
+                    //console.log('layerView remove', arguments);
+                    me.render();
+                });
                 //this.model.on('change', this.render, this);
+                this.supportedTypes = this.options.supportedTypes;
                 me.render();
             },
-
             /**
              * Renders layerRowTemplate and calls _renderLayertools
              *
@@ -140,6 +149,7 @@ define([
                     // create AdminLayerSettingsView
                     var settings = new AdminLayerSettingsView({
                         model: me.model,
+                        supportedTypes : me.supportedTypes,
                         instance: me.options.instance,
                         classes: me.classNames,
                         layerTabModel: me.options.layerTabModel
@@ -173,12 +183,68 @@ define([
                         subLayer = this._getSubLayerById(subLayerId);
                     var parentId = this.model.getId();
 
-                    // create AdminLayerSettingsView
-                    var settings = new AdminLayerSettingsView({
-                        model: subLayer,
-                        instance: this.options.instance,
-                        layerTabModel: this.options.layerTabModel,
-                        baseLayerId: parentId
+                // create AdminLayerSettingsView
+                var settings = new AdminLayerSettingsView({
+                    model: subLayer,
+                    supportedTypes : me.supportedTypes,
+                    instance: this.options.instance,
+                    layerTabModel: this.options.layerTabModel,
+                    baseLayerId: parentId,
+                    groupId: element.parents('.accordion').attr('lcid')
+                });
+                // Create buttons for the popup and hide the form buttons...
+                var container = jQuery('<div class="admin-layerselector"><div class="layer"></div></div>'),
+                    buttons = [],
+                    saveButton = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                    cancelButton = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                    exitPopup = function () {
+                        settings.undelegateEvents();
+                        settings.$el.removeData().unbind();
+                        settings.remove();
+                        Backbone.View.prototype.remove.call(settings);
+                        dialog.close();
+                        // TODO refresh parent layer view
+                        // call trigger on parent element's dom...
+                        // see adminAction
+                    };
+                if(subLayer && subLayer.getId && subLayer.getId()) {
+                    saveButton.setTitle(this.instance.getLocalization('save'));
+                }
+                else {
+                    saveButton.setTitle(this.instance.getLocalization('add'));
+                }
+                saveButton.addClass('primary');
+                saveButton.setHandler(function () {
+                    var el = {
+                        currentTarget: settings.$el.find('.admin-add-sublayer-ok')
+                    };
+                    settings.addLayer(el, exitPopup);
+                    // update the UI on parent level
+                    me.model.trigger('change', me.model);
+                });
+                cancelButton.setHandler(function () {
+                    exitPopup();
+                });
+                cancelButton.setTitle(this.instance.getLocalization('cancel'));
+                buttons.push(saveButton);
+                if (isEdit) {
+                    var deleteButton = Oskari.clazz.create('Oskari.userinterface.component.Button');
+                    deleteButton.setTitle(this.instance.getLocalization('delete'));
+                    deleteButton.setHandler(function () {
+                        var el = {
+                            currentTarget: settings.$el.find('.admin-remove-sublayer')
+                        };
+                        settings.removeLayer(el, function() {
+                            // we need to trigger this manually for sublayers to work...
+                            me.$el.trigger({
+                                type: 'adminAction',
+                                command: 'removeLayer',
+                                modelId: subLayerId,
+                                baseLayerId: parentId
+                            });
+                            exitPopup(); 
+                        });
+                        //exitPopup();
                     });
                     element.append(settings.$el);
 

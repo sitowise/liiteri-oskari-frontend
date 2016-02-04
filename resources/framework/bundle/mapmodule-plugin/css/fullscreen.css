@@ -1,4 +1,5 @@
 .fullscreenDiv {
+  pointer-events: auto;
   position: absolute;
   top: 10px;
   left: 10px;
@@ -6,6 +7,6 @@
   color: black;
   background: transparent;
   z-index: 15000; }
-
-.fullscreenDiv .fullscreenDivImg {
-  cursor: pointer; }
+  .fullscreenDiv .fullscreenDivImg {
+    cursor: pointer;
+    pointer-events: auto; }

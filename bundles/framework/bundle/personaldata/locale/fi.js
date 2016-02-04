@@ -1,15 +1,16 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
   "lang": "fi",
   "key": "PersonalData",
   "value": {
     "title": "Omat tiedot",
-	"flyoutTitle": "Käyttäjän omat tiedot",
+    "flyoutTitle": "Käyttäjän omat tiedot",
     "desc": "Omat tiedot",
-	"tooltip": "Käyttäjätoiminnot",
+    "tooltip": "Käyttäjätoiminnot",
     "notLoggedIn": "Omiin tietoihin voit tallentaa omia karttanäkymiä ja kohteita sekä nähdä muille sivustoille julkaisemasi kartat. <a href='/web/fi/login'>Kirjaudu palveluun</a>.",
     "tabs": {
       "myviews": {
-        "title": "Näkymät",
+                "title": "Karttanäkymät",
         "edit": "Muokkaa",
         "publish": "Muuta julkiseksi",
         "unpublish": "Muuta yksityiseksi",
@@ -18,27 +19,27 @@ Oskari.registerLocalization({
           "name": "Nimi",
           "description": "Kuvaus",
           "publish": "Julkaisu",
-          "edit": " ",
-          "delete": " "
+                    "edit": "Muokkaa",
+                    "delete": "Poista"
         },
         "popup": {
-          "edit": "Muokkaa näkymän tietoja",
-          "title": "Näkymän tallennus",
-          "label": "Näkymän nimi:",
+                    "edit": "Karttanäkymän muokkaus",
+                    "title": "Karttanäkymän tallennus",
+                    "label": "Näkymän nimi",
           "name_placeholder": "Anna näkymälle nimi",
           "description_placeholder": "Anna näkymälle kuvaus",
           "save": "Tallenna",
           "cancel": "Peruuta",
-          "error_noname": "Syötä nimi",
-          "deletetitle": "Poiston varmistus",
-          "deletemsg": "Haluatko poistaa näkymän?"
+                    "error_noname": "Anna näkymälle nimi",
+                    "deletetitle": "Karttanäkymän poisto",
+                    "deletemsg": "Haluatko poistaa valitun näkymän?"
         },
         "save": {
-          "success": "Näkymä tallennettu.",
-          "error_noname": "Nimi ei voi olla tyhjä.",
-          "error_illegalchars": "Nimessä on luvattomia merkkejä. Sallittuja merkkejä ovat kaikki suomen kielen aakkoset, numerot sekä välilyönti ja yhdysmerkki.",
+                    "success": "Karttanäkymän tallennus onnistui.",
+                    "error_noname": "Karttanäkymän nimi ei voi olla tyhjä.",
+                    "error_illegalchars": "Karttanäkymän nimessä on kiellettyjä merkkejä. Sallittuja merkkejä ovat aakkoset (a-ö, A-Ö), numerot (0-9), välilyönti ja yhdysmerkki (-).",
           "msg": {
-            "view_name": "Näkymän nimi"
+                        "view_name": "Karttanäkymän tiedot"
           }
         },
         "button": {
@@ -49,30 +50,30 @@ Oskari.registerLocalization({
         },
         "error": {
           "title": "Virhe!",
-          "generic": "Järjestelmässä tapahtui virhe. Yritä uudelleen myöhemmin.",
-          "notsaved": "Näkymän tallentaminen epäonnistui.",
-          "notdeleted": "Näkymän poisto epäonnistui.",
-          "makePublic": "Näkymän muuttaminen julkiseksi epäonnistui. Yritä myöhemmin uudelleen.",
+                    "generic": "Järjestelmässä tapahtui virhe. Yritä myöhemmin uudelleen.",
+                    "notsaved": "Karttanäkymän tallennus epäonnistui. Yritä myöhemmin uudelleen.",
+                    "notdeleted": "Karttanäkymän poisto epäonnistui. Yritä myöhemmin uudelleen.",
+                    "makePublic": "Karttanäkymän muuttaminen julkiseksi epäonnistui. Yritä myöhemmin uudelleen.",
           "makePrivate": "Näkymän muuttaminen yksityiseksi epäonnistui. Yritä myöhemmin uudelleen.",
-          "loadfailed": "Näkymien lataus epäonnistui."
+                    "loadfailed": "Karttanäkymien lataus epäonnistui. Yritä myöhemmin uudelleen."
         }
       },
       "publishedmaps": {
         "title": "Julkaistut kartat",
-        "show" : "Näytä kartalla",
+                "show": "Näytä kartalla",
         "getHTML": "HTML-koodi",
-        "edit" : "Muokkaa",
+                "edit": "Muokkaa",
         "publish": "Julkaise kartta",
         "unpublish": "Peru julkaisu",
         "delete": "Poista",
         "grid": {
           "name": "Nimi",
-          "domain": "Kartan tiedot",
+                    "domain": "Julkaisupaikka",
           "publish": "Tila",
-          "show" : "Toiminnot",
-          "html" : " ",
-          "edit": " ",
-          "delete": " "
+                    "show": "Toiminnot",
+                    "html": "HTML-koodi",
+                    "edit": "Muokkaa",
+                    "delete": "Poista"
         },
         "published": {
             "desc": "Voit liittää kartan internet-sivustollesi lisäämällä sinne alla olevan HTML-koodin:"
@@ -85,16 +86,16 @@ Oskari.registerLocalization({
           "save": "Tallenna",
           "cancel": "Peruuta",
           "error_noname": "Anna kartalle nimi",
-          "deletetitle": "Poiston varmistus",
+                    "deletetitle": "Julkaistun kartan poisto",
           "deletemsg": "Haluatko poistaa julkaistun kartan? Tämän jälkeen kartta ei näy sivustollasi.",
-          "showErrorTitle": "Näkymä puutteellinen",
-          "showConfirmMissing": "Osa näkymään tallennetuista tasoista ei ole käytettävissä, haluatko silti avata näkymän?",
-          "showConfirmNotLoaded": "Kaikki karttatasot eivät ole vielä latautuneet, yritä uudelleen hetken päästä."
+                    "showErrorTitle": "Karttanäkymä on puutteellinen.",
+                    "showConfirmMissing": "Osa karttanäkymän karttatasoista ei ole käytettävissä. Haluatko silti avata karttanäkymän?",
+                    "showConfirmNotLoaded": "Kaikki karttanäkymään kuuluvat karttatasot eivät latautuneet kartalle. Yritä myöhemmin uudelleen."
         },
         "save": {
-          "success": "Kartta tallennettu.",
-          "error_noname": "Nimi ei voi olla tyhjä.",
-          "error_illegalchars": "Nimessä on luvattomia merkkejä. Sallittuja merkkejä ovat kaikki suomen kielen aakkoset, numerot sekä välilyönti ja yhdysmerkki.",
+                    "success": "Kartan tallennus onnistui.",
+                    "error_noname": "Kartan nimi ei voi olla tyhjä.",
+                    "error_illegalchars": "Kartan nimessä on kiellettyjä merkkejä. Sallittuja merkkejä ovat aakkoset (a-ö, A-Ö), numerot (0-9), välilyönti ja yhdysmerkki (-).",
           "msg": {
             "view_name": "Kartan nimi"
           }
@@ -107,11 +108,11 @@ Oskari.registerLocalization({
         },
         "error": {
           "title": "Virhe!",
-          "generic": "Järjestelmässä tapahtui virhe. Yritä uudelleen myöhemmin.",
-          "notsaved": "Kartan tallentaminen epäonnistui.",
-          "notdeleted": "Kartan poisto epäonnistui.",
+                    "generic": "Järjestelmässä tapahtui virhe. Yritä myöhemmin uudelleen.",
+                    "notsaved": "Kartan tallentaminen epäonnistui. Yritä myöhemmin uudelleen.",
+                    "notdeleted": "Kartan poisto epäonnistui.  Yritä myöhemmin uudelleen.",
           "makePublic": "Kartan julkaiseminen epäonnistui. Yritä myöhemmin uudelleen.",
-          "makePrivate": "Kartan vaihtaminen yksityiseksi epäonnistui. Yritä myöhemmin uudelleen."
+                    "makePrivate": "Kartan muuttaminen yksityiseksi epäonnistui. Yritä myöhemmin uudelleen."
         }
       },
       "account": {
@@ -120,10 +121,10 @@ Oskari.registerLocalization({
         "lastName": "Sukunimi",
         "nickName": "Nimimerkki",
         "email": "Sähköpostiosoite",
-        "roles": "Roles",
+        "roles": "Roolit",
         "changeInfo": "Muuta tietoja",
         "changePassword": "Muuta salasana",
-        "removeAccount": "Poista tili",
+                "removeAccount": "Poista käyttäjätili",
         "changeInfoUrl": "/web/fi/profiili"
       }
     },
@@ -144,4 +145,5 @@ Oskari.registerLocalization({
       "no": "Ei"
     }
   }
-});
+}
+);
