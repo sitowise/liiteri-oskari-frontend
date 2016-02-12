@@ -8,7 +8,7 @@
  * - a reference to implementing file in /bundles...
  *
  * 2) LOCALISATION file references
- * - references to locale implementation files in bundles/.../locale/.js
+ * - references to locale implementation files in bundles/.../resources/locale/.js
  *
  * 3) Call to Create the BackboneJS Oskari Adapter with appropriate
  * parameters: <Bundle-Name>, <View Class Name>
@@ -47,7 +47,7 @@ Oskari.clazz.define(
         "source": {
             "scripts": [{
                 "type": "text/javascript",
-                "src": "../../../../bundles/integration/bundle/admin-layerselector/View.js"
+                "src": "../../../../bundles/integration/admin-layerselector/View.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/integration/bundle/admin-layerselector/service/AdminLayerSelectorService.js"
@@ -62,38 +62,22 @@ Oskari.clazz.define(
                 "src": "../../../../bundles/integration/bundle/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequestHandler.js"
             }, {
                 "type": "text/css",
-                "src": "../../../../resources/integration/bundle/admin-layerselector/css/style.css"
+                "src": "../../../../bundles/integration/admin-layerselector/resources/css/style.css"
             }],
             "locales": [
                 {
                     "lang": "fi",
                     "type": "text/javascript",
-                    "src": "../../../../bundles/integration/bundle/admin-layerselector/locale/fi.js"
+                    "src": "../../../../bundles/integration/admin-layerselector/resources/locale/fi.js"
                 }, {
                     "lang": "en",
                     "type": "text/javascript",
-                    "src": "../../../../bundles/integration/bundle/admin-layerselector/locale/en.js"
+                    "src": "../../../../bundles/integration/admin-layerselector/resources/locale/en.js"
                 }, {
                     "lang": "sv",
                     "type": "text/javascript",
-                    "src": "../../../../bundles/integration/bundle/admin-layerselector/locale/sv.js"
+                    "src": "../../../../bundles/integration/admin-layerselector/resources/locale/sv.js"
                 }
-                /*        , {
-           // NOTE! EXTERNAL LIBRARY!
-            "type" : "text/javascript",
-            "src" : "../../../../libraries/jquery/plugins/tagIt/tag-it.js"
-        }
-        ,
-        // css
-        {
-            "type" : "text/css",
-            "src" : "../../../../libraries/jquery/plugins/tagIt/jquery.tagit.css"
-        },
-        {
-            "type": "text/javascript",
-            "src" : "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js"
-        }
-*/
             ],
             "resources": []
         },
