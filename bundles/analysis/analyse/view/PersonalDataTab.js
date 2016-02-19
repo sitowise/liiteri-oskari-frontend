@@ -70,6 +70,7 @@ Oskari.clazz.define(
                         layer.isBaseLayer()
                     );
                     sandbox.request(me.instance, request);
+                    me.handleBounds(layer);
                     return false;
                 });
                 return link;
@@ -99,6 +100,49 @@ Oskari.clazz.define(
             me.update();
             return me.container;
         },
+
+        /**
+         * @method handleBounds
+         * @private
+         *
+         * Make use of the layer bounding box information to set appropriate map view
+         *
+         * @param
+         * {Oskari.mapframework.domain.WmsLayer/Oskari.mapframework.domain.WfsLayer/Oskari.mapframework.domain.VectorLayer}
+         *            layer layer for which to handle bounds
+         *
+         */
+        handleBounds: function (layer) {
+            var sandbox = this.instance.sandbox;
+
+            var geom = layer.getGeometry();
+
+            if ((geom === null) || (typeof geom === 'undefined') ) {
+                return;
+            }
+            if (geom.length === 0) {
+                return;
+            }
+
+            var olPolygon = geom[0],
+                bounds = olPolygon.getBounds(),
+                centroid = olPolygon.getCentroid(),
+                epsilon = 1.0,
+                rb = sandbox.getRequestBuilder('MapMoveRequest'),
+                req;
+
+            if (rb) {
+                if (olPolygon.getArea() < epsilon) {
+                    // zoom to level 9 if a single point
+                    req = rb(centroid.x, centroid.y, 9);
+                    sandbox.request(this.instance, req);
+                } else {
+                    req = rb(centroid.x, centroid.y, bounds);
+                    sandbox.request(this.instance, req);
+                }
+            }
+        },
+
         /**
          * Updates the tab content with current analysis layers listing
          * @method update
@@ -171,9 +215,10 @@ Oskari.clazz.define(
          * Request backend to delete analysis data for the layer. On success removes the layer
          * from map and layerservice. On failure displays a notification.
          * @param {Oskari.mapframework.bundle.mapanalysis.domain.AnalysisLayer} layer analysis data to be destroyed
+         * @param {Boolean} should success dialog be shown or not. Optional, if not set, dialog is shown.
          * @private
          */
-        _deleteAnalysis: function (layer) {
+        _deleteAnalysis: function (layer, showDialog) {
             var me = this,
                 sandbox = this.instance.sandbox,
                 tokenIndex = layer.getId().lastIndexOf('_') + 1, // parse actual id from layer id
@@ -188,7 +233,7 @@ Oskari.clazz.define(
                 type: 'POST',
                 success: function (response) {
                     if (response && response.result === 'success') {
-                        me._deleteSuccess(layer);
+                        me._deleteSuccess(layer, showDialog);
                     } else {
                         me._deleteFailure();
                     }
@@ -203,9 +248,10 @@ Oskari.clazz.define(
          * Success callback for backend operation.
          * @method _deleteSuccess
          * @param {Oskari.mapframework.bundle.mapanalysis.domain.AnalysisLayer} layer layer that was removed
+         * @param {Boolean} should success dialog be shown or not. Optional, if not set, dialog is shown.
          * @private
          */
-        _deleteSuccess: function (layer) {
+        _deleteSuccess: function (layer, showDialog) {
             var sandbox = this.instance.sandbox,
                 service = sandbox.getService(
                     'Oskari.mapframework.service.MapLayerService'
@@ -220,14 +266,16 @@ Oskari.clazz.define(
             sandbox.request(this.instance, request);
             service.removeLayer(layer.getId());
             // show msg to user about successful removal
-            var dialog = Oskari.clazz.create(
-                'Oskari.userinterface.component.Popup'
-            );
-            dialog.show(
-                this.loc.notification.deletedTitle,
-                this.loc.notification.deletedMsg
-            );
-            dialog.fadeout(3000);
+            if (showDialog) {
+                var dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                );
+                dialog.show(
+                    this.loc.notification.deletedTitle,
+                    this.loc.notification.deletedMsg
+                );
+                dialog.fadeout(3000);
+            }
         },
         /**
          * Failure callback for backend operation.

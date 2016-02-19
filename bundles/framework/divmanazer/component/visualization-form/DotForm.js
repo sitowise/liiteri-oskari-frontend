@@ -17,7 +17,6 @@ Oskari.clazz.define(
         this.defaultValues = defaultValues;
         this.saveButton = null;
         this.cancelButton = null;
-        this.saveButtonHandler = null;
         this.renderDialog = null;
         this.messageEnabled = false;
 
@@ -130,7 +129,7 @@ Oskari.clazz.define(
             '<label>' + this.loc.color.labelOr + '</label>' +
             '</div>' +
             '<div class="color-source-selector">' +
-            '<label>' + this.loc.color.labelCustom + '</label>' +
+            '<label id="color-point-custom-rgb-label" for="color-point-custom-rgb">' + this.loc.color.labelCustom + '</label>' +
             '</div>' +
             '<div class="custom-colors"></div>' +
             '</div>' +
@@ -151,7 +150,7 @@ Oskari.clazz.define(
             '<div class="colorcolumn22"></div>' +
             '</div>' +
             '</div>');
-        this.templateColorSource = jQuery('<input type="checkbox" name="colorInput" value = "custom" class="color-source">');
+        this.templateColorSource = jQuery('<input type="checkbox" name="colorInput" value = "custom" class="color-source" id="color-point-custom-rgb">');
         this.templateColorValue = jQuery('<label class="color-label"></label><br><input type="text" name="color-input" value="0" disabled="disabled" class="custom-color">');
         this.templateSizerValue = jQuery('<div class="sizer-value"></div>');
         this.templateMessage = jQuery('<div class = "message"><label class="message-label"></label><div class="field"><input type="text" name="message-text" class="message-text"/></div></div>');
@@ -292,7 +291,7 @@ Oskari.clazz.define(
                         }
                         jQuery('#' + activeCell + 'ColorCell').css('border', '1px solid #000000');
                     }
-                    me.values.color = me.creator.rgbToHex(this.style.backgroundColor);
+                    me.values.color = Oskari.util.rgbToHex(this.style.backgroundColor);
                     me.activeColorCell = cellIndex;
                     if (cellIndex < 10) {
                         cellIndex = '0' + cellIndex.toString();
@@ -355,7 +354,7 @@ Oskari.clazz.define(
             // if the color is not picked from selection, it must be users own color
             // add color values to the input fields
             if (!statedChosenColor) {
-                var rgb = me.creator.hexToRgb(me.values.color);
+                var rgb = Oskari.util.hexToRgb(me.values.color);
 
                 dialogContent.find('input.custom-color.custom-red-value').val(rgb.r);
                 dialogContent.find('input.custom-color.custom-green-value').val(rgb.g);
@@ -386,6 +385,12 @@ Oskari.clazz.define(
             });
 
             this._updatePreview(dialogContent);
+            var saveButtonHandler = function () {
+                me.renderDialog.close();
+                if (me.saveCallback) {
+                    me.saveCallback();
+                }
+            };
 
             // Optional dot message
             if (this.messageEnabled) {
@@ -398,11 +403,7 @@ Oskari.clazz.define(
                 });
                 input.keypress(function (evt) {
                     if (evt.keyCode === 13) {
-                        if (me.saveButtonHandler !== null) {
-                            me.saveButtonHandler();
-                        } else {
-                            me.renderDialog.close();
-                        }
+                        saveButtonHandler();
                     }
                 });
                 messageContainer.insertAfter(dialogContent.find('div.preview'));
@@ -410,16 +411,7 @@ Oskari.clazz.define(
 
             var saveBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.SaveButton');
             saveBtn.addClass('primary showSelection');
-            if (this.saveButtonHandler !== null ){
-                saveBtn.setHandler(this.saveButtonHandler);
-            } else {
-                saveBtn.setHandler(function () {
-                    me.renderDialog.close();
-                    if (me.saveCallback) {
-                        me.saveCallback();
-                    }
-                });
-            }
+            saveBtn.setHandler(saveButtonHandler);
             this.saveButton = saveBtn;
 
             var cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.CancelButton');
@@ -451,6 +443,11 @@ Oskari.clazz.define(
             return this.renderDialog;
         },
 
+        /**
+         * @method setSaveHandler
+         * Sets a user defined handler for the save button
+         * @param {function} handler Save button handler
+         */
         setSaveHandler: function (param) {
             this.saveCallback = param;
         },
@@ -474,18 +471,6 @@ Oskari.clazz.define(
                         container.css('border', '1px solid');
                     }
                 }
-            }
-        },
-
-        /**
-         * @method setSaveHandler
-         * Sets a user defined handler for the save button
-         * @param {function} handler Save button handler
-         */
-        setSaveHandler: function(handler) {
-            this.saveButtonHandler = handler;
-            if (this.saveButton !== null) {
-                this.saveButton.setHandler(handler);
             }
         },
 

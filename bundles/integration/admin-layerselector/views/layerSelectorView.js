@@ -48,9 +48,6 @@ define([
              */
             render: function () {
                 this.el.html(this.appTemplate);
-                // TODO this is empty rendering for inspire tab - instead, we should render
-                // somekind of notification that we are wating for data.
-                // this._renderLayerGroups(null, 'inspire');
             },
 
             /**
@@ -80,7 +77,7 @@ define([
             },
             removeLayer : function(layerId) {
                 // removing layer from the main collection
-                // layer groups monitor the main collection and update 
+                // layer groups monitor the main collection and update
                 // their state based on changes to the main collection
                 var models = this.instance.models.layers;
                 var layer = models.get(layerId);
@@ -171,9 +168,6 @@ define([
                 // render organizations
                 this._renderLayerGroups(this.userGisDataTabModel, 'userGisData');
 
-                // FIXME: not really comfortable with this but need 
-                // the references on layer forms and instance is available
-                // maybe create a service to store these?
 //                this.instance.models.inspire = this.inspireTabModel;
 //                this.instance.models.organization = this.organizationTabModel;
                 this.instance.models.userThemes = this.userThemesTabModel;
@@ -187,8 +181,6 @@ define([
 				jQuery('.tab-content.userGisData').hide();
 
                 // Check that data for classes is fetched
-                // FIXME we shouldn't need to do this everytime, just once?
-                //console.log("Getting inspire themes and map layer classes");
 //                this.inspireTabModel.getClasses('getInspireName');
 //                this.organizationTabModel.getClasses('getOrganizationName');
                 this.userThemesTabModel.getClasses();
@@ -213,14 +205,13 @@ define([
                 target.parent().addClass('active');
 
                 // change focus and visibility
-                // TODO: part of this should be done through CSS classes
-                /*if (type == 'inspire') {
+                if (type === 'inspire') {
                     jQuery('.tab-content.organization').hide();
                     jQuery('.tab-content.userThemes').hide();
                     jQuery('.tab-content.inspire').show();
                     jQuery('.tab-content.inspire').find('.admin-filter-input').focus();
                     this.selectedType = type;
-                } else if (type == 'organization') {
+                } else if (type === 'organization') {
                     jQuery('.tab-content.inspire').hide();
                     jQuery('.tab-content.userThemes').hide();
                     jQuery('.tab-content.organization').show();

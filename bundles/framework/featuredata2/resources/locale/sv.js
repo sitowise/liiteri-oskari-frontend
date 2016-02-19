@@ -1,47 +1,51 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "sv",
     "key": "FeatureData2",
     "value": {
         "title": "Objektuppgifter",
         "desc": "",
-        "loading": "Laddar ned",
+        "loading": "Laddar…",
         "showmore": "Visa",
-        "nodata": "Kartlagren du valt saknar uppgifter om objekt.",
+        "nodata": "Valda kartlager innehåller inga attributdata.",
         "featureNameAll": "Datatyp",
         "errorscale": "Uppgifter om objekt kan inte visas på denna skalnivå. Byt skalnivå.",
-        "errordata": "Fel i data från servern. Flytta något på kartan för att uppdatera.",
-        "columnSelectorTooltip": "Visa kolumner",
-        "popup": {
+        "errordata": "Fel i data från servern. Flytta lite på kartan för att uppdatera den.",
+        "columnSelectorTooltip": "Välj synliga kolumner",
+        "featureDataPopup": "Summa värden",
+        "selectionTools": {
             "title": "Markera objekt på kartan",
             "instructions": " ",
+            "selectFromTop": "Välj från topplager",
+            "selectAll": "Välj från alla lagern",
             "link": {
-                "title": "välja mer"
+                "title": "Välj fler funktioner"
             },
             "button": {
-                "cancel": "Avbryt",
+                "cancel": "Stäng",
                 "empty": "Ta bort valda objekt",
-                "show": "Visa",
+                "show": "Visa funktioner",
                 "close": "Stäng",
                 "edit": "Redigera"
             },
             "tools": {
                 "point": {
-                    "tooltip": "Lägg punkt"
+                    "tooltip": "Lägg en punkt på kartan."
                 },
                 "line": {
-                    "tooltip": "Lägg rad"
+                    "tooltip": "Lägg till en linje på kartan."
                 },
                 "polygon": {
-                    "tooltip": "Lägg polygon"
+                    "tooltip": "Lägg till ett område på kartan."
                 },
                 "square": {
-                    "tooltip": "Lägg kvadrat"
+                    "tooltip": "Lägg ett rektangulärt område på kartan."
                 },
                 "circle": {
-                    "tooltip": "Lägg cirkel"
+                    "tooltip": "Lägg ett cirkulärt område på kartan."
                 },
                 "select": {
-                    "tooltip": "Markera objekt"
+                    "tooltip": "Välj funktioner"
                 }
             }
         },
@@ -49,38 +53,38 @@ Oskari.registerLocalization({
             "style": "Stil",
             "show": "Visa",
             "hide": "Göm",
-            "hidden": "Kartan är tillfälligt gömd.",
+            "hidden": "Kartlagret är tillfälligt dolt.",
             "out-of-scale": "Data som ingår i detta kartlager kan inte visas på den valda skalnivån.",
             "move-to-scale": "Gå till en lämplig skalnivå.",
             "out-of-content-area": "Detta kartlager saknar innehåll vid dessa koordinater.",
-            "move-to-content-area": "Lokalisera",
+            "move-to-content-area": "Flytta till en lämplig plats.",
             "description": "Beskrivning",
-            "object-data": "Objektuppgifter",
+            "object-data": "Objektdata",
             "rights": {
                 "notavailable": "Får inte publiceras.",
-                "guest": "Logga in för att avskilja och inbädda detta kartlager.",
+                "guest": "Logga in för att publicera kartlagret i en inbäddad karta.",
                 "loggedin": "Får publiceras",
                 "official": "Får publiceras för myndighetsbruk.",
-                "need-login": "Du måste logga in.",
+                "need-login": "Du måste logga in för att publicera kartlagret i en inbäddad karta.",
                 "can_be_published_by_provider": {
-                    "label": "Får publiceras av dataproducenter",
+                    "label": "Får publiceras av dataleverantör",
                     "tooltip": "För att publicera detta kartlager krävs dataproducenträttigheter. Om du är dataproducent, kontakta Paikkatietoikkunas stödtjänst och be om publiceringsrättigheter."
                 },
                 "can_be_published": {
                     "label": "Får publiceras",
-                    "tooltip": "Kartlagret får publiceras i ett inbäddat kartfönster utan att begränsa antalet användare."
+                    "tooltip": "Kartlagret får publiceras i ett inbäddat kartfönster. Gränsen för användningen är inte begränsad"
                 },
                 "can_be_published_map_user": {
                     "label": "Får publiceras",
-                    "tooltip": "Kartlagret får publiceras i ett inbäddat kartfönster. Antalet användare per vecka kan vara begränsat."
+                    "tooltip": "Kartlagret får publiceras i ett inbäddat kartfönster. Gränsen för användningen kan vara begränsad."
                 },
                 "no_publication_permission": {
                     "label": "Får inte publiceras.",
-                    "tooltip": "Dataproducenten har inte beviljat tillstånd att publicera kartlagret i ett inbäddat kartfönster."
+                    "tooltip": "Kartlagret kan inte publiceras i en inbäddad karta. Uppgiftslämnaren har inte tillåtelse till det."
                 },
                 "can_be_published_by_authority": {
                     "label": "Får publiceras",
-                    "tooltip": "Kartlagret får publiceras i ett inbäddat kartfönster utan användningsbegränsningar."
+                    "tooltip": "Kartlagret får publiceras i ett inbäddat kartfönster. Gränsen för användningen är inte begränsad"
                 }
             },
             "tooltip": {
@@ -90,29 +94,29 @@ Oskari.registerLocalization({
             },
             "filter": {
                 "title": "Filter",
-                "description": "Välj objekt från analyslager:",
+                "description": "Välj funktionerna från kartlagret:",
                 "cancelButton": "Avbryt",
                 "clearButton": "Töm filter",
                 "refreshButton": "Uppdatera filter",
-                "addFilter": "Tilllägg en ny filter",
-                "removeFilter": "Ta bort en filter",
-                "bbox": { 
-                    "title": "Filter på grund av kartvyn", 
-                    "on": "Ta med endast objekt som syns på kartvyn.", 
-                    "off": "Ta med alla objekt." 
+                "addFilter": "Lägg till ett nytt filter",
+                "removeFilter": "Ta bort filtret",
+                "bbox": {
+                    "title": "Kartvy filter",
+                    "on": "Endast funktionen syns på kartvyn.",
+                    "off": "Alla funktioner."
                 },
-                "clickedFeatures": { 
-                    "title": "Filter på grund av objektval", 
-                    "label": "Ta med endast objekt utvalda på kartan." 
+                "clickedFeatures": {
+                    "title": "Filter på grund av objektval",
+                    "label": "Endast de funktioner som valts på kartan."
                 },
                 "values": {
-                    "title": "Filter på grund av attribut",
-                    "placeholders": { 
-                        "case-sensitive": "Bokstavsstorlek verkar på val.", 
-                        "attribute": "Attribut", 
-                        "boolean": "Logisk operator", 
-                        "operator": "Operator", 
-                        "attribute-value": "Värde" 
+                    "title": "Filtrera funktionerna efter attributdata",
+                    "placeholders": {
+                        "case-sensitive": "Filtret är skiftlägeskänsligt.",
+                        "attribute": "Attribut",
+                        "boolean": "Logisk operatör",
+                        "operator": "Operatör",
+                        "attribute-value": "Värde"
                     },
                     "equals": "är lika med",
                     "like": "är ungefär lika med",
@@ -123,24 +127,30 @@ Oskari.registerLocalization({
                     "greaterThanOrEqualTo": "är större än eller lika med",
                     "lessThanOrEqualTo": "är mindre än eller lika med"
                 },
-                "aggregateAnalysisFilter": { 
-                    "addAggregateFilter": "Välj ett statistiskt mått.", 
-                    "aggregateValueSelectTitle": "Använd ett statistiskt mått på analys", 
-                    "selectAggregateAnalyse": "Välj en analys för statistiska mått", 
-                    "selectIndicator": "Välj en indikator", 
-                    "selectReadyButton": "Färdig", 
-                    "getAggregateAnalysisFailed": "Statistiska måttet kunde inte hitttas.", 
-                    "noAggregateAnalysisPopupTitle": "Analyslager kunde inte hittas.", 
-                    "noAggregateAnalysisPopupContent": "Du har gjort inga analys för statistiska mått. Du kan göra dem med analys funktion och efter det använda det med filter." 
+                "aggregateAnalysisFilter": {
+                    "addAggregateFilter": "Välj det sammanlagda värdet",
+                    "aggregateValueSelectTitle": "Använd det sammanlagda värdet i filtret",
+                    "selectAggregateAnalyse": "Välj den sammanlagda analysen",
+                    "selectIndicator": "Välj indikatorn",
+                    "selectReadyButton": "Färdig",
+                    "getAggregateAnalysisFailed": "De aggregerade uppgifterna kunde inte hittas.",
+                    "noAggregateAnalysisPopupTitle": "Den sammanlagda analysen hittade inte.",
+                    "noAggregateAnalysisPopupContent": "Du har inte gjort en sammanlagd analys. Du kan skapa dina egna aggregerade uppgifter från analysfunktion och sedan använda värdena i filtrering."
                 },
-                "validation": { 
-                    "title": "Uppdatering av filter misslyckades beroende av följande orsaker: ", 
-                    "attribute_missing": "The attribut finns inte.", 
-                    "operator_missing": "Operator finns inte.", 
-                    "value_missing": "Värde finns inte.", 
-                    "boolean_operator_missing": "Logisk operator finns inte." 
+                "validation": {
+                    "title": "Uppdatering av filter misslyckades beroende av följande orsaker:",
+                    "attribute_missing": "Attributet saknas.",
+                    "operator_missing": "Operatören saknas.",
+                    "value_missing": "Värdet saknas.",
+                    "boolean_operator_missing": "Den logiska operatören saknas."
                 }
             }
+        },
+        "gridFooter": {
+            "aggregateColumnField": "Antal",
+            "noDataMessage": "Antal = Antal utan skyddad objekt",
+            "noDataCommonMessage": "Antal = Antal utan skyddad objekt"
         }
     }
-});
+}
+);

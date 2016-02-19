@@ -3,17 +3,18 @@ Oskari.registerLocalization(
     "lang": "fi",
     "key": "MapWfs2",
     "value": {
-        "title": "MapWfs2",
+        "title": "Vektoritasojen ylläpito",
         "desc": "",
-        "object-data": "Kohdetiedot",
         "default-style": "Oletustyyli",
         "own-style": "Oma tyyli",
+        "refresh": "Päivitä",
+        "refresh_title": "Päivitä vektoritasot, jotka eivät päivity automaattisesti kartalla.",
         "tile": {
-            "title": "MapWfs2"
+            "title": "Vektoritasojen (WFS) yläpito"
         },
         "flyout": {
-            "title": "MapWfs2",
-            "message": "MapWfs2"
+            "title": "Vektoritasojen (WFS) yläpito",
+            "message": "Vektoritasojen (WFS) ylläpito"
         },
         "error": {
             "title": "Virhe",
@@ -27,6 +28,10 @@ Oskari.registerLocalization(
             "features_parsing_failed": "Tason ({layer}) featureiden käsittely epäonnistui.",
             "wfs_image_parsing_failed": "Image parsing of WFS layer {layer} failed",
             "arcgis_image_parsing_failed": "Image parsing of REST layer {layer} failed"
+        },
+        "information": {
+            "title": "Kohdetietojen esittäminen",
+            "info": "Osa valituista vektoritasoista (WFS) ei päivity automaattisesti. Zbr/><br/> Valitse haluamasi alue kartalta ja klikkaa Päivitä-painiketta kartalla.<br/><br/>Klikkaa Kohdetiedot nähdäksesi tason kohdetiedot."
         },
         "button": {
             "cancel": "Peruuta",

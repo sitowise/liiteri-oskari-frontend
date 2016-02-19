@@ -26,6 +26,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
          */
         this.mapDivId = 'mapdiv';
         this.contentMapDivId = 'contentMap';
+        this.resizeTimer = null;
     }, {
         getName: function () {
             return this.__name;
@@ -53,6 +54,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
             return this.sandbox;
         },
 
+        /**
+         * @method  @public adjustMapSize adjust map size
+         */
         adjustMapSize: function () {
             var me = this;
 
@@ -62,16 +66,19 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
                     dataContent = jQuery('.oskariui-left'),
                     dataContentHasContent = dataContent.length && !dataContent.is(':empty'),
                     dataContentWidth = dataContent.width(),
-                    dataContentInlineWidth = dataContent.length ? dataContent[0].style.width : '',
                     mapContainer = contentMap.find('.oskariui-center'),
                     mapDiv = jQuery('#' + me.mapDivId),
                     mapHeight = jQuery(window).height(),
-                    mapWidth = contentMap.width();
+                    mapWidth = contentMap.width(),
+                    sidebar = jQuery('#sidebar:visible'),
+                    statsgrid = jQuery('.oskari-view.statsgrid:visible'),
+                    maxWidth = jQuery(window).width()-sidebar.width()-statsgrid.width(),
+                    mapTools = jQuery('#maptools:visible');
 
                 contentMap.height(mapHeight);
 
                 var toolbar = contentMap.find(
-                    '.oskariui-menutoolbar:visible'
+                    '#menutoolbar:visible'
                 );
                 if (toolbar.length > 0) {
                     mapHeight -= toolbar.height();
@@ -88,12 +95,20 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
                     dataContent.addClass('oskari-closed');
                 }
 
-                // HACKHACK don't set widths if we have percentages there...
-                if (!dataContentInlineWidth ||
-                        dataContentInlineWidth.indexOf('%') === -1) {
-                    mapContainer.width(mapWidth);
-                    //mapDiv.width(mapWidth);
+                if(contentMap.hasClass('oskari-map-window-fullscreen')){
+                    maxWidth += mapTools.width();
+                    maxWidth += sidebar.width();
+                    var position = sidebar.position();
+                    if(position && position.left){
+                        maxWidth += position;
+                    }
                 }
+
+                if(mapWidth>maxWidth){
+                    mapWidth = maxWidth;
+                }
+
+                mapContainer.width(mapWidth);
 
                 // notify map module that size has changed
                 me.updateSize();
@@ -134,28 +149,29 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
                     .height(me.conf.size.height);
                 // TODO check if we need to set mapDiv size at all here...
                 jQuery('#' + me.mapDivId).height(me.conf.size.height);
-            } else {
-                // react to window resize with timer so app stays responsive
-                var resizeTimer;
-                jQuery(window).resize(function () {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(
-                        function () {
-                            me.adjustMapSize();
-                        },
-                        100
-                    );
-                });
-
-                me.adjustMapSize();
             }
 
+            // react to window resize with timer so app stays responsive
+            jQuery(window).resize(function () {
+                clearTimeout(me.resizeTimer);
+                me.resizeTimer = setTimeout(
+                    function () {
+                        me.adjustMapSize();
+                    },
+                    100
+                );
+            });
+
+            
 
             module.start(me.getSandbox());
 
             if (!me.nomaprender) {
                 map.render(me.mapDivId);
             }
+
+            me.adjustMapSize();
+            
             // startup plugins
             if (me.conf.plugins) {
                 var plugins = this.conf.plugins,
@@ -163,11 +179,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
 
                 for (i = 0; i < plugins.length; i += 1) {
                     try {
-                        // FIXME this is prolly the wrong place for getConfig...
-                        // I _think_ plugins contains plugin definitions, not plugin instances...
                         plugins[i].instance = Oskari.clazz.create(
                             plugins[i].id,
-                            plugins[i].config || (plugins[i].getConfig ? plugins[i].getConfig() : {}),
+                            plugins[i].config || {},
                             plugins[i].state
                         );
                         module.registerPlugin(plugins[i].instance);
@@ -386,16 +400,26 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
          *
          */
         _handleProjectionDefs: function (defs) {
-            // ensure static projections are defined
-            Proj4js.defs = {
+            var defaultDefs = {
                 'EPSG:3067': '+proj=utm +zone=35 +ellps=GRS80 +units=m +no_defs',
                 'EPSG:4326': '+title=WGS 84 +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
             };
 
-            // use given defs instead
-            if (defs) {
-                Proj4js.defs = defs;
-            }
+            // OL3 uses proj4
+            if(window.proj4) {
+                // ensure static projections are defined
+                jQuery.each(defs || defaultDefs, function(srs, defs) {
+                    window.proj4.defs(srs, defs);
+                });
+            } 
+            // OL2 uses Proj4js
+            else {
+                if(!Proj4js) {
+                    window.Proj4js = {};
+                }
+                // ensure static projections are defined
+                Proj4js.defs = defs || defaultDefs;
+            }            
         },
 
         /**
@@ -424,7 +448,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
 
         /**
          * @private @method _createServices
-         * Setup services for this application. 
+         * Setup services for this application.
          * Mainly Oskari.mapframework.service.MapLayerService, but also hacks in
          * WMTS support and if conf.disableDevelopmentMode == 'true' -> disables
          * debug messaging and initializes
@@ -488,9 +512,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
                 mapmodule = me.getMapModule(),
                 mapModuleName = mapmodule.getName(),
                 rbAdd,
-                rbOpacity,
-                rbVis,
-                rbStyle,
                 len,
                 i,
                 layer;
@@ -507,46 +528,32 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapfull.MapFullBundleInstance',
                 );
             }
 
-            me.getSandbox().syncMapState(true);
+            // mapmodule needed to set also param, because without it max zoomlevel check not working
+            me.getSandbox().syncMapState(true, mapmodule);
 
             // setting state
             if (state.selectedLayers) {
                 rbAdd = me.getSandbox().getRequestBuilder('AddMapLayerRequest');
-                rbOpacity = me.getSandbox().getRequestBuilder(
-                    'ChangeMapLayerOpacityRequest'
-                );
-                rbVis = me.getSandbox().getRequestBuilder(
-                    'MapModulePlugin.MapLayerVisibilityRequest'
-                );
-                rbStyle = me.getSandbox().getRequestBuilder(
-                    'ChangeMapLayerStyleRequest'
-                );
+
                 len = state.selectedLayers.length;
                 for (i = 0; i < len; i += 1) {
                     layer = state.selectedLayers[i];
+
+                    var oskariLayer = me.getSandbox().findMapLayerFromAllAvailable(layer.id);
+                    if(oskariLayer) {
+                        oskariLayer.setVisible(layer.hidden !== true);
+
+                        if (layer.opacity || layer.opacity === 0) {
+                            oskariLayer.setOpacity(layer.opacity);
+                        }
+                        if (layer.style) {
+                            oskariLayer.selectStyle(layer.style);
+                        }
+                    }
                     me.getSandbox().request(
                         mapModuleName,
                         rbAdd(layer.id, true)
                     );
-                    me.getSandbox().request(
-                        mapModuleName,
-                        rbVis(
-                            layer.id,
-                            layer.hidden !== true
-                        )
-                    );
-                    if (layer.style) {
-                        me.getSandbox().request(
-                            mapModuleName,
-                            rbStyle(layer.id, layer.style)
-                        );
-                    }
-                    if (layer.opacity || layer.opacity === 0) {
-                        me.getSandbox().request(
-                            mapModuleName,
-                            rbOpacity(layer.id, layer.opacity)
-                        );
-                    }
                 }
             }
 

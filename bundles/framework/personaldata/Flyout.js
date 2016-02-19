@@ -110,10 +110,37 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.Flyout',
                 flyout = jQuery(this.container), // clear container
                 tabId,
                 tab,
-                panel;
+                panel,
+                notLoggedIn = this.instance.getLocalization('notLoggedIn'),
+                notLoggedInText = this.instance.getLocalization('notLoggedInText'),
+                notLoggedInFullText = notLoggedIn,
+                conf = this.instance.conf,
+                lang = Oskari.getLang();
+
+
+            if(conf.logInUrl) {
+                if(typeof conf.logInUrl === 'object') {
+                    var value = conf.logInUrl[lang];
+                    if(!value) {
+                        value = conf.logInUrl[Oskari.getDefaultLanguage()];
+                    }
+
+                    if(value) {
+                        notLoggedInText = '<a href="' + value + '">' + notLoggedInText + '</a>';
+                    }
+                }
+                else if(typeof conf.logInUrl === 'string') {
+                    notLoggedInText = '<a href="' + conf.logInUrl + '">' + notLoggedInText + '</a>';
+                }
+            }
+
+            notLoggedInFullText += '<br/><br/>' + notLoggedInText;
+
             flyout.empty();
+
             this.tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer',
-            this.instance.getLocalization('notLoggedIn'));
+                notLoggedInFullText);
+
             this.tabsContainer.insertTo(flyout);
 
             //if (!sandbox.getUser().isLoggedIn()) {
@@ -128,7 +155,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.Flyout',
                     panel.setId(tabId);
                     panel.setTitle(tab.getTitle());
                     tab.addTabContent(panel.getContainer());
-               
+
                     // binds tab to events
                     if (tab.bindEvents) {
                         tab.bindEvents();

@@ -118,6 +118,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                         this.ready = true;
                     }
                 }
+                dummyLayer.setId(layerId);
+                dummyLayer.setOpacity(100);
+                var event = builder(featureIdList, dummyLayer, true);
+                this.sandbox.notifyAll(event);
             }
         },
         /**

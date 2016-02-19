@@ -1,8 +1,11 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "et",
     "key": "maplegend",
     "value": {
         "title": "Legendid",
-        "desc": ""
+        "desc": "",
+        "noLegendsText": "No map legends available"
     }
-});
+}
+);

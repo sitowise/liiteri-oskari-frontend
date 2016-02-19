@@ -44,10 +44,23 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
             "src": "../../../../bundles/framework/layerselector2/view/PublishedLayersTab.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/layerselector2/request/AddTabRequest.js"
+            "src": "../../../../bundles/framework/layerselector2/request/ShowFilteredLayerListRequest.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/layerselector2/request/AddTabRequestHandler.js"
+            "src": "../../../../bundles/framework/layerselector2/request/ShowFilteredLayerListRequestHandler.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/request/AddLayerListFilterRequest.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/request/AddLayerListFilterRequestHandler.js"
+        },
+        {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/request/AddTabRequest.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/request/AddTabRequestHandler.js"
         }, {
             "type": "text/css",
             "src": "../../../../bundles/framework/layerselector2/resources/css/style.css"
@@ -90,6 +103,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
             "type": "text/javascript",
             "src": "../../../../bundles/framework/layerselector2/resources/locale/fi.js"
         }, {
+            "lang": "fr",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/resources/locale/fr.js"
+        }, {
             "lang": "ka",
             "type": "text/javascript",
             "src": "../../../../bundles/framework/layerselector2/resources/locale/ka.js"
@@ -106,13 +123,33 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.LayerSelectorBund
             "type": "text/javascript",
             "src": "../../../../bundles/framework/layerselector2/resources/locale/hu.js"
         }, {
+            "lang": "is",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/resources/locale/is.js"
+        }, {
+            "lang": "it",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/resources/locale/it.js"
+        }, {
             "lang": "lv",
             "type": "text/javascript",
             "src": "../../../../bundles/framework/layerselector2/resources/locale/lv.js"
         }, {
+            "lang": "nb",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/resources/locale/nb.js"
+        }, {
             "lang": "nl",
             "type": "text/javascript",
             "src": "../../../../bundles/framework/layerselector2/resources/locale/nl.js"
+        }, {
+            "lang": "nn",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/resources/locale/nn.js"
+        }, {
+            "lang": "nn",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/layerselector2/resources/locale/nn.js"
         }, {
             "lang": "pl",
             "type": "text/javascript",

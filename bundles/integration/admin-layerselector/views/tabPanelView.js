@@ -21,9 +21,7 @@ define([
 
         return Backbone.View.extend({
             tagName: 'div',
-
             className: 'tab-content',
-
             /**
              * This object contains backbone event-handling.
              * It binds methods to certain events fired by different elements.
@@ -36,12 +34,9 @@ define([
                 "click .accordion-header": "toggleLayerGroup",
                 "click .admin-add-layer-btn": "toggleAddLayer",
                 "click .admin-add-layer-cancel": "hideAddLayer",
-
                 "click .admin-edit-grouping-btn": "toggleGroupingSettings",
                 "click .admin-add-grouping-cancel": "toggleGroupingSettings",
-
                 "click .admin-add-grouping-btn": "toggleAddLayerGrouping",
-
                 "click .admin-add-grouping-ok": "saveLayerGrouping",
                 "click .admin-remove-grouping": "removeLayerGrouping",
                 "click .show-add-class": "catchClicks"
@@ -63,7 +58,6 @@ define([
                 // listenTo will remove dead listeners, use it instead of on()
                 var me = this;
                 this.listenTo(this.layerGroupingModel, 'change:layerGroups', function() {
-                    //console.log('tabPanelView change groups', arguments);
                     me.render();
                 });
                 this.listenTo(this.layerGroupingModel, 'change:filteredLayerGroups', this.renderFiltered);
@@ -71,12 +65,8 @@ define([
                     // route adminAction from model to an ui element that View.js listens
                     this.$el.trigger(e);
                 });
-
                 this.addGroupingButtonTemplate = _.template(AddGroupingButtonTemplate);
                 this.addGroupingTemplate = _.template(AddGroupingTemplate);
-
-                //this.addInspireTemplate = _.template(AdminAddInspireTemplate);
-                //this.addOrganizationTemplate = _.template(AdminAddOrganizationTemplate);
                 this.addLayerBtnTemplate = _.template(AdminAddLayerBtnTemplate);
                 this.filterTemplate = _.template(FilterLayersTemplate);
                 this.tabTemplate = _.template(TabPanelTemplate);
@@ -122,7 +112,7 @@ define([
             },
 
             /**
-             * Setup supported layer types based on what this bundle can handle and 
+             * Setup supported layer types based on what this bundle can handle and
              * which layer types are supported by started application (layer models registered).
              *
              * NOTE! This must be done here so layer type specific templates have time to load.
@@ -130,19 +120,19 @@ define([
              * for existing layers
              */
             __setupSupportedLayerTypes : function() {
-                var me = this;
                 // generic list of layertypes supported
                 this.supportedTypes = [
                     {id : "wfslayer", localeKey : "wfs"},
                     {id : "wmslayer", localeKey : "wms"},
                     {id : "wmtslayer", localeKey : "wmts"},
-                    {id : "arcgislayer", localeKey : "arcgis", footer : false}
+                    {id : "arcgislayer", localeKey : "arcgis", footer : false},
+                    {id : "arcgis93layer", localeKey : "arcgis93", footer : false}
                 ];
                 // filter out ones that are not registered in current appsetup
                 var sandbox = this.instance.sandbox,
                     mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
-                this.supportedTypes = _.filter(this.supportedTypes, function(type){ 
-                    return mapLayerService.hasSupportForLayerType(type.id) 
+                this.supportedTypes = _.filter(this.supportedTypes, function(type){
+                    return mapLayerService.hasSupportForLayerType(type.id);
                 });
                 // setup templates for layer types/require only ones supported
                 _.each(this.supportedTypes, function(type) {
@@ -152,7 +142,7 @@ define([
                     var file = 'text!_bundle/templates/layer/' + type.id + 'SettingsTemplateHeader.html';
                     require([file], function(header) {
                         type.headerTemplate = _.template(header);
-                    }, function(err) {
+                    }, function() {
                         sandbox.printWarn('No admin header template for layertype: ' + type.id + " file was: " + file);
                     });
                 });
@@ -163,7 +153,7 @@ define([
                     var file = 'text!_bundle/templates/layer/' + type.id + 'SettingsTemplateFooter.html';
                     require([file], function(footer) {
                         type.footerTemplate = _.template(footer);
-                    }, function(err) {
+                    }, function() {
                         sandbox.printWarn('No admin footer template for layertype: ' + type.id + " file was: " + file);
                     });
                 });
@@ -253,7 +243,7 @@ define([
                     // grouping add panel
                     var newGroup = this.layerGroupingModel.getTemplateGroup();
                     var btnConfig = {};
-                    if (this.options.tabId == 'inspire') {
+                    if (this.options.tabId === 'inspire') {
                         btnConfig.title = this.options.instance.getLocalization('admin').addInspire;
                         btnConfig.desc = this.options.instance.getLocalization('admin').addInspireDesc;
                     }
@@ -264,17 +254,8 @@ define([
                     }
                     var groupingPanelContainer = this.$el.find('.oskarifield');
                     groupingPanelContainer.append(this.addGroupingButtonTemplate({ loc: btnConfig }));
+
                     groupingPanelContainer.append(this.__createGroupingPanel(this.options.tabId, newGroup));
-
-
-
-                    /*// TODO: at some point it could be nice to filter layers also.
-                var selectedLayers = this.options.instance.sandbox.findAllSelectedMapLayers();
-                for(var i = 0; i < selectedLayers.length; ++i) {
-                    this.setLayerSelected(selectedLayers[i].getId(), true);
-                }                            
-                this.filterLayers(this.filterField.getValue());
-                */
 
                     // hide layers
                     this.$el.find('div.content').hide();
@@ -311,6 +292,7 @@ define([
                             }
                         }
                 };
+
                 // override some UI texts for inspire theme form
                 if(tabId === 'inspire') {
                     groupingConfig.title = adminLoc.addInspireName;
@@ -340,8 +322,8 @@ define([
                 e.stopPropagation();
                 var element = jQuery(e.currentTarget),
                     grouping = element.parents('.accordion-header');
-                // if there is no accordion-header 
-                if (grouping.length == 0) {
+                // if there is no accordion-header
+                if (grouping.length === 0) {
                     element.parents('.admin-add-class').removeClass('show-add-class');;
                 }
                 // if there is accordion header, toggle visibility of settings
@@ -362,7 +344,7 @@ define([
              *
              * @method hideGroupingSettings
              */
-            hideGroupingSettings: function (e) {
+            hideGroupingSettings: function () {
                 jQuery('.admin-add-class').removeClass('show-add-class');
             },
 
@@ -387,8 +369,6 @@ define([
              * @method toggleAddLayer
              */
             toggleAddLayer: function (e) {
-                //add layer
-                var me = this;
                 e.stopPropagation();
                 var element = jQuery(e.currentTarget),
                     layer = element.parent(),
@@ -488,7 +468,7 @@ define([
                     id : element.parents('.accordion').attr('lcid')
                 };
 
-                addClass.find('[id$=-name]').filter('[id^=add-class-]').each(function (index) {
+                addClass.find('[id$=-name]').filter('[id^=add-class-]').each(function () {
                     lang = this.id.substring(10, this.id.indexOf("-name"));
                     data["name_" + lang] = this.value;
                 });
@@ -530,28 +510,25 @@ define([
                    dialog.close();
                    me.layerGroupingModel.remove(groupId, function(err, info) {
                         if(info && info.responseText) {
-                            try {
-                                var obj = JSON.parse(info.responseText);
-                                if(obj.info && obj.info.code && loc.errors[obj.info.code]) {
-                                    me.__showDialog(loc.errors.title, loc.errors[obj.info.code], element);
-                                }
-                                return;
-                            } catch(ignored) {}
+                            var obj = JSON.parse(info.responseText);
+                            if(obj.info && obj.info.code && loc.errors[obj.info.code]) {
+                                me.__showDialog(loc.errors.title, loc.errors[obj.info.code], element);
+                            }
+                            return;
                         }
                         if(err) {
-                            // TODO: handle error
                             me._showDialog(me.instance.getLocalization('admin')['errorTitle'], err);
                             return;
                         }
                     });
                 });
-                
+
                 cancelBtn.setHandler(function() {
                    dialog.close();
                 });
 
                 dialog.show(me.instance.getLocalization('admin')['warningTitle'], confirmMsg, [btn, cancelBtn]);
-                dialog.makeModal();                
+                dialog.makeModal();
             },
             /**
             * @method _showDialog

@@ -4,7 +4,7 @@
  * Requests for a search to be made with the given query and provides
  * callbacks
  */
-Oskari.clazz.define('Oskari.mapframework.bundle.search.service.SearchService', 
+Oskari.clazz.define('Oskari.mapframework.bundle.search.service.SearchService',
 
 /**
  * @method create called automatically on construction
@@ -24,8 +24,7 @@ function (searchUrl) {
      * @method getQName
      * @return {String} fully qualified name for service
      */
-    getQName : function() {
-        return this.__qname;
+    getQName : function() { return this.__qname;
     },
     /** @static @property __name service name */
     __name : "SearchService",
@@ -38,12 +37,12 @@ function (searchUrl) {
     },
     /**
      * @method doSearch
-     * 
+     *
      * Makes the actual ajax call to search service implementation
 	 * @param {String}
 	 *            searchString the query to search with
 	 * @param {Function}
-	 *            onSuccess callback method for successful search 
+	 *            onSuccess callback method for successful search
 	 * @param {Function}
 	 *            onComplete callback method for search completion
      */
@@ -67,8 +66,31 @@ function (searchUrl) {
             error : onError,
             success : onSuccess
         });
-    }
-}, {
+    },
+        getSearchResult: function (params) {
+            var me = this;
+            success = function (response) {
+                var success = true,
+                    requestParameters = params,
+                    result = response;
+
+                var evt = Oskari.getSandbox().getEventBuilder('SearchResultEvent')(success, requestParameters, result);
+                Oskari.getSandbox().notifyAll(evt);
+            };
+            error = function (response) {
+                var success = false,
+                    requestParameters = params,
+                    result = response;
+
+                var evt = Oskari.getSandbox().getEventBuilder('SearchResultEvent')(success, requestParameters, result);
+                Oskari.getSandbox().notifyAll(evt);
+            };
+
+            me.doSearch(params.searchKey, success, error);
+        }
+},
+
+{
     /**
      * @property {String[]} protocol array of superclasses as {String}
      * @static

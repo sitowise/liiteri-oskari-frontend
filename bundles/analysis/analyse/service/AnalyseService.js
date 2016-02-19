@@ -39,7 +39,7 @@ Oskari.clazz.define(
         /**
          * @public @method sendAnalyseData
          * Sends the data to backend for analysis.
-         *         
+         *
          * @param {Object} data the data to send
          * @param {Function} success the success callback
          * @param {Function} failure the failure callback
@@ -249,7 +249,9 @@ Oskari.clazz.define(
             }
             if (layer) {
                 layer.setPropertyTypes(propertyJson.propertyTypes);
-                layer.setWpsLayerParams(propertyJson.wps_params);
+                if(propertyJson.wps_params) {
+                    layer.setWpsLayerParams(propertyJson.wps_params);
+                }
             }
         }
     }, {

@@ -27,6 +27,14 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
         me.progressSpinner = Oskari.clazz.create('Oskari.userinterface.component.ProgressSpinner');
         me.dataTable = null;
         me.datatableLocaleLocation = Oskari.getSandbox().getService('Oskari.liiteri.bundle.liiteri-ui.service.UIConfigurationService').getDataTablesLocaleLocation() + locale.datatablelanguagefile;
+        me._templates = {
+            table: jQuery('<table class="layer-rights-table"><thead></thead><tbody></tbody></table>'),
+            cellTh: jQuery('<th></th>'),
+            cellTd: jQuery('<td></td>'),
+            row: jQuery('<tr></tr>'),
+            checkBox: jQuery('<input type="checkbox" />'),
+            name: jQuery('<span class="layer-name"></span>')
+        };
     }, {
         /**
          * @method getName
@@ -171,7 +179,7 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 type: 'POST',
                 url: ajaxUrl + 'action_route=SaveLayerPermission',
                 lang: Oskari.getLang(),
-                timestamp: new Date().getTime(),               
+                timestamp: new Date().getTime(),
                 data: saveData,
                 success: function (response) {
                     if (response && response.error) {
@@ -252,15 +260,15 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 select = jQuery(this.container).find('select.admin-layerrights-role'),
                 option = select.find('option[value=' + role.id +']');
 
-            if (operation == 'remove') { 
-                option.remove(); 
-            } 
-            if (operation == 'update') { 
-                option.html(role.name); 
+            if (operation == 'remove') {
+                option.remove();
+            }
+            if (operation == 'update') {
+                option.html(role.name);
             }
             if (operation == 'add') {
                 select.append("<option value=" + role.id +">" + role.name + "</option>");
-            } 
+            }
         },
 
         /**
@@ -272,51 +280,54 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
          */
         createLayerRightGrid: function (columnHeaders, layerRightsJSON) {
             "use strict";
-            var table = '<table class="layer-rights-table">',
-                i = 0,
-                tr = 0,
-                layerRight = null,
-                header = null,
-                value = null;
+            var me = this,
+                table = me._templates.table.clone(),
+                thead = table.find('thead'),
+                tbody = table.find('tbody'),
+                service = this.instance.getSandbox().getService('Oskari.mapframework.service.MapLayerService'),
+                headerRow = me._templates.row.clone();
 
-            table += "<thead><tr>";
-            for (i  = 0; i < columnHeaders.length; i += 1) {
-                table += '<th>' + columnHeaders[i].name + '</th>';
-            }
-            table += '</tr></thead>';
+            // Create headers
+            jQuery.each(columnHeaders, function(index, header) {
+                var thCell = me._templates.cellTh.clone();
+                thCell.html(header.name);
+                headerRow.append(thCell);
+            });
+            thead.append(headerRow);
 
-            table += "<tbody>";
-            table += "</tbody>";
-            table += "</table>";
-
-                table += "<tr>";
-
+            // Create rows
+            jQuery.each(layerRightsJSON, function(index, layerRight) {
+                var layer = service.findMapLayer(layerRight.id),
+                    dataRow = me._templates.row.clone();
                 // lets loop through header
-                for (i = 0; i < columnHeaders.length; i += 1) {
-                    header = columnHeaders[i];
-                    //select input value based on arrangement of header columns
-                    value = layerRight[header.id];
-                    var tooltip = header.name;
+                jQuery.each(columnHeaders, function(index, header) {
+                    var value = layerRight[header.id],
+                        tooltip = header.name,
+                        dataCell = me._templates.cellTd.clone(),
+                        cell = null;
 
                     if (header.id === 'name') {
                         if(layer) {
                             tooltip = layer.getLayerType() + '/' + layer.getInspireName() + '/' + layer.getOrganizationName();
-                            //value = '<div class="layer-icon ' + layer.getIconClassname() + '"></div> ' + value;
                         }
-                        table += '<td><span class="layer-name" data-resource="' + layerRight.resourceName + 
-                            '" data-namespace="' + layerRight.namespace + 
-                            '" title="' + tooltip + 
-                            '">' + value + '</span></td>';
-                    } else if (value) {
-                        table += '<td><input type="checkbox" checked="checked" data-right="' + header.id + '" title="' + tooltip + '" /></td>';
+                        cell = me._templates.name.clone();
+                        cell.attr('data-resource', layerRight.resourceName);
+                        cell.attr('data-namespace', layerRight.namespace);
+                        cell.html(value);
                     } else {
-                        table += '<td><input type="checkbox" data-right="' + header.id + '" title="' + tooltip + '" /></td>';
+                        cell = me._templates.checkBox.clone();
+                        cell.attr('data-right', header.id);
+                        if(value){
+                            cell.attr('checked', 'checked');
+                        }
                     }
-                }
+                    cell.attr('title', tooltip);
+                    dataCell.append(cell);
+                    dataRow.append(dataCell);
+                });
+                tbody.append(dataRow);
+            });
 
-                table += "</tr>";
-            }
-            table += "</tbody></table>";
             return table;
         },
         /**
@@ -361,7 +372,6 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                     value = td.prop('checked');
 
                     if (cleanDataObj[right] !== value) {
-                        //console.log("Dirty value on " + right + ": " + cleanDataObj[right] + " : " + value);
                         dirty = true;
                     }
                     dataObj[right] = value;
@@ -370,17 +380,14 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 if (cleanDataObj.resourceName !== dataObj.resourceName) {
                     // Don't save stuff in the wrong place...
                     dirty = false;
-                    //console.err("Resource name mismatch: " + cleanDataObj.resourceName + ", " + dataObj.resourceName);
                 }
 
                 if (cleanDataObj.namespace !== dataObj.namespace) {
                     // Don't save stuff in the wrong place...
                     dirty = false;
-                    //console.err("Namespace mismatch: " + cleanDataObj.namespace + ", " + dataObj.namespace);
                 }
 
                 if (dirty) {
-                    //console.log(dataObj);
                     data.push(dataObj);
                 }
             }
@@ -563,13 +570,15 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             "use strict";
             var externalIdSelect = jQuery(this.container).find("select.admin-layerrights-role"),
                 a,
-                d;
+                d,
+                rightsLoc = this.instance._localization.rights;
+
             externalIdSelect.html("");
             if (externalType !== "0") {
                 if (selectedId !== "0") {
-                    a = '<option value="0" >-- Valitse tunniste --</option>';
+                    a = '<option value="0" >-- ' + rightsLoc.selectValue + ' --</option>';
                 } else {
-                    a = '<option value="0" selected="selected">-- Valitse tunniste --</option>';
+                    a = '<option value="0" selected="selected">-- ' + rightsLoc.selectValue + ' --</option>';
                 }
                 for (d = 0; d < result.external.length; d += 1) {
                     if (result.external[d].id === selectedId) {

@@ -301,7 +301,6 @@ Oskari.clazz.define(
             popup.events.on({
                 'click': function (evt) {
                     var link = jQuery(evt.target || evt.srcElement);
-
                     if (link.hasClass('olPopupCloseBox')) { // Close button
                         me.close(id);
                     } else { // Action links
@@ -313,6 +312,9 @@ Oskari.clazz.define(
                         if (contentData[i] && contentData[i].actions && contentData[i].actions[text]) {
                             contentData[i].actions[text]();
                         }
+                    }
+                    if(!link.is('a') || link.parents('.getinforesult_table').length) {
+                        evt.stopPropagation();
                     }
                 },
                 scope: popup
@@ -476,13 +478,13 @@ Oskari.clazz.define(
                 size = me.getMap().getCurrentSize(),
                 width = size.w,
                 height = size.h;
-            // if infobox would be out of screen 
+            // if infobox would be out of screen
             // -> move map to make infobox visible on screen
             var panx = 0,
                 pany = 0,
                 popup = jQuery('.olPopup'),
                 infoboxWidth = popup.width() + 128, // add some safety margin here so the popup close button won't got under the zoombar...
-                infoboxHeight = popup.height() + 128; //300; 
+                infoboxHeight = popup.height() + 128; //300;
 
             if (pixels.x + infoboxWidth > width) {
                 panx = width - (pixels.x + infoboxWidth);
@@ -514,7 +516,11 @@ Oskari.clazz.define(
          * @param {String} id popup id
          */
         _changeColourScheme: function (colourScheme, div, id) {
-            div = div || jQuery('div#' + id);
+            if (id) {
+                div = div || jQuery('div#' + id) || jQuery('.olPopup:visible');
+            } else {
+                div = div || jQuery('.olPopup:visible');
+            }
 
             if (!colourScheme || !div) {
                 return;

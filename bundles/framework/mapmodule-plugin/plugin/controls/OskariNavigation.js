@@ -1,10 +1,10 @@
 /**
-The draw method has been copy/pasted from OpenLayers.Control.Navigation and custom code hooks have been 
-added to it as needed to get Oskari events sent from map movements and hovering. Kinetic movement has been disabled since it 
+The draw method has been copy/pasted from OpenLayers.Control.Navigation and custom code hooks have been
+added to it as needed to get Oskari events sent from map movements and hovering. Kinetic movement has been disabled since it
 messes up location on Oskari.
 
 Note! Windows Phone pinch zoom requires fractionalZoom to be used and an additional css-class to be added
-to map div. 
+to map div.
 */
 OskariNavigation = OpenLayers.Class(OpenLayers.Control.Navigation, {
 
@@ -16,14 +16,12 @@ OskariNavigation = OpenLayers.Class(OpenLayers.Control.Navigation, {
         OpenLayers.Control.Navigation.prototype.initialize.apply(this, [bounds, options]);
     },
       /* @method setup */
-      setup : function(mapmodule) {
+    setup : function(mapmodule) {
         this.mapmodule = mapmodule;
         this.sandbox = this.mapmodule.getSandbox();
         this._hoverEventBuilder = this.sandbox.getEventBuilder('MouseHoverEvent');
         this._hoverEvent = this._hoverEventBuilder();
-        this._mapClickedBuilder = this.sandbox.getEventBuilder('MapClickedEvent');
-      },
-
+    },
 
     draw: function() {
         // disable right mouse context menu for support of right click events
@@ -41,32 +39,25 @@ OskariNavigation = OpenLayers.Class(OpenLayers.Control.Navigation, {
         var movementHook = function(actualmethod, ctx) {
             return function() {
                 var c = ctx || me;
-                actualmethod.apply(c, arguments);
+                var value = actualmethod.apply(c, arguments);
                 me.mapmodule.notifyMoveEnd();
-            };
-        };
-        var clickHook = function(actualmethod, ctx) {
-            return function() {
-                var c = ctx || me;
-                actualmethod.apply(c, arguments);
-                me.__sendMapClickEvent(arguments[0]);
+                return value;
             };
         };
 
-        var clickCallbacks = { 
-            'click': clickHook(this.defaultClick),
-            'dblclick': movementHook(this.defaultDblClick), 
-            'dblrightclick': movementHook(this.defaultDblRightClick) 
+        var clickCallbacks = {
+            'dblclick': movementHook(this.defaultDblClick),
+            'dblrightclick': movementHook(this.defaultDblRightClick)
         };
         // </custom hooking>
         var clickOptions = {
-            'double': true, 
+            'double': true,
             'stopDouble': true
         };
         this.handlers.click = new OpenLayers.Handler.Click(
             this, clickCallbacks, clickOptions
         );
-        
+
         this.dragPan = new OpenLayers.Control.DragPan(
             OpenLayers.Util.extend({
                 map: this.map,
@@ -87,7 +78,7 @@ OskariNavigation = OpenLayers.Class(OpenLayers.Control.Navigation, {
         var originalzoomBox = this.zoomBox.zoomBox;
         this.zoomBox.zoomBox = movementHook(originalzoomBox, this.zoomBox);
         // </custom hooking>
-        
+
         this.dragPan.draw();
         this.zoomBox.draw();
         var wheelOptions = this.map.fractionalZoom ? {} : {
@@ -129,7 +120,7 @@ OskariNavigation = OpenLayers.Class(OpenLayers.Control.Navigation, {
                     if(dpx < this.pixelTolerance) {
                         passes = false;
                     }
-                }           
+                }
                 return passes;
             }
         };
@@ -145,11 +136,5 @@ OskariNavigation = OpenLayers.Class(OpenLayers.Control.Navigation, {
         var lonlat = this.map.getLonLatFromViewPortPx(evt.xy);
         this._hoverEvent.set(lonlat.lon, lonlat.lat, true, evt.pageX, evt.pageY);
         this.sandbox.notifyAll(this._hoverEvent);
-    },
-    __sendMapClickEvent : function(evt) {
-        /* may be this should dispatch to mapmodule */
-        var lonlat = this.map.getLonLatFromViewPortPx(evt.xy),
-            event = this._mapClickedBuilder(lonlat, evt.xy.x, evt.xy.y);
-        this.sandbox.notifyAll(event);
     }
 });

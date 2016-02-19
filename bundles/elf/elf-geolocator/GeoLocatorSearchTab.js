@@ -1,7 +1,7 @@
 /**
  * Creates the UI for ELF Geonetwork search service and
  * adds it as a tab to the search bundle.
- * 
+ *
  * @class Oskari.elf.geolocator.GeoLocatorSeachTab
  */
 Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
@@ -18,7 +18,9 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         this.loc = instance.getLocalization('tab');
         this.templates = {};
         for (var t in this.__templates) {
-            this.templates[t] = jQuery(this.__templates[t]);
+            if(this.__templates.hasOwnProperty(t)) {
+                this.templates[t] = jQuery(this.__templates[t]);
+            }
         }
         this.resultsGrid = this.__initResultsGrid();
         this.progressSpinner = Oskari.clazz.create(
@@ -30,10 +32,6 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
                 +        '<div class="errors"></div>'
                 +        '<form>'
                 +            '<div class="search-fields"></div>'
-                +            '<div class="search-additionals">'
-                +                '<div class="additionals-title"></div>'
-                +                '<div class="input-fields"></div>'
-                +            '</div>'
                 +            '<div class="search-buttons">'
                 +            '<div class="commit">'
                 +                '<input type="submit" />'
@@ -51,9 +49,6 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
                 +        '<div class="search-results"></div>'
                 +    '</div>'
                 +'</div>',
-            button:  '<div class="geolocator-button">' +
-                '<input type="button" />' +
-                '</div>',
             addInput:
             '<div class="additional-input">' +
             '   <div class="controls">' +
@@ -73,6 +68,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
             '<label for="countries"></label>' +
             '<input id="countries">' +
             '</div>',
+            emptyDiv: '<div><br/></div>',
             result: '<div class="result"></div>'
         },
         /**
@@ -91,7 +87,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         },
         /**
          * Sends a request to the search bundle to add the UI as a tab.
-         * 
+         *
          * @method requestToAddTab
          */
         requestToAddTab: function () {
@@ -107,7 +103,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         /**
          * Initializes the tab content by creating the search fields
          * and binding functionality.
-         * 
+         *
          * @method __initContent
          * @private
          * @return {jQuery}
@@ -117,102 +113,30 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
                 container = this.templates.container.clone(),
                 searchUi = container.find('div.geolocator-search'),
                 resultsUi = container.find('div.geolocator-results'),
-                searchInput = Oskari.clazz.create(
-                    'Oskari.userinterface.component.FormInput',
-                    'elf-geolocator-search', this.sandbox),
-                regionInput = Oskari.clazz.create(
-                    'Oskari.userinterface.component.FormInput',
-                    'elf-geolocator-region', this.sandbox),
+                searchInput = Oskari.clazz.create('Oskari.userinterface.component.FormInput','elf-geolocator-search', this.sandbox),
+                regionInput = Oskari.clazz.create('Oskari.userinterface.component.FormInput','elf-geolocator-region', this.sandbox),
                 searchButton = searchUi.find('div.commit input[type="submit"]'),
-                countryInput = this.templates.countryAutoInput.clone();
-                geolocButton = this.templates.button.clone(),
-                normalCheck = this.templates.addInput.clone(),
-                regionCheck = this.templates.addInput.clone(),
-                fuzzyCheck = this.templates.addInput.clone(),
-                exonymCheck = this.templates.addInputCbx.clone(),
+                countryInput = this.templates.countryAutoInput.clone(),
                 backButton = resultsUi.find('div.header-results span.back');
-
-
 
             searchInput.setRequired(true, this.loc.errors.searchTermMissing);
             searchInput.addClearButton();
             searchInput.getField().addClass('search-field');
             searchInput.setLabel(this.loc.searchTitle);
             searchInput.setPlaceholder(this.loc.searchPlaceholder);
-
             regionInput.addClearButton();
             regionInput.getField().addClass('search-field');
             regionInput.setLabel(this.loc.regionTitle);
             regionInput.setPlaceholder(this.loc.regionPlaceholder);
-            regionInput.setEnabled(false);
+            regionInput.setEnabled(true);
 
             countryInput.find('label')
                 .text(this.loc.countryFilter);
 
-            var closureMagic = function (tool) {
-                return function () {
-                    if(tool.attr('id') === 'elf-geolocator-search-exonym') return;
-                    me.getContent()
-                        .find('div.input-fields')
-                        .find('input').removeAttr('checked');
-                    me.regionInput.setEnabled(tool.attr('id') === 'elf-geolocator-search-region');
-                    me.getContent().find('#countries').removeAttr('disabled');
-                    if (tool.attr('id') !== 'elf-geolocator-search-normal') me.getContent().find('#countries').attr('disabled', 'disabled');
-                    tool.attr('checked', 'checked');
-                };
-            };
-
-            normalCheck
-                .find('input').attr({
-                    'id': 'elf-geolocator-search-normal',
-                    'name': 'elf-geolocator-search-normal',
-                    'checked': 'checked',
-                    'title': this.loc.normalDesc
-                }).end()
-                .find('label')
-                    .attr('for', 'elf-geolocator-search-normal')
-                    .text(this.loc.normalTitle).end()
-                .change(closureMagic(normalCheck.find('input')));
-
-            regionCheck
-                .find('input').attr({
-                    'id': 'elf-geolocator-search-region',
-                    'name': 'elf-geolocator-search-region',
-                    'title': this.loc.restrictedDesc
-                }).end()
-                .find('label')
-                .attr('for', 'elf-geolocator-search-region')
-                .text(this.loc.restrictedTitle).end()
-                .change(closureMagic(regionCheck.find('input')));
-
-            fuzzyCheck
-                .find('input').attr({
-                    'id': 'elf-geolocator-search-fuzzy',
-                    'name': 'elf-geolocator-search-fuzzy',
-                    'title': this.loc.fuzzyDesc
-                }).end()
-                .find('label')
-                .attr('for', 'elf-geolocator-search-fuzzy')
-                .text(this.loc.fuzzyTitle).end()
-                .change(closureMagic(fuzzyCheck.find('input')));
-
-            exonymCheck
-                .find('input').attr({
-                    'id': 'elf-geolocator-search-exonym',
-                    'name': 'elf-geolocator-search-exonym',
-                    'title': this.loc.exonymDesc
-                }).end()
-                .find('label')
-                    .attr('for', 'elf-geolocator-search-exonym')
-                    .text(this.loc.exonymTitle).end();
-            searchButton
-                .val(this.loc.searchButton)
-                .on('click submit', function (e) {
+            searchButton.val(this.loc.searchButton).on('click submit', function (e) {
                     e.preventDefault();
                     var values = me.__getValues();
-
                     me.__removeErrors(container);
-
                     if (values.errors) {
                         me.__addErrors(values.errors);
                     } else {
@@ -222,41 +146,18 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
                     }
                 });
 
-            backButton
-                .text(this.loc.backButton)
-                .on('click', function (e) {
+            backButton.text(this.loc.backButton).on('click', function () {
                     resultsUi.hide();
                     searchUi.show();
-                });
-
-            geolocButton.find('input')
-                .attr('title', this.loc.geolocDesc)
-                .val(this.loc.geolocButton)
-                .on('click', function (e) {
-                    me.instance.startTool();
                 });
 
             container.find('div.search-fields')
                 .append(searchInput.getField())
                 .append(countryInput)
-                .append(regionInput.getField());
+                .append(this.templates.emptyDiv.clone()); // use later when data is available   .append(regionInput.getField());
 
             // Populate autocomplete countries
             me.__getCountries();
-
-
-            container.find('div.search-additionals')
-                .find('div.additionals-title')
-                    .text(this.loc.additionalsTitle)
-                    .end()
-                .find('div.input-fields')
-                    .append(normalCheck)
-                    .append(regionCheck)
-                    .append(fuzzyCheck)
-                    .append(exonymCheck);
-
-            container.find('div.search-buttons')
-                .append(geolocButton);
 
             resultsUi.find('div.header-results span.title')
                 .append(this.__getSearchResultsTitle());
@@ -269,15 +170,12 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
             this.searchInput = searchInput;
             this.regionInput = regionInput;
 
-
-
-
             return container;
         },
         /**
          * Returns the title for the search results.
          * Appends the result count to it if given.
-         * 
+         *
          * @method __getSearchResultsTitle
          * @private
          * @param  {Number} count
@@ -289,8 +187,12 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
             // Add search method to title (method might be changed in backend)
             if (method !== undefined && method !== null) {
                 for(var key in method[0]) {
-                    if (method[0][key] == 'fuzzy') title = this.loc.fuzzyResultsTitle;
-                    else if (method[0][key] == 'filter') title = this.loc.filterResultsTitle;
+                    if (method[0][key] === 'fuzzy') {
+                        title = this.loc.fuzzyResultsTitle;
+                    }
+                    else if (method[0][key] === 'filter') {
+                        title = this.loc.filterResultsTitle;
+                    }
                 }
             }
             if (count !== undefined && count !== null) {
@@ -303,7 +205,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
          * Returns the form values.
          * If there were validations errors the return object
          * has a key `errors`
-         * 
+         *
          * @method __getValues
          * @private
          * @return {Object}
@@ -323,29 +225,17 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
             values.country = container
                 .find('#countries').attr('country');
             }
-            values.normal  = container
-                .find('input[name=elf-geolocator-search-normal]')
-                .is(':checked');
-            values.filter  = container
-                .find('input[name=elf-geolocator-search-region]')
-                .is(':checked');
-            values.fuzzy  = container
-                .find('input[name=elf-geolocator-search-fuzzy]')
-                .is(':checked');
-            values.exonym = container
-                .find('input[name=elf-geolocator-search-exonym]')
-                .is(':checked');
 
             return values;
         },
         /**
          * Performs the search through the search service.
-         * 
+         *
          * @method __doSearch
          * @private
          * @param  {Object} values
          */
-        __doSearch: function (values) {
+        __doSearch: function(values) {
             var me = this;
 
             me.__beforeSearch();
@@ -354,7 +244,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
                 function (results) {
                     me.__handleSearchResult(results);
                 },
-                function (error) {
+                function () {
                     me.__handleSearchResult();
                 });
         },
@@ -365,19 +255,19 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
          * @private
          * @param  {Object} values
          */
-        __getCountries: function () {
+        __getCountries: function() {
             var me = this;
             this.instance.getSearchService().getCountries(me.countryUrl,
                 function (results) {
                     me.__handleCountryResult(results);
                 },
-                function (error) {
+                function () {
                     me.__handleCountryResult();
                 });
         },
         /**
          * Empties the search results div and starts the progress spinner.
-         * 
+         *
          * @method __beforeSearch
          * @private
          */
@@ -393,7 +283,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         },
         /**
          * Renders the search results or a notification of an error.
-         * 
+         *
          * @method __handleSearchResult
          * @private
          * @param  {Object} results
@@ -418,8 +308,9 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
          * @param  {Object} results
          */
         __handleCountryResult: function (results) {
-
-            if(jQuery.isEmptyObject(results)) return;
+            if(jQuery.isEmptyObject(results)) {
+                return;
+            }
 
             var container = this.getContent().find('div.geolocator-search');
 
@@ -434,16 +325,16 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
                     }
 
                 })
-                    .focus(function () {
+                    .focus(function (event) {
                         event.preventDefault();
                         container.find('#countries').val('');
                         container.find('#countries').autocomplete('search', '');
                     });
             });
         },
-/**
+        /**
          * Renders the search results to a div.
-         * 
+         *
          * @method __renderSearchResults
          * @private
          * @param  {Object} results
@@ -470,7 +361,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         },
         /**
          * Renders a message to the results div notifying of an error.
-         * 
+         *
          * @method __handleSearchError
          * @private
          * @param  {jQuery} container
@@ -482,7 +373,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         },
         /**
          * Initializes the Oskari grid for displaying the search results.
-         * 
+         *
          * @method __initResultsGrid
          * @private
          * @return {Oskari.userinterface.component.Grid}
@@ -495,17 +386,27 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
 
             grid.setVisibleFields(visibleFields);
 
-            grid.setColumnValueRenderer('name', function (name, data) {
-                var link = jQuery('<span class="elf-fake-link"></span>');
+            grid.setColumnValueRenderer('name', function(name, data) {
+                var nameTemplate = jQuery('<div class="nameColumn"></div>'),
+                    link = jQuery('<span class="elf-fake-link"></span>');
 
-                link.append(name).on('click', function (e) {
+                link.append(name).on('click', function() {
                     me.instance.resultClicked(data);
                 });
 
-                return link;
+                nameTemplate.append(link);
+
+                if (data.exonymNames) {
+                    _.forEach(data.exonymNames, function (name) {
+                        var listElement = jQuery('<li class="exonymList"></li>');
+                        listElement.html(name);
+                        nameTemplate.append(listElement);
+                    });
+                }
+                return nameTemplate;
             });
 
-            _.each(visibleFields, function (field) {
+            _.each(visibleFields, function(field) {
                 grid.setColumnUIName(field, me.loc.grid[field]);
             });
 
@@ -513,7 +414,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         },
         /**
          * Creates a model for the results grid containing the search results.
-         * 
+         *
          * @method __getGridModel
          * @private
          * @param  {Object} results
@@ -527,13 +428,15 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
 
             _.each(results, function (result) {
                 gridModel.addData({
+                    'exonymNames': result.exonymNames,
                     'id': result.id,
                     'name': result.name,
                     'village': result.village,
                     'type': result.type,
                     'rank': result.rank,
                     'lon': result.lon,
-                    'lat': result.lat
+                    'lat': result.lat,
+                    'zoomScale': result.zoomScale
                 });
             });
 
@@ -542,7 +445,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         /**
          * Displays the error messages in a div
          * and adds a class to the error input fields.
-         * 
+         *
          * @method __addErrors
          * @private
          * @param  {Object[]} errors
@@ -562,7 +465,7 @@ Oskari.clazz.define('Oskari.elf.geolocator.GeoLocatorSeachTab',
         /**
          * Empties the error div and removes the error class
          * from the input fields.
-         * 
+         *
          * @method __removeErrors
          * @private
          * @param  {jQuery} container

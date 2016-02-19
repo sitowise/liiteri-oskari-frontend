@@ -158,7 +158,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
          * Destroys the panel/removes it from document
          */
         destroy: function () {
-            if( !this.html){ 
+            if( !this.html){
               return;
             }
             this.html.remove();
@@ -174,7 +174,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
         },
         /**
          * Returns the header of the panel.
-         * 
+         *
          * @method getHeader
          * @return {jQuery} refrence to this panels header DOM element
          */

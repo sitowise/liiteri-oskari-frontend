@@ -36,9 +36,9 @@ module.exports = function (grunt) {
         },
         sprite: {
             options: {
-                iconDirectoryPath: '../applications/paikkatietoikkuna.fi/full-map/icons',
-                resultImageName: '../applications/paikkatietoikkuna.fi/full-map/icons/icons.png',
-                resultCSSName: '../applications/paikkatietoikkuna.fi/full-map/css/icons.css',
+                iconDirectoryPath: '../applications/sample/servlet/icons',
+                resultImageName: '../applications/sample/servlet/icons/icons.png',
+                resultCSSName: '../applications/sample/servlet/css/icons.css',
                 spritePathInCSS: '../icons'
             }
         },
@@ -51,14 +51,13 @@ module.exports = function (grunt) {
         },
         release: {
             options: {
-                configs: '../applications/paikkatietoikkuna.fi/full-map/minifierAppSetup.json,../applications/paikkatietoikkuna.fi/full-map_guest/minifierAppSetup.json,../applications/paikkatietoikkuna.fi/published-map/minifierAppSetup.json',
-                // ,../applications/parcel/minifierAppSetup.json
+                configs: '../applications/sample/servlet/minifierAppSetup.json',
                 defaultIconDirectoryPath: '../applications/default/icons/'
             }
         },
         buildApp: {
             options: {
-                applicationPaths: '../applications/paikkatietoikkuna.fi/full-map/,../applications/paikkatietoikkuna.fi/full-map_guest/,../applications/paikkatietoikkuna.fi/published-map/,../applications/parcel/',
+                applicationPaths: '../applications/sample/servlet/',
                 buildsetupconfigFileName: 'buildsetupconfig.json',
                 appsetupconfigFileName: 'appsetupconfig.json',
                 defaultIconDirectoryPath: '../applications/default/icons/'
@@ -74,7 +73,7 @@ module.exports = function (grunt) {
             ci: {
                 browsers: ['PhantomJS'],
                 proxies: {
-                    '/': 'http://dev.paikkatietoikkuna.fi/'
+                    '/': 'http://demo.oskari.org/'
                 },
                 reporters: ['junit'],
                 junitReporter: {
@@ -127,7 +126,13 @@ module.exports = function (grunt) {
         genL10nExcels: {
             target: {
                 expand: true,
-                src: ['../bundles/**/bundle/*/']
+                src: ['../bundles/*/*/']
+            }
+        },
+        genL10nEmptyExcels: {
+            target: {
+                expand: true,
+                src: ['../bundles/*/*/']
             }
         },
         compress: {
@@ -168,6 +173,22 @@ module.exports = function (grunt) {
                 },
                 files: '<%= compress.zip.files %>'
             }
+        },
+
+        trimtrailingspaces: {
+            main: {
+              src: ['../bundles/**/*.js'],
+              options: {
+                filter: 'isFile',
+                encoding: 'utf8',
+                failIfTrimmed: false
+              }
+            }
+        },
+        localizationJSCleanup: {
+            target: {
+                src: ['../bundles/**/locale/*.js']
+            }
         }
     });
 
@@ -182,6 +203,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-trimtrailingspaces');
 
     // Default task(s).
     grunt.registerTask('default', ['karma:dev', 'compileAppSetupToStartupSequence', 'compileDev', 'karma:dev:run', 'watch']);
@@ -198,7 +220,7 @@ module.exports = function (grunt) {
 
         grunt.config.set(
             'compileAppCSS.dev.options', {
-                appSetupFile: '../applications/paikkatietoikkuna.fi/full-map/minifierAppSetup.json',
+                appSetupFile: '../applications/sample/servlet/minifierAppSetup.json',
                 dest: options.dest
             }
         );
@@ -267,7 +289,7 @@ module.exports = function (grunt) {
 
         // use grunt default options
         if(!version) {
-            version  = new Date().getTime();
+            version  = new Date().toISOString().replace(/:/g,'');
             grunt.log.writeln('No version specified, using current timestamp: ' + version + 
                 '\nUsage: grunt release:<version>:"../path/to/minifierAppSetup.json"');
         }
@@ -391,15 +413,6 @@ module.exports = function (grunt) {
                 // only run the given copy tasks
                 grunt.task.run('copy:' + copyApps[i]);
             }
-/*
-            finalFiles.push({
-                expand: true,
-                cwd: '../',
-                src: ['bundles/**/resources/images/*.{png,jpg,jpeg,svg,gif}'],
-                dest: dest + '/images/',
-                flatten: true
-            });
-*/
             // add final copy settings to be run after compilation
             grunt.config.set('copy.final.files', finalFiles);
         } else {
@@ -423,7 +436,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('watchSCSS', 'Watch task for SCSS files', function () {
         grunt.config.set('compileAppCSS.watchCSS.options', {
-            appSetupFile: '../applications/paikkatietoikkuna.fi/full-map/minifierAppSetup.json'
+            appSetupFile: '../applications/sample/servlet/minifierAppSetup.json'
         });
         grunt.task.run('compileAppCSS');
     });
@@ -543,8 +556,6 @@ module.exports = function (grunt) {
             processedAppSetup = parser.getComponents(options.appSetupFile),
             i,
             pasFiles,
-            findImageDir = '../images/',
-            findImageDirRegExp = new RegExp(findImageDir, 'g'),
             replaceImageDir = './images/';
 
         grunt.log.writeln('Concatenating and minifying css');
@@ -566,9 +577,12 @@ module.exports = function (grunt) {
                 value = value + '\n' + content;
             }
 
-            // correct image paths
-            value = value.replace(findImageDirRegExp, replaceImageDir);
-
+            // FIXME: Make a better effort when improving tooling for Oskari2
+            // fix image paths to minified form
+            // "../images/pic.png" -> "./images/pic.png"
+            value = value.replace(/\.\.\/images\//g, replaceImageDir);
+            // "../../../something/resources/images/pic.png" -> "./images/pic.png"
+            value = value.replace(/\.\.\/\.\.\/\.\.\/.*\/images\//g, replaceImageDir);
 
             // minify value
             packed = cssPacker.processString(value);
@@ -584,12 +598,12 @@ module.exports = function (grunt) {
             });
         };
         var getResourcePaths = function(list) {
-            var TO_MATCH = 'Oskari' + path.sep + 'bundles',
+            var TO_MATCH = 'oskari' + path.sep + 'bundles',
                 matcherSize = TO_MATCH.length + 1;
             var value = [];
             _.each(list, function(dep) {
-                var actual =  dep.path || '';
-                var index = actual.indexOf(TO_MATCH);
+                var actual =  dep.resourcesPath || '';
+                var index = actual.toLowerCase().indexOf(TO_MATCH);
                 if(index !== -1) {
                     //console.log(actual.substring(index + matcherSize));
                     var imagePath = actual + path.sep + 'resources' + path.sep + 'images';

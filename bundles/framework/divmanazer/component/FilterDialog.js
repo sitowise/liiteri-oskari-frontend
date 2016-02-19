@@ -11,6 +11,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
      */
     function (loc, fixedOptions, psandbox) {
         this.sandbox = psandbox || Oskari.getSandbox();
+        this.WFSLayerService = this.sandbox.getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService');
         this.loc = loc;
 
         // Optionally fixed options
@@ -21,12 +22,57 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
 
         this.__filterTemplates = {
             filterContent: '<div class="analyse-filter-popup-content">' +
-                //'<div class="analyse-filter filter-title"></div>' +
-                '</div>',
-            filterContentBBOX: '<div class="analyse-filter analyse-filter-popup-bbox">' + '<div class="bbox-title"></div>' + '<div class="bbox-radio">' + '<div class="bbox-on">' + '<input id="analyse-filter-bbox-on" type="radio" name="filter-bbox" value="true" />' + '<label for="analyse-filter-bbox-on"></label>' + '</div>' + '<div class="bbox-off">' + '<input id="analyse-filter-bbox-off" type="radio" name="filter-bbox" value="false" checked="checked" />' + '<label for="analyse-filter-bbox-off"></label>' + '</div>' + '</div>' + '</div>',
-            filterClickedFeatures: '<div class="analyse-filter analyse-filter-clicked-features">' + '<div class="clicked-features-title"></div>' + '<input type="checkbox" name="analyse-clicked-features" id="analyse-clicked-features" />' + '<label for="analyse-clicked-features"></label>' + '</div>',
-            filterContentValues: '<div class="analyse-filter analyse-filter-popup-values">' + '<div class="values-title"></div>' + '</div>',
-            filterContentOption: '<div class="filter-option">' + '<input name="case-sensitive" type="checkbox"></input>' + '<select class="attribute"></select>' + '<select class="operator"></select>' + '<input name="attribute-value" class="filter-input-value" type="text"></input>' + '</div>',
+                                '<div class="filter-selections-title"></div>' +
+                                '<div class="filter-selection-radios">'+
+                                '</div>'+
+                           '</div>',
+            filterContentClickedFeatures:   '<div id="clicked-features-selection-container">'+
+                                                '<div class="clicked-features-radio">' +
+                                                    '<input id="analyse-clicked-features" type="radio" name="analysis-filter-radio" class="filter-radio"/>' +
+                                                    '<label id="filter-clicked-features" for="analyse-clicked-features"></label>' +
+                                                '</div>' +
+                                            '</div>',
+            filterContentBBOX:  '<div id="bbox-selection-container">'+
+                                    '<div class="bbox-on">' +
+                                        '<input id="analyse-filter-bbox-on" type="radio" name="analysis-filter-radio"  class="filter-radio" value="true" />' +
+                                        '<label for="analyse-filter-bbox-on"></label>' +
+                                    '</div>' +
+                                    '<div class="bbox-off">' +
+                                        '<input id="analyse-filter-bbox-off" type="radio" name="analysis-filter-radio"  class="filter-radio" value="false" />' +
+                                        '<label for="analyse-filter-bbox-off"></label>' +
+                                    '</div>' +
+                                '</div>',
+            filterContentFilterByGeometry:  '<div id="filter-by-geometry-selection-container">'+
+                                                '<div class="filter-by-geometry-radio">' +
+                                                    '<input id="analyse-filter-by-geometry" type="radio" name="analysis-filter-radio"  class="filter-radio"/>' +
+                                                    '<label id="filter-by-geometry-label" for="analyse-filter-by-geometry"></label>' +
+                                                '</div>' +
+                                                '<div class="filter-by-geometry-methods">' +
+                                                    '<div class="filter-by-geometry-intersect">' +
+                                                        '<input id="analyse-filter-by-geometry-intersect" type="radio" name="filter-by-geometry" value="Intersects" disabled/>' +
+                                                        '<label id="filter-by-geometry-intersect-label" for="analyse-filter-by-geometry-intersect"></label>' +
+                                                    '</div>' +
+                                                    '<div class="filter-by-geometry-contains">' +
+                                                        '<input id="analyse-filter-by-geometry-contains" type="radio" name="filter-by-geometry" value="Within" disabled/>' +
+                                                        '<label id="filter-by-geometry-contains-label" for="analyse-filter-by-geometry-contains"></label>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                            '</div>',
+            filterContentValues: '<div class="analyse-filter analyse-filter-popup-values">' +
+                                    '<div class="values-title"></div>' +
+                                    '<div class="values-additional-info"></div>'+
+                                 '</div>',
+            filterContentOption: '<div class="filter-by-values-container">' +
+                                    '<div class="case-sensitive-filtering">' +
+                                        '<input name="case-sensitive" type="checkbox"></input>' +
+                                        '<label for="case-sensitive"></label>' +
+                                    '</div>' +
+                                    '<div class="filter-option">' +
+                                        '<select class="attribute"></select>' +
+                                        '<select class="operator"></select>' +
+                                        '<input name="attribute-value" class="filter-input-value" type="text"></input>' +
+                                    '</div>' +
+                                '</div>',
             manageFilterOption: '<div class="manage-filter-option">' + '<div class="add-filter-option">+</div>' + '<div class="remove-filter-option">-</div>' + '</div>',
             filterBooleanOption: '<select class="boolean"></select>',
             option: '<option></option>'
@@ -43,7 +89,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
          * @method _createFilterDialog
          * @param {Oskari.mapframework.bundle.mapwfs2.domain.WFSLayer} layer
          */
-        createFilterDialog: function (layer, prevJson,  cb) {
+        createFilterDialog: function (layer, prevJson,  cb, clickedFeatures, selectedTemporaryFeatures) {
             var me = this,
                 closeButton = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 // Clears the filter values
@@ -63,14 +109,13 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
             if (typeof me._layer === null) {
                 return;
             }
-
             // Create filter dialog content
             layerAttributes = me._layer.getFilterJson();
             if (layerAttributes === null) {
-                me._loadWFSLayerPropertiesAndTypes(me._layer.getId(), prevJson, cb);
+                me._loadWFSLayerPropertiesAndTypes(me._layer.getId(), prevJson, cb, clickedFeatures, selectedTemporaryFeatures);
                 return;
             }
-            popupContent = this.getFilterDialogContent(me._layer);
+            popupContent = this.getFilterDialogContent(me._layer, clickedFeatures, selectedTemporaryFeatures);
             popupTitle = this.loc.filter.description + " " + me._layer.getName();
 
             // Create the actual popup dialog
@@ -89,7 +134,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
             clearButton.addClass('analyse-clear-filter');
             clearButton.setHandler(function () {
                 // Sets the dialog content to its original state
-                me.popup.setContent(me.getFilterDialogContent(me._layer));
+                me.popup.setContent(me.getFilterDialogContent(me._layer, clickedFeatures, selectedTemporaryFeatures));
                 if (me._clearButtonHandler) {
                     me._clearButtonHandler.apply();
                 }
@@ -102,6 +147,15 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                 var filtersJson = me.getFilterValues();   // Get the filter values from the dialog
                 // Validate the values for errors
                 filterErrors = me._validateFilterValues(filtersJson);
+
+                //"additional" errors, other than "missing value" etc.. ie. bbox selected but no property filters
+                if (filtersJson.filterErrors) {
+
+                    if (!filterErrors) {
+                        filterErrors = [];
+                    }
+                    filterErrors = filterErrors.concat(filtersJson.filterErrors);
+                }
                 if (filterErrors) {
                     // If there were validation errors, notify the user of them
                     // and prevent refreshing the filter values.
@@ -115,8 +169,8 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                 }
             });
             // If there's already filter values for current layer, populate the dialog with them.
-            if (prevJson && !jQuery.isEmptyObject(prevJson)) {
-                this.fillDialogContent(popupContent, prevJson, me._layer);
+            if (prevJson && !jQuery.isEmptyObject(prevJson))  {
+                this.fillDialogContent(popupContent, prevJson, me._layer, clickedFeatures, selectedTemporaryFeatures);
             }
 
             me.popup.show(popupTitle, popupContent, [closeButton, clearButton, updateButton]);
@@ -129,33 +183,48 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                cb();
             }
         },
-
         /**
          * Creates the content for the filter dialog popup.
          *
          * @method getFilterDialogContent
          * @param {Oskari.mapframework.bundle.mapwfs2.domain.WFSLayer} layer
          */
-        getFilterDialogContent: function (layer) {
-            var content = jQuery(this.__filterTemplates.filterContent),
-                bboxSelection = jQuery(this.__filterTemplates.filterContentBBOX),
-                clickedFeaturesSelection = jQuery(this.__filterTemplates.filterClickedFeatures),
+        getFilterDialogContent: function (layer, clickedFeatures, selectedTemporaryFeatures) {
+            var me = this,
+                content = jQuery(this.__filterTemplates.filterContent),
+                selectionRadios = content.find('div.filter-selection-radios'),
+                filterContentClickedFeatures = jQuery(this.__filterTemplates.filterContentClickedFeatures),
+                filterContentBBOX = jQuery(this.__filterTemplates.filterContentBBOX),
+                filterContentFilterByGeometry = jQuery(this.__filterTemplates.filterContentFilterByGeometry),
                 valuesSelection = jQuery(this.__filterTemplates.filterContentValues),
                 filterOption;
 
+            if (typeof this.fixedOptions.bboxSelection === "undefined" || typeof this.fixedOptions.clickedFeaturesSelection === "undefined") {
+                content.find('div.filter-selections-title').html('<h4>' + this.loc.filter.content.title + '</h4>');
+            }
+
             // The BBOX filter selection
             if (typeof this.fixedOptions.bboxSelection === "undefined") {
-                bboxSelection.find('div.bbox-title').html('<h4>' + this.loc.filter.bbox.title + '</h4>');
-                bboxSelection.find('div.bbox-on').find('label').html(this.loc.filter.bbox.on).prop('checked', true);
-                bboxSelection.find('div.bbox-off').find('label').html(this.loc.filter.bbox.off);
-                content.append(bboxSelection);
+                filterContentBBOX.find('div.bbox-on').find('label').html(this.loc.filter.bbox.on).prop('checked', true);
+                filterContentBBOX.find('div.bbox-off').find('label').html(this.loc.filter.bbox.off);
+                selectionRadios.append(filterContentBBOX);
             }
 
             // Filter clicked features
             if (typeof this.fixedOptions.clickedFeaturesSelection === "undefined") {
-                clickedFeaturesSelection.find('div.clicked-features-title').html('<h4>' + this.loc.filter.clickedFeatures.title + '</h4>');
-                clickedFeaturesSelection.find('label').html(this.loc.filter.clickedFeatures.label);
-                content.append(clickedFeaturesSelection);
+                filterContentClickedFeatures.find('div.clicked-features-title').html('<h4>' + this.loc.filter.clickedFeatures.title + '</h4>');
+                filterContentClickedFeatures.find('label').html(this.loc.filter.clickedFeatures.clickedFeaturesLabel);
+                selectionRadios.append(filterContentClickedFeatures);
+            }
+
+
+
+            // Filter clicked features
+            if (typeof this.fixedOptions.clickedFeaturesSelection === "undefined") {
+                filterContentFilterByGeometry.find('#filter-by-geometry-label').html(this.loc.filter.clickedFeatures.filterByGeometryLabel);
+                filterContentFilterByGeometry.find('#filter-by-geometry-intersect-label').html(this.loc.filter.clickedFeatures.filterByGeometryIntersect);
+                filterContentFilterByGeometry.find('#filter-by-geometry-contains-label').html(this.loc.filter.clickedFeatures.filterByGeometryContains);
+                selectionRadios.append(filterContentFilterByGeometry);
             }
 
             // Filter values selection
@@ -166,9 +235,94 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
 
             content.append(valuesSelection);
 
+            this._initFilterSelections(filterContentClickedFeatures, filterContentFilterByGeometry, filterContentBBOX, valuesSelection, clickedFeatures, selectedTemporaryFeatures);
+
+            selectionRadios.find("input[name=analysis-filter-radio]").on("change", function(evt) {
+                var filterByGeometryChecked = filterContentFilterByGeometry.find("input[name=analysis-filter-radio]").is(':checked');
+                //check / uncheck the filter by geometry (the additional radios need toggling / disabling / enabling as well)
+                me._toggleFilterByGeometrySelection(filterContentFilterByGeometry, selectedTemporaryFeatures, filterByGeometryChecked);
+
+                //show / hide the values + a reassuring message
+                me._toggleFilterByValuesSelection(filterContentClickedFeatures, filterContentFilterByGeometry, filterContentBBOX, valuesSelection);
+            });
+
             return content;
         },
-
+        /**
+         * Initialises the filterselections
+         * @method _initFilterSelections
+         * @private
+         */
+        _initFilterSelections: function(filterContentClickedFeatures, filterContentFilterByGeometry, filterContentBBOX, valuesSelection, clickedFeatures, selectedTemporaryFeatures) {
+            this._toggleClickedFeaturesSelection(filterContentClickedFeatures, clickedFeatures, clickedFeatures);
+            this._toggleFilterByGeometrySelection(filterContentFilterByGeometry, selectedTemporaryFeatures, (!clickedFeatures && selectedTemporaryFeatures));
+            this._toggleBBOXSelection(filterContentBBOX, (!clickedFeatures && !selectedTemporaryFeatures));
+            this._toggleFilterByValuesSelection(filterContentClickedFeatures, filterContentFilterByGeometry, filterContentBBOX, valuesSelection);
+        },
+        /**
+         * Toggles the clicked features selection radio of the filter dialog popup.
+         *
+         * @method _toggleClickedFeaturesSelection
+         * @private
+         * @param {DOM element} container
+         * @param {boolean} activate
+         */
+        _toggleClickedFeaturesSelection: function(container, enable, check) {
+            container.find('#analyse-clicked-features').prop({'checked': check, 'disabled': !enable});
+        },
+        /**
+         * Toggles the filter by geometry radios of the filter dialog popup.
+         *
+         * @method _toggleFilterByGeometrySelection
+         * @private
+         * @param {DOM element} container
+         * @param {boolean} activate
+         */
+        _toggleFilterByGeometrySelection: function(container, enable, check) {
+            if (!enable) {
+                check = false;
+            }
+            container.find('#analyse-filter-by-geometry').prop({'checked':check, 'disabled': !enable});
+            if (check) {
+                container.find('input[name="filter-by-geometry"]').prop({'disabled': !enable});
+                //check the first option.
+                container.find('#analyse-filter-by-geometry-intersect').prop({'checked': check, 'disabled': !enable})
+            } else {
+                container.find('input[name="filter-by-geometry"]').prop({'checked': check, 'disabled': true});
+            }
+        },
+        /**
+         * Toggles the bbox selection radios of the filter dialog popup.
+         *
+         * @method _toggleBBOXSelection
+         * @private
+         * @param {DOM element} container
+         * @param {boolean} activate
+         */
+        _toggleBBOXSelection: function(container, check) {
+            container.find('div.bbox-on').find('input[name=analysis-filter-radio]').prop({'checked': check});
+            container.find('div.bbox-off').find('input[name=analysis-filter-radio]').prop({'checked': false});
+        },
+        /**
+         * Toggles the property selections of the filter dialog popup.
+         *
+         * @method _toggleFilterByValuesSelection
+         * @private
+         */
+        _toggleFilterByValuesSelection: function(filterContentClickedFeatures, filterContentFilterByGeometry, filterContentBBOX, valuesSelection) {
+            var filterByGeometryChecked = filterContentFilterByGeometry.find("input[name=analysis-filter-radio]").is(':checked'),
+                bboxOFF = filterContentBBOX.find('div.bbox-off').find("input[name=analysis-filter-radio]").is(':checked');
+            if (bboxOFF) {
+                valuesSelection.find("div.values-additional-info").html(this.loc.filter.values.info.bboxOff);
+                valuesSelection.find("div.filter-by-values-container").css({"display": "block"});
+            } else if (filterByGeometryChecked) {
+                valuesSelection.find("div.values-additional-info").html(this.loc.filter.values.info.filterByGeometrySelected);
+                valuesSelection.find("div.filter-by-values-container").css({"display": "none"})
+            } else {
+                valuesSelection.find("div.values-additional-info").html("");
+                valuesSelection.find("div.filter-by-values-container").css({"display": "block"})
+            }
+        },
         /**
          * Fills the dialog with filter values.
          *
@@ -178,26 +332,29 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
          * @param {Object} values
          * @param {Oskari.mapframework.bundle.mapwfs2.domain.WFSLayer} layer
          */
-        fillDialogContent: function (dialog, values, layer) {
-            var bboxDiv = dialog.find('div.bbox-radio'),
-                clickedFeaturesDiv = dialog.find('div.analyse-filter-clicked-features'),
+        fillDialogContent: function (dialog, values, layer, clickedFeatures, selectedTemporaryFeatures) {
+            var bboxDiv = dialog.find('#bbox-selection-container'),
+                clickedFeaturesDiv = dialog.find('#clicked-features-selection-container'),
+                filterByGeometryDiv = dialog.find('#filter-by-geometry-selection-container'),
+                valuesDiv = dialog.find('div.analyse-filter-popup-values'),
                 filterDiv = dialog.find('div.filter-option'),
                 filter,
                 i;
-
-            // Set the BBOX value
             if (values.bbox && !jQuery.isEmptyObject(values.bbox)) {
                 // BBOX enabled
-                bboxDiv.find('div.bbox-off').find('input[name=filter-bbox]').removeAttr('checked');
-                bboxDiv.find('div.bbox-on').find('input[name=filter-bbox]').attr('checked', 'checked');
-            } else {
-                // BBOX disabled
-                bboxDiv.find('div.bbox-off').find('input[name=filter-bbox]').attr('checked', 'checked');
-                bboxDiv.find('div.bbox-on').find('input[name=filter-bbox]').removeAttr('checked');
-            }
-
-            if (values.featureIds) {
-                clickedFeaturesDiv.find('input[name=analyse-clicked-features]').attr('checked', 'checked');
+                this._toggleBBOXSelection(bboxDiv, true);
+                this._toggleClickedFeaturesSelection(clickedFeaturesDiv, clickedFeatures, false);
+                this._toggleFilterByGeometrySelection(filterByGeometryDiv, selectedTemporaryFeatures, false);
+            } else if (values.noBBOX) {
+                this._toggleBBOXSelection(bboxDiv, false);
+                bboxDiv.find('div.bbox-off').find('input[name=analysis-filter-radio]').prop({'checked': true});
+                this._toggleClickedFeaturesSelection(clickedFeaturesDiv, clickedFeatures, false);
+                this._toggleFilterByGeometrySelection(filterByGeometryDiv, selectedTemporaryFeatures, false);
+            //no previous selections (bbox or no bbox, ) and no selected features -> select bbox by default.
+            } else if (!(clickedFeatures || selectedTemporaryFeatures)) {
+                this._toggleBBOXSelection(bboxDiv, true);
+                this._toggleClickedFeaturesSelection(clickedFeaturesDiv, clickedFeatures, false);
+                this._toggleFilterByGeometrySelection(filterByGeometryDiv, selectedTemporaryFeatures, false);
             }
 
             if (values.filters && values.filters.length) {
@@ -223,10 +380,28 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                         // A normal filter
                         var newFilterDiv = this._addAttributeFilter(layer);
                         this._fillFilterOptionsDiv(newFilterDiv, filter);
-                        dialog.find('div.analyse-filter-popup-values').append(newFilterDiv);
+                        valuesDiv.append(newFilterDiv);
                     }
                 }
             }
+
+            //the selection had been made before and there still are features selected?
+            if (values.featureIds && clickedFeatures) {
+                this._toggleClickedFeaturesSelection(clickedFeaturesDiv, true, true);
+                this._toggleBBOXSelection(bboxDiv, false);
+                this._toggleFilterByGeometrySelection(filterByGeometryDiv, selectedTemporaryFeatures, false);
+            }
+            if (values.filterByGeometryMethod && selectedTemporaryFeatures) {
+                this._toggleFilterByGeometrySelection(filterByGeometryDiv, true, true);
+                dialog.find('#analyse-filter-by-geometry').prop('checked', true);
+                var method = values.filterByGeometryMethod;
+                dialog.find('input[value=' + method+ ']').prop('checked', true);
+                this._toggleBBOXSelection(bboxDiv, false);
+                this._toggleClickedFeaturesSelection(clickedFeaturesDiv, clickedFeatures, false);
+            }
+
+            this._toggleFilterByValuesSelection(clickedFeaturesDiv, filterByGeometryDiv, bboxDiv, valuesDiv);
+
         },
 
         /**
@@ -270,6 +445,8 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                 opSelect = filterOption.find('select.operator'),
                 opPlaceHolder = this.loc.filter.values.placeholders.operator;
 
+            filterOption.find('label').html(this.loc.filter.values.placeholders['case-sensitive']);
+
             // Appends values to the attribute select.
             this._appendOptionValues(attrSelect, attrPlaceHolder, me._getLayerAttributes(layer));
             // Appends values to the operator select.
@@ -310,7 +487,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
 
             // Add link to filter with aggregate values if there are any
             if (this.fixedOptions.addLinkToAggregateValues === true) {
-                filterOption
+                filterOption.find('.filter-option')
                     .addClass("filter-option-aggregate")
                     .find('input[name=attribute-value]')
                     .wrap('<div class="attribute-value-block"></div>')
@@ -318,7 +495,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
             }
 
             // Add the buttons to remove this filter and to add a new filter.
-            filterOption.append(this._addManageFilterOption(layer));
+            filterOption.find('.filter-option').append(this._addManageFilterOption(layer));
 
             return filterOption;
         },
@@ -408,12 +585,12 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
          * @param {jQuery object} element the 'remove filter' button element
          */
         _removeFilter: function (element, layer) {
-            var parent = element.parents('div.filter-option'),
+            var parent = element.parents('div.filter-by-values-container'),
                 // Previous filter selection element
-                prevSibling = parent.prev('div.filter-option'),
+                prevSibling = parent.prev('div.filter-by-values-container'),
                 manageFilterOption = this._addManageFilterOption(layer);
 
-            // Replace the boolean operator select with the 
+            // Replace the boolean operator select with the
             prevSibling.find('select.boolean').replaceWith(manageFilterOption);
             // Unless this is the last filter option, remove it.
             if (prevSibling && prevSibling.length) {
@@ -525,6 +702,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
             var filterValues = {},
                 bboxValue,
                 clickedFeatures,
+                filterByGeometry,
                 domFilters,
                 domFilter,
                 filter,
@@ -534,60 +712,88 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                 i;
 
             popupContent = this.popup.getJqueryContent();
-
             // Get the map window bbox if chosen.
             if (typeof this.fixedOptions.bboxSelection === "undefined") {
-                bboxValue = jQuery(popupContent).find('input[name=filter-bbox]:checked').val();
+                bboxValue = jQuery(popupContent).find('#bbox-selection-container').find('input[name=analysis-filter-radio]:checked').val();
             } else {
                 bboxValue = this.fixedOptions.bboxSelection;
             }
             if ('true' === bboxValue) {
                 filterValues.bbox = this.sandbox.getMap().getBbox();
             }
+            else if ('false' === bboxValue) {
+                filterValues.noBBOX = true;
+            }
 
             if (typeof this.fixedOptions.clickedFeaturesSelection === "undefined") {
-                clickedFeatures = jQuery(popupContent).find('input[name=analyse-clicked-features]').is(':checked');
+                clickedFeatures = jQuery(popupContent).find('#clicked-features-selection-container').find('input[name=analysis-filter-radio]').is(':checked');
+                filterByGeometry = jQuery(popupContent).find('#filter-by-geometry-selection-container').find('input[name=filter-by-geometry]:checked').val();
             } else {
                 clickedFeatures = this.fixedOptions.clickedFeaturesSelection;
             }
             if (clickedFeatures) {
-                // At this point, just set this to 'true', since we can't
-                // get hold of the layer - and consequently the clicked features - yet.
-                filterValues.featureIds = true;
+                if (jQuery(popupContent).find('#clicked-features-selection-container').find('input[name=analysis-filter-radio]').is(':disabled')) {
+                    filterValues.featureIds = false;
+                    jQuery(popupContent).find('#clicked-features-selection-container').find('input[name=analysis-filter-radio]').attr('checked', false);
+                } else {
+                    filterValues.featureIds = true;
+                }
+            }
+            if (filterByGeometry) {
+                if (jQuery(popupContent).find('#filter-by-geometry-selection-container').find('input[name=analysis-filter-radio]').is(':disabled')) {
+                    filterValues.filterByGeometryMethod = false;
+                    //uncheck the sub boxes
+                    jQuery(popupContent).find('input[name=filter-by-geometry]').attr('checked', false);
+                    jQuery(popupContent).find('#filter-by-geometry-selection-container').find('input[name=analysis-filter-radio]').attr('checked', false);
+                } else {
+                    filterValues.filterByGeometryMethod = filterByGeometry;
+                }
             }
 
             // Get the actual filters.
             domFilters = jQuery(popupContent).find('div.filter-option');
-            if (domFilters && domFilters.length) {
-                filterValues.filters = [];
 
-                for (i = 0; i < domFilters.length; ++i) {
-                    domFilter = jQuery(domFilters[i]);
+            //skip the property filters, if filtering by geometry or selected features is selected.
+            if (!(filterValues.filterByGeometryMethod)) {
+                if (domFilters && domFilters.length) {
+                    filterValues.filters = [];
 
-                    filter = {};
-                    filter.caseSensitive = domFilter.find('input[name="case-sensitive"]').is(':checked');
-                    filter.attribute = domFilter.find('select.attribute').val();
-                    filter.operator = domFilter.find('select.operator').val();
-                    filter.value = domFilter.find('input[name=attribute-value]').val();
-                    filterValues.filters.push(filter);
+                    for (i = 0; i < domFilters.length; ++i) {
+                        domFilter = jQuery(domFilters[i]);
 
-                    boolOperator = domFilter.find('select.boolean').val();
-                    if (boolOperator) {
-                        filterValues.filters.push({
-                            'boolean': boolOperator
-                        });
+                        filter = {};
+                        filter.caseSensitive = domFilter.find('input[name="case-sensitive"]').is(':checked');
+                        filter.attribute = domFilter.find('select.attribute').val();
+                        filter.operator = domFilter.find('select.operator').val();
+                        filter.value = domFilter.find('input[name=attribute-value]').val();
+                        filterValues.filters.push(filter);
+
+                        boolOperator = domFilter.find('select.boolean').val();
+                        if (boolOperator) {
+                            filterValues.filters.push({
+                                'boolean': boolOperator
+                            });
+                        }
                     }
+                }
+                // Special case when the one filter which is always in the DOM is empty
+                // --> the user didn't want a filter but just the bbox perhaps.
+                // NOTE! This is quite an ugly hack, used so that we don't send empty filters to backend.
+                emptyFilter = filterValues.filters[0];
+                if (domFilters.length === 1 &&
+                    (!emptyFilter.attribute && !emptyFilter.value)) {
+                    delete filterValues.filters;
                 }
             }
 
-            // Special case when the one filter which is always in the DOM is empty
-            // --> the user didn't want a filter but just the bbox perhaps.
-            // NOTE! This is quite an ugly hack, used so that we don't send empty filters to backend.
-            emptyFilter = filterValues.filters[0];
-            if (domFilters.length === 1 &&
-                (!emptyFilter.attribute && !emptyFilter.value)) {
-                delete filterValues.filters;
+            if (filterValues.noBBOX && (!filterValues.filters || filterValues.filters.length === 0)) {
+                if (!filterValues.filterErrors) {
+                    filterValues.filterErrors = [];
+                }
+                filterValues.filterErrors.push("bbox_selected_with_no_properties");
             }
+
+
             return filterValues;
         },
 
@@ -669,7 +875,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
          * Load analysis layers in start.
          *
          */
-        _loadWFSLayerPropertiesAndTypes:function (layer_id, prevJson, cb) {
+        _loadWFSLayerPropertiesAndTypes:function (layer_id, prevJson, cb, clickedFeatures, selectedTemporaryFeatures) {
             var me = this,
                 url = me.sandbox.getAjaxUrl()
 
@@ -679,7 +885,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
 
                 function (response) {
                     if (response) {
-                        me._handleWFSLayerPropertiesAndTypesResponse(response, prevJson, cb);
+                        me._handleWFSLayerPropertiesAndTypesResponse(response, prevJson, cb, clickedFeatures, selectedTemporaryFeatures);
                     }
                 },
                 // Error callback
@@ -720,7 +926,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
          * @private
          * @param {JSON} propertyJson properties and property types of WFS layer JSON returned by server.
          */
-        _handleWFSLayerPropertiesAndTypesResponse: function (propertyJson, prevJson, cb) {
+        _handleWFSLayerPropertiesAndTypesResponse: function (propertyJson, prevJson, cb, clickedFeatures, selectedTemporaryFeatures) {
             var me = this,
                 prevJson,
                 fields = propertyJson.propertyTypes;
@@ -735,7 +941,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                 }
             }
             this._layer.setFilterJson(layerAttributes);
-            this.createFilterDialog(this._layer, prevJson, cb);
+            this.createFilterDialog(this._layer, prevJson, cb, clickedFeatures, selectedTemporaryFeatures);
         },
 
         /**

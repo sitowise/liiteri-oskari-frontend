@@ -21,6 +21,7 @@ Oskari.clazz.define(
         this.started = false;
         this.plugins = {};
         this.localization = null;
+        this.filteredLayerListOpenedByRequest = false;
     }, {
         /**
          * @static
@@ -73,6 +74,7 @@ Oskari.clazz.define(
             }
             return this._localization;
         },
+
         /**
          * @method start
          * implements BundleInstance protocol start method
@@ -107,14 +109,13 @@ Oskari.clazz.define(
             request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(me);
             sandbox.request(me, request);
 
-//            var mapIconDesc = {
-//                'text': 'layerselector2',
-//                'iconCss': 'glyphicon mapicon map-mapicon',
-//				'tooltip': me.getLocalization('tooltip').bundle,
-//                'actionType': 'toogle'
-//            }
-//            var request2 = sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(me, mapIconDesc, me);
-//            sandbox.request(me, request2);
+            // create and register request handlers
+            var reqHandler = Oskari.clazz.create('Oskari.mapframework.bundle.layerselector2.request.ShowFilteredLayerListRequestHandler', sandbox, this);
+            sandbox.addRequestHandler('ShowFilteredLayerListRequest', reqHandler);
+
+
+            var reqHandlerAddLayerListFilter = Oskari.clazz.create('Oskari.mapframework.bundle.layerselector2.request.AddLayerListFilterRequestHandler', sandbox, this);
+            sandbox.addRequestHandler('AddLayerListFilterRequest', reqHandlerAddLayerListFilter);
 
             // draw ui
             me.createUi();
@@ -210,6 +211,8 @@ Oskari.clazz.define(
                     layerId = event.getLayerId(),
                     layer;
 
+                flyout.clearNewestFilter();
+
                 if (event.getOperation() === 'update') {
                     layer = mapLayerService.findMapLayer(layerId);
                     flyout.handleLayerModified(layer);
@@ -228,6 +231,8 @@ Oskari.clazz.define(
                     // refresh layer count
                     //tile.refresh();
                 }
+
+
             },
 
             'BackendStatus.BackendStatusChangedEvent': function (event) {
@@ -252,7 +257,8 @@ Oskari.clazz.define(
              * @method ExtensionUpdatedEvent
              */
             'userinterface.ExtensionUpdatedEvent': function (event) {
-                var plugin = this.plugins['Oskari.userinterface.Flyout'];
+                var me = this,
+                    plugin = me.plugins['Oskari.userinterface.Flyout'];
 
                 // ExtensionUpdateEvents are fired a lot, only let layerselector2 extension event to be handled when enabled
                 if (event.getExtension().getName() !== this.getName()) {
@@ -261,6 +267,12 @@ Oskari.clazz.define(
                 }
                 if (event.getViewState() !== 'close') {
                     plugin.focus();
+                }
+                // Remove the filtering, if opened by ShowFilteredLayerListRequest.
+                else if(me.filteredLayerListOpenedByRequest) {
+                    plugin.deactivateAllFilters();
+                    plugin.setLayerListFilteringFunction(null);
+                    me.filteredLayerListOpenedByRequest = false;
                 }
             },
             'liiteri-servicepackages.ServicePackageSelectedEvent': function (event) {

@@ -148,7 +148,7 @@ Oskari.registerLocalization(
             },
             "dot": {
                 "title": "Point feature style",
-                "tooltip": "",
+                "tooltip": "Define a style for point features.",
                 "symbol": {
                     "label": "Icon"
                 },
@@ -170,7 +170,7 @@ Oskari.registerLocalization(
             },
             "line": {
                 "title": "Line feature style",
-                "tooltip": "",
+                "tooltip": "Define a style for line features.",
                 "style": {
                     "label": "Dash"
                 },
@@ -198,7 +198,7 @@ Oskari.registerLocalization(
             },
             "area": {
                 "title": "Area feature style",
-                "tooltip": "",
+                "tooltip": "Define a style for area features.",
                 "linestyle": {
                     "label": "Line dash"
                 },
@@ -244,7 +244,8 @@ Oskari.registerLocalization(
                 "additional": {
                     "title": "Additional settings",
                     "dataSource": "Data source",
-                    "metadata": "Metadata link"
+                    "metadata": "Metadata link",
+                    "export_selection": "Export only selected features"
                 },
                 "columns": {
                     "title": "Columns",

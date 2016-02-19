@@ -134,12 +134,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 allowedSiblings: [
                     'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
                     'Oskari.mapframework.bundle.mapmodule.plugin.PanButtons',
-                    'Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar',
+                    'Oskari.mapframework.bundle.mapmodule.plugin.Portti2Zoombar'
                 ],
                 groupedSiblings: true
             },
 
-            'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin': 
+            'Oskari.mapframework.bundle.mapmodule.plugin.SearchPlugin':
 {               allowedLocations: ['top left', 'top center', 'top right'],
                 allowedSiblings: [
                     'Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin',
@@ -266,13 +266,20 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
 
         me.maplayerPanel = null;
         me.mainPanel = null;
+
+        //dig up the config from the instance used by the full map if it is present
+        var logoPluginConfig = {};
+        var mainMapLogoPlugin = me.instance.getSandbox().findRegisteredModuleInstance("MainMapModuleLogoPlugin");
+        if(mainMapLogoPlugin) {
+            logoPluginConfig = _.cloneDeep(mainMapLogoPlugin.getConfig());
+        }
+        // override location
+        logoPluginConfig.location = {
+            classes: me.logoPluginClasses.classes
+        };
         me.logoPlugin = Oskari.clazz.create(
             'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
-            {
-                location: {
-                    classes: me.logoPluginClasses.classes
-                }
-            }
+            logoPluginConfig
         );
         me.latestGFI = null;
     }, {
@@ -350,7 +357,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
 
             // 3rd panel: size panel
-            accordion.addPanel(me._createSizePanel());
+            accordion.addPanel(me._createSizePanel())
 
             // 4th panel: tools panel
             accordion.addPanel(me._createToolsPanel());
@@ -565,6 +572,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 totalHeight = size.height;
 
             if (totalWidth === null || totalWidth === undefined || totalWidth === '') {
+                if(!container.length) {
+                    // check if we actually have .row-fluid structure, fallback to mapmodule as container
+                    container = me.mapModule.getMapEl();
+                }
                 // Ugly hack, container has a nasty habit of overflowing the viewport...
                 totalWidth = jQuery(window).width() - container.offset().left;
             }
@@ -688,21 +699,26 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 };
             }));
             radioButtonGroup.setHandler(selectionHandler);
+
+            // --> NÄMÄ?
             radioButtonGroup.insertTo(contentPanel);
+            // <--
+
 
             customSizes.className = 'customsize';
-
             widthInput.setName('width');
             widthInput.setPlaceholder(me.loc.sizes.width);
             widthInput.setValue(selectedOption.width);
             widthInput.setHandler(function () {
                 me._updateMapSize();
             });
-            widthInput.insertTo(customSizes);
 
+            // --> NÄMÄ?
+            widthInput.insertTo(customSizes);
             customSizes.appendChild(
                 document.createTextNode(me.loc.sizes.separator)
             );
+            // <--
 
             heightInput.setName('height');
             heightInput.setPlaceholder(me.loc.sizes.height);
@@ -779,6 +795,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                     }
                 }
             }
+
             // Add the layout panel to the accordion.
             me.toolsPanel = Oskari.clazz.create(
                 'Oskari.mapframework.bundle.publisher.view.PublisherToolsForm',
@@ -1368,7 +1385,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 // get state of statsgrid
                 // TODO? for some reason original state has been cloned
                 // real / live state can be found from plugins...
-                var statsGridState = me.gridPlugin.getState(); //me.sandbox.getStatefulComponents().statsgrid,
+                var statsGridState =  me.sandbox.getStatefulComponents().statsgrid.state,
                 statsGridState = me._filterIndicators(_.clone(statsGridState, true));
                 statsGridState.gridShown = me.isDataVisible;
                 selections.gridState = statsGridState;
@@ -1647,6 +1664,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 );
             }
             Oskari.setLang(lang);
+
             var me = this,
                 i,
                 tool,
@@ -1656,8 +1674,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 if (tool._isPluginStarted) {
                     // FIXME no restarts, it breaks stuff... add a changeLanguage function or smthn...
                     // stop and start if enabled to change language
-                    me.toolsPanel.activatePreviewPlugin(tool, false);
-                    me.toolsPanel.activatePreviewPlugin(tool, true);
+                    me.toolsPanel.activatePreviewPlugin(tool, false, true);
+                    me.toolsPanel.activatePreviewPlugin(tool, true, true);
                 }
             }
             // stop and start if enabled to change language
@@ -1811,7 +1829,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             }
 
             // Set the toolStyle to the config of each tool
-            // and change the style immedately. 
+            // and change the style immedately.
             for (i = 0; i < tools.length; i += 1) {
                 tool = tools[i];
                 // special object for zoombar
@@ -1904,7 +1922,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 tools = me.toolsPanel.getTools();
 
             // Set the font to the config of each tool
-            // and change the font immedately. 
+            // and change the font immedately.
             for (i = 0; i < tools.length; i += 1) {
                 tool = tools[i];
                 if (tool.config) {
@@ -2216,13 +2234,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
                 i;
 
             for (i = 0; i < siblings.length; i += 1) {
-                if (jQuery.inArray(siblings[i], me.toolDropRules[pluginClazz].allowedSiblings) < 0) {
+                if (me.toolDropRules[pluginClazz] && jQuery.inArray(siblings[i], me.toolDropRules[pluginClazz].allowedSiblings) < 0) {
                     // Unallowed sibling, move to source
                     sibling = me._getPluginByClazz(siblings[i]);
                     if (sibling) {
                         sibling.setLocation(source.attr('data-location'));
                     } else {
-                        me.sandbox.printWarn(
+                        me.instance.sandbox.printWarn(
                             'BasicPublisher._moveSiblings(): Couldn\'t find sibling',
                             siblings[i]
                         );
@@ -2256,12 +2274,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
             for (i = 0; i < siblings.length; i += 1) {
                 if (!excludedSibling || siblings[i] !== excludedSibling) {
                     // sibling is not ignored, see if it's an allowed sibling
-                    if (jQuery.inArray(siblings[i], me.toolDropRules[pluginClazz].allowedSiblings) < 0 && pluginClazz !== siblings[i]) {
+                    if (me.toolDropRules[pluginClazz] && jQuery.inArray(siblings[i], me.toolDropRules[pluginClazz].allowedSiblings) < 0 && pluginClazz !== siblings[i]) {
                         // not an allowed sibling, see if we can move it out of the way (don't pass a source, it'd cause an infinite loop)
                         // only accept 2/yes as a result, moving source plugins out of the way would get too weird
-                        if (source && me._locationAllowed(this.toolDropRules[siblings[i]].allowedLocations, source) && me._siblingsAllowed(siblings[i], null, source, pluginClazz) === 2) {
-                            // sibling can be moved to source
-                            ret = 1;
+                        if (source &&
+                            (!this.toolDropRules[siblings[i]] ||
+                            (this.toolDropRules[siblings[i]] && me._locationAllowed(this.toolDropRules[siblings[i]].allowedLocations, source))) &&
+                            me._siblingsAllowed(siblings[i], null, source, pluginClazz) === 2) {
+                                // sibling can be moved to source
+                                ret = 1;
                         } else {
                             // sibling can't be moved to source
                             ret = 0;

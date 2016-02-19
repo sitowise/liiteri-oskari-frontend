@@ -9,7 +9,7 @@
   left: 0;
   /* sidebar has 3, we want to open it on top of this */
   z-index: 2;
-  width: 365px; }
+  width: 382px; }
   #contentMap div.basic_publisher div.content {
     padding: 10px; }
 
@@ -102,7 +102,7 @@ div.basic_publisher .layer.selected {
         display: inline-block; }
       div.basic_publisher .layer.selected div.layer-tools div.left-tools div.layer-opacity {
         display: inline-block;
-        background-image: url('../../../layerselection2/images/opacity_slider.png');
+        background-image: url('../../../layerselection2/resources/images/opacity_slider.png');
         background-repeat: no-repeat; }
         div.basic_publisher .layer.selected div.layer-tools div.left-tools div.layer-opacity input.opacity {
           padding: 1px;

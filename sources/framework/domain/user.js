@@ -35,6 +35,7 @@ Oskari.clazz.define('Oskari.mapframework.domain.User',
             if (userData.userUUID) {
                 this._loggedIn = true;
             }
+            this._apiKey = userData.apikey;
         }
     }, {
         /**
@@ -107,6 +108,15 @@ Oskari.clazz.define('Oskari.mapframework.domain.User',
          */
         getUuid: function () {
             return this._uuid;
+        },
+        /**
+         * @method getAPIkey
+         * API-key for the user
+         *
+         * @return {String}
+         */
+        getAPIkey: function () {
+            return this._apiKey;
         },
         /**
          * @method isLoggedIn

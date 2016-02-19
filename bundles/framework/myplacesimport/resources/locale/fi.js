@@ -4,24 +4,24 @@ Oskari.registerLocalization(
     "key": "MyPlacesImport",
     "value": {
         "title": "Omien aineistojen tuonti",
-        "desc": "Voit tuoda omia aineistoja shp-, gpx- tai mif/mid-tiedostomuodossa zip-pakattuna tai kmz-tiedostomuodossa (pakattu kml).",
-        "help": "Valitse aineiston sisältävä tiedosto tai anna linkki vastaavaan tiedostoon. Tiedosto voi olla joko shp-, zip- tai kml/kmx-tiedostomuodossa. Voit luoda shapefile (shp) -siirtoformaatissa olevasta aineistosta zip-tiedoston pakkaamalla ko. aineistoon liittyvät shp-, shx-, dbf- ja prj-päätteiset tiedostot yhteen zip-tiedostoon. Myös Googlen karttapalvelusta saatavat kml/kmz-tiedostot on mahdollista pakata zip-tiedostoon.",
+        "desc": "NOT TRANSLATED",
         "tool": {
             "tooltip": "Omien aineistojen tuonti"
         },
         "flyout": {
             "title": "Omien aineistojen tuonti",
-            "description": "Voit tuoda omia aineistoja shp-, gpx- tai mif/mid-tiedostomuodossa zip-pakattuna tai kmz-tiedostomuodossa (pakattu kml).",
+            "description": "Lataa aineisto tietokoneeltasi pakattuna zip-tiedostoon. Aineiston on oltava jossakin seuraavista tiedostomuodoista: <br/>\r\nShapefile (*.shp, *.shx, *dbf, *prj) <br/>\r\nGPS-siirtotiedosto (*.gpx) <br/>\r\nMapInfo (*.mif, *mid) <br/>\r\nGoogle Map (*.kml, *.kmz) <br/>\r\nTarkista, että kaikki tiedot ovat oikeassa koordinaattijärjestelmässä.",
+            "help": "Lataa aineisto tietokoneeltasi pakattuna zip-tiedostoon. Tarkista, että aineisto on oikeassa tiedostomuodossa ja koordinaattijärjestelmässä.",
             "actions": {
                 "cancel": "Peruuta",
                 "next": "Seuraava"
             },
             "file": {
-                "submit": "Lähetä",
+                "submit": "Tuo aineisto",
                 "chooseFile": "Valitse tiedosto",
                 "fileOverSizeError": {
                     "title": "Virhe",
-                    "message": "Aineistosi on liian suuri. Voit tuoda korkeintaan <xx> megatavun kokoisen pakatun tiedoston.",
+                    "message": "Valitsemasi tiedosto on liian suuri. Enimmäiskoko on <xx> mb.",
                     "close": "Sulje"
                 }
             },
@@ -30,12 +30,12 @@ Oskari.registerLocalization(
                 "name": "Nimi",
                 "desc": "Kuvaus",
                 "source": "Tietolähde",
-                "style": "Aineiston tyylimäärittelyt"
+                "style": "Tyylimäärittelyt"
             },
             "validations": {
                 "error": {
                     "title": "Virhe",
-                    "message": "Tiedostoa ei ole valittu ja karttatason nimi puuttuu."
+                    "message": "Aineiston tuonti epäonnistui. Valitse ensin tiedosto ja anna karttatasolle nimi. Yritä sitten uudelleen."
                 }
             },
             "finish": {
@@ -44,7 +44,7 @@ Oskari.registerLocalization(
                     "message": "Aineisto löytyy Karttatasot-valikon Omat tasot -välilehdeltä"
                 },
                 "failure": {
-                    "title": "Aineiston tuonti epäonnistui. Yritä myöhemmin uudelleen.",
+                    "title": "Aineiston tuonti epäonnistui.",
                     "server_error_key_limit": "Sallittujen GIS aineistojen määrä on ylittynyt tai tiedoston koko ylittää sallitun rajan."
                 }
             }
@@ -65,12 +65,12 @@ Oskari.registerLocalization(
                 "delete": "Poista"
             },
             "notification": {
-                "deletedTitle": "Aineiston poisto",
+                "deletedTitle": "Poista aineisto",
                 "deletedMsg": "Aineisto on poistettu."
             },
             "error": {
-                "title": "Virhe!",
-                "generic": "Järjestelmässä tapahtui virhe. Yritä myöhemmin uudelleen."
+                "title": "Virhe",
+                "generic": "Aineiston lataus epäonnistui järjestelmässä tapahtuneen virheen vuoksi."
             }
         },
         "layer": {

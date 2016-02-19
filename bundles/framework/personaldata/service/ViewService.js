@@ -154,16 +154,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.service.ViewService
          * function will receive boolean value as parameter indicating success(true)
          * or error(false)
          */
-        updateView: function (id, name, description, callback) {
+        updateView: function (id, name, description, isDefault, callback) {
             var me = this;
-
             jQuery.ajax({
                 url: me._viewUrl + 'action_route=UpdateView',
                 type: 'POST',
                 data: {
                     id: id,
                     newName: name,
-                    newDescription: description
+                    newDescription: description,
+                    newIsDefault: isDefault
                 },
                 dataType: 'json',
                 beforeSend: function (x) {
@@ -227,7 +227,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.service.ViewService
                         response.msg = 'ok';
                     }
                 } else if (layerMissing) {
-                    // not loaded yet and layer missing 
+                    // not loaded yet and layer missing
                     response.msg = 'notloaded';
                 } else {
                     // not loaded yet but all layers found

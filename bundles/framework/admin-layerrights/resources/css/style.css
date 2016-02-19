@@ -1,46 +1,39 @@
 .admin-layerrights-layers .layer-rights-table {
    }
-  .admin-layerrights-layers .layer-rights-table th {
-    padding: 2px 5px; }
   .admin-layerrights-layers .layer-rights-table th, .admin-layerrights-layers .layer-rights-table td {
     text-align: center; }
+  .admin-layerrights-layers .layer-rights-table th {
+    padding: 2px 5px; }
 
 table.layer-rights-table thead tr {
   position: relative;
   display: block; }
-  table.layer-rights-table thead tr th {
+  table.layer-rights-table thead tr th:first-child {
     width: 40%;
     padding: 2px 5px;
-    text-align: center; }
-  table.layer-rights-table thead tr th + th {
-    width: 15%; }
-  table.layer-rights-table thead tr th + th + th {
-    width: 15%; }
-  table.layer-rights-table thead tr th + th + th + th {
-    width: 15%; }
-  table.layer-rights-table thead tr th + th + th + th + th {
+    text-align: center;
+    min-width: 380px; }
+  table.layer-rights-table thead tr th {
     width: 15%; }
 table.layer-rights-table tbody {
   position: relative;
   display: block;
   width: 100%;
   overflow: auto; }
-  @media screen and (max-height: 800px) {
+  @media screen and (max-height: 600px) {
+    table.layer-rights-table tbody {
+      max-height: 86px; } }
+  @media screen and (max-height: 800px) and (min-height: 600px) {
     table.layer-rights-table tbody {
       max-height: 280px; } }
   @media screen and (min-height: 800px) {
     table.layer-rights-table tbody {
       max-height: 480px; } }
-  table.layer-rights-table tbody tr td {
+  table.layer-rights-table tbody tr td:first-child {
     width: 40%;
-    text-align: center; }
-  table.layer-rights-table tbody tr td + td {
-    width: 15%; }
-  table.layer-rights-table tbody tr td + td + td {
-    width: 15%; }
-  table.layer-rights-table tbody tr td + td + td + td {
-    width: 15%; }
-  table.layer-rights-table tbody tr td + td + td + td + td {
+    text-align: center;
+    min-width: 380px; }
+  table.layer-rights-table tbody tr td {
     width: 15%; }
 
 div.admin-layerrights-flyout div.oskari-flyoutcontentcontainer {

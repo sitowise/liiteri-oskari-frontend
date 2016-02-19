@@ -32,19 +32,29 @@ if (!Function.prototype.bind) {
                 // exted given object (layer) with this one
                 if(model) {
                     for(var key in model) {
-                        var prop = model[key];
-                        if(typeof prop === 'function') {
+                        if(model[key] && typeof model[key] === 'function') {
+                            var prop = model[key];
                             this[key] = prop.bind(this.attributes);
                         }
                     }
                 }
-                //jQuery.extend(this, model);
+                this._selectFirstStyle();
                 this.supportedLanguages = Oskari.getSupportedLanguages();
                 // setup backbone id so collections work
                 this.id = model.getId();
             },
             /**
-             * Sets the internal state for full capabilities response. 
+             * Selects the first style so legendImage will show initial value
+             * @return {[type]} [description]
+             */
+            _selectFirstStyle : function() {
+                var styles = this.getStyles();
+                if(styles.length) {
+                    this.selectStyle(styles[0].getName());
+                }
+            },
+            /**
+             * Sets the internal state for full capabilities response.
              * Call setupCapabilities with selected wmslayer to pick one layer def from the whole response after calling this.
              * @param  {Object} capabilities response from server
              */
@@ -64,7 +74,7 @@ if (!Function.prototype.bind) {
                     capabilities.groups.sort(sortFunction);
                     _.each(capabilities.groups, function (group) {
                         me._sortCapabilities(group);
-                    }); 
+                    });
                 }
             },
             _getPropertyComparatorFor : function(property) {
@@ -109,6 +119,8 @@ if (!Function.prototype.bind) {
                     silent: true
                 });
 
+                this._selectFirstStyle();
+
                 // this will trigger change so the previous can be done silently
                 this.setCapabilitiesResponse(capabilities);
             },
@@ -123,21 +135,12 @@ if (!Function.prototype.bind) {
                 }
             },
             /**
-             * Extra handling per layertype. If data is not given assume getter, otherwise setup data.
+             * Extra handling per layertype in format key=layertype, value is a function that takes params data and reference to the map layer.
+             * Like "wmts" : function(data, mapLayer) {}
+             * If data is not given assume getter, otherwise setup data.
              * @type {Object}
              */
             _typeHandlers : {
-                "wmts" : function(data, mapLayer) {
-                    if(!data) {
-                        return {
-                            tileMatrix : this.getOriginalMatrixSetData()
-                        };  
-                    }
-                    else {
-                        mapLayer.setOriginalMatrixSetData(data.tileMatrix);
-                    }
-                }
-
             },
             /**
              * Recursive function to search capabilities by layerName.
@@ -181,30 +184,29 @@ if (!Function.prototype.bind) {
                   found = me.setupCapabilities(wmsName, group);
                 }
                 // layer node
-                if (capabilities.layerName == layerName) {
+                if (capabilities.layerName === layerName) {
                     if(!additionalId) {
                         me._setupFromCapabilitiesValues(capabilities);
                         return true;
-
-                    } else if(capabilities.additionalId == additionalId) {
+                    } else if(capabilities.additionalId === additionalId) {
                         me._setupFromCapabilitiesValues(capabilities);
                         return true;
                     }
                 }
                 // group node
-                if (capabilities.self && capabilities.self.layerName == layerName) {
+                if (capabilities.self && capabilities.self.layerName === layerName) {
                     me._setupFromCapabilitiesValues(capabilities.self);
                     return true;
                 }
                 var found = false;
 
-                // check layers directly under this 
+                // check layers directly under this
                 _.each(capabilities.layers, function (layer) {
                     if (!found) {
                         found = me.setupCapabilities(layerName, layer, additionalId);
                     }
                 });
-                // if not found, check any groups under this 
+                // if not found, check any groups under this
                 if (!found && capabilities.groups) {
                     _.each(capabilities.groups, function (group) {
                         if (!found) {
@@ -251,7 +253,50 @@ if (!Function.prototype.bind) {
                 }
                 return null;
             },
-
+            /**
+             * Returns service version if defined or null if not
+             * @return {String} version
+             */
+            getVersion: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.version;
+                }
+                return null;
+            },
+            /**
+             * Returns service  jobtype if defined or null if not
+             * @return {String} jobtype
+             */
+            getJobType: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.jobtype;
+                }
+                return null;
+            },
+            /**
+             * Returns capabilities for layer JSON
+             * @return {Object} capabilities
+             */
+            getCapabilities: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.capabilities;
+                }
+                return null;
+            },
+            /**
+             * Returns wfs service manual refresh mode
+             * @return {Boolean} true/false
+             */
+            isManualRefresh: function () {
+                var adminBlock = this.getAdmin();
+                if (adminBlock) {
+                    return adminBlock.manualRefresh;
+                }
+                return false;
+            },
             /**
              * Returns interface url
              * @return {String} url
@@ -299,7 +344,26 @@ if (!Function.prototype.bind) {
              * @returns {String} legend url
              */
             getLegendUrl: function() {
-                return this.getCurrentStyle().getLegend();
+                var adminBlock = this.getAdmin();
+                var capabilitiesBlock = this.getCapabilities();
+                var currentStyleName = this.getCurrentStyle().getName();
+
+                if (capabilitiesBlock) {
+                    if(currentStyleName && capabilitiesBlock.styles) {
+                        var selectedStyle = jQuery.grep(capabilitiesBlock.styles ||[], function(style){
+                            return style.name === currentStyleName;
+                        });
+
+                        if(selectedStyle.length>0) {
+                            return selectedStyle[0].legend;
+                        }
+                    }
+                    if(adminBlock) {
+                        return adminBlock.legendImage;
+                    }
+                }
+
+                return ''; //this.getCurrentStyle().getLegend();
             },
 
             /**
@@ -314,27 +378,19 @@ if (!Function.prototype.bind) {
                 // add languages from possible object value
                 if (attr && typeof attr === 'object') {
                     for(var key in attr) {
-                        langList.push(key);
+                        if(attr.hasOwnProperty(key)) {
+                            langList.push(key);
+                        }
                     }
                 }
 
                 // add any missing languages
-                _.each(this.supportedLanguages, function(lang) {
-                    if(jQuery.inArray(lang, langList) == -1) {
+                _.each(this.supportedLanguages, function (lang) {
+                    if (jQuery.inArray(lang, langList) === -1) {
                         langList.push(lang);
                     }
                 });
-                /*
-                // TODO: do we need to sort by language?
-                langList.sort(function (a, b) {
-                    if (a < b) {
-                        return -1;
-                    }
-                    if (a > b) {
-                        return 1;
-                    }
-                    return 0;
-                });*/
+
                 return langList;
             }
         });

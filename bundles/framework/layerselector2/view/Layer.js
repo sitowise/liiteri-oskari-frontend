@@ -27,7 +27,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
 				'<div class="layer-icon"></div>' +
 			'</div>' +
 			'<div class="layer-title"></div>' +
-        //'<div class="layer-keywords"></div>' + 
+        //'<div class="layer-keywords"></div>' +
         '</div>',
         /**
          * @method getId
@@ -127,8 +127,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
             //"use strict";
             var me = this,
                 sandbox = me.sandbox,
-                // create from layer template 
-                // (was clone-from-template but template was only used once so there was some overhead)  
+                // create from layer template
+                // (was clone-from-template but template was only used once so there was some overhead)
                 layerDiv = jQuery(this.__template),
                 tooltips = this.localization.tooltip,
                 tools = jQuery(layerDiv).find('div.layer-tools'),
@@ -157,7 +157,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
                 // I'll just leave this like it was on old implementation
                 icon.attr('title', tooltips['type-wms']);
             } else if (layer.isLayerOfType('WFS')) {
-                icon.attr('title', tooltips['type-wfs']);
+                if(layer.isManualRefresh()) {
+                    icon.attr('title', tooltips['type-wfs-manual']);
+                }
+                else {
+                    icon.attr('title', tooltips['type-wfs']);
+                }
             } else if (layer.isLayerOfType('VECTOR')) {
                 icon.attr('title', tooltips['type-wms']);
             }
@@ -226,6 +231,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
             layerDiv.attr('layer_id', layer.getId());
             layerDiv.find('input').attr('id', 'oskari_layerselector2_layerlist_checkbox_layerid_' + layer.getId());
             layerDiv.find('.layer-title').append(layer.getName());
+            layerDiv.find('.layer-title').click(function(){
+                layerDiv.find('input').prop('checked', !layerDiv.find('input').prop('checked')).trigger('change');
+            });
+
             layerDiv.find('input').change(function () {
                 checkbox = jQuery(this);
                 if (checkbox.is(':checked')) {

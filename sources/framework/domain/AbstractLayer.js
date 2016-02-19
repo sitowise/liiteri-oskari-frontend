@@ -40,6 +40,9 @@ Oskari.clazz.define(
         /* optional options */
         me._options = options || {};
 
+        /* optional attributes */
+        me._attributes = {};
+
         /* modules can "tag" the layers with this for easier reference */
         me._metaType = null;
 
@@ -129,6 +132,8 @@ Oskari.clazz.define(
         me._admin = null;
 
         this._gfiContent = null;
+
+        me._created = null;
 
     }, {
         /**
@@ -269,10 +274,14 @@ Oskari.clazz.define(
          */
         getName: function (lang) {
             if (this._name && typeof this._name === 'object') {
-                if (lang) {
-                    return this._name[lang];
+                if (!lang) {
+                    lang = Oskari.getLang();
                 }
-                return this._name[Oskari.getLang()];
+                var value = this._name[lang];
+                if(!value) {
+                    value = this._name[Oskari.getDefaultLanguage()];
+                }
+                return value;
             }
             return this._name;
         },
@@ -328,10 +337,14 @@ Oskari.clazz.define(
          */
         getOrganizationName: function (lang) {
             if (this._organizationName && typeof this._organizationName === 'object') {
-                if (lang) {
-                    return this._organizationName[lang];
+                if (!lang) {
+                    lang = Oskari.getLang();
                 }
-                return this._organizationName[Oskari.getLang()];
+                var value = this._organizationName[lang];
+                if(!value) {
+                    value = this._organizationName[Oskari.getDefaultLanguage()];
+                }
+                return value;
             }
             return this._organizationName;
         },
@@ -354,10 +367,14 @@ Oskari.clazz.define(
          */
         getInspireName: function (lang) {
             if (this._inspireName && typeof this._inspireName === 'object') {
-                if (lang) {
-                    return this._inspireName[lang];
+                if (!lang) {
+                    lang = Oskari.getLang();
                 }
-                return this._inspireName[Oskari.getLang()];
+                var value = this._inspireName[lang];
+                if(!value) {
+                    value = this._inspireName[Oskari.getDefaultLanguage()];
+                }
+                return value;
             }
             return this._inspireName;
         },
@@ -397,10 +414,14 @@ Oskari.clazz.define(
          */
         getDescription: function (lang) {
             if (this._description && typeof this._description === 'object') {
-                if (lang) {
-                    return this._description[lang];
+                if (!lang) {
+                    lang = Oskari.getLang();
                 }
-                return this._description[Oskari.getLang()];
+                var value = this._description[lang];
+                if(!value) {
+                    value = this._description[Oskari.getDefaultLanguage()];
+                }
+                return value;
             }
             return this._description;
         },
@@ -672,7 +693,7 @@ Oskari.clazz.define(
          * Selects a #Oskari.mapframework.domain.Style with given name as #getCurrentStyle.
          * If style is not found, assigns an empty #Oskari.mapframework.domain.Style to #getCurrentStyle
          */
-        selectStyle: function (styleName, preventRecursion) {
+        selectStyle: function (styleName) {
             var me = this,
                 i,
                 style;
@@ -681,11 +702,13 @@ Oskari.clazz.define(
                 style = me.getStyles()[i];
                 if (style.getName() === styleName) {
                     me._currentStyle = style;
-                    if (style.getLegend()) {
-                        me._legendImage = style.getLegend();
-                    }
                     return;
                 }
+            }
+            // if layer has only one style - always use it
+            if(me.getStyles().length === 1) {
+                this._currentStyle = me.getStyles()[0];
+                return;
             }
 
             // didn't match anything select the first one
@@ -740,6 +763,10 @@ Oskari.clazz.define(
          * adds layer tool to tools
          */
         addTool: function (tool) {
+            if(!tool || this.getTool(tool.getName())) {
+                // check for duplicates and invalid param
+                return;
+            }
             this._tools.push(tool);
         },
 
@@ -764,7 +791,7 @@ Oskari.clazz.define(
                     }
                 }
             }
-            return tool;
+            return null;
         },
         /**
          * @method setLegendImage
@@ -778,6 +805,10 @@ Oskari.clazz.define(
          * @return {String} URL to a legend image
          */
         getLegendImage: function () {
+            var style = this.getCurrentStyle();
+            if(style && style.getLegend()) {
+                return style.getLegend();
+            }
             return this._legendImage;
         },
         /**
@@ -931,6 +962,13 @@ Oskari.clazz.define(
             return this._params;
         },
         /**
+         * @method setParams
+         * @param {Object} optional layer parameters for OpenLayers
+         */
+        setParams: function (param) {
+            this._params = param;
+        },
+        /**
          * @method getOptions
          * @return {Object} optional layer options for OpenLayers, empty object if no options were passed in construction
          */
@@ -938,11 +976,37 @@ Oskari.clazz.define(
             return this._options;
         },
         /**
+         * @method getAttributes
+         * @return {Object} optional layer attributes like heatmap-parameters
+         */
+        getAttributes: function () {
+            return this._attributes || {};
+        },
+        /**
+         * @method setAttributes
+         * @param {Object} optional layer attributes like heatmap-parameters
+         */
+        setAttributes: function (param) {
+            this._attributes = param;
+        },
+
+        /**
          * @method hasFeatureData
          * @return {Boolean} true if the layer has feature data
          */
         hasFeatureData: function () {
             return this._featureData;
+        },
+        /**
+         * @method isManualRefresh
+         * @return {Boolean} true/false
+         */
+        isManualRefresh: function () {
+            if (this.getAttributes().manualRefresh){
+                return this.getAttributes().manualRefresh
+            } else {
+                return false;
+            }
         },
         /**
          * @method getLayerName
@@ -1108,6 +1172,22 @@ Oskari.clazz.define(
          */
         getAdmin: function () {
             return this._admin;
+        },
+
+        /**
+         * Sets an created block
+         * @param {Date} created
+         */
+        setCreated: function(created){
+            this._created = created;
+        },
+
+        /**
+         * Returns an created block
+         * @return {Date} created
+         */
+        getCreated: function(){
+            return this._created;
         }
         },
         

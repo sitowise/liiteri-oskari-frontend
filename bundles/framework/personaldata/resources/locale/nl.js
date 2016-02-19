@@ -1,10 +1,12 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "nl",
     "key": "PersonalData",
     "value": {
         "title": "Mijn gegevens",
         "desc": "Mijn gegevens",
         "notLoggedIn": "U kunt bekeken kaarten opslaan en bladeren door kaarten die je hebt geïntegreerd op andere websites in Mijn gegevens. <a href='/web/en/login'> Log in </ a>.",
+        "notLoggedInText": "NOT TRANSLATED.",
         "tabs": {
             "myviews": {
                 "title": "Mijn kaartweergaven",
@@ -16,8 +18,8 @@ Oskari.registerLocalization({
                     "name": "Naam",
                     "description": "Beschrijving",
                     "publish": "Gepubliceerd",
-                    "edit": " ",
-                    "delete": " "
+                    "edit": "Wijzigen",
+                    "delete": "Verwijderen"
                 },
                 "popup": {
                     "edit": "Wijzig informatie van de weergave",
@@ -58,7 +60,7 @@ Oskari.registerLocalization({
             "publishedmaps": {
                 "title": "Geïntegreerde kaarten",
                 "show": "Toon op de kaart",
-                "getHTML": "NOT TRANSLATED",
+                "getHTML": "HTML code",
                 "edit": "Bewerken",
                 "publish": "Kaart publiceren",
                 "unpublish": "Kaart niet vrijgeven",
@@ -67,13 +69,13 @@ Oskari.registerLocalization({
                     "name": "Naam",
                     "domain": "Kaart instellingen",
                     "publish": "Status",
-                    "show": "NOT TRANSLATED",
-                    "html": " ",
-                    "edit": " ",
-                    "delete": " "
+                    "show": "Acties",
+                    "html": "HTML code",
+                    "edit": "Wijzigen",
+                    "delete": "Verwijderen"
                 },
                 "published": {
-                    "desc": "NOT TRANSLATED"
+                    "desc": "De kaart invoegen door het toevoegen van de onderstaande HTML code op uw website:"
                 },
                 "popup": {
                     "edit": "Wijzig kaartnaam",
@@ -129,4 +131,5 @@ Oskari.registerLocalization({
             "no": "Nee"
         }
     }
-});
+}
+);

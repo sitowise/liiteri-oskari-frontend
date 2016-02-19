@@ -21,45 +21,38 @@ Oskari.clazz.category(
             // Without a conf, all buttons are included
             return true;
         },
+        /**
+         * @method _addDefaultButtons
+         * @private
+         *
+         * Adds default map window controls to toolbar.
+         * TODO: check if we really want to do this here instead of
+         * mapfull start()
+         */
+        _addDefaultButtons: function () {
+            var me = this,
+                loc = this.getLocalization('buttons'),
+                sandbox = this.getSandbox(),
+                reqBuilder = sandbox.getRequestBuilder('ToolSelectionRequest'),
+                gfiRn = 'MapModulePlugin.GetFeatureInfoActivationRequest',
+                gfiReqBuilder = sandbox.getRequestBuilder(gfiRn),
+                group,
+                req;
 
-    /**
-     * @method _addDefaultButtons
-     * @private
-     *
-     * Adds default map window controls to toolbar.
-     * TODO: check if we really want to do this here instead of
-     * mapfull start()
-     */
-    _addDefaultButtons: function () {
-        var me = this,
-            loc = this.getLocalization('buttons'),
-            reqBuilder = this.getSandbox().getRequestBuilder('ToolSelectionRequest'),
-            gfiRn = 'MapModulePlugin.GetFeatureInfoActivationRequest',
-            gfiReqBuilder = this.getSandbox().getRequestBuilder(gfiRn),
-            rb,
-            rn,
-            req,
-            linkParams,
-            pcn,
-            okcn,
-            dialog,
-            okBtn,
-            linkContent,
-            wopParm,
-            link,
-            mapUrlPrefix = me.conf ? me.getSandbox().getLocalizedProperty(me.conf.mapUrlPrefix) : null,
-            buttonGroups = [
-                    {
-                        'name' : 'basictools',
-                        'buttons': {
-                            'zoombox' : {
-                                iconCls: 'tool-zoombox',
-                                tooltip: loc.zoom,
-                                sticky: true,
-                                callback: function () {
-                                    rn = 'map_control_zoom_tool';
-                                    me.getSandbox().request(me, gfiReqBuilder(false));
-                                    me.getSandbox().request(me, reqBuilder(rn));
+            var buttonGroups = [{
+                    'name': 'history',
+                    'buttons': {
+                        'reset': {
+                            iconCls: 'tool-reset',
+                            tooltip: loc.history.reset,
+                            sticky: false,
+                            callback: function () {
+                                // statehandler reset state
+                                var rb = me.getSandbox().getRequestBuilder(
+                                    'StateHandler.SetStateRequest'
+                                );
+                                if (rb) {
+                                    me.getSandbox().request(me, rb());
                                 }
                             },
                             'select' : {
@@ -116,18 +109,61 @@ Oskari.clazz.category(
 							    }
 							}
                         },
+                        'history_back': {
+                            iconCls: 'tool-history-back',
+                            tooltip: loc.history.back,
+                            sticky: false,
+                            callback: function () {
+                                me.getSandbox().request(
+                                    me,
+                                    reqBuilder('map_control_tool_prev')
+                                );
+                            }
+                        },
+                        'history_forward': {
+                            iconCls: 'tool-history-forward',
+                            tooltip: loc.history.next,
+                            sticky: false,
+                            callback: function () {
+                                me.getSandbox().request(
+                                    me,
+                                    reqBuilder('map_control_tool_next')
+                                );
+                            }
+                        }
+                    }
+                }, {
+                    'name': 'basictools',
+                    'buttons': {
+                        'zoombox': {
+                            iconCls: 'tool-zoombox',
+                            tooltip: loc.zoom,
+                            sticky: true,
+                            callback: function () {
+                                var toolname = 'map_control_zoom_tool';
+                                if(gfiReqBuilder) {
+                                    me.getSandbox().request(
+                                        me,
+                                        gfiReqBuilder(false)
+                                    );
+                                }
+                                me.getSandbox().request(me, reqBuilder(toolname));
+                            }
+                        },
                         'select': {
                             iconCls: 'tool-pan',
                             tooltip: loc.pan,
                             selected: true,
                             sticky: true,
                             callback: function () {
-                                rn = 'map_control_navigate_tool';
-                                me.getSandbox().request(
-                                    me,
-                                    gfiReqBuilder(true)
-                                );
-                                me.getSandbox().request(me, reqBuilder(rn));
+                                var toolname = 'map_control_navigate_tool';
+                                if(gfiReqBuilder) {
+                                    me.getSandbox().request(
+                                        me,
+                                        gfiReqBuilder(true)
+                                    );
+                                }
+                                me.getSandbox().request(me, reqBuilder(toolname));
                             }
                         },
                         'measureline': {
@@ -135,12 +171,14 @@ Oskari.clazz.category(
                             tooltip: loc.measure.line,
                             sticky: true,
                             callback: function () {
-                                rn = 'map_control_measure_tool';
-                                me.getSandbox().request(
-                                    me,
-                                    gfiReqBuilder(false)
-                                );
-                                me.getSandbox().request(me, reqBuilder(rn));
+                                var toolname = 'map_control_measure_tool';
+                                if(gfiReqBuilder) {
+                                    me.getSandbox().request(
+                                        me,
+                                        gfiReqBuilder(false)
+                                    );
+                                }
+                                me.getSandbox().request(me, reqBuilder(toolname));
                             }
                         },
                         'measurearea': {
@@ -148,12 +186,14 @@ Oskari.clazz.category(
                             tooltip: loc.measure.area,
                             sticky: true,
                             callback: function () {
-                                rn = 'map_control_measure_area_tool';
-                                me.getSandbox().request(
-                                    me,
-                                    gfiReqBuilder(false)
-                                );
-                                me.getSandbox().request(me, reqBuilder(rn));
+                                var toolname = 'map_control_measure_area_tool';
+                                if(gfiReqBuilder) {
+                                    me.getSandbox().request(
+                                        me,
+                                        gfiReqBuilder(false)
+                                    );
+                                }
+                                me.getSandbox().request(me, reqBuilder(toolname));
                             }
                         }
                     }
@@ -165,58 +205,58 @@ Oskari.clazz.category(
                             tooltip: loc.link.tooltip,
                             sticky: false,
                             callback: function () {
-                                linkParams = me.getSandbox().generateMapLinkParameters({});
+                                var mapUrlPrefix = me.__getMapUrl();
+                                var linkParams = me.getSandbox().generateMapLinkParameters({});
                                 // This is kinda ugly...
                                 // Only show marker if there's no markers.
                                 if (linkParams.indexOf('&markers=') === -1) {
                                     linkParams += '&showMarker=true';
                                 }
-                                pcn = 'Oskari.userinterface.component.Popup';
-                                okcn = 'Oskari.userinterface.component.Button';
-                                dialog = Oskari.clazz.create(pcn);
+                                var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
                                 dialog.addClass('no_resize');
-                                okBtn = Oskari.clazz.create(okcn);
+                                var okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
                                 okBtn.setTitle(loc.link.ok);
                                 okBtn.addClass('primary');
                                 okBtn.setHandler(function () {
-                                    rn = 'EnableMapKeyboardMovementRequest';
                                     dialog.close();
-                                    me.getSandbox().postRequestByName(rn);
+                                    me.getSandbox().postRequestByName('EnableMapKeyboardMovementRequest');
                                 });
 
-                                linkContent = '<div class="linkcontent">' +
+                                var linkContent = '<div class="linkcontent">' +
                                     mapUrlPrefix + linkParams + '</div>';
-                                rn = 'DisableMapKeyboardMovementRequest';
-                                me.getSandbox().postRequestByName(rn);
+                                me.getSandbox().postRequestByName('DisableMapKeyboardMovementRequest');
                                 dialog.show(loc.link.title, linkContent, [okBtn]);
-                            }
-                        },
-                        'print': {
-                            iconCls: 'tool-print',
-                            tooltip: loc.print.tooltip,
-                            sticky: false,
-                            callback: function () {
-                                wopParm = 'location=1,' + 'status=1,' +
-                                    'scrollbars=1,' + 'width=850,' +
-                                    'height=1200';
-                                link = window.location.pathname + '?' +
-                                    me.getSandbox().generateMapLinkParameters() +
-                                    '&p_p_id=Portti2Map_WAR_portti2mapportlet&p_p_lifecycle=0&p_p_state=exclusive' +
-                                    '&showMarker=false&forceCache=true&mapmode=print&viewId=2';
-                                window.open(link, 'Print', wopParm);
                             }
                         }
                     }
                 }];
 
-        for (group in buttonGroups) {
-            var buttonGroup = buttonGroups[group],
-            tool;
-            for (tool in buttonGroup.buttons) {
-                if (this._isButtonConfigured(tool, buttonGroup.name)) {
-                    this.addToolButton(tool, buttonGroup.name, buttonGroup.buttons[tool]);
+            for (group in buttonGroups) {
+                var buttonGroup = buttonGroups[group],
+                    tool;
+                for (tool in buttonGroup.buttons) {
+                    if (this._isButtonConfigured(tool, buttonGroup.name)) {
+                        this.addToolButton(tool, buttonGroup.name, buttonGroup.buttons[tool]);
+                    }
                 }
             }
+        },
+
+        /**
+         * Returns the map url for link tool
+         * @private
+         * @return {String} base URL for state parameters
+         */
+        __getMapUrl : function() {
+            var sandbox = this.getSandbox();
+            var url = null;
+            if(this.conf) {
+                url = sandbox.getLocalizedProperty(this.conf.mapUrlPrefix);
+            }
+
+            // setup current url as base if none configured
+            return sandbox.createURL(url || window.location.pathname, true);
         }
+
     }
 );

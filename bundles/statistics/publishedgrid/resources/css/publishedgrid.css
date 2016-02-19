@@ -8,10 +8,9 @@
 }
 
   #publishedgridToggle.hidePublishedGrid {
-    background: url(../../../../framework/mapmodule-plugin/resources/images/hide-navigation.png); }
+    background: url(../../../../mapping/mapmodule/resources/images/hide-navigation.png); }
   #publishedgridToggle.showPublishedGrid {
-    background: url(../../../../framework/mapmodule-plugin/resources/images/show-navigation.png);
-}
+    background: url(../../../../mapping/mapmodule/resources/images/show-navigation.png); }
 
 .publishedgrid .slick-header-column {
     height: 130px;

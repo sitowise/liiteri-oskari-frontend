@@ -5,7 +5,9 @@ Oskari.clazz.define(
     'Oskari.mapframework.bundle.mapwfs2.service.Connection',
     /**
      * @static @method create called automatically on construction
-     *
+     * For debugging you can add:
+     * - this.cometd.addListener('/service/**', console.log); // debug
+     * - this.cometd.addListener('/meta/**', console.log); // debug
      * @param {Object} config
      * @param {Object} plugin
      *
@@ -18,6 +20,7 @@ Oskari.clazz.define(
         me.cometd = jQuery.cometd;
 
         me._connected = false;
+        me._handshakeInProcess = false;
         me._errorSub = null;
 
         me._connectionProblemWaitTime = 5000; // wait before say that we have disconnected (retry change)
@@ -42,14 +45,18 @@ Oskari.clazz.define(
         me.cometd.configure({
             url: me.cometURL,
             //logLevel : "debug",
-            backoffIncrement: me._backoffIncrement, // if connection can't be established add this time to waiting time before trying again (ms)
-            maxBackoff: me._maxBackoff, // maximum time of backoff (not incremented after reaching) (ms)
-            maxNetworkDelay: me._maxNetworkDelay // max request time before considering that the request failed (ms)
+            // if connection can't be established add this time to waiting time before trying again (ms)
+            backoffIncrement: me._backoffIncrement,
+            // maximum time of backoff (not incremented after reaching) (ms)
+            maxBackoff: me._maxBackoff,
+            // max request time before considering that the request failed (ms)
+            maxNetworkDelay: me._maxNetworkDelay
         });
 
         me.cometd.addListener(
             '/meta/handshake',
             function () {
+                me._handshakeInProcess = false;
                 me._metaHandshake.apply(me, arguments);
             }
         );
@@ -59,23 +66,24 @@ Oskari.clazz.define(
                 me._metaConnect.apply(me, arguments);
             }
         );
-        //this.cometd.addListener('/service/**', this.getData); // debug
-        //this.cometd.addListener('/meta/**', this.getData); // debug
 
         if (!me._lazy) {
-            me.connect(); // init conn
+            // init conn
+            me.connect();
         }
 
         // Disconnect when the page unloads
         jQuery(window).unload(function () {
-            me.disconnect();
-        });
+            me.disconnect(); });
     }, {
         /**
          * @method connect
          */
         connect: function () {
-            this.cometd.handshake();
+            if(!this._connected && !this._handshakeInProcess ){
+                this._handshakeInProcess = true;
+                this.cometd.handshake();
+            }
         },
 
         /**
@@ -244,14 +252,4 @@ Oskari.clazz.define(
             }
 
         }
-
-        /**
-         * @method getData
-         * @param {Object} data
-         */
-        /*
-    , getData : function (data) {
-        console.log("getData:", data);
-    }
-    */
     });

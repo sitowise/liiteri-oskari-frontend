@@ -4,12 +4,12 @@ Oskari.registerLocalization(
     "key": "admin-layerrights",
     "value": {
         "title": "Layer Rights",
-        "desc": "desc",
+        "desc": "NOT TRANSLATED",
         "tile": {
             "title": "Map Layer Rights"
         },
-        "flyout" : {
-            "title" : "Layer Rights Management",
+        "flyout": {
+            "title": "Map Layer Rights",
             "message": "Layer Rights Management",
             "datatablelanguagefile": "English.json"
         },
@@ -19,14 +19,15 @@ Oskari.registerLocalization(
             "rightToView": "View",
             "rightToDownload": "Download",
             "rightToPublishView": "View in Embedded map",
-            "success" : {
-                "title" : "Layer rights saved",
-                "message" : "Layer rights were saved successfully."
+            "success": {
+                "title": "Layer Rights Saved",
+                "message": "Map layer rights have been updated."
             },
-            "error" : {
-                "title" : "Layer rights not saved",
-                "message" : "Saving of layer rights failed."
-            }
+            "error": {
+                "title": "Error",
+                "message": "Map layer rights could not been updated."
+            },
+            "selectValue": "Select value"
         },
         "save" : "Save",
         "selectRole": "Role",

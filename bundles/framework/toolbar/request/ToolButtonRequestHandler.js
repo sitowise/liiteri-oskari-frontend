@@ -5,7 +5,7 @@
  * Oskari.mapframework.bundle.toolbar.request.ToolButtonStateRequest
  *  for managing toolbar buttons
  */
-Oskari.clazz.define('Oskari.mapframework.bundle.toolbar.request.ToolButtonRequestHandler', 
+Oskari.clazz.define('Oskari.mapframework.bundle.toolbar.request.ToolButtonRequestHandler',
 
 /**
  * @method create called automatically on construction
@@ -17,7 +17,7 @@ function(toolbar) {
     this._toolbar = toolbar;
 }, {
     /**
-     * @method handleRequest 
+     * @method handleRequest
      * Hides the requested infobox/popup
      * @param {Oskari.mapframework.core.Core} core
      *      reference to the application core (reference sandbox core.getSandbox())
@@ -27,7 +27,6 @@ function(toolbar) {
     handleRequest : function(core, request) {
         var sandbox = core.getSandbox(),
             requestName = request.getName();
-
         if(requestName == 'Toolbar.AddToolButtonRequest') {
             this._handleAdd(sandbox, request);
         }

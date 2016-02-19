@@ -35,6 +35,16 @@
     transition-property: $property;
 }
 
+/* capabilities popup */
+.admin-layerselector-capabilities-popup {
+    width : 50%;
+
+    textarea {
+        width : 95%;
+        height : 250px;
+    }
+}
+
 /* layer group container */
 div.admin-layerselector {
 
@@ -361,7 +371,7 @@ div.admin-layerselector {
 
     .show-add-class {
         padding: 10px 10px;
-        height: 230px;
+        height: 100%;
         width: 100%;
     }
 
@@ -457,7 +467,7 @@ div.admin-layerselector {
 
     .left-tools .layer-opacity {
         display: inline-block;
-        background-image: url('../../../layerselection2/images/opacity_slider.png');
+        background-image: url('../../../admin-layerselector/resources/images/opacity_slider.png');
         background-repeat: no-repeat;
         background-position-y: 3px;
     }

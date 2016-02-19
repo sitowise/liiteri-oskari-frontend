@@ -42,7 +42,7 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
             if (buttons && buttons.length > 0) {
                 for (i = 0; i < buttons.length; i += 1) {
                     buttons[i].insertTo(actionDiv);
-                    if (buttons[i].focus) {
+                    if (buttons[i].isFocus()) {
                         focusedButton = i;
                     }
                 }
@@ -64,8 +64,11 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
                 contentDiv.css('overflow-y', 'auto');
             }
             // center on screen
-            this.dialog.css('margin-left', -(this.dialog.width() / 2) + 'px');
-            this.dialog.css('margin-top', -(this.dialog.height() / 2) + 'px');
+            me.dialog.css('margin-left', -(this.dialog.width() / 2) + 'px');
+            me.dialog.css('margin-top', -(this.dialog.height() / 2) + 'px');
+
+            // make popup to visible
+            me.dialog.css('opacity', 1);
         },
         /**
          * @method fadeout
@@ -99,9 +102,10 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
          */
         createCloseButton: function (label) {
             var me = this,
-                okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-
-            okBtn.setTitle(label);
+                okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.CloseButton');
+            if(label) {
+                okBtn.setTitle(label);
+            }
             okBtn.setHandler(function () {
                 me.close(true);
             });
@@ -251,7 +255,7 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
                 );
             }
         },
-        /** 
+        /**
          * @method setContent
          * Sets dialog content element
          * @param {HTML/DOM/jQueryObject}
@@ -331,15 +335,17 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
         /**
          * @method makeDraggable
          * Makes dialog draggable with jQuery Event Drag plugin
+         * @param options  optional options for draggable
          */
-        makeDraggable: function () {
-            var me = this;
-            me.dialog.css('position', 'absolute');
-            me.dialog.draggable({
+        makeDraggable: function (options) {
+            var me = this,
+                dragOptions = options ? options : {
                 scroll: false,
                 handle: "h3.popupHeader",
-                cursor: "move"
-            });
+                cursor: "move
+            };
+            me.dialog.css('position', 'absolute');
+            me.dialog.draggable(dragOptions);
         },
 
         makeResizable: function(options) {

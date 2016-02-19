@@ -4,7 +4,7 @@ define([
     "text!_bundle/templates/group/subLayerTemplate.html",
     'text!_bundle/templates/adminGroupSettingsTemplate.html'
 ],
-    function (ViewTemplate, AdminLayerSettingsView, SubLayerTemplate, AdminGroupSettingsTemplate) {
+    function (ViewTemplate, AdminLayerSettingsView, SubLayerTemplate) {
         return Backbone.View.extend({
             tagName: 'div',
             className: 'layer',
@@ -40,18 +40,14 @@ define([
                 me.subLayerTemplate = _.template(SubLayerTemplate);
                 // listenTo will remove dead listeners, use it instead of on()
                 this.listenTo(this.model, 'add', function() {
-                    //console.log('layerView add', arguments);
                     me.render();
                 });
                 this.listenTo(this.model, 'change', function() {
-                    //console.log('layerView change', arguments);
                     me.render();
                 });
                 this.listenTo(this.model, 'remove', function() {
-                    //console.log('layerView remove', arguments);
                     me.render();
                 });
-                //this.model.on('change', this.render, this);
                 this.supportedTypes = this.options.supportedTypes;
                 me.render();
             },
@@ -87,12 +83,6 @@ define([
                 } else if (layer.isLayerOfType('WMS')) {
                     icon.attr('title', tooltips['type-wms']);
                 } else if (layer.isLayerOfType('WMTS')) {
-                    // FIXME: WMTS is an addition done by an outside bundle
-                    // so this shouldn't
-                    // be here
-                    // but since it would require some refactoring to make
-                    // this general
-                    // I'll just leave this like it was on old implementation
                     icon.attr('title', tooltips['type-wms']);
                 } else if (layer.isLayerOfType('WFS')) {
                     icon.attr('title', tooltips['type-wfs']);
@@ -155,11 +145,6 @@ define([
                         layerTabModel: me.options.layerTabModel
                     });
                     element.append(settings.$el);
-
-                    // TODO when backend works and we have new jQuery UI
-                    //this.$el.find("#add-layer-inspire-theme").tagit({availableTags: ["Hallinnolliset yksiköt", "Hydrografia", "Kiinteistöt", "Kohteet", "Koordinaattijärjestelmät", "Korkeus", "Liikenneverkot", "Maankäyttö", "Maanpeite","Maaperä","Merialueet", "Metatieto"]});
-
-
                     element.find('.admin-add-layer').addClass('show-edit-layer');
                 } else {
                     //hide layer settings
@@ -242,14 +227,13 @@ define([
                                 modelId: subLayerId,
                                 baseLayerId: parentId
                             });
-                            exitPopup(); 
+                            exitPopup();
                         });
-                        //exitPopup();
                     });
                     element.append(settings.$el);
 
                     // TODO when backend works and we have new jQuery UI
-                    //this.$el.find("#add-layer-inspire-theme").tagit({availableTags: ["Hallinnolliset yksiköt", "Hydrografia", "Kiinteistöt", "Kohteet", "Koordinaattijärjestelmät", "Korkeus", "Liikenneverkot", "Maankäyttö", "Maanpeite","Maaperä","Merialueet", "Metatieto"]});
+                    //this.$el.find("#add-layer-inspire-theme").tagit({availableTags: ["Hallinnolliset yksik�t", "Hydrografia", "Kiinteist�t", "Kohteet", "Koordinaattij�rjestelm�t", "Korkeus", "Liikenneverkot", "Maank�ytt�", "Maanpeite","Maaper�","Merialueet", "Metatieto"]});
                     element.addClass('show-edit-sublayer');
                 } else {
                     //hide layer settings

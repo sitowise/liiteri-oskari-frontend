@@ -16,6 +16,7 @@ Oskari.registerLocalization(
             "abstract": "Información básica",
             "inspire": "metadatos Inspire",
             "jhs": "ISO 19115 metadatos",
+            "quality": "Calidad de los Datos",
             "xml": "ISO 19139 XML archivo",
             "map": "Extensión geográfica",
             "pdf": "Imprimir",
@@ -379,6 +380,10 @@ Oskari.registerLocalization(
                     }
                 }
             },
+            "qualityContent": {
+                "qualityPassTrue": "El conjunto de datos es conforme a la especificación",
+                "qualityPassFalse": "El conjunto de datos no es conforme a la especificación"
+            },
             "heading": {
                 "abstractTextData": "Texto resumen (datos)",
                 "abstractTextService": "Texto resumen (resumen)",
@@ -409,7 +414,22 @@ Oskari.registerLocalization(
                 "spatialResolution": "Resolución espacial",
                 "temporalExtent": "Extensiones temporales",
                 "topicCategory": "Categorías del tema",
-                "useLimitation": "Limitaciones de uso"
+                "useLimitation": "Limitaciones de uso",
+                "absoluteExternalPositionalAccuracy": "Exactitud posicional externa absoluta",
+                "accuracyOfTimeMeasurement": "Exactitud de la medida del tiempo",
+                "completenessCommission": "Completitud (Comisión de integridad)",
+                "completenessOmission": "Omisión de integridad",
+                "conceptualConsistency": "Consistencia conceptual",
+                "domainConsistency": "Consistencia de Dominio",
+                "formatConsistency": "Consistencia de Formato",
+                "griddedDataPositionalAccuracy": "Exactitud posicional de datos de la cuadriculada",
+                "nonQuantitativeAttributeAccuracy": "Exactitud de los atributos no cuantitativos",
+                "quantitativeAttributeAccuracy": "Exactitud de los atributos  cuantitativos",
+                "relativeInternalPositionalAccuracy": "Exactitud posicional interna relativa",
+                "temporalConsistency": "Consistencia temporal",
+                "temporalValidity": "Validez temporal",
+                "thematicClassificationCorrectness": "Corrección de la clasificación temática",
+                "topologicalConsistency": "Consistencia topológica."
             }
         },
         "tile": {

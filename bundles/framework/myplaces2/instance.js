@@ -159,7 +159,7 @@ Oskari.clazz.define(
 
             sandbox.printDebug("Initializing my places module...");
 
-            // handles toolbar buttons related to my places 
+            // handles toolbar buttons related to my places
             this.buttons = Oskari.clazz.create("Oskari.mapframework.bundle.myplaces2.ButtonHandler", this);
             this.buttons.start();
 
@@ -179,7 +179,7 @@ Oskari.clazz.define(
             // Set max features to configured.
             var maxFeatures = (conf ? conf.maxFeatures : undefined);
             //'/web/fi/kartta?p_p_id=Portti2Map_WAR_portti2mapportlet&p_p_lifecycle=1&p_p_state=exclusive&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&_Portti2Map_WAR_portti2mapportlet_fi.mml.baseportlet.CMD=ajax.jsp&myplaces=WFS';
-            // this.conf.queryUrl; 
+            // this.conf.queryUrl;
             // back end communication
             this.myPlacesService = Oskari.clazz.create('Oskari.mapframework.bundle.myplaces2.service.MyPlacesService',
                 actionUrl, user.getUuid(), sandbox, defaults, this, {
@@ -348,46 +348,6 @@ Oskari.clazz.define(
                 }
             }
             return defaults;
-        },
-
-        /**
-         * Convert hexadecimal color values to decimal values (255,255,255)
-         * Green: hexToRgb("#0033ff").g
-         * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-         *
-         * @method hex
-         * hexadecimal color value e.g. '#00ff99'
-         */
-        hexToRgb: function (hex) {
-            // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-                return r + r + g + g + b + b;
-            });
-
-            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
-        },
-
-        /**
-         * Convert rgb values to hexadecimal color values
-         *
-         * @method rgb
-         * decimal color values e.g. 'rgb(255,0,0)'
-         */
-        rgbToHex: function (rgb) {
-            if (rgb.charAt(0) === '#') return rgb.substring(1);
-            var parts = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-            delete(parts[0]);
-            for (var j = 1; j <= 3; ++j) {
-                parts[j] = parseInt(parts[j]).toString(16);
-                if (parts[j].length == 1) parts[j] = '0' + parts[j];
-            }
-            return parts.join('');
         }
     }, {
         /**

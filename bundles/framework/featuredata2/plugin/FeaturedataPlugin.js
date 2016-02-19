@@ -30,7 +30,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataP
                     '</div>');
 
             var link = el.find('a');
-            link.html(me._instance.getLocalization('title'));
+            me._loc = Oskari.getLocalization('FeatureData2', Oskari.getLang() || Oskari.getDefaultLanguage(), true);
+            link.html(me._loc.title);
             me._bindLinkClick(link);
             el.mousedown(function (event) {
                 event.stopPropagation();
@@ -44,10 +45,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataP
                 sandbox = me.getSandbox();
             linkElement.bind('click', function () {
                 sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._instance, 'detach']);
+                var event = sandbox.getEventBuilder('WFSRefreshManualLoadLayersEvent')();
+                sandbox.notifyAll(event);
                 return false;
             });
         },
-
         /**
          * @method _refresh
          * Updates the plugins interface (hides if no featuredata layer selected)
@@ -56,15 +58,45 @@ Oskari.clazz.define('Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataP
             var me = this,
                 sandbox = me.getMapModule().getSandbox(),
                 layers = sandbox.findAllSelectedMapLayers(),
-                i;
+                i,
+                isVisible = false;
+
+            if(this.getElement()) {
+                this.getElement().hide();
+            }
             // see if there's any wfs layers, show element if so
             for (i = 0; i < layers.length; i++) {
                 if (layers[i].hasFeatureData()) {
-                    me.setVisible(true);
-                    return;
+                    isVisible = true;
                 }
             }
-            me.setVisible(false);
+            if(isVisible && this.getElement()){
+              this.getElement().show();
+            }
+            me.setVisible(isVisible);
+
+        },
+        showLoadingIndicator : function(blnLoad) {
+            if(!this.getElement()) {
+                return;
+            }
+            if(blnLoad) {
+                this.getElement().addClass('loading');
+            }
+            else {
+                this.getElement().removeClass('loading');
+            }
+        },
+        showErrorIndicator : function(blnLoad) {
+            if(!this.getElement()) {
+                return;
+            }
+            if(blnLoad) {
+                this.getElement().addClass('error');
+            }
+            else {
+                this.getElement().removeClass('error');
+            }
         },
 
         _setLayerToolsEditModeImpl: function () {

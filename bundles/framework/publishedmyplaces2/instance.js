@@ -1,6 +1,6 @@
 /**
  * @class Oskari.mapframework.bundle.publishedmyplaces.PublishedMyPlacesBundleInstance
- * 
+ *
  * My places functionality
  */
 Oskari.clazz.define("Oskari.mapframework.bundle.publishedmyplaces.PublishedMyPlacesBundleInstance",
@@ -21,7 +21,7 @@ function() {
     __name : 'PublishedMyPlaces',
     /**
      * @method getName
-     * @return {String} the name for the component 
+     * @return {String} the name for the component
      */
     getName : function() {
         return this.__name;
@@ -37,7 +37,7 @@ function() {
      * @method getLocalization
      * Returns JSON presentation of bundles localization data for current language.
      * If key-parameter is not given, returns the whole localization data.
-     * 
+     *
      * @param {String} key (optional) if given, returns the value for key
      * @return {String/Object} returns single localization string or
      *      JSON object for complete data depending on localization
@@ -76,13 +76,13 @@ function() {
     },
     /**
      * @method forceDisable
-     * Disables the functionality since something went wrong 
+     * Disables the functionality since something went wrong
      * (couldnt create default category)
      */
     forceDisable : function() {
         this.buttons.disableButtons();
         var loc = this.getLocalization();
-      
+
         this.showMessage(loc.category.organization + ' - ' +
              loc.notification.error.title, loc.notification.error.generic);
     },
@@ -158,14 +158,14 @@ function() {
         }
 
         sandbox.printDebug("Initializing my places module...");
-        
-        // handles toolbar buttons related to my places 
+
+        // handles toolbar buttons related to my places
         this.buttons = Oskari.clazz.create("Oskari.mapframework.bundle.publishedmyplaces.ButtonHandler", this);
         this.buttons.start();
-        
+
 
         var user = sandbox.getUser();
-        
+
         if(!user.isLoggedIn() && conf.allowGuest !== true) {
             // guest users don't need anything else
             // overrideable via conf.allowGuest
@@ -175,13 +175,13 @@ function() {
         sandbox.register(me);
         // handles category related logic - syncs categories to my places map layers etc
         this.categoryHandler = Oskari.clazz.create('Oskari.mapframework.bundle.publishedmyplaces.CategoryHandler', this);
-        this.categoryHandler.start();        
+        this.categoryHandler.start();
 
         var defaults = this._getCategoryDefaults();
         var actionUrl = this.conf.queryUrl;
 
         // back end communication
-        this.myPlacesService = Oskari.clazz.create('Oskari.mapframework.bundle.myplaces2.service.MyPlacesService', 
+        this.myPlacesService = Oskari.clazz.create('Oskari.mapframework.bundle.myplaces2.service.MyPlacesService',
             actionUrl, user.getUuid(), sandbox, defaults, this);
         // register service so personal data can access it
         this.sandbox.registerService(this.myPlacesService);
@@ -239,52 +239,12 @@ function() {
              }
          }
          return defaults;
-     },
-
-    /**
-     * Convert hexadecimal color values to decimal values (255,255,255)
-     * Green: hexToRgb("#0033ff").g 
-     * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-     *
-     * @method hex
-     * hexadecimal color value e.g. '#00ff99'
-     */
-    hexToRgb: function(hex) {
-        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-            return r + r + g + g + b + b;
-        });
-
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-        } : null;
-    },
-
-    /**
-     * Convert rgb values to hexadecimal color values
-     *
-     * @method rgb
-     * decimal color values e.g. 'rgb(255,0,0)'
-     */
-    rgbToHex: function(rgb) {
-        if (rgb.charAt(0) === '#') return rgb.substring(1);
-        var parts = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-        delete (parts[0]);
-        for (var j = 1; j <= 3; ++j) {
-            parts[j] = parseInt(parts[j]).toString(16);
-            if (parts[j].length == 1) parts[j] = '0' + parts[j];
-        }
-        return parts.join('');
-    }
+     }
 
 }, {
     /**
      * @property {String[]} protocol
-     * @static 
+     * @static
      */
     protocol : ['Oskari.bundle.BundleInstance']
 });

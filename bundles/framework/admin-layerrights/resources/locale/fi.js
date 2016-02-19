@@ -4,14 +4,14 @@ Oskari.registerLocalization(
     "key": "admin-layerrights",
     "value": {
         "title": "Tasojen oikeudet",
-        "desc": "kuv",
+        "desc": "NOT TRANSLATED",
         "tile": {
             "title": "Tasojen oikeudet"
         },
         "flyout" : {
             "title": "Tasojen Oikeuksien Hallinta",
             "datatablelanguagefile": "Finnish.json",
-            "message": "NOT TRANSLATED"
+            "message": "Karttatasojen oikeuksien hallinta"
         },
         "rights": {
             "name": "Karttataso",
@@ -19,14 +19,15 @@ Oskari.registerLocalization(
             "rightToView": "Katseluoikeus",
             "rightToDownload": "Latausoikeus",
             "rightToPublishView": "Katseluoikeus upotetussa kartassa",
-            "success" : {
-                "title" : "Oikeudet on päivitetty",
-                "message" : "Oikeuksien tallentaminen onnistui."
+            "success": {
+                "title": "Oikeudet on päivitetty",
+                "message": "Karttatasojen oikeudet on päivitetty."
             },
-            "error" : {
-                "title" : "Oikeuksia ei ole päivitetty",
-                "message" : "Oikeuksien tallentaminen ei onnistunut."
-            }
+            "error": {
+                "title": "Virhe",
+                "message": "Karttatasojen oikeuksia ei voitu päivittää."
+            },
+            "selectValue": "Valitse tunniste"
         },
         "save" : "Tallenna",
         "selectRole": "Rooli",

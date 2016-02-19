@@ -24,7 +24,7 @@ function() {
 
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/mapwfs2/comp.js"
+            "src" : "../../../../libraries/cometd/comp.js"
         },{
             "type" : "text/javascript",
             "src" : "../../../../libraries/jquery/plugins/jquery.cookie.js"
@@ -34,6 +34,15 @@ function() {
         },{
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/service/Mediator.js"
+        },{
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/service/StatusHandler.js"
+        },{
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/service/WFSLayerService.js"
+        },{
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/event/WFSStatusChangedEvent.js"
         },{
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/plugin/QueuedTilesGrid.js"
@@ -59,6 +68,9 @@ function() {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/event/WFSFeatureGeometriesEvent.js"
         }, {
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/event/WFSRefreshManualLoadLayersEvent.js"
+        },{
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/event/WFSImageEvent.js"
         }, {
@@ -106,16 +118,11 @@ function() {
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/divmanazer/component/visualization-form/AreaForm.js"
+        },{
+            "type": "text/css",
+            "src": "../../../../bundles/framework/mapwfs2/resources/css/style.css"
         }],
         "locales" : [{
-            "lang" : "fi",
-            "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/fi.js"
-        }, {
-            "lang" : "sv",
-            "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/sv.js"
-        }, {
             "lang" : "en",
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/resources/locale/en.js"
@@ -123,6 +130,46 @@ function() {
             "lang" : "es",
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/resources/locale/es.js"
+        }, {
+            "lang" : "et",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/et.js"
+        }, {
+            "lang" : "fi",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/fi.js"
+        }, {
+            "lang" : "fr",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/fr.js"
+        }, {
+            "lang" : "is",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/is.js"
+        }, {
+            "lang" : "it",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/it.js"
+        }, {
+            "lang" : "sv",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/sv.js"
+        }, {
+            "lang" : "nb",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/nb.js"
+        }, {
+            "lang" : "nl",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/nl.js"
+        }, {
+            "lang" : "nn",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/nn.js"
+        }, {
+            "lang" : "sl",
+            "type" : "text/javascript",
+            "src" : "../../../../bundles/framework/mapwfs2/resources/locale/sl.js"
         }, {
             "lang" : "de",
             "type" : "text/javascript",

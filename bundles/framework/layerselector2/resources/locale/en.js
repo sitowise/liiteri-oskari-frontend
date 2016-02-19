@@ -6,19 +6,19 @@ Oskari.registerLocalization(
         "title": "Map Layers",
         "desc": "",
         "errors": {
-            "title": "Error!",
-            "generic": "The system error occurred. Please try again later.",
-            "loadFailed": "The error in loading the map layers occurred. Reload the webpage in your browser and select map layers again.",
-            "noResults": "No results found.",
-            "noResultsForKeyword": "No map layers found by this keyword.",
-            "minChars": "Write at least four characters. Allowed characters are the letters a-z as well as å, ä and ö, numbers, backspaces and hyphens."
+            "title": "Error",
+            "generic": "The system error occurred.",
+            "loadFailed": "The map layers could not be loaded. Reload the webpage in your browser and select map layers again.",
+            "noResults": "No search results could be found. Please check the search term.",
+            "noResultsForKeyword": "No map layers could be found. Please check the search term.",
+            "minChars": "The search term is too short. Type at least four characters."
         },
         "loading": "Searching...",
         "filter": {
             "text": "Search map layers.",
-            "keywordsTitle": "Keywords:",
-            "shortDescription": "Search map layers by the name of the map layer, the name of the data producer or the keyword describing the map layer.",
-            "description": "Write a part of the name of the map layer, the name of the data producer or the keyword describing the map layer. The keyword search starts up when at least four characters has been written. Allowed characters are the letters a-z as well as å, ä and ö, numbers, backspaces and hyphens.",
+            "keywordsTitle": "Keywords",
+            "shortDescription": "Search map layers by map layer name, data producer name or keyword.",
+            "description": "Search map layers by map layer name, data producer name or keyword. You can type a whole term or a part of it. The search term must be at least four characters long.",
             "inspire": "By Theme",
             "organization": "By Data Provider",
             "servicePackage": "Service Package",
@@ -36,7 +36,8 @@ Oskari.registerLocalization(
 			"bundle": "Map Layers",
             "type-base": "Background map",
             "type-wms": "Map layer (WMS, WMTS)",
-            "type-wfs": "Data product (WFS)"
+            "type-wfs": "Data product (WFS)",
+            "type-wfs-manual": "Refresh feature data by clicking 'Feature Data' or 'Refresh' button in the map window."
         },
         "backendStatus": {
             "OK": {
@@ -66,7 +67,18 @@ Oskari.registerLocalization(
             "ak": "Subordinate concept",
             "yk": "Superordinate concept"
         },
-		"downloadLayer": "Download layer"
+        "layerFilter": {
+            "buttons": {
+                "newest": "Newest",
+                "stats": "Vector layers"
+            },
+            "tooltips": {
+                "newest": "Show ## newest map layers",
+                "stats": "Show only vector layers",
+                "remove": "Remove filter"
+            }
+        },
+        "downloadLayer": "Download layer"
     }
 }
 );

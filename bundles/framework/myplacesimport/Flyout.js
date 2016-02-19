@@ -128,7 +128,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             return template;
         },
         /**
-        * Checks the file upload form file size 
+        * Checks the file upload form file size
         * @private
         */
         __checkFileSize: function(locale){
@@ -137,20 +137,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
                 fileSize = null,
                 fileInput = me.container.find('input[name=file-import]');
 
-            //console.log(me.instance.conf.maxFileSizeMb+ ' is size limit');
-
             // Checks modern browsers (FF, Safari, Opera, Chore and IE 10 >)
             if(fileInput[0]  && fileInput[0].files) {
                 fileSize = fileInput[0].files[0].size //size in kb
-                fileSize = fileSize / 1048576; //size in mb 
+                fileSize = fileSize / 1048576; //size in mb
             }
 
             // Check IE 9
-            if(fileSize===null && navigator.userAgent.match(/msie/i)) {                
-                try{                
+            if(fileSize===null && navigator.userAgent.match(/msie/i)) {
+                try{
                     var hasAX = "ActiveXObject" in window;
                     if(hasAX){
-                        var objFSO = new ActiveXObject("Scripting.FileSystemObject"); 
+                        var objFSO = new ActiveXObject("Scripting.FileSystemObject");
                         var filePath = $("#" + fileid)[0].value;
                         var objFile = objFSO.getFile(filePath);
                         var fileSize = objFile.size; //size in kb
@@ -169,7 +167,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
                 dialog.makeModal();
                 dialog.onClose(function() {
                     me.container.find('form input[type=submit]').prop('disabled', true);
-                });                
+                });
             } else {
                 me.container.find('form input[type=submit]').prop('disabled', false);
             }
@@ -196,7 +194,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             file.find('div.desc label').html(locale.layer.desc);
             file.find('div.source label').html(locale.layer.source);
             file.find('div.style label').html(locale.layer.style);
-            file.find('div.style-form').html(styleForm.getForm());            
+            file.find('div.style-form').html(styleForm.getForm());
             file.find('input[name=file-import]').bind('change', function(e){
                 me.__checkFileSize(locale);
             });
@@ -218,10 +216,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
                             var executed = 0;
                             me.container.find('iframe').on('load', function() {
                                 if (executed > 0) {
-                                    console.log('called more than once');
                                     return;
                                 }
-                                executed++; 
+                                executed++;
                                 me.progressSpinner.stop();
                                 me.__finish(jQuery(this), locale);
                             });
@@ -232,7 +229,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
         },
         /**
          * Returns the visualization form's values.
-         * 
+         *
          * @method __getStyleValues
          * @private
          * @param  {Oskari.userinterface.component.VisualizationForm} styleForm
@@ -270,7 +267,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
         /**
          * Validates the form inputs (currently that the name and file are present).
          * Returns true if there were any errors (missing values).
-         * 
+         *
          * @method __validateForm
          * @private
          * @param  {jQuery} form
@@ -295,7 +292,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
         /**
          * Sends the layer data to the backend and shows a message.
          * Also refreshes the UI
-         * 
+         *
          * @method __finish
          * @private
          * @param {jQuery} iframe
@@ -311,7 +308,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
                 json = JSON.parse(iframe.contents().find('pre').text());
 
                 if (this.__jsonError(json)) {
-                    success = false;   
+                    success = false;
                 }
             } catch(error) {
                 this.instance
@@ -336,7 +333,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
         },
         /**
          * Displays a message on the screen
-         * 
+         *
          * @method __showMessage
          * @private
          * @param  {String} title
@@ -346,13 +343,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             var me = this,
                 loc = this._locale,
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-            
+
             dialog.show(title, message);
             dialog.fadeout(5000);
         },
         /**
          * Checks if json is null or undefined or if it has a key `error`.
-         * 
+         *
          * @method __jsonError
          * @private
          * @param  {JSON} json

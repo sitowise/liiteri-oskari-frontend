@@ -182,16 +182,23 @@ Oskari.clazz.define(
                 sandbox.request(this, tileRequest);
             }
         },
+        __addIndicatorTab : function() {
+            if(this.userIndicatorsTab) {
+                return;
+            }
+            var locale = this.getLocalization();
+            if (this.sandbox.getUser().isLoggedIn()) {
+                var userIndicatorsTab = Oskari.clazz.create(
+                    'Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
+                    this, locale.tab
+                );
+                this.userIndicatorsTab = userIndicatorsTab;
+            }
+        },
         eventHandlers: {
-            'Personaldata.PersonaldataLoadedEvent': function (event) {
-                var locale = this.getLocalization();
-                if (this.sandbox.getUser().isLoggedIn()) {
-                    var userIndicatorsTab = Oskari.clazz.create(
-                        'Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
-                        this, locale.tab
-                    );
-                    this.userIndicatorsTab = userIndicatorsTab;
-                }
+            'Personaldata.PersonaldataLoadedEvent': function () {
+                // personal data has been loaded after this bundle
+                this.__addIndicatorTab();
             },
             /**
              * @method userinterface.ExtensionUpdatedEvent

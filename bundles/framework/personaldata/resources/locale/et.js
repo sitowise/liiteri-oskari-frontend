@@ -1,10 +1,12 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "et",
     "key": "PersonalData",
     "value": {
         "title": "Minu andmed",
         "desc": "Minu andmed",
         "notLoggedIn": "Võid salvestada kaardivaateid ja sirvida kaarte, mida oled põiminud teistes veebilehtes Minu andmete all",
+        "notLoggedInText": "NOT TRANSLATED.",
         "tabs": {
             "myviews": {
                 "title": "Minu kaardivaated",
@@ -16,8 +18,8 @@ Oskari.registerLocalization({
                     "name": "Nimi",
                     "description": "Kirjeldus",
                     "publish": "Avaldatud",
-                    "edit": " ",
-                    "delete": " "
+                    "edit": "NOT TRANSLATED",
+                    "delete": "NOT TRANSLATED"
                 },
                 "popup": {
                     "edit": "Toimeta vaate info",
@@ -68,9 +70,9 @@ Oskari.registerLocalization({
                     "domain": "Kaardi seadistused",
                     "publish": "Olek",
                     "show": "NOT TRANSLATED",
-                    "html": " ",
-                    "edit": " ",
-                    "delete": " "
+                    "html": "NOT TRANSLATED",
+                    "edit": "NOT TRANSLATED",
+                    "delete": "NOT TRANSLATED"
                 },
                 "published": {
                     "desc": "NOT TRANSLATED"
@@ -129,4 +131,5 @@ Oskari.registerLocalization({
             "no": "Ei"
         }
     }
-});
+}
+);

@@ -16,6 +16,24 @@ Oskari.clazz.define('Oskari.mapframework.bundle.userguide.Flyout',
     }, {
 
         /**
+         * @method setEl
+         * @param {Object} el
+         *      reference to the container in browser
+         * @param {Number} width
+         *      container size(?) - not used
+         * @param {Number} height
+         *      container size(?) - not used
+         *
+         * Interface method implementation
+         */
+        setEl: function (el, width, height) {
+            this.container = el[0];
+            if (!jQuery(this.container).hasClass('userguide')) {
+                jQuery(this.container).addClass('userguide');
+            }
+        },
+
+        /**
          * @method startPlugin
          * called by host to start flyout operations
          */
@@ -38,7 +56,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.userguide.Flyout',
             this.userGuideTabs = this.instance.getLocalization('tabs') || [];
             if (this.instance.getLocalization('tabs')) {
                 me.tabContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer');
-                
+
                 for (i = 0; i < me.userGuideTabs.length; i += 1) {
                     newtab = me.userGuideTabs[i];
                     tab = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
@@ -46,7 +64,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.userguide.Flyout',
                     tab.setContent(me.getLocalization('help').loadingtxt);
                     tab.tagsTxt = newtab.tags;
 
-                    me.tabContainer.addPanel(tab);   
+                    me.tabContainer.addPanel(tab);
                 }
                 me.tabContainer.insertTo(me.cel);
             }

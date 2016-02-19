@@ -1,8 +1,8 @@
 define([
-    "_bundle/collections/todoCollection", 
-    "_bundle/views/itemView", 
-    "text!_bundle/templates/stats.html", 
-    "text!_bundle/templates/view.html"], 
+    "_bundle/collections/todoCollection",
+    "_bundle/views/itemView",
+    "text!_bundle/templates/stats.html",
+    "text!_bundle/templates/view.html"],
     function(TodoCollection, ItemView, StatsTemplate, ViewTemplate) {
     // Create our global collection of **Todos**.
     var Todos = new TodoCollection;
@@ -41,7 +41,7 @@ define([
 
             this.footer = this.$('footer');
             this.main = $('#main');
-            
+
             Todos.fetch();
         },
         // Re-rendering the App just means refreshing the statistics -- the rest
@@ -79,10 +79,9 @@ define([
         // If you hit return in the main input field, create new **Todo** model,
         // persisting it to *localStorage*.
         createOnEnter : function(e) {
-            if(e.keyCode != 13)
+            if(e.keyCode !== 13 || !this.input.val()) {
                 return;
-            if(!this.input.val())
-                return;
+            }
 
             Todos.create({
                 title : this.input.val()

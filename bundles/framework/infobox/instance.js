@@ -26,7 +26,7 @@ function() {
 
 	/**
 	 * @method getName
-	 * @return {String} the name for the component 
+	 * @return {String} the name for the component
 	 */
 	getName : function() {
 		return this.__name;
@@ -126,8 +126,18 @@ function() {
 		 * @method MapClickedEvent
 		 */
 		MapClickedEvent : function(e) {
-		}
+		},
+		'Publisher2.ColourSchemeChangedEvent': function(evt){
+            this._handleColourSchemeChangedEvent(evt);
+        },
+        'Publisher.ColourSchemeChangedEvent': function(evt){
+            this._handleColourSchemeChangedEvent(evt);
+        }
 	},
+
+	_handleColourSchemeChangedEvent: function(evt){
+		this.popupPlugin._changeColourScheme(evt.getColourScheme());
+    },
 
 	/**
 	 * @method stop
@@ -170,7 +180,7 @@ function() {
             popups : []
         };
         var popups = this.popupPlugin.getPopups();
-        
+
         for(var id in popups) {
             var popup = popups[id];
             var data = {
@@ -181,13 +191,13 @@ function() {
             };
             state.popups.push(data);
         }
-        
+
         return state;
     }
 }, {
 	/**
 	 * @property {String[]} protocol
-	 * @static 
+	 * @static
 	 */
 	protocol : ['Oskari.bundle.BundleInstance', 'Oskari.mapframework.module.Module']
 });

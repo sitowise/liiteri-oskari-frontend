@@ -122,16 +122,9 @@ function(name,viewClazz) {
      * BundleInstance protocol method
      */
     stop : function() {
-        var sandbox = this.sandbox;
-
-        /* sandbox cleanup */
-
-      
-
-        var request = sandbox.getRequestBuilder('userinterface.RemoveExtensionRequest')(this);
+        var sandbox = this.sandbox,
+            request = sandbox.getRequestBuilder('userinterface.RemoveExtensionRequest')(this);
         sandbox.request(this, request);
-
-//        sandbox.unregisterStateful(this.mediator.bundleId);
         sandbox.unregister(this);
         this.sandbox = null;
         this.started = false;
@@ -148,12 +141,14 @@ function(name,viewClazz) {
             view = Oskari.clazz.create(viewCls,this.getLocalization('view'),this,this.getConfiguration()),
             p;
         this.view = view;
-        
+
         for(p in view.eventHandlers) {
-            sandbox.registerForEventByName(view, p);
+            if(view.eventHandlers.hasOwnProperty(p)) {
+                sandbox.registerForEventByName(view, p);
+            }
         }
 
-        me.plugins['Oskari.userinterface.Flyout'] = 
+        me.plugins['Oskari.userinterface.Flyout'] =
             Oskari.clazz.create('Oskari.integration.bundle.bb.Flyout', me, locFlyout, view);
 
         if(view.init !== null && view.init !== undefined) {
@@ -173,7 +168,9 @@ function(name,viewClazz) {
             view = me.view,
             p;
         for (p in view.eventHandlers) {
-            sandbox.unregisterFromEventByName(view, p);
+            if(view.eventHandlers.hasOwnProperty(p)) {
+                sandbox.unregisterFromEventByName(view, p);
+            }
         }
         for (pluginType in me.plugins) {
             if(pluginType) {
@@ -199,7 +196,7 @@ function(name,viewClazz) {
     getName : function() {
         return this._name;
     },
-    
+
     /**
      * @method getConfiguration
      */
@@ -211,9 +208,9 @@ function(name,viewClazz) {
      * @method setState
      * @param {Object} state bundle state as JSON
      */
-    setState : function(state) {
+    setState : function() {
     },
-    
+
     /*
      * @method getState
      * @return {Object} bundle state as JSON
