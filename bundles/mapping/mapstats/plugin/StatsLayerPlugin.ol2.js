@@ -641,79 +641,53 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             me._loadingControl = new OpenLayers.Control.LoadingPanel(loadingPanelOptions);
             me._map.addControl(me._loadingControl);         
 
-                        for (i = 0; i < drawLayer.features.length; i += 1) {
-                            if (drawLayer.features[i].attributes[attrText] === event.features[0].attributes[attrText]) {
-                                foundInd = i;
-                                break;
-                            }
-                        }
-                        featureStyle = OpenLayers.Util.applyDefaults(
-                            featureStyle,
-                            OpenLayers.Feature.Vector.style['default']
-                        );
-                        featureStyle.fillColor = '#ff0000';
-                        featureStyle.strokeColor = '#ff3333';
-                        featureStyle.strokeWidth = 3;
-                        featureStyle.fillOpacity = 0.2;
-
-                        if (foundInd >= 0) {
-                            drawLayer.features[i].selected =
-                                !drawLayer.features[i].selected;
-                            if (drawLayer.features[i].selected) {
-                                drawLayer.features[i].style = featureStyle;
-                            } else {
-                                drawLayer.features[i].style = null;
-                                me._highlightCtrl.highlight(drawLayer.features[i]);
-                            }
-                            if (eventBuilder) {
-                                highlightEvent = eventBuilder(
-                                    drawLayer.features[i].attributes,
-                                    drawLayer.features[i].selected,
-                                    'click'
-                                );
-                            }
-                        } else {
-                            drawLayer.addFeatures([newFeature]);
-                            newFeature.selected = true;
-                            newFeature.style = featureStyle;
-                            if (eventBuilder) {
-                                highlightEvent = eventBuilder(
-                                    newFeature.attributes,
-                                    newFeature.selected,
-                                    'click'
-                                );
-                            }
-                        }
-                        drawLayer.redraw();
-
-                        if (highlightEvent) {
-                            me.getSandbox().notifyAll(highlightEvent);
-                        }
-                    },
-                    beforegetfeatureinfo: function (event) {},
-                    nogetfeatureinfo: function (event) {}
-                }
-            });
-            // Add the control to the map
-            me.getMap().addControl(me._getFeatureControlSelect);
-            // Activate only is mode is on.
-            if (me._modeVisible) {
-                me._getFeatureControlSelect.activate();
+            for (i = 0; i < drawLayer.features.length; i += 1) {
+            	if (drawLayer.features[i].attributes[attrText] === event.features[0].attributes[attrText]) {
+            		foundInd = i;
+            		break;
+            	}
             }
+            featureStyle = OpenLayers.Util.applyDefaults(
+            		featureStyle,
+            		OpenLayers.Feature.Vector.style['default']
+            );
+            featureStyle.fillColor = '#ff0000';
+            featureStyle.strokeColor = '#ff3333';
+            featureStyle.strokeWidth = 3;
+            featureStyle.fillOpacity = 0.2;
 
-            openLayer.opacity = layer.getOpacity() / 100;
-            gridLayer.opacity = layer.getOpacity() / 100;
-            featureLayer.opacity = layer.getOpacity() / 100;
-            me._map.addLayers([openLayer, gridLayer, featureLayer]);
-            
-            if (keepLayerOnTop) {
-                me._map.setLayerIndex(openLayer, me._map.layers.length - 2);
-                me._map.setLayerIndex(gridLayer, me._map.layers.length - 1);
-                me._map.setLayerIndex(featureLayer, me._map.layers.length);
+            if (foundInd >= 0) {
+            	drawLayer.features[i].selected =
+            		!drawLayer.features[i].selected;
+            	if (drawLayer.features[i].selected) {
+            		drawLayer.features[i].style = featureStyle;
+            	} else {
+            		drawLayer.features[i].style = null;
+            		me._highlightCtrl.highlight(drawLayer.features[i]);
+            	}
+            	if (eventBuilder) {
+            		highlightEvent = eventBuilder(
+            				drawLayer.features[i].attributes,
+            				drawLayer.features[i].selected,
+            				'click'
+            		);
+            	}
             } else {
-                me._map.setLayerIndex(openLayer, 0);
-                me._map.setLayerIndex(gridLayer, 1);
-                me._map.setLayerIndex(featureLayer, 2);
+            	drawLayer.addFeatures([newFeature]);
+            	newFeature.selected = true;
+            	newFeature.style = featureStyle;
+            	if (eventBuilder) {
+            		highlightEvent = eventBuilder(
+            				newFeature.attributes,
+            				newFeature.selected,
+            				'click'
+            		);
+            	}
+            }
+            drawLayer.redraw();
+
+            if (highlightEvent) {
+            	me.getSandbox().notifyAll(highlightEvent);
             }
         },
 

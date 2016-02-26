@@ -41,25 +41,25 @@ function() {
     "source" : {
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/user-layers/instance.js"
+            "src" : "../../../../bundles/liiteri/user-layers/instance.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/user-layers/view/UserLayersView.js"
+            "src" : "../../../../bundles/liiteri/user-layers/view/UserLayersView.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/user-layers/event/LayersModified.js"
+            "src" : "../../../../bundles/liiteri/user-layers/event/LayersModified.js"
         }],
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/user-layers/locale/fi.js"
+            "src" : "../../../../bundles/liiteri/user-layers/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/user-layers/locale/en.js"
+            "src" : "../../../../bundles/liiteri/user-layers/resources/locale/en.js"
         }, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/user-layers/css/style.css"
+            "src": "../../../../bundles/liiteri/user-layers/resources/css/style.css"
         }]
     },
     "bundle" : {

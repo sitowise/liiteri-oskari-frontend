@@ -41,13 +41,13 @@ function() {
     "source" : {
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-workspaces/instance.js"
+            "src" : "../../../../bundles/liiteri/liiteri-workspaces/instance.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-workspaces/Tile.js"
+            "src" : "../../../../bundles/liiteri/liiteri-workspaces/Tile.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-workspaces/view/WorkspacesView.js"
+            "src" : "../../../../bundles/liiteri/liiteri-workspaces/view/WorkspacesView.js"
 		}, {
 		    "src": "../../../../libraries/jquery/plugins/DataTables-1.10.7/media/js/jquery.dataTables.js",
 		    "type": "text/javascript"
@@ -58,14 +58,14 @@ function() {
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-workspaces/locale/fi.js"
+            "src" : "../../../../bundles/liiteri/liiteri-workspaces/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-workspaces/locale/en.js"
+            "src" : "../../../../bundles/liiteri/liiteri-workspaces/resources/locale/en.js"
         }, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-workspaces/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-workspaces/resources/css/style.css"
         }]
     },
     "bundle" : {

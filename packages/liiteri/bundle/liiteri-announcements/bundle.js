@@ -28,25 +28,25 @@ Oskari.clazz.define(
 
             "scripts": [{
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/instance.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/instance.js"
             }, {
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/Tile.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/Tile.js"
             }, {
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/request/ShowAnnouncementsFlyoutRequest.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsFlyoutRequest.js"
             },{
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/request/ShowAnnouncementsFlyoutRequestHandler.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsFlyoutRequestHandler.js"
             },{
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/Flyout.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/Flyout.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../libraries/jquery/plugins/jquery.cookie.js"
             }, {
                 "type": "text/css",
-                "src": "../../../../resources/liiteri/bundle/liiteri-announcements/css/style.css"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/resources/css/style.css"
             }, {
                 "src": "../../../../libraries/jquery/plugins/DataTables-1.10.7/media/js/jquery.dataTables.js",
                 "type": "text/javascript"
@@ -58,11 +58,11 @@ Oskari.clazz.define(
             "locales": [{
                 "lang": "en",
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/locale/en.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/resources/locale/en.js"
             }, {
                 "lang": "fi",
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-announcements/locale/fi.js"
+                "src": "../../../../bundles/liiteri/liiteri-announcements/resources/locale/fi.js"
             }]
         },
         "bundle": {

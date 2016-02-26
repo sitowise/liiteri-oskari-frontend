@@ -115,7 +115,7 @@ Oskari.registerLocalization(
                         "label": "Näytä päivämäärä",
                         "tooltip": "Näytä tulosteessa sen laatimispäivämäärä.",
                         "checked": "checked",
-                        "cssClass" : "printout_pdfOnly
+                        "cssClass" : "printout_pdfOnly"
                     },
                     {
                         "id": "pageLegend",

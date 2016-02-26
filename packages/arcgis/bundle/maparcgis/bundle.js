@@ -28,13 +28,13 @@ Oskari.clazz.define("Oskari.arcgis.bundle.arcgis.MapArcGisBundle", function() {
 			"src" : "../../../../bundles/mapping/maparcgis/plugin/ArcGisLayerPlugin.ol2.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/arcgis/bundle/maparcgis/ol/Control/ArcGisGetFeatureInfo.js"
+		    "src": "../../../../bundles/arcgis/maparcgis/ol/Control/ArcGisGetFeatureInfo.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/arcgis/bundle/maparcgis/ol/Format/EsriGeoJSON.js"
+		    "src": "../../../../bundles/arcgis/maparcgis/ol/Format/EsriGeoJSON.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/arcgis/bundle/maparcgis/ol/Format/ArcGisGetFeatureInfo.js"
+		    "src": "../../../../bundles/arcgis/maparcgis/ol/Format/ArcGisGetFeatureInfo.js"
 		}, {
 			"type" : "text/javascript",
 			"src" : "../../../../bundles/mapping/maparcgis/domain/ArcGisLayer.js"
@@ -43,10 +43,10 @@ Oskari.clazz.define("Oskari.arcgis.bundle.arcgis.MapArcGisBundle", function() {
 			"src" : "../../../../bundles/mapping/maparcgis/domain/ArcGis93Layer.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/arcgis/bundle/maparcgis/domain/ArcGisLayerModelBuilder.js"
+		    "src": "../../../../bundles/arcgis/maparcgis/domain/ArcGisLayerModelBuilder.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/arcgis/bundle/maparcgis/service/ArcGisService.js"
+		    "src": "../../../../bundles/arcgis/maparcgis/service/ArcGisService.js"
 		}
        ]
 	},

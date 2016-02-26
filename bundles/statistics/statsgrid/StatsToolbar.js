@@ -48,36 +48,37 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsToolbar',
 
             var buttonGroup = 'statsgrid-tools';
             var buttons = {
-                'toogleTableView': {
-                    toolbarid: me.toolbarId,
-                    iconCls: 'glyphicon glyphicon-list-alt',
-                    tooltip: this.instance._localization.showSelected,
-                    text: this.instance._localization.toogleTable,
-                    sticky: false,
-                    toggleSelection: true,
-                    initiallySelected: true,
-                    callback: function () {                        
-                        var statsgrid = view.instance.gridPlugin;
-                        statsgrid.toogleTableView();
+                    'toogleTableView': {
+                        toolbarid: me.toolbarId,
+                        iconCls: 'glyphicon glyphicon-list-alt',
+                        tooltip: this.instance._localization.showSelected,
+                        text: this.instance._localization.toogleTable,
+                        sticky: false,
+                        toggleSelection: true,
+                        initiallySelected: true,
+                        callback: function () {                        
+                            var statsgrid = view.instance.gridPlugin;
+                            statsgrid.toogleTableView();
+                        },
                     },
+                    'toogleMapView': {
+                        toolbarid: me.toolbarId,
+                        iconCls: 'glyphicon glyphicon-screenshot',
+                        tooltip: this.instance._localization.showSelected,
+                        text: this.instance._localization.toogleMap,
+                        sticky: false,
+                        toggleSelection: true,
+                        initiallySelected: true,
+                        selected: true,
+                        callback: function() {
+                            var statsgrid = view.instance.gridPlugin;
+                            statsgrid.toogleMapView();
+                        },
+                    }
                 },
-                'toogleMapView': {
-                    toolbarid: me.toolbarId,
-                    iconCls: 'glyphicon glyphicon-screenshot',
-                    tooltip: this.instance._localization.showSelected,
-                    text: this.instance._localization.toogleMap,
-                    sticky: false,
-                    toggleSelection: true,
-                    initiallySelected: true,
-                    selected: true,
-                    callback: function() {
-                        var statsgrid = view.instance.gridPlugin;
-                        statsgrid.toogleMapView();
-                    },
-                },
-                requester = this.instance,
-                reqBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
-                tool;
+	            requester = this.instance,
+	            reqBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
+	            tool;
 
             for (tool in buttons) {
                 if (buttons.hasOwnProperty(tool)) {

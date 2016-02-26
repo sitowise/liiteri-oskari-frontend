@@ -41,28 +41,28 @@ function() {
     "source" : {
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-usergisdata/instance.js"
+            "src" : "../../../../bundles/liiteri/liiteri-usergisdata/instance.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-usergisdata/view/OwnDataLayer.js"
+            "src" : "../../../../bundles/liiteri/liiteri-usergisdata/view/OwnDataLayer.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-usergisdata/view/OwnLayersTab.js"
+            "src" : "../../../../bundles/liiteri/liiteri-usergisdata/view/OwnLayersTab.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-usergisdata/model/LayerGroup.js"
+            "src" : "../../../../bundles/liiteri/liiteri-usergisdata/model/LayerGroup.js"
 		}, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-usergisdata/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-usergisdata/resources/css/style.css"
         }],
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-usergisdata/locale/fi.js"
+            "src" : "../../../../bundles/liiteri/liiteri-usergisdata/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-usergisdata/locale/en.js"
+            "src" : "../../../../bundles/liiteri/liiteri-usergisdata/resources/locale/en.js"
         }]
     },
     "bundle" : {

@@ -1188,7 +1188,6 @@ Oskari.clazz.define(
          */
         getCreated: function(){
             return this._created;
-        }
         },
         
         setDownloadServiceUrl: function (downloadServiceUrl) {

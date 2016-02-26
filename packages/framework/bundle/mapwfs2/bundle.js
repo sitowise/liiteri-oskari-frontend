@@ -60,7 +60,7 @@ function() {
             "src" : "../../../../bundles/framework/mapwfs2/event/WFSFeatureEvent.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/mapwfs2/event/WFSLoadingFinishedEvent.js"
+            "src": "../../../../bundles/framework/mapwfs2/event/WFSLoadingFinishedEvent.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/mapwfs2/event/WFSFeaturesSelectedEvent.js"

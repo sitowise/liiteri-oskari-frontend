@@ -125,11 +125,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.PublisherToolsFor
                     classes: 'top right'
                 }
             }
-        },*/
+        },
         {
             id: 'Oskari.mapframework.mapmodule.ControlsPlugin',
             selected: true
-        } /*, {
+        },/* {
             id: 'Oskari.mapframework.bundle.mapmodule.plugin.PublisherToolbarPlugin',
             selected: false,
             lefthanded: 'top right',
@@ -151,7 +151,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.PublisherToolsFor
                 ignoredLayerTypes: ['WFS'],
                 infoBox: false
             }
-        }];
+        }*/];
         // set enabled plugins if available
         if (enabledPlugins) {
             var i,

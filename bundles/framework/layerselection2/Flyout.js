@@ -370,7 +370,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
          *
          * @return {jQuery} reference to the created layer container
          */
-        _createLayerContainer: function (layer, goupName) {
+        _createLayerContainer: function (layer, groupName) {
             var me = this,
                 sandbox = me.instance.getSandbox(),
                 reqName = 'ChangeMapLayerOpacityRequest',

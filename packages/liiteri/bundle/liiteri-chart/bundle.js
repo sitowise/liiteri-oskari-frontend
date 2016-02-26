@@ -17,22 +17,22 @@ function() {
            "src": "../../../../libraries/jqplot/jquery.jqplot.js"
         }, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/instance.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/instance.js"
         }, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/Tile.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/Tile.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/Flyout.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/Flyout.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/View.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/View.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/request/ShowChartRequest.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/request/ShowChartRequest.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/request/ShowChartRequestHandler.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/request/ShowChartRequestHandler.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../libraries/jqplot/plugins/jqplot.barRenderer.min.js"
@@ -50,7 +50,7 @@ function() {
             "src": "../../../../libraries/jqplot/plugins/jqplot.pointLabels.min.js"
         }, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-chart/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-chart/resources/css/style.css"
         }, {
             "type": "text/css",
             "src": "../../../../libraries/jqplot/jquery.jqplot.min.css"
@@ -59,11 +59,11 @@ function() {
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/locale/fi.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-chart/locale/en.js"
+            "src": "../../../../bundles/liiteri/liiteri-chart/resources/locale/en.js"
         }]
     },
     "bundle" : {

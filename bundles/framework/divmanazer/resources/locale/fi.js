@@ -3,31 +3,11 @@ Oskari.registerLocalization(
     "lang": "fi",
     "key": "DivManazer",
     "value": {
-      "VisualizationForm": {
-          "defaultGroupName": "Määritä tyyli, jolla aineistot piirretään kartalle. Jos kohteesi on piste, muokkaa pisteen tyyliä, jos viiva, muokkaa viivan tyyliä ja jos alue, muokkaa alueen tyyliä.",
-          "setStyleForAllValues": "Aseta sama tyyli kaikille arvoille",
       "tooltips": {
         "dot": "Muokkaa pisteen esitystapaa",
         "area": "Muokkaa alueen esitystapaa",
         "line": "Muokkaa viivan esitystapaa"
       },
-      "dot": {
-        "title": "Pistekohteen esitystapa",
-        "tooltip": "",
-        "symbol": {
-          "label": "Pistekohteen kuvake"
-        },
-        "size": {
-          "label": "Koko"
-        },
-        "color": {
-          "label": "Väri",
-          "labelOr": "tai",
-          "labelCustom": "Oma RGB-väri (0-255)"
-        },
-        "preview": {
-          "label": "Esikatselu"
-        },
         "buttons": {
             "add": "Lisää",
             "cancel": "Peruuta",
@@ -37,7 +17,8 @@ Oskari.registerLocalization(
             "exit": "Poistu",
             "ok": "OK",
             "save": "Tallenna",
-            "search": "Hae"
+            "search": "Hae",
+            "submit": ""
         },
         "LanguageSelect": {
             "title": "Kieli",

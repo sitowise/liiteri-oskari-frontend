@@ -55,19 +55,19 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundle"
             "src": "../../../../bundles/framework/personaldata/request/AddTabRequestHandler.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/personaldata/request/SelectTabRequest.js"
+            "src": "../../../../bundles/framework/personaldata/request/SelectTabRequest.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/personaldata/request/SelectTabRequestHandler.js"
+            "src": "../../../../bundles/framework/personaldata/request/SelectTabRequestHandler.js"
         }, {
             "type": "text/css",
             "src": "../../../../bundles/framework/personaldata/resources/css/personaldata.css"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/myplaces2/MyPlacesTab.js",
+            "src": "../../../../bundles/framework/myplaces2/MyPlacesTab.js",
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/personaldata/UserPopup.js"
+            "src": "../../../../bundles/framework/personaldata/UserPopup.js"
         }],
 
         "locales": [{

@@ -105,7 +105,7 @@ function(instance) {
      * @param {Boolean} skip add maplayer even in map-layer-service
      * @param {Function} cb (optional)
      */
-<<<<<<< HEAD
+
     addLayerToService: function(layerJson, cb) {
         var mapLayerService = this.sandbox.getService('Oskari.mapframework.service.MapLayerService'),
             // Create the layer model
@@ -115,16 +115,6 @@ function(instance) {
 			// Add the layer to the map layer service
 			mapLayerService.addLayer(mapLayer);
 		}
-		
-=======
-    addLayerToService: function(layerJson, skipEvent, cb) {
-        var mapLayerService = this.sandbox
-                .getService('Oskari.mapframework.service.MapLayerService'),
-            // Create the layer model
-            mapLayer = mapLayerService.createMapLayer(layerJson);
-        // Add the layer to the map layer service
-        mapLayerService.addLayer(mapLayer, skipEvent);
->>>>>>> 1.27.3
         if (_.isFunction(cb)) cb(mapLayer);
 
         return mapLayer;

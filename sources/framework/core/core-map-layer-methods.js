@@ -210,7 +210,8 @@ Oskari.clazz.category(
             var me = this,
                 id = request.getMapLayerId(),
                 keepLayersOrder = request.getKeepLayersOrder(), // TODO we need to pass this as false from layerselector...
-                isBaseMap = request.isBasemap();
+                isBaseMap = request.isBasemap(),
+                groupName = request.getGroupName();
 
             me.printDebug(
                 'Trying to add map layer with id "' + id + '" AS ' +
@@ -256,21 +257,14 @@ Oskari.clazz.category(
                     this._selectedLayers.push(mapLayer);
                 }
             }
-            var evt;
-            if (mapLayer.isBaseLayer() || isBaseMap) {
-                evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, keepLayersOrder, isBaseMap);
-            } else {
-                evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, true, isBaseMap);
-            }
-        }
-        var evt;
-        if (mapLayer.isBaseLayer() || isBaseMap) {
-            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, keepLayersOrder, isBaseMap, groupName);
-        } else {
-            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, true, isBaseMap, groupName);
-        }
-        me.copyObjectCreatorToFrom(evt, request);
-        me.dispatch(evt);
+	        var evt;
+	        if (mapLayer.isBaseLayer() || isBaseMap) {
+	            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, keepLayersOrder, isBaseMap, groupName);
+	        } else {
+	            evt = me.getEventBuilder('AfterMapLayerAddEvent')(mapLayer, true, isBaseMap, groupName);
+	        }
+	        me.copyObjectCreatorToFrom(evt, request);
+	        me.dispatch(evt);
     },
     /**
      * @method _handleRemoveMapLayerRequest
@@ -288,6 +282,7 @@ Oskari.clazz.category(
             me.printDebug("Attempt to remove layer '" + id + "' that is not selected.");
             return;
         }
+    },
 
         /**
          * @private @method _handleRemoveMapLayerRequest

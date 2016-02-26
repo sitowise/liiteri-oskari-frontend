@@ -437,6 +437,22 @@ Oskari.clazz.define(
         getVisualizationForm: function () {
             return this._visualizationForm;
         },
+        _getCachedGridTiles: function (layers, grid) {
+            var result = {};
+            if (grid == null)
+                return result;
+
+            for (var i = 0; i < layers.length; ++i) {
+                var layer = layers[i];
+                var layerId = layer.getId();
+                var cachedPrintTiles = this._getCachedPrintTiles(layerId, grid);
+
+                if (cachedPrintTiles.length > 0)
+                    result[layerId] = cachedPrintTiles;
+            }
+
+            return result;
+        },
 
         /**
          * @method mapMoveHandler
@@ -665,23 +681,6 @@ Oskari.clazz.define(
 //                    layer.setClickedFeatureListIds(event.getWfsFeatureIds());
 //                    this.getHighlightImage(layer, srs, [bbox.left, bbox.bottom, bbox.right, bbox.top], zoom, event.getWfsFeatureIds());
 //                }
-
-                srs = map.getSrsName();
-                bbox = map.getExtent();
-                zoom = map.getZoom();
-
-                this.getHighlightImage(
-                    layer,
-                    srs, [
-                        bbox.left,
-                        bbox.bottom,
-                        bbox.right,
-                        bbox.top
-                    ],
-                    zoom,
-                    wfsFeatureIds
-                );
-            }
 
             me.getIO().highlightMapLayerFeatures(
                 layerId,

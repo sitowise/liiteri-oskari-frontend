@@ -140,7 +140,6 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
 
             /* removed for some reason or another */
             //sandbox.registerAsStateful(me.mediator.bundleId, me);
-        },
 
             /* IE fixes for flyout height others use CSS media query */            
             if (this._isMsieLowerThanNine()) {

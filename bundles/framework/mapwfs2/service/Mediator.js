@@ -369,7 +369,7 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
             sandbox.notifyAll(infoEvent);
         }
     },
-,
+
     /**
      * @method getWFSFeatureGeometries
      * @param {Object} data
@@ -811,6 +811,7 @@ Oskari.clazz.category(
                 };
                 result.subStyles.push(uvItem);
             }
+        }
         return result;
     },
     _mapToSymbol: function(symbolStyle) {
@@ -910,7 +911,7 @@ Oskari.clazz.category(
             this.sendMessage('/service/wfs/setPropertyFilter', {
                 'filter': filter
             });
-        }
+        },
 
         /**
          * @method setMapLayerVisibility

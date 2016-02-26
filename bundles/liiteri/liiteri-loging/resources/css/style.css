@@ -100,7 +100,7 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
 
 .loging-window .footerContainer {
     text-align: center;
-    background-image: url(../img/liiteri-pattern.png);
+    background-image: url(../images/liiteri-pattern.png);
 	height: 100px;
 }
 
@@ -134,7 +134,7 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
 
 .loging-window .logo {
     margin: 0px auto;
-    background-image: url(../img/liiteri-logo.png);
+    background-image: url(../images/liiteri-logo.png);
     background-repeat: no-repeat;
     width: 252px;
     height: 62px;

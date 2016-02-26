@@ -143,7 +143,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
                 checkbox,
                 elBackendStatus,
                 mapLayerId,
-                layerInfo;
+                layerInfo,
+                subLmeta;
 
             icon.addClass(layer.getIconClassname());
 

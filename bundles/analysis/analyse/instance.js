@@ -167,7 +167,6 @@ Oskari.clazz.define(
             me.WFSLayerService = me.sandbox.getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService');
 
             this.__addTab();
-        },
 
             // Request tab to be added to personal data
             var tab = Oskari.clazz.create('Oskari.mapframework.bundle.analyse.view.PersonalDataTab', this, this.localization.personalDataTab);

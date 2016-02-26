@@ -43,43 +43,43 @@ function() {
     "source" : {
         "scripts" : [{
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/instance.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/instance.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/service/UrbanPlanningService.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/service/UrbanPlanningService.js"
         }, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/Tile.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/Tile.js"
         }, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/MapViewTile.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/MapViewTile.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/plugin/TilePlugin.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/plugin/TilePlugin.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/UrbanPlanDetailsForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/view/UrbanPlanDetailsForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/UrbanPlanFilterForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/view/UrbanPlanFilterForm.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/NewModeView.js"
+            "src" : "../../../../bundles/liiteri/liiteri-urbanplanning/view/NewModeView.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/UrbanPlanMarkingsFilterForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/view/UrbanPlanMarkingsFilterForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/UrbanPlanMarkingsDetailsForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/view/UrbanPlanMarkingsDetailsForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/UrbanPlanPeopleFilterForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/view/UrbanPlanPeopleFilterForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/view/UrbanPlanPeopleDetailsForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/view/UrbanPlanPeopleDetailsForm.js"
         }, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/UrbanPlanningToolbar.js"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/UrbanPlanningToolbar.js"
         }, {
             "src": "../../../../libraries/jquery/jquery-ui.css",
             "type": "text/css"
@@ -103,16 +103,16 @@ function() {
             "type" : "text/css"
         }, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-urbanplanning/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-urbanplanning/resources/css/style.css"
         }],
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/locale/fi.js"
+            "src" : "../../../../bundles/liiteri/liiteri-urbanplanning/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-urbanplanning/locale/en.js"
+            "src" : "../../../../bundles/liiteri/liiteri-urbanplanning/resources/locale/en.js"
         }]
     },
     "bundle" : {

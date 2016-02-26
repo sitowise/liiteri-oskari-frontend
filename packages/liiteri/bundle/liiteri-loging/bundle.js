@@ -29,35 +29,35 @@ Oskari.clazz.define(
 
             "scripts": [{
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/instance.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/instance.js"
             }, {
                 "type" : "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/request/ShowLoginWindowRequest.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/request/ShowLoginWindowRequest.js"
             }, {
                 "type" : "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/request/ShowLoginWindowRequestHandler.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/request/ShowLoginWindowRequestHandler.js"
             }, {
                 "type" : "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/event/LoginEvent.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/event/LoginEvent.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../libraries/jquery/plugins/jquery.cookie.js"
             }, {
                 "type": "text/css",
-                "src": "../../../../resources/liiteri/bundle/liiteri-loging/css/style.css"
+                "src": "../../../../bundles/liiteri/liiteri-loging/resources/css/style.css"
             }],
             "locales": [{
                 "lang": "en",
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/locale/en.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/resources/locale/en.js"
             }, {
                 "lang": "fi",
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/locale/fi.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/resources/locale/fi.js"
             }, {
                 "lang": "sv",
                 "type": "text/javascript",
-                "src": "../../../../bundles/liiteri/bundle/liiteri-loging/locale/sv.js"
+                "src": "../../../../bundles/liiteri/liiteri-loging/resources/locale/sv.js"
             }]
         },
         "bundle": {

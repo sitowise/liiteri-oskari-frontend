@@ -92,7 +92,7 @@ Oskari.clazz.define("Oskari.userinterface.bundle.ui.ComponentsBundle", function(
             "src" : "../../../../bundles/framework/divmanazer/component/VisualizationForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/bundle/divmanazer/component/GroupVisualizationForm.js"
+            "src": "../../../../bundles/framework/divmanazer/component/GroupVisualizationForm.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/framework/divmanazer/component/visualization-form/AreaForm.js"

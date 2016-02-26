@@ -366,7 +366,7 @@ Oskari.clazz.define(
             this.gridPlugin.setState(this.state);
             this.classifyPlugin.setState(this.state);
             // Reset the classify plugin
-            this.classifyPlugin.refresh();
+            this.classifyPlugin.resetUI();
 
             if (state.isActive) {
                 var view = this.getView(),

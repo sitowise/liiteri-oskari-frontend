@@ -25,7 +25,7 @@ div.mapiconsplugin {
 .mapicon {
     width: 48px;
     height: 48px;
-    background-image: url(/Oskari/resources/framework/bundle/mapmodule-plugin/plugin/mapicons/images/icons.png);
+    background-image: url(/Oskari/bundles/framework/mapmodule-plugin/resources/images/icons.png);
 }
 
 .layer-mapicon {    

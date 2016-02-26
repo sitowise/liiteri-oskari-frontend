@@ -14,61 +14,61 @@ function() {
         "scripts": [
         {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/instance.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/instance.js"
         }, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/Tile.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/Tile.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/Flyout.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/Flyout.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/View.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/View.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/plugin/TilePlugin.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/plugin/TilePlugin.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/plugin/MapTilePlugin.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/plugin/MapTilePlugin.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/service/UIConfigurationService.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/service/UIConfigurationService.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/plugin/ExpandPlugin.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/plugin/ExpandPlugin.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/plugin/AnalyticsPlugin.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/plugin/AnalyticsPlugin.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/plugin/ToolbarSequenceManagerPlugin.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/plugin/ToolbarSequenceManagerPlugin.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/component/FilterForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/component/FilterForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/component/FilterCloud.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/component/FilterCloud.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/component/SharingForm.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/component/SharingForm.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/event/UISizeChangedEvent.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/event/UISizeChangedEvent.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/request/UIAddTileRequest.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/request/UIAddTileRequest.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/request/UIAddTileRequestHandler.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/request/UIAddTileRequestHandler.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/request/UIUpdateTileRequest.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/request/UIUpdateTileRequest.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/request/UIUpdateTileRequestHandler.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/request/UIUpdateTileRequestHandler.js"
         }, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-ui/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-ui/resources/css/style.css"
         }, {
             "src" : "../../../../libraries/chosen/chosen.jquery.js",
             "type" : "text/javascript"
@@ -80,11 +80,11 @@ function() {
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/locale/fi.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-ui/locale/en.js"
+            "src": "../../../../bundles/liiteri/liiteri-ui/resources/locale/en.js"
         }]
     },
     "bundle" : {

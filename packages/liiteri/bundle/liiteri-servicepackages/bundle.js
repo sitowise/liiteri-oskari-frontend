@@ -41,43 +41,43 @@ function() {
     "source" : {
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/instance.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/instance.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/Tile.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/Tile.js"
 		}, {
             "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-servicepackages/Flyout.js"
+            "src": "../../../../bundles/liiteri/liiteri-servicepackages/Flyout.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/liiteri/bundle/liiteri-servicepackages/View.js"
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/View.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/liiteri/bundle/liiteri-servicepackages/service/ServicePackageService.js"            
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/service/ServicePackageService.js"            
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/event/ServicePackageSelectedEvent.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/event/ServicePackageSelectedEvent.js"
 		}, {
             "type": "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/event/GroupingUpdatedEvent.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/event/GroupingUpdatedEvent.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/request/SetServicePackageRequest.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/request/SetServicePackageRequest.js"
 		}, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/request/SetServicePackageRequestHandler.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/request/SetServicePackageRequestHandler.js"
 		}, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-servicepackages/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-servicepackages/resources/css/style.css"
         }],
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/locale/fi.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/resources/locale/fi.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/liiteri/bundle/liiteri-servicepackages/locale/en.js"
+            "src" : "../../../../bundles/liiteri/liiteri-servicepackages/resources/locale/en.js"
         }]
     },
     "bundle" : {
@@ -109,7 +109,7 @@ function() {
             "Import-Namespace" : ["Oskari"],
             "Import-Bundle" : {
                 "liiteri-groupings" : {
-                    "bundlePath": "../../../../packages/liiteri/bundle/liiteri-groupings/"
+                    "bundlePath": "../../../../packages/liiteri/liiteri-groupings/"
                 }
             },
             "Require-Bundle-Instance": ['liiteri-groupings']

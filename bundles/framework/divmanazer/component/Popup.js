@@ -342,7 +342,7 @@ Oskari.clazz.define('Oskari.userinterface.component.Popup',
                 dragOptions = options ? options : {
                 scroll: false,
                 handle: "h3.popupHeader",
-                cursor: "move
+                cursor: "move"
             };
             me.dialog.css('position', 'absolute');
             me.dialog.draggable(dragOptions);
