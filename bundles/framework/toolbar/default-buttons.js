@@ -39,197 +39,120 @@ Oskari.clazz.category(
                 group,
                 req;
 
-            var buttonGroups = [{
-                    'name': 'history',
-                    'buttons': {
-                        'reset': {
-                            iconCls: 'tool-reset',
-                            tooltip: loc.history.reset,
-                            sticky: false,
-                            callback: function () {
-                                // statehandler reset state
-                                var rb = me.getSandbox().getRequestBuilder(
-                                    'StateHandler.SetStateRequest'
-                                );
-                                if (rb) {
-                                    me.getSandbox().request(me, rb());
-                                }
-                            },
-                            'select' : {
-                                iconCls: 'tool-pan',
-                                tooltip: loc.pan,
-                                selected: true,
-                                sticky: true,
-                                callback: function () {
-                                    rn = 'map_control_navigate_tool';
-                                    me.getSandbox().request(me, gfiReqBuilder(false));
-                                    me.getSandbox().request(me, reqBuilder(rn));
-                                }
-                            },
-                            'measureline' : {
-                                iconCls: 'tool-measure-line',
-                                tooltip: loc.measure.line,
-                                sticky: true,
-                                callback: function () {
-                                    rn = 'map_control_measure_tool';
-                                    me.getSandbox().request(me, gfiReqBuilder(false));
-                                    me.getSandbox().request(me, reqBuilder(rn));
-                                }
-                            },
-                            'measurearea' : {
-                                iconCls: 'tool-measure-area',
-                                tooltip: loc.measure.area,
-                                sticky: true,
-                                callback: function () {
-                                    rn = 'map_control_measure_area_tool';
-                                    me.getSandbox().request(me, gfiReqBuilder(false));
-                                    me.getSandbox().request(me, reqBuilder(rn));
-                                }
-                            },
-							'featureinfo' : {
-								iconCls: 'tool-feature-info',
-                                tooltip: loc.featureinfo,
-                                sticky: true,
-                                callback: function () {
-                                    me.getSandbox().request(me, gfiReqBuilder(true));
-                                }
-							},
-							'clear': {
-							    iconCls: 'tool-clear',
-							    tooltip: loc.clear,
-							    sticky: false,
-							    callback: function () {
-							        me.getSandbox().request(me, gfiReqBuilder(false));
-							        $.each(me.getSandbox().findAllSelectedMapLayers(), function (idx, layer) {
-							            if (layer.hasFeatureData && layer.hasFeatureData()) {
-							                var event = me.getSandbox().getEventBuilder("WFSFeaturesSelectedEvent")([], layer, false);
-							                me.getSandbox().notifyAll(event);
-							            }							            
-							        });							        
-							    }
-							}
-                        },
-                        'history_back': {
-                            iconCls: 'tool-history-back',
-                            tooltip: loc.history.back,
-                            sticky: false,
-                            callback: function () {
-                                me.getSandbox().request(
-                                    me,
-                                    reqBuilder('map_control_tool_prev')
-                                );
-                            }
-                        },
-                        'history_forward': {
-                            iconCls: 'tool-history-forward',
-                            tooltip: loc.history.next,
-                            sticky: false,
-                            callback: function () {
-                                me.getSandbox().request(
-                                    me,
-                                    reqBuilder('map_control_tool_next')
-                                );
-                            }
-                        }
-                    }
-                }, {
-                    'name': 'basictools',
-                    'buttons': {
-                        'zoombox': {
-                            iconCls: 'tool-zoombox',
-                            tooltip: loc.zoom,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_zoom_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(false)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        },
-                        'select': {
-                            iconCls: 'tool-pan',
-                            tooltip: loc.pan,
-                            selected: true,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_navigate_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(true)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        },
-                        'measureline': {
-                            iconCls: 'tool-measure-line',
-                            tooltip: loc.measure.line,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_measure_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(false)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        },
-                        'measurearea': {
-                            iconCls: 'tool-measure-area',
-                            tooltip: loc.measure.area,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_measure_area_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(false)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        }
-                    }
-                }, {
-                    'name': 'viewtools',
-                    'buttons': {
-                        'link': {
-                            iconCls: 'tool-link',
-                            tooltip: loc.link.tooltip,
-                            sticky: false,
-                            callback: function () {
-                                var mapUrlPrefix = me.__getMapUrl();
-                                var linkParams = me.getSandbox().generateMapLinkParameters({});
-                                // This is kinda ugly...
-                                // Only show marker if there's no markers.
-                                if (linkParams.indexOf('&markers=') === -1) {
-                                    linkParams += '&showMarker=true';
-                                }
-                                var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-                                dialog.addClass('no_resize');
-                                var okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-                                okBtn.setTitle(loc.link.ok);
-                                okBtn.addClass('primary');
-                                okBtn.setHandler(function () {
-                                    dialog.close();
-                                    me.getSandbox().postRequestByName('EnableMapKeyboardMovementRequest');
-                                });
+            var buttonGroups = [
+                                {
+                                    'name' : 'basictools',
+                                    'buttons': {
+                                        'zoombox' : {
+                                            iconCls: 'tool-zoombox',
+                                            tooltip: loc.zoom,
+                                            sticky: true,
+                                            callback: function () {
+                                                rn = 'map_control_zoom_tool';
+                                                me.getSandbox().request(me, gfiReqBuilder(false));
+                                                me.getSandbox().request(me, reqBuilder(rn));
+                                            }
+                                        },
+                                        'select' : {
+                                            iconCls: 'tool-pan',
+                                            tooltip: loc.pan,
+                                            selected: true,
+                                            sticky: true,
+                                            callback: function () {
+                                                rn = 'map_control_navigate_tool';
+                                                me.getSandbox().request(me, gfiReqBuilder(false));
+                                                me.getSandbox().request(me, reqBuilder(rn));
+                                            }
+                                        },
+                                        'measureline' : {
+                                            iconCls: 'tool-measure-line',
+                                            tooltip: loc.measure.line,
+                                            sticky: true,
+                                            callback: function () {
+                                                rn = 'map_control_measure_tool';
+                                                me.getSandbox().request(me, gfiReqBuilder(false));
+                                                me.getSandbox().request(me, reqBuilder(rn));
+                                            }
+                                        },
+                                        'measurearea' : {
+                                            iconCls: 'tool-measure-area',
+                                            tooltip: loc.measure.area,
+                                            sticky: true,
+                                            callback: function () {
+                                                rn = 'map_control_measure_area_tool';
+                                                me.getSandbox().request(me, gfiReqBuilder(false));
+                                                me.getSandbox().request(me, reqBuilder(rn));
+                                            }
+                                        },
+            							'featureinfo' : {
+            								iconCls: 'tool-feature-info',
+                                            tooltip: loc.featureinfo,
+                                            sticky: true,
+                                            callback: function () {
+                                                me.getSandbox().request(me, gfiReqBuilder(true));
+                                            }
+            							},
+            							'clear': {
+            							    iconCls: 'tool-clear',
+            							    tooltip: loc.clear,
+            							    sticky: false,
+            							    callback: function () {
+            							        me.getSandbox().request(me, gfiReqBuilder(false));
+            							        $.each(me.getSandbox().findAllSelectedMapLayers(), function (idx, layer) {
+            							            if (layer.hasFeatureData && layer.hasFeatureData()) {
+            							                var event = me.getSandbox().getEventBuilder("WFSFeaturesSelectedEvent")([], layer, false);
+            							                me.getSandbox().notifyAll(event);
+            							            }
+            							        });
+            							    }
+            							}
+                                    }
+                                },
+                                {
+                                    'name' : 'viewtools',
+                                    'buttons': {
+                                        'link' : {
+                                            iconCls: 'tool-link',
+                                            tooltip: loc.link.tooltip,
+                                            sticky: false,
+                                            callback: function () {
+                                                linkParams = me.getSandbox().generateMapLinkParameters({
+                                                    showMarker: true
+                                                });
+                                                pcn = 'Oskari.userinterface.component.Popup';
+                                                okcn = 'Oskari.userinterface.component.Button';
+                                                dialog = Oskari.clazz.create(pcn);
+                                                dialog.addClass("no_resize");
+                                                okBtn = Oskari.clazz.create(okcn);
+                                                okBtn.setTitle(loc.link.ok);
+                                                okBtn.addClass('primary');
+                                                okBtn.setHandler(function () {
+                                                    rn = 'EnableMapKeyboardMovementRequest';
+                                                    dialog.close();
+                                                    me.getSandbox().postRequestByName(rn);
+                                                });
 
-                                var linkContent = '<div class="linkcontent">' +
-                                    mapUrlPrefix + linkParams + '</div>';
-                                me.getSandbox().postRequestByName('DisableMapKeyboardMovementRequest');
-                                dialog.show(loc.link.title, linkContent, [okBtn]);
-                            }
-                        }
-                    }
-                }];
+                                                linkContent = '<textarea rows="3" cols="80">' + mapUrlPrefix + linkParams + '</textarea>';
+                                                rn = 'DisableMapKeyboardMovementRequest';
+                                                me.getSandbox().postRequestByName(rn);
+                                                dialog.show(loc.link.title, linkContent, [okBtn]);
+                                            }
+                                        },
+                                        'print' : {
+                                            iconCls: 'tool-print',
+                                            tooltip: loc.print.tooltip,
+                                            sticky: false,
+                                            callback: function () {
+                                                wopParm = "location=1," + "status=1," + "scrollbars=1," + "width=850," + "height=1200";
+                                                link = window.location.pathname + '?' + me.getSandbox().generateMapLinkParameters() +
+                                                    '&p_p_id=Portti2Map_WAR_portti2mapportlet&p_p_lifecycle=0&p_p_state=exclusive' +
+                                                    '&showMarker=false&forceCache=true&mapmode=print&viewId=2';
+                                                window.open(link, "Print", wopParm);
+                                            }
+                                        }
+                                    }
+                                }
+                            ];
 
             for (group in buttonGroups) {
                 var buttonGroup = buttonGroups[group],
