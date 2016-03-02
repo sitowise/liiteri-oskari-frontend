@@ -11,7 +11,7 @@ div.toolrow {
     display: inline-block;
     cursor: pointer; }
     div.toolrow div.tool.selected, div.toolrow div.tool:hover:not(.disabled), div.toolrow div.tool:active:not(.disabled) {
-      background-color: #212121; }
+      background-color: #0068a1; }
 
 div.linkcontent {
   word-wrap: break-word;
