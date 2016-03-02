@@ -3,18 +3,19 @@
  * Displays the NLS logo and provides a link to terms of use on top of the map.
  * Gets base urls from localization files.
  */
-Oskari.clazz.define(
-    'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
+Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
     /**
-     * @static @method create called automatically on construction
-     *
+     * @method create called automatically on construction
+     * @static
      */
-    function (config) {
-        this._clazz =
-            'Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin';
-        this._defaultLocation = 'bottom left';
-        this._index = 1;
-        this._name = 'LogoPlugin';
+
+    function (conf) {
+        this.conf = conf;
+        this.mapModule = null;
+        this.pluginName = null;
+        this._sandbox = null;
+        this._map = null;
+        this.element = null;
     }, {
 
         templates: {
@@ -26,204 +27,292 @@ Oskari.clazz.define(
                     "</div>"
             ),
             dataSourcesDialog: jQuery(
-                '<div class="data-sources-dialog">' +
-                '  <div class="layers">' +
-                '    <h4></h4>' +
-                '  </div>' +
-                '  <div class="indicators">' +
-                '    <h4></h4>' +
-                '  </div>' +
-                '</div>'
+                "<div class='data-sources-dialog'>" +
+                    "<div class='layers'><h4></h4></div>" +
+                    "<div class='indicators'><h4></h4></div>" +
+                    "</div>"
             )
         },
 
-        /**
-         * @method _createEventHandlers
-         * Create eventhandlers.
-         *
-         *
-         * @return {Object.<string, Function>} EventHandlers
-         */
-        _createEventHandlers: function () {
-            return {
-                'StatsGrid.IndicatorsEvent': function (event) {
-                    this._addIndicatorsToDataSourcesDialog(
-                        event.getIndicators()
-                    );
-                },
+        /** @static @property __name plugin name */
+        __name: 'LogoPlugin',
 
-                MapSizeChangedEvent: function (event) {
-                    if (this.dataSourcesDialog) {
-                        var target = this.getElement().find('.data-sources');
-                        if (target) {
-                            this.dataSourcesDialog.moveTo(target, 'top');
-                        }
-                    }
-                }
-
-            };
+        getClazz: function () {
+            return "Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin";
         },
 
         /**
-         * @method _setLayerToolsEditModeImpl
-         * Called after layerToolsEditMode is set.
-         *
-         *
+         * @method getName
+         * @return {String} plugin name
          */
-        _setLayerToolsEditModeImpl: function () {
+        getName: function () {
+            return this.pluginName;
+        },
+        /**
+         * @method getMapModule
+         * @return {Oskari.mapframework.ui.module.common.MapModule} reference to map module
+         */
+        getMapModule: function () {
+            return this.mapModule;
+        },
+        /**
+         * @method setMapModule
+         * @param {Oskari.mapframework.ui.module.common.MapModule} reference to map module
+         */
+        setMapModule: function (mapModule) {
+            this.mapModule = mapModule;
+            if (mapModule) {
+                this.pluginName = mapModule.getName() + this.__name;
+            }
+        },
+        /**
+         * @method hasUI
+         * @return {Boolean} true
+         * This plugin has an UI so always returns true
+         */
+        hasUI: function () {
+            return true;
+        },
+        /**
+         * @method init
+         * Interface method for the module protocol
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        init: function (sandbox) {},
+        /**
+         * @method register
+         * Interface method for the plugin protocol
+         */
+        register: function () {},
+        /**
+         * @method unregister
+         * Interface method for the plugin protocol
+         */
+        unregister: function () {},
+        /**
+         * @method startPlugin
+         * Interface method for the plugin protocol
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        startPlugin: function (sandbox) {
+            var me = this,
+                p;
+            me._sandbox = sandbox || me.getMapModule().getSandbox();
+            me._map = me.getMapModule().getMap();
+
+            me._sandbox.register(me);
+            for (p in me.eventHandlers) {
+                if (me.eventHandlers.hasOwnProperty(p)) {
+                    me._sandbox.registerForEventByName(me, p);
+                }
+            }
+            me._createUI();
+        },
+        /**
+         * @method stopPlugin
+         *
+         * Interface method for the plugin protocol
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        stopPlugin: function (sandbox) {
+            var me = this,
+                p;
+
+            for (p in me.eventHandlers) {
+                if (me.eventHandlers.hasOwnProperty(p)) {
+                    me._sandbox.unregisterFromEventByName(me, p);
+                }
+            }
+
+            me._sandbox.unregister(me);
+            me._map = null;
+            me._sandbox = null;
+
+            // TODO: check if added?
+            // unbind change listener and remove ui
+            if (me.element) {
+                me.element.find('a').unbind('click');
+                me.element.remove();
+                me.element = undefined;
+            }
+        },
+        /**
+         * @method start
+         * Interface method for the module protocol
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        start: function (sandbox) {},
+        /**
+         * @method stop
+         * Interface method for the module protocol
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        stop: function (sandbox) {},
+        /** 
+         * @property {Object} eventHandlers
+         * @static
+         */
+        eventHandlers: {
+            'StatsGrid.IndicatorsEvent': function (event) {
+                this._addIndicatorsToDataSourcesDialog(event.getIndicators());
+            },
+
+            'LayerToolsEditModeEvent' : function (event) {
+                // FIXME make sure event.isInMode() returns a boolean and remove !!
+                this.isInLayerToolsEditMode = !!event.isInMode();
+                if (!this.isInLayerToolsEditMode) {
+                    this.setLocation(this.element.parents('.mapplugins').attr('data-location'));
+                }
+            },
+
+            'MapSizeChangedEvent' : function (event) {
+                if (this.dataSourcesDialog) {
+                    var target = jQuery('div.logoplugin div.data-sources');
+                    if (target) {
+                        this.dataSourcesDialog.moveTo(target, 'top');
+                    }
+                }
+            }
+
+        },
+
+        /** 
+         * @method onEvent
+         * @param {Oskari.mapframework.event.Event} event a Oskari event object
+         * Event is handled forwarded to correct #eventHandlers if found or discarded if not.
+         */
+        onEvent: function (event) {
+            var handler = this.eventHandlers[event.getName()];
+            if (handler) {
+                return handler.apply(this, [event]);
+            }
+        },
+
+        /**
+         * Sets the location of the logo.
+         *
+         * @method setLocation
+         * @param {String} location The new location
+         */
+        setLocation: function (location) {
             var me = this;
-            // TODO document why this is done...
-            if (!me.inLayerToolsEditMode()) {
-                me.setLocation(
-                    me.getElement().parents('.mapplugins').attr(
-                        'data-location'
-                    )
-                );
-            } else {
-                if (me.dataSourcesDialog) {
-                    me.dataSourcesDialog.close(true);
-                    me.dataSourcesDialog = null;
-                }
+            if (!me.conf) {
+                me.conf = {};
+            }
+            if (!me.conf.location) {
+                me.conf.location = {};
+            }
+            me.conf.location.classes = location;
+
+            if (me.element) {
+                me.getMapModule().setMapControlPlugin(me.element, location, 1);
             }
         },
 
         /**
-         * @private @method _createControlElement
-         * Draws the panbuttons on the screen.
-         *
-         *
-         * @return {jQuery}
-         * Plugin jQuery element
-         */
-        _createControlElement: function () {
-            return jQuery(
-                '<div class="mapplugin logoplugin">' +
-                '  <div class="icon"></div>' +
-                '  <div class="terms">' +
-                '    <a href="#" target="_blank"></a>' +
-                '  </div>' +
-                '  <div class="data-sources">' +
-                '    <a href="#"></a>' +
-                '  </div>' +
-                '</div>'
-            );
-        },
-
-        /**
-         * @public  @method _refresh
-         * Called after a configuration change.
-         *
-         *
-         */
-        refresh: function () {
-            var me = this,
-                conf = me.getConfig(),
-                termsUrl;
-
-            if (conf) {
-                termsUrl = me.getSandbox().getLocalizedProperty(conf.termsUrl);
-
-                if (conf.font) {
-                    me.changeFont(conf.font);
-                } else {
-                    var font = me.getToolFontFromMapModule();
-                    if (font !== null && font !== undefined) {
-                        me.changeFont(font, me.getElement());
-                    }
-                }
-            }
-
-            me._loc = Oskari.getLocalization('MapModule', Oskari.getLang() || Oskari.getDefaultLanguage()).plugin.LogoPlugin;
-
-            me._createServiceLink();
-            me._createTermsLink(termsUrl);
-            me._createDataSourcesLink();
-        },
-
-        _createServiceLink: function () {
-            var me = this,
-                mapUrl = me.__getMapUrl(),
-                link,
-                linkParams;
-
-            link = me.getElement().find('.icon');
-            link.unbind('click');
-
-            link.click(function (event) {
-                if (!me.inLayerToolsEditMode()) {
-                    linkParams = me.getSandbox().generateMapLinkParameters({});
-                    window.open(mapUrl + linkParams, '_blank');
-                }
-            });
-        },
-
-        /**
-         * Returns the map url for link tool
+         * @method _createUI
          * @private
-         * @return {String} base URL for state parameters
+         * Creates logo and terms of use links on top of map
          */
-        __getMapUrl : function() {
-            var sandbox = this.getSandbox();
-            var url = sandbox.getLocalizedProperty(this.getConfig().mapUrlPrefix);
-
-            // setup current url as base if none configured
-            return sandbox.createURL(url || window.location.pathname, true);
-        },
-        _createTermsLink: function (termsUrl) {
+        _createUI: function () {
             var me = this,
-                link = me.getElement().find('.terms a');
+                sandbox = me._sandbox,
+                pluginLoc = me.getMapModule().getLocalization('plugin', true),
+                myLoc = pluginLoc[me.__name],
+                link,
+                linkParams,
+                mapUrl,
+                termsUrl,
+                containerClasses = 'bottom left',
+                position = 1,
+                dataSources;
 
-            if (termsUrl) {
-                link.html(me._loc.terms);
-                link.attr('href', termsUrl);
-                link.click(function (evt) {
-                    evt.preventDefault();
-                    if (!me.inLayerToolsEditMode()) {
-                        window.open(termsUrl, '_blank');
+            if (me.conf) {
+                mapUrl = sandbox.getLocalizedProperty(me.conf.mapUrlPrefix);
+                termsUrl = sandbox.getLocalizedProperty(me.conf.termsUrl);
+            }
+
+            if (!me.element) {
+                me.element = me.templates.main.clone();
+            }
+
+            if (me.conf) {
+                if(me.conf.location) {
+                    containerClasses = me.conf.location.classes || containerClasses;
+                    position = me.conf.location.position || position;
+                }
+                if(me.conf.font) {
+                    this.changeFont(me.conf.font);
+                }
+            }
+            //parentContainer.append(me.element);
+            me.getMapModule().setMapControlPlugin(me.element, containerClasses, position);
+            link = me.element.find('div.icon');
+            if (mapUrl) {
+                link.bind('click', function () {
+                    if (!me.isInLayerToolsEditMode) {
+                        linkParams = sandbox.generateMapLinkParameters();
+                        mapUrl += linkParams;
+                        window.open(mapUrl, '_blank');
+                        return false;
                     }
                 });
-                link.show();
+            }
+
+            link = me.element.find('a');
+            if (termsUrl) {
+                link.append(myLoc.terms);
+                link.bind('click', function () {
+                    if (!me.isInLayerToolsEditMode) {
+                        window.open(termsUrl, '_blank');
+                        return false;
+                    }
+                });
             } else {
                 link.hide();
             }
-        },
 
-        _createDataSourcesLink: function () {
-            var me = this,
-                conf = me.getConfig(),
-                dataSources = me.getElement().find('.data-sources');
-
-            if (conf && conf.hideDataSourceLink) {
-                dataSources.hide();
+            dataSources = me.element.find('div.data-sources');
+            if (me.conf && me.conf.hideDataSourceLink) {
+                dataSources.remove();
             } else {
-                dataSources.show();
-                dataSources.find('a').html(me._loc.dataSources);
-                dataSources.unbind('click');
+                dataSources.html(myLoc.dataSources);
                 dataSources.click(function (e) {
-                    if (!me.inLayerToolsEditMode() && !me.dataSourcesDialog) {
+                    if (!me.isInLayerToolsEditMode && me.dataSourcesDialog == null) {
                         me._openDataSourcesDialog(e.target);
                         me._requestDataSources();
-                    } else if (me.dataSourcesDialog) {
+                    } else if (me.dataSourcesDialog != null) {
                         me.dataSourcesDialog.close(true);
                         me.dataSourcesDialog = null;
                     }
                 });
             }
+            // in case we are already in edit mode when plugin is drawn
+            this.isInLayerToolsEditMode = me.getMapModule().isInLayerToolsEditMode();
+
         },
 
         /**
-         * @public @method changeFont
-         * Changes the font plugin's font by adding a class to its DOM elements.
+         * Changes the font used by plugin by adding a CSS class to its DOM elements.
          *
+         * @method changeFont
          * @param {String} fontId
          * @param {jQuery} div
-         *
          */
         changeFont: function (fontId, div) {
             var classToAdd,
                 testRegex;
-
-            div = div || this.getElement();
+            div = div || this.element;
 
             if (!div || !fontId) {
                 return;
@@ -232,54 +321,47 @@ Oskari.clazz.define(
             classToAdd = 'oskari-publisher-font-' + fontId;
             testRegex = /oskari-publisher-font-/;
 
-            this.changeCssClasses(classToAdd, testRegex, [div]);
+            this.getMapModule().changeCssClasses(classToAdd, testRegex, [div]);
         },
 
         /**
-         * @private @method _requestDataSources
-         * Sends a request for indicators. If the statsgrid bundle is not
-         * available (and consequently there aren't any indicators) it opens the
-         * data sources dialog and just shows the data sources of the layers.
+         * Sends a request to get indicators. If the statsgrid bundle is not available
+         * (and consequently there aren't any indicators) it opens the data sources dialog
+         * and just shows the data sources of the layers.
          *
-         *
+         * @method _requestDataSources
          * @return {undefined}
          */
         _requestDataSources: function () {
             var me = this,
-                reqBuilder = me.getSandbox().getRequestBuilder(
-                    'StatsGrid.IndicatorsRequest'
-                ),
+                reqBuilder = me._sandbox.getRequestBuilder('StatsGrid.IndicatorsRequest'),
                 request;
 
             if (reqBuilder) {
                 request = reqBuilder();
-                me.getSandbox().request(me, request);
+                me._sandbox.request(me, request);
             }
         },
 
         /**
-         * @method _openDataSourcesDialog
          * Opens a dialog to show data sources of the selected layers
          * and statistics indicators.
          *
-         * @param  {jQuery} target arget element where the popup is attached to
+         * @method _openDataSourcesDialog
+         * @param  {jQuery} target the target element where the popup is attached to
          * @param  {Array[Object]} indicators the open indicators
-         *
          * @return {undefined}
          */
         _openDataSourcesDialog: function (target) {
             var me = this,
-                popupTitle = me._loc.dataSources,
-                dialog = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Popup'
-                ),
-                closeButton = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Button'
-                ),
+                pluginLoc = me.getMapModule().getLocalization('plugin', true)[me.__name],
+                popupTitle = pluginLoc.dataSources,
+                dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                closeButton = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 content = me.templates.dataSourcesDialog.clone(),
                 layersCont = content.find('div.layers'),
-                layersHeaderLoc = me._loc.layersHeader,
-                layers = me.getSandbox().findAllSelectedMapLayers(),
+                layersHeaderLoc = pluginLoc.layersHeader,
+                layers = me._sandbox.findAllSelectedMapLayers(),
                 layersLen = layers.length,
                 layer, info,
                 i;
@@ -296,7 +378,7 @@ Oskari.clazz.define(
             } else {
                 layersCont.find('h4').html(layersHeaderLoc);
 
-                for (i = 0; i < layersLen; i += 1) {
+                for (i = 0; i < layersLen; ++i) {
                     layer = layers[i];
                     info = layer.getName() + " - " + ((layer.getCopyrightInfo() == null) ? pluginLoc['emptyDataSource'] : layer.getCopyrightInfo());
 
@@ -304,30 +386,30 @@ Oskari.clazz.define(
                 }
             }
 
-            me.dataSourcesDialog = dialog;
+            this.dataSourcesDialog = dialog;
 
             dialog.show(popupTitle, content, [closeButton]);
 
-            target = target || me.getElement().find('div.data-sources');
+            target = target || me.element.find('div.data-sources');
             dialog.moveTo(target, 'top');
         },
 
         /**
-         * @method _addIndicatorsToDataSourcesDialog
          * Adds indicators to the data sources dialog.
          *
+         * @method _addIndicatorsToDataSourcesDialog
          * @param {Object} indicators
-         *
          */
         _addIndicatorsToDataSourcesDialog: function (indicators) {
-            if (!this.dataSourcesDialog) {
+            var dialog = this.dataSourcesDialog;
+            if (!dialog) {
                 return;
             }
-            var me = this,
-                dialog = me.dataSourcesDialog,
+
+            var pluginLoc = this.getMapModule().getLocalization('plugin', true)[this.__name],
                 content = dialog.getJqueryContent(),
                 indicatorsCont = content.find('div.indicators'),
-                indicatorsHeaderLoc = me._loc.indicatorsHeader,
+                indicatorsHeaderLoc = pluginLoc.indicatorsHeader,
                 indicator,
                 i,
                 target;
@@ -345,25 +427,20 @@ Oskari.clazz.define(
                         indicator = indicators[i];
                         indicatorsCont.append(
                             '<div>' +
-                            indicator.title + ' - ' +
-                            indicator.organization +
-                            '</div>'
+                                indicator.title + ' - ' + indicator.organization +
+                                '</div>'
                         );
                     }
                 }
             }
 
-            target = target || me.getElement().find('div.data-sources');
+            target = target || this.element.find('div.data-sources');
             dialog.moveTo(target, 'top');
         }
     }, {
-        extend: ['Oskari.mapping.mapmodule.plugin.BasicMapModulePlugin'],
         /**
-         * @static @property {string[]} protocol array of superclasses
+         * @property {String[]} protocol array of superclasses as {String}
+         * @static
          */
-        protocol: [
-            'Oskari.mapframework.module.Module',
-            'Oskari.mapframework.ui.module.common.mapmodule.Plugin'
-        ]
-    }
-);
+        'protocol': ["Oskari.mapframework.module.Module", "Oskari.mapframework.ui.module.common.mapmodule.Plugin"]
+    });
