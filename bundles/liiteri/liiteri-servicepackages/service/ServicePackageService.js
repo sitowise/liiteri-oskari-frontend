@@ -141,7 +141,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
                 if (state.statsVisibility == true) {
                     sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
                 } else if (state.statistics.state && state.statistics.state.layerId) {
-                    var eventBuilder = sandbox.getEventBuilder('StatsGrid.SotkadataChangedEvent');
+                    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
                     var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
                     if (eventBuilder && layer) {
                         var event = eventBuilder(layer, null);

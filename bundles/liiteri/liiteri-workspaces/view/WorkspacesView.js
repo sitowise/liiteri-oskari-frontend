@@ -683,7 +683,7 @@ function() {
 			if (workspace.statsVisibility == true) {
 			    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
 			} else if (workspace.statistics.state && workspace.statistics.state.layerId) {
-			    var eventBuilder = sandbox.getEventBuilder('StatsGrid.SotkadataChangedEvent');
+			    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
 			    var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
                 if (eventBuilder && layer) {
                     var event = eventBuilder(layer, null);

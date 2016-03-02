@@ -411,12 +411,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 this.isSelectHilightedMode = false;
             },
             /**
-             * @method SotkadataChangedEvent
-             * @param {MapStats.SotkadataChangedEvent} event
+             * @method StatsDataChangedEvent
+             * @param {MapStats.StatsDataChangedEvent} event
              *
              * Creates classification of stats column data and shows it on geostats legend html
              */
-            'StatsGrid.SotkadataChangedEvent': function (event) {
+            'StatsGrid.StatsDataChangedEvent': function (event) {
                 // Create a new Manaclassification for thematic data, if selected
                 // thematic data column is changed in (ManageStatsOut)-grid
                 // stats Oskari layer, which send the event
