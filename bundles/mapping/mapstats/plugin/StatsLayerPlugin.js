@@ -367,7 +367,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             var openLayer = new OpenLayers.Layer.Vector("layer_feature_" + layer.getId(), {
                                 strategies: [new OpenLayers.Strategy.Fixed(), new OpenLayers.Strategy.Refresh({force: true, active: true})],
                                 protocol: new OpenLayers.Protocol.HTTP({
-                                    url: "?action_route=GetStatsFeatures",
+                                    url: me._sandbox.getAjaxUrl() + "action_route=GetStatsFeatures",
                                     format: new OpenLayers.Format.GeoJSON(),
                                     params : {
                                         LAYERID: me.defaultLayerId,
