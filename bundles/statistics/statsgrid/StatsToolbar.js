@@ -12,14 +12,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsToolbar',
         this.toolbarId = 'statsgrid';
         this.instance = instance;
         this.localization = localization;
+        this._createUI();
     }, {
         show: function (isShown) {
-            if (isShown) {
-                this.addToolButton();
-            } else {
-                this.removeToolButton();
-            }
-            //sandbox.requestByName(this.instance, 'Toolbar.ToolbarRequest', [this.toolbarId, showHide]);
+            var showHide = isShown ? 'show' : 'hide';
+            var sandbox = this.instance.getSandbox();
+            sandbox.requestByName(this.instance, 'Toolbar.ToolbarRequest', [this.toolbarId, showHide]);
         },
         destroy: function () {
             var sandbox = this.instance.getSandbox();
@@ -35,9 +33,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsToolbar',
          */
         _createUI: function () {
 
-            var view = this.instance.plugins['Oskari.userinterface.View'],
-                me = this,
-                sandbox = this.instance.getSandbox();
+            var view = this.instance.plugins['Oskari.userinterface.View'];
+            var me = this;
+            var sandbox = this.instance.getSandbox();
             sandbox.requestByName(this.instance, 'Toolbar.ToolbarRequest', [this.toolbarId, 'add', {
                 title: me.localization.title,
                 show: false,
@@ -48,108 +46,46 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsToolbar',
 
             var buttonGroup = 'statsgrid-tools';
             var buttons = {
-                    'toogleTableView': {
-                        toolbarid: me.toolbarId,
-                        iconCls: 'glyphicon glyphicon-list-alt',
-                        tooltip: this.instance._localization.showSelected,
-                        text: this.instance._localization.toogleTable,
-                        sticky: false,
-                        toggleSelection: true,
-                        initiallySelected: true,
-                        callback: function () {                        
-                            var statsgrid = view.instance.gridPlugin;
-                            statsgrid.toogleTableView();
-                        },
+                'toogleTableView': {
+                    toolbarid: me.toolbarId,
+                    iconCls: 'glyphicon glyphicon-list-alt',
+                    tooltip: this.instance._localization.showSelected,
+                    text: this.instance._localization.toogleTable,
+                    sticky: false,
+                    toggleSelection: true,
+                    initiallySelected: true,
+                    callback: function () {                        
+                        var statsgrid = view.instance.gridPlugin;
+                        statsgrid.toogleTableView();
                     },
-                    'toogleMapView': {
-                        toolbarid: me.toolbarId,
-                        iconCls: 'glyphicon glyphicon-screenshot',
-                        tooltip: this.instance._localization.showSelected,
-                        text: this.instance._localization.toogleMap,
-                        sticky: false,
-                        toggleSelection: true,
-                        initiallySelected: true,
-                        selected: true,
-                        callback: function() {
-                            var statsgrid = view.instance.gridPlugin;
-                            statsgrid.toogleMapView();
-                        },
-                    }
                 },
-	            requester = this.instance,
-	            reqBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
-	            tool;
-
-            for (tool in buttons) {
-                if (buttons.hasOwnProperty(tool)) {
-                    sandbox.request(requester, reqBuilder(tool, buttonGroup, buttons[tool]));
+                'toogleMapView': {
+                    toolbarid: me.toolbarId,
+                    iconCls: 'glyphicon glyphicon-screenshot',
+                    tooltip: this.instance._localization.showSelected,
+                    text: this.instance._localization.toogleMap,
+                    sticky: false,
+                    toggleSelection: true,
+                    initiallySelected: true,
+                    selected: true,
+                    callback: function() {
+                        var statsgrid = view.instance.gridPlugin;
+                        statsgrid.toogleMapView();
+                    },
                 }
-            }
-        },
-        addToolButton: function () {
-            var me = this,
-                instance = me.instance,
-                view = instance.plugins['Oskari.userinterface.View'],
-                sandbox = instance.getSandbox(),
-                buttonGroup = 'statsgrid-tools',
-                buttons = {
-                    'selectAreas': {
-                        iconCls: 'selection-square',
-                        tooltip: instance._localization.showSelected,
-                        sticky: false,
-                        toggleSelection: true,
-                        callback: function () {
-                            var statsgrid = instance.gridPlugin,
-                                mode = statsgrid.toggleSelectMunicipalitiesMode(),
-                                eventBuilder,
-                                evt;
+            };
 
-                            // if mode is on, unselect all unhilighted areas and notify other plugins
-                            if (mode) {
-                                // unselect all areas except hilighted
-                                statsgrid.unselectAllAreas(true);
-
-                                // tell statsLayerPlugin to hilight all areas which are selected by clicking
-                                eventBuilder = instance.getSandbox()
-                                    .getEventBuilder('StatsGrid.SelectHilightsModeEvent');
-                                if (eventBuilder) {
-                                    evt = eventBuilder(statsgrid.selectedMunicipalities);
-                                    sandbox.notifyAll(evt);
-                                }
-                                //otherwise, clear hilights
-                            } else {
-                                statsgrid.grid.scrollRowToTop(0);
-                                eventBuilder = sandbox
-                                    .getEventBuilder('StatsGrid.ClearHilightsEvent');
-                                if (eventBuilder) {
-                                    evt = eventBuilder(me.isVisible);
-                                    sandbox.notifyAll(evt);
-                                }
-                            }
-                        }
-                    }
-                },
-                reqBuilder = sandbox
-                    .getRequestBuilder('Toolbar.AddToolButtonRequest'),
+            var requester = this.instance;
+            var reqBuilder = sandbox.getRequestBuilder('Toolbar.AddToolButtonRequest'),
                 tool;
 
 			//there shouldn't be any button in Liiteri's toolbar
             for (tool in buttons) {
                 if (buttons.hasOwnProperty(tool)) {
-                    sandbox.request(
-                        instance, reqBuilder(tool, buttonGroup, buttons[tool]));
+                    sandbox.request(requester, reqBuilder(tool, buttonGroup, buttons[tool]));
                 }
             }
-        },
-        removeToolButton: function () {
-            var instance = this.instance,
-                sandbox = instance.getSandbox(),
-                reqBuilder = sandbox
-                    .getRequestBuilder('Toolbar.RemoveToolButtonRequest');
 
-            if (reqBuilder) {
-                sandbox.request(instance, reqBuilder(
-                    'selectAreas', 'statsgrid-tools'));
-            }
+
         }
     });

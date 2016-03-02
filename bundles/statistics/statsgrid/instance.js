@@ -5,15 +5,14 @@
  * from DefaultExtension class.
  *
  */
-Oskari.clazz.define(
-    'Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance',
+Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance',
     /**
      * @static constructor function
      */
 
     function () {
 		this.servicePackageData = null;
-        this.defaultConf = {
+        this.conf = {
             "name": "StatsGrid",
             "sandbox": "sandbox",
             "stateful": true,
@@ -28,25 +27,27 @@ Oskari.clazz.define(
         };
         this.drawPluginId = this.getName();
     }, {
-        afterStart: function (sandbox) {
-            var me = this;
-            var tooltipRequestHandler = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.request.TooltipContentRequestHandler',
-                me
-            );
-            sandbox.addRequestHandler(
-                'StatsGrid.TooltipContentRequest',
-                tooltipRequestHandler
-            );
+        "start": function () {
+            var me = this,
+                conf = this.conf,
+                sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
+                sandbox = Oskari.getSandbox(sandboxName);
+            me.sandbox = sandbox;
+            sandbox.register(this);
 
-            var indicatorRequestHandler = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.request.IndicatorsRequestHandler',
-                me
-            );
-            sandbox.addRequestHandler(
-                'StatsGrid.IndicatorsRequest',
-                indicatorRequestHandler
-            );
+            /* stateful */
+            if (conf && conf.stateful === true) {
+                sandbox.registerAsStateful(this.mediator.bundleId, this);
+            }
+
+            var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
+            sandbox.request(this, request);
+
+            var tooltipRequestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.TooltipContentRequestHandler', this);
+            sandbox.addRequestHandler('StatsGrid.TooltipContentRequest', tooltipRequestHandler);
+
+            var indicatorRequestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.IndicatorsRequestHandler', this);
+            sandbox.addRequestHandler('StatsGrid.IndicatorsRequest', indicatorRequestHandler);
 
 			var currentStateRequestHandler = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.request.CurrentStateRequestHandler', this);
             sandbox.addRequestHandler('StatsGrid.CurrentStateRequest', currentStateRequestHandler);
@@ -55,90 +56,78 @@ Oskari.clazz.define(
             sandbox.addRequestHandler('StatsGrid.SetStateRequest', setStateRequestHandler);
 
             var locale = me.getLocalization(),
-                mapModule = sandbox.findRegisteredModuleInstance(
-                    'MainMapModule'
-                );
-            me.mapModule = mapModule;
+                mapModule = sandbox.findRegisteredModuleInstance('MainMapModule');
+            this.mapModule = mapModule;
 
             // create the StatisticsService for handling ajax calls
             // and common functionality.
-            var statsService = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.StatisticsService',
-                me
-            );
+            var statsService = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.StatisticsService', me);
             sandbox.registerService(statsService);
-            me.statsService = statsService;
+            this.statsService = statsService;
 
             // Handles user indicators
-            var userIndicatorsService = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.UserIndicatorsService',
-                me
-            );
+            var userIndicatorsService = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.UserIndicatorsService', me);
             sandbox.registerService(userIndicatorsService);
             userIndicatorsService.init();
-            me.userIndicatorsService = userIndicatorsService;
+            this.userIndicatorsService = userIndicatorsService;
+
+            // if (sandbox.getUser().isLoggedIn()) {
+                // var userIndicatorsTab = Oskari.clazz.create(
+                    // 'Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
+                    // this, locale.tab
+                // );
+                // this.userIndicatorsTab = userIndicatorsTab;
+            // }
 
             // Register stats plugin for map which creates
             // - the indicator selection UI (unless 'published' param in the conf is true)
             // - the grid.
             var gridConf = {
-                state: me.getState(),
+                'state': me.getState(),
                 //'csvDownload' : true,
-                statistics: [{
-                    id: 'min',
-                    visible: true
+                "statistics": [{
+                    "id": "min",
+                    "visible": true
                 }, {
-                    id: 'max',
-                    visible: true
+                    "id": "max",
+                    "visible": true
                 }, {
-                    id: 'avg',
-                    visible: true
+                    "id": "avg",
+                    "visible": true
                 }, {
-                    id: 'mde',
-                    visible: true
+                    "id": "mde",
+                    "visible": true
                 }, {
-                    id: 'mdn',
-                    visible: true
+                    "id": "mdn",
+                    "visible": true
                 }, {
-                    id: 'std',
-                    visible: true
+                    "id": "std",
+                    "visible": true
                 }, {
-                    id: 'sum',
-                    visible: false
+                    "id": "sum",
+                    "visible": true
                 }]
             };
-            var gridPlugin = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin',
-                gridConf,
-                locale
-            );
+
+//            var visualizationPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.VisualizationStatsPlugin', gridConf, locale);
+//            mapModule.registerPlugin(visualizationPlugin);
+//            mapModule.startPlugin(visualizationPlugin);
+//            this.visualizationPlugin = visualizationPlugin;
+
+            var gridPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin', gridConf, locale, this);
             mapModule.registerPlugin(gridPlugin);
             mapModule.startPlugin(gridPlugin);
-            me.gridPlugin = gridPlugin;
+            this.gridPlugin = gridPlugin;
 
             // Register classification plugin for map.
-            var classifyPlugin = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin',
-                {
-                    'state': me.getState()
-                },
-                locale
-            );
+            var classifyPlugin = Oskari.clazz.create('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificationPlugin', {
+                'state': me.getState()
+            }, locale);
             mapModule.registerPlugin(classifyPlugin);
             mapModule.startPlugin(classifyPlugin);
-            me.classifyPlugin = classifyPlugin;
+            this.classifyPlugin = classifyPlugin;
 
-            var dataSourceRequestHandler = Oskari.clazz.create(
-                'Oskari.statistics.bundle.statsgrid.request.DataSourceRequestHandler',
-                me.gridPlugin
-            );
-            sandbox.addRequestHandler(
-                'StatsGrid.AddDataSourceRequest',
-                dataSourceRequestHandler
-            );
-
-            this.setState(me.state);
-            me._enableTile();
+            this.setState(this.state);
 
             this.buttons = Oskari.clazz.create("Oskari.statistics.bundle.statsgrid.ButtonHandler", this);
             this.buttons.start();
@@ -182,24 +171,7 @@ Oskari.clazz.define(
                 sandbox.request(this, tileRequest);
             }
         },
-        __addIndicatorTab : function() {
-            if(this.userIndicatorsTab) {
-                return;
-            }
-            var locale = this.getLocalization();
-            if (this.sandbox.getUser().isLoggedIn()) {
-                var userIndicatorsTab = Oskari.clazz.create(
-                    'Oskari.statistics.bundle.statsgrid.UserIndicatorsTab',
-                    this, locale.tab
-                );
-                this.userIndicatorsTab = userIndicatorsTab;
-            }
-        },
-        eventHandlers: {
-            'Personaldata.PersonaldataLoadedEvent': function () {
-                // personal data has been loaded after this bundle
-                this.__addIndicatorTab();
-            },
+        "eventHandlers": {
             /**
              * @method userinterface.ExtensionUpdatedEvent
              */
@@ -207,12 +179,12 @@ Oskari.clazz.define(
                 var me = this,
                     view = this.getView();
 
-                if (event.getExtension().getName() !== me.getName() || !me._isLayerPresent()) {
+                if (event.getExtension().getName() !== me.getName() || !this._isLayerPresent()) {
                     // not me -> do nothing
                     return;
                 }
 
-                var isShown = event.getViewState() !== 'close';
+                var isShown = event.getViewState() !== "close";
                 view.prepareMode(isShown, null, true);
 
                 var operation = isShown ? 'show' : 'hide';
@@ -233,13 +205,13 @@ Oskari.clazz.define(
             /**
              * @method AfterMapMoveEvent
              */
-            AfterMapMoveEvent: function (event) {
+            'AfterMapMoveEvent': function (event) {
                 var view = this.getView();
                 if (view.isVisible && view._layer) {
                     this._createPrintParams(view._layer);
                 }
             },
-            AfterMapLayerRemoveEvent: function (event) {
+            'AfterMapLayerRemoveEvent': function (event) {
                 this._afterMapLayerRemoveEvent(event);
             },
             /**
@@ -247,9 +219,19 @@ Oskari.clazz.define(
              * @param {Oskari.mapframework.event.common.MapLayerEvent} event
              *
              */
-            MapLayerEvent: function (event) {
+            'MapLayerEvent': function (event) {
                 // Enable tile when stats layer is available
-                this._enableTile();
+                var me = this;
+                var layerPresent = this._isLayerPresent();
+                if (layerPresent) {
+//                    var mapIconDesc = {
+//                        'text': 'stats',
+//                        'iconCss': 'glyphicon mapicon stats-mapicon',
+//                        'actionType': 'toogle',
+//                    }
+//                    var iconRequest = me.sandbox.getRequestBuilder('MapIconsPlugin.AddMapIconRequest')(me, mapIconDesc, me);
+//                    me.sandbox.request(me, iconRequest);
+                }
             },
 			'liiteri-servicepackages.ServicePackageSelectedEvent': function (event) {
 				//this.gridPlugin.getServicePackageIndicators(event.getThemes())
@@ -260,22 +242,12 @@ Oskari.clazz.define(
 			    me.getView().resize();
 			}
         },
-
-        _enableTile: function () {
-            var layerPresent = this._isLayerPresent(),
-                tile = this.plugins['Oskari.userinterface.Tile'];
-            if (layerPresent && tile) {
-                tile.enable();
-            }
-        },
-
         isLayerVisible: function () {
             var ret,
                 layer = this.sandbox.findMapLayerFromSelectedMapLayers(this.conf.defaultLayerId);
             ret = layer !== null && layer !== undefined;
             return ret;
         },
-
         _isLayerPresent: function () {
             var service = this.sandbox.getService('Oskari.mapframework.service.MapLayerService');
             if (this.conf && this.conf.defaultLayerId) {
@@ -289,7 +261,6 @@ Oskari.clazz.define(
             }
             return false;
         },
-
         /**
          * Returns the user indicators service.
          *
@@ -299,7 +270,6 @@ Oskari.clazz.define(
         getUserIndicatorsService: function () {
             return this.userIndicatorsService;
         },
-
         /**
          * @method addUserIndicator
          * @param {Object} indicator
@@ -307,8 +277,7 @@ Oskari.clazz.define(
         addUserIndicator: function (indicator) {
             var me = this,
                 view = me.getView(),
-                state = me.getState(),
-                s = me.getSandbox();
+                state = me.getState();
 
             state.indicators = state.indicators || [];
             state.indicators.push(indicator);
@@ -323,18 +292,9 @@ Oskari.clazz.define(
                     function () {
                         me.gridPlugin.changeGridRegion(indicator.category);
                         me.gridPlugin.addIndicatorDataToGrid(
-                            null,
-                            indicator.id,
-                            indicator.gender,
-                            indicator.year,
-                            indicator.data,
-                            indicator.meta
+                            null, indicator.id, indicator.gender, indicator.year, indicator.data, indicator.meta
                         );
                         me.gridPlugin.addIndicatorMeta(indicator);
-                        s.postRequestByName(
-                            'userinterface.UpdateExtensionRequest',
-                            [me, 'attach']
-                        );
                     }, 1000
                 );
             } else {
@@ -344,7 +304,6 @@ Oskari.clazz.define(
                 me.setState(state);
             }
         },
-
         /**
          * Sets the map state to one specified in the parameter. State is bundle specific, check the
          * bundle documentation for details.
@@ -366,21 +325,8 @@ Oskari.clazz.define(
             this.gridPlugin.setState(this.state);
             this.classifyPlugin.setState(this.state);
             // Reset the classify plugin
-            this.classifyPlugin.resetUI();
-
-            if (state.isActive) {
-                var view = this.getView(),
-                    layerId = this.state.layerId,
-                    layer = null;
-
-                if (layerId !== null && layerId !== undefined) {
-                    layer = this.sandbox.getService('Oskari.mapframework.service.MapLayerService').findMapLayer(layerId);
-                }
-                // view._layer isn't set if we call this without a layer...
-                view.prepareMode(true, layer, false);
-            }
+            this.classifyPlugin.resetUI(this.state);
         },
-
         getState: function () {
             return this.state;
         },
@@ -411,9 +357,9 @@ Oskari.clazz.define(
             var i = null,
                 ilen = null,
                 ilast = null,
-                statsgridState = 'statsgrid=',
-                valueSeparator = '+',
-                indicatorSeparator = ',',
+                statsgridState = "statsgrid=",
+                valueSeparator = "+",
+                indicatorSeparator = ",",
                 stateValues = null,
                 indicatorValues = null,
                 colorsValues = null,
@@ -436,7 +382,7 @@ Oskari.clazz.define(
             // fifth value.
             // 'manualBreaksInput' can be an empty string but it must be the
             // sixth value.
-            for (i = 0, ilen = keys.length, ilast = ilen - 1; i < ilen; i += 1) {
+            for (i = 0, ilen = keys.length, ilast = ilen - 1; i < ilen; i++) {
                 value = state[keys[i]];
                 if (value !== null && value !== undefined) {
                     // skip undefined and null
@@ -448,11 +394,8 @@ Oskari.clazz.define(
             }
 
             // handle indicators separately
-            for (i = 0, ilen = indicators.length, ilast = ilen - 1; i < ilen; i += 1) {
-                if (indicators[i].id === null || indicators[i].id === undefined) {
-                    indicators[i].id = indicators[i].indicator;
-                }
-                indicatorValues += indicators[i].id;
+            for (i = 0, ilen = indicators.length, ilast = ilen - 1; i < ilen; i++) {
+                indicatorValues += indicators[i].indicator;
                 indicatorValues += valueSeparator;
                 indicatorValues += indicators[i].year;
                 indicatorValues += valueSeparator;
@@ -463,12 +406,10 @@ Oskari.clazz.define(
             }
 
             // handle colors separately
-            var colorArr = [],
-                cKey;
-
+            var colorArr = [];
             colors.flipped = colors.flipped === true;
-            for (i = 0, ilen = colorKeys.length; i < ilen; i += 1) {
-                cKey = colorKeys[i];
+            for (i = 0, ilen = colorKeys.length; i < ilen; ++i) {
+                var cKey = colorKeys[i];
                 if (colors.hasOwnProperty(cKey) && colors[cKey] !== null && colors[cKey] !== undefined) {
                     colorArr.push(colors[cKey]);
                 }
@@ -479,12 +420,10 @@ Oskari.clazz.define(
 
             var ret = null;
             if (stateValues && indicatorValues) {
-                ret = statsgridState + stateValues + '-' + indicatorValues + '-';
+                ret = statsgridState + stateValues + "-" + indicatorValues;
                 if (colorsValues) {
-                    ret += colorsValues;
+                    ret += "-" + colorsValues;
                 }
-                // Should the mode be open or not
-                ret += (view && view.isVisible) ? '-1' : '-0';
             }
 
             return ret;
@@ -645,6 +584,5 @@ Oskari.clazz.define(
             }
         }
     }, {
-        extend: ['Oskari.userinterface.extension.DefaultExtension']
-    }
-);
+        "extend": ["Oskari.userinterface.extension.DefaultExtension"]
+    });

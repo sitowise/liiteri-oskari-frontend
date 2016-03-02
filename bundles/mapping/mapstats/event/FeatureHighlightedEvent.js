@@ -7,13 +7,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.event.FeatureHighlighte
     /**
      * @method create called automatically on construction
      * @static
-     * @param {Object} feature Attributes
+     * @param {Object} feature
      * @param {Boolean} highlighted
      * @param {String} highlightType
      */
 
-    function (feaAttributes, highlighted, highlightType) {
-        this._feaAttributes = feaAttributes;
+    function (feature, highlighted, highlightType) {
+        this._feature = feature;
         this._highlighted = highlighted;
         this._highlightType = highlightType;
     }, {
@@ -31,8 +31,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.event.FeatureHighlighte
          * @method getFeature
          * @return {Object}
          */
-        getFeaAttributes: function () {
-            return this._feaAttributes;
+        getFeature: function () {
+            return this._feature;
         },
 
         /**

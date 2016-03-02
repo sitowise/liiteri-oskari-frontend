@@ -30,7 +30,7 @@ Oskari.clazz.define(
                 "src": "../../../../bundles/framework/mapstats/LoadingPanel.js"
             }, {
                 "type": "text/javascript",
-                "src": "../../../../bundles/mapping/mapstats/plugin/StatsLayerPlugin.ol2.js"
+                "src": "../../../../bundles/mapping/mapstats/plugin/StatsLayerPlugin.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/mapping/mapstats/domain/StatsLayer.js"

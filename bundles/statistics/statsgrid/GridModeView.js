@@ -212,7 +212,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
             if (isShown) {
                 /** ENTER The Mode */
                 // Hide base layers, store hidden layers to state so we can show them on exit
-                me.hiddenLayers = [];
+                me.instance.state.hiddenLayers = [];
                 if (me.instance.conf.hideLayers) {
                     layers = me.instance.sandbox.findAllSelectedMapLayers();
                     for (i = 0; i < layers.length; i++) {
@@ -240,14 +240,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 elCenter.removeClass('span12');
                 elCenter.width(centerWidth);
                 // remove toolbar's height
-                var height = jQuery(window).height() - jQuery('#contentMap').find('.oskariui-menutoolbar').height();
-                mapModule.getMapEl().height(height);
+                mapModule.getMapEl().height(jQuery(window).height() - jQuery('#contentMap').find('.oskariui-menutoolbar').height());
                 //window resize is handled in mapfull - instance.js
                 elLeft.empty();
-                elLeft.show();
                 elLeft.removeClass('oskari-closed');
                 elLeft.width(leftWidth);
-                elLeft.height(height);
                 elLeft.resizable({
                     minWidth: 350,
                     handles: "e",
@@ -267,10 +264,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 
                 /** a hack to notify openlayers of map size change */
                 mapModule.updateSize();
+
             } else {
                 /** EXIT The Mode */
                 // Make hidden layers visible
-                layers = me.hiddenLayers;
+                layers = me.instance.state.hiddenLayers;
                 if (layers) {
                     for (i = 0; i < layers.length; i++) {
                         layer = layers[i];
@@ -283,7 +281,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                 // remove stats layer if we added it and there's no active indicators
                 // this breaks published stats...
                 //me.instance.gridPlugin.resetLayer();
-                me.hiddenLayers = [];
+
+                me.instance.state.hiddenLayers = [];
                 me.instance.gridPlugin.destroyPopups(); // This is ugly, whose responsibility should this be?
                 jQuery('#contentMap').removeClass('statsgrid-contentMap');
                 jQuery('.oskariui-mode-content').removeClass('statsgrid-mode');

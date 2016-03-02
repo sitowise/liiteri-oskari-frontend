@@ -1,14 +1,14 @@
 /**
- * @class Oskari.mapframework.bundle.mapstats.event.StatsVisualizationChangeEvent
+ * @class Oskari.statistics.bundle.statsgrid.event.SotkadataChangedEvent
  * 
  * 
  */
-Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.event.StatsVisualizationChangeEvent',
+Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.event.SotkadataChangedEvent',
 /**
  * @method create called automatically on construction
  * @static
- * @param {Object} layer an Oskari layer for visualizing the stats.
- * @param {Object} params Params should have keys for VIS_ID, VIS_NAME, VIS_ATTR, VIS_CLASSES, VIS_COLORS.
+ * @param {Object} layer Thematic map layer (Oskari layer for visualizing the stats).
+ * @param {Object} params Params should have keys for  CUR_COL, VIS_NAME, VIS_ATTR, VIS_CODES, COL_VALUES
  */
 function(layer, params) {
     this._layer = layer;
@@ -20,11 +20,11 @@ function(layer, params) {
      * @return {String} The event name.
      */
     getName : function() {
-        return "MapStats.StatsVisualizationChangeEvent";
+        return "StatsGrid.SotkadataChangedEvent";
     },
     /**
     * @method getLayer
-    * Returns the layer the new style should be applied to.
+    * Returns Oskari layer.
     * @return {Object}
     */
     getLayer: function() {
@@ -32,7 +32,7 @@ function(layer, params) {
     },
     /**
      * @method getParams
-     * Returns the params used to generate the new style.
+     * Returns the data for to create teh stats classifications.
      * @return {Object} 
      */
     getParams : function() {

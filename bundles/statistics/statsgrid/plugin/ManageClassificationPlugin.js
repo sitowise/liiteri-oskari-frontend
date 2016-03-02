@@ -31,7 +31,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 'grid2km': 400000,
                 'grid5km': 800000,
                 'grid10km': 1600000,
-                'grid20km': 3200000           
+                'grid20km': 32000000           
             },
             graduated: {
                 'strokeColor' : {

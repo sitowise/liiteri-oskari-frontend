@@ -591,6 +591,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
 
 
+            },
+            'WFSFeaturesSelectedEvent': function (event) {
+                //update the status of selected geometries in the geometry filter popup
+                var me = this,
+		            index = me._getPopupIndex('filterBySelectedAreaPopup'),
+		            popup = null,
+		            filterContainer = null,
+                    filterBtn = null,
+                    clickedGeometries = 0;
+
+                if (index != null) {
+                    popup = me.popups[index];
+                }
+
+                if (popup && popup.content && popup.popup && popup.popup.dialog) {
+                    filterContainer = popup.content.find('.filter-container');
+                    filterBtn = popup.popup.dialog.find('div.actions input.filterBtn');
+
+                    clickedGeometries = me._updateGeometriesInfoInPopup(filterContainer);
+
+                    if (clickedGeometries > 0) {
+                        filterBtn.removeAttr('disabled');
+                    } else {
+                        filterBtn.attr('disabled', 'disabled');
+                    }
+                }
             }
         },
 
@@ -608,7 +634,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @method getLayer
          * @return {Object} layer
          */
-        getLayer: function(layer) {
+        getLayer: function() {
             return this._layer;
         },
 
@@ -3771,13 +3797,17 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             } else {
                                 return a.indicatorData.year - b.indicatorData.year;
                             }
-                        } else if(typeof a.orderNumber === 'undefined' && typeof b.orderNumber === 'undefined') {
-                            return 0;
-                        } else if(typeof a.orderNumber === 'undefined') {
-                            return -1;
-                        } else if (typeof b.orderNumber === 'undefined') {
-                            return 1;
-                        }                          
+                        } else {
+                            if(typeof a.orderNumber !== 'undefined' && typeof b.orderNumber !== 'undefined') {
+                                return a.orderNumber - b.orderNumber;
+                            } else if(typeof a.orderNumber === 'undefined' && typeof b.orderNumber === 'undefined') {
+                                return 0;
+                            } else if(typeof a.orderNumber === 'undefined') {
+                                return -1;
+                            } else if (typeof b.orderNumber === 'undefined') {
+                                return 1;
+                            }
+                        }
                     });
                 }
             }
@@ -5326,42 +5356,63 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 content = jQuery('<div id="statsgrid-filter-by-region"><p class="filter-desc"></p><div class="filter-container"></div></div>').clone(),
                 selectionGeometries = [],
                 dialogButtons = [],
-                direction = null;
+                direction = null,
+                clickedGeometries = 0;
 
             // destroy possible open instance
             me._destroyPopup('filterBySelectedAreaPopup');
+
+            // hide theme map layer to make possible to select features from another map layers
+            me._setLayerVisibility(false);
 
             cancelBtn.setTitle(cancelLoc);
             cancelBtn.setHandler(function () {
                 //headerMenuPlugin.hide();
                 me._destroyPopup('filterBySelectedAreaPopup');
+                me._setLayerVisibility(true);
             });
             
             clearBtn.setTitle(clearLoc);
             clearBtn.setHandler(function () {
                 me.geometryFilter.reset();
                 me._updateGeometryFilter();
-                var sandbox = me._sandbox,
-                rb = sandbox.getRequestBuilder('BackgroundDrawPlugin.StopDrawingRequest');
+                var sandbox = me._sandbox;
+                var rb = sandbox.getRequestBuilder('BackgroundDrawPlugin.StopDrawingRequest');
                 if (rb) {
                     var request = rb(me.instance.getName(), true);
                     sandbox.request(me, request);
                 }
                 me._destroyPopup('filterBySelectedAreaPopup');
+                // restore theme map layer
+                me._setLayerVisibility(true);
             });
             
             filterBtn.setTitle(filterLoc);
             filterBtn.addClass('primary');
+            filterBtn.addClass('filterBtn');
             filterBtn.setHandler(function (e) {
                 me.geometryFilter.reset();
-                for (var ix = 0; ix < selectionGeometries.length; ++ix) {
-                    me.geometryFilter.addGeometry(selectionGeometries[ix]);
-                }                
+
+                var selectedLayers = me.instance.sandbox.findAllSelectedMapLayers();
+                for (var i = 0; i < selectedLayers.length; i++) {
+                    var l = selectedLayers[i];
+
+                    if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
+                        && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+
+                        for (var j = 0; j < l.getClickedGeometries().length; ++j) {
+                            me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1]);
+                        }
+                    }
+                }
+
                 if(me.mode === 'twoway') {
                     me.geometryFilter.setDirection(content.find('.type').val());
                 }
                 me._updateGeometryFilter();
                 me._destroyPopup('filterBySelectedAreaPopup');
+                // restore theme map layer
+                me._setLayerVisibility(true);
             });
             
             // Description text
@@ -5370,32 +5421,23 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var filterContainer = content.find('.filter-container');
             
             var layerFilterContainer = '';
-            
-            var selectedLayers = me.instance.sandbox.findAllSelectedMapLayers();
-            for (var i = 0; i < selectedLayers.length; i++) {
-                var l = selectedLayers[i];
-                if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
-                    layerFilterContainer = layerFilterContainer + l.getName() + "  " + l.getClickedGeometries().length + " kohdetta valittuna<br/>";
-                    for(var j = 0; j < l.getClickedGeometries().length; ++j) {
-                        selectionGeometries.push(l.getClickedGeometries()[j][1]);
-                    }
-                }
+	
+            clickedGeometries = me._updateGeometriesInfoInPopup(filterContainer);
+	
+            if (clickedGeometries == 0) {
+                filterBtn.setEnabled(false);
             }
 
-            if (layerFilterContainer.length == 0) {
-                layerFilterContainer = "Valituilla tasoilla ei ole valittuja kohteita";
-            } else {
-                dialogButtons.push(filterBtn);
-            }
+            dialogButtons.push(filterBtn);
 
             filterContainer.append(jQuery('<div>' + layerFilterContainer + '</div>'));
             
             if(me.mode === 'twoway') {
-                var typeSelectDiv = jQuery('<div>Aluerajauksen tyyppi: </div>');
+                var typeSelectDiv = jQuery('<div>' + me._locale.areaFilterType + ' </div>');
                 var typeSelector = jQuery('<select class="type"></select>');
                 
-                typeSelector.append(jQuery('<option value="home">Koti</option>'));
-                typeSelector.append(jQuery('<option value="work">Työ</option>'));
+                typeSelector.append(jQuery('<option value="home">' + me._locale.areaFilterHome + '</option>'));
+                typeSelector.append(jQuery('<option value="work">' + me._locale.areaFilterWork + '</option>'));
                 
                 typeSelectDiv.append(typeSelector);
                 filterContainer.append(typeSelectDiv);
@@ -5408,6 +5450,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 if (me.mode === 'twoway') {
                     me.geometryFilter.setDirection(content.find('.type').val());
                 }
+                // restore theme map layer
+                me._setLayerVisibility(true);
             });
             
             dialogButtons.push(drawBtn);            
@@ -5426,6 +5470,38 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             });
 
             dialog.moveTo('.fetch-data-area.selector-button', 'bottom');
+        },
+
+        /**
+         * @method _updateGeometriesInfoInPopup
+         * Updates DOM element with status of selected geometries
+         * @param filterContainer
+         * @return number of selected geometries
+         */
+        _updateGeometriesInfoInPopup: function (filterContainer) {
+            var me = this,
+                selectedLayers = me.instance.sandbox.findAllSelectedMapLayers(),
+                clickedGeometries = 0,
+                layerFilterContainer = '';
+
+            for (var i = 0; i < selectedLayers.length; i++) {
+                var l = selectedLayers[i];
+                if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
+                    && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+
+                    layerFilterContainer = layerFilterContainer + l.getName() + "  " + l.getClickedGeometries().length + " " + me._locale.areaFilterItemsSelected + "<br/>";
+                    clickedGeometries = l.getClickedGeometries().length;
+                }
+            }
+
+            if (layerFilterContainer.length == 0) {
+                layerFilterContainer = me._locale.areaFilterNoItemsSelected;
+            }
+
+            filterContainer.empty();
+            filterContainer.append(jQuery('<div>' + layerFilterContainer + '</div>'));
+
+            return clickedGeometries;
         },
         
         _createFilterExistsPopup: function (type, callback) {
