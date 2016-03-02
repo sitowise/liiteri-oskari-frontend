@@ -14,7 +14,7 @@ function() {
         "scripts": [
         {
            "type": "text/javascript",
-           "src": "../../../../libraries/jqplot/jquery.jqplot.js"
+           "src": "../../../../libraries/jqplot/jquery.jqplot.all.js"
         }, {
             "type" : "text/javascript",
             "src": "../../../../bundles/liiteri/liiteri-chart/instance.js"
@@ -33,21 +33,6 @@ function() {
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/liiteri/liiteri-chart/request/ShowChartRequestHandler.js"
-        }, {
-            "type": "text/javascript",
-            "src": "../../../../libraries/jqplot/plugins/jqplot.barRenderer.min.js"
-        }, {
-            "type": "text/javascript",
-            "src": "../../../../libraries/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"
-        }, {
-            "type": "text/javascript",
-            "src": "../../../../libraries/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"
-        }, {
-            "type": "text/javascript",
-            "src": "../../../../libraries/jqplot/plugins/jqplot.canvasTextRenderer.min.js"
-        }, {
-            "type": "text/javascript",
-            "src": "../../../../libraries/jqplot/plugins/jqplot.pointLabels.min.js"
         }, {
             "type": "text/css",
             "src": "../../../../bundles/liiteri/liiteri-chart/resources/css/style.css"
