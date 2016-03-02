@@ -25,7 +25,7 @@ Oskari.clazz.define("Oskari.arcgis.bundle.arcgis.MapArcGisBundle", function() {
 
 		"scripts" : [{
 			"type" : "text/javascript",
-			"src" : "../../../../bundles/mapping/maparcgis/plugin/ArcGisLayerPlugin.ol2.js"
+			"src": "../../../../bundles/arcgis/maparcgis/plugin/ArcGisLayerPlugin.js"
 		}, {
 		    "type": "text/javascript",
 		    "src": "../../../../bundles/arcgis/maparcgis/ol/Control/ArcGisGetFeatureInfo.js"
@@ -37,10 +37,7 @@ Oskari.clazz.define("Oskari.arcgis.bundle.arcgis.MapArcGisBundle", function() {
 		    "src": "../../../../bundles/arcgis/maparcgis/ol/Format/ArcGisGetFeatureInfo.js"
 		}, {
 			"type" : "text/javascript",
-			"src" : "../../../../bundles/mapping/maparcgis/domain/ArcGisLayer.js"
-		}, {
-			"type" : "text/javascript",
-			"src" : "../../../../bundles/mapping/maparcgis/domain/ArcGis93Layer.js"
+			"src" : "../../../../bundles/arcgis/maparcgis/domain/ArcGisLayer.js"
 		}, {
 		    "type": "text/javascript",
 		    "src": "../../../../bundles/arcgis/maparcgis/domain/ArcGisLayerModelBuilder.js"
