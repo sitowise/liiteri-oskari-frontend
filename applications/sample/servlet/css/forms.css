@@ -185,7 +185,7 @@ input[type="submit"]:focus, input[type="button"]:focus, input[type="reset"]:focu
 
 /* This is used in buttons */
 input[type="submit"]:hover:enabled, input[type="button"]:hover:enabled, input[type="reset"]:hover:enabled, button:hover:enabled, .lfr-actions:hover, .lfr-actions:hover ul {
-  background: #b9ced9 url(../images/application/state_hover_bg.png) repeat-x 0 0;
+  background: #b9ced9;
   border-color: #627782;
   /* Hover color doesn't really matter... */
   color: #369;
@@ -204,7 +204,6 @@ input.aui-form-validator-error, textarea.aui-form-validator-error, select.aui-fo
 /* This is used in all primary buttons */
 button.primary, input.primary {
   background-color: #217ad4;
-  background-image: url(../images/blue_button_liuku.png);
   border-color: #0000BF #0000DE #0000DE #0000BF;
   color: #FFF;
   text-shadow: 1px 1px #AAF;
