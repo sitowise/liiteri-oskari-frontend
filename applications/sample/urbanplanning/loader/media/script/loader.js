@@ -17,7 +17,7 @@ $(function () {
     var instance = {};
     instance.sandbox = {};
     instance.sandbox.getAjaxUrl = function () {
-        return "/?";
+        return "/oskari-map/action?";
     }
     instance.getLocalization = function (key) {
         return Oskari.getLocalization('liiteri-urbanplanning')[key];

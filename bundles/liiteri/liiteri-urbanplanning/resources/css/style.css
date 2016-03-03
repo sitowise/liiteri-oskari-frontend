@@ -424,7 +424,7 @@ tr.highlight {
 }
 
 div.ajax-loader-big {
-    background-image: url('/Oskari/resources/liiteri/bundle/liiteri-urbanplanning/images/ajax-loader-big.gif');
+    background-image: url('/Oskari/bundles/liiteri/liiteri-urbanplanning/resources/images/ajax-loader-big.gif');
     background-repeat: no-repeat;
     width: 66px;
     height: 66px;
@@ -434,7 +434,7 @@ div.ajax-loader-big {
 
 #urbanPlanBundleContent .dataTables_processing {
   height: 66px !important;
-    background-image: url('/Oskari/resources/liiteri/bundle/liiteri-urbanplanning/images/ajax-loader-big-transparent.gif') !important;
+    background-image: url('/Oskari/bundles/liiteri/liiteri-urbanplanning/resources/images/ajax-loader-big-transparent.gif') !important;
   background-position: 50% 50% !important;
   background-repeat: no-repeat !important;
   background-color: rgba(255,255,255,0.8) !important;

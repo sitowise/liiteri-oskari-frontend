@@ -2,8 +2,7 @@ jQuery(document).ready(function () {
 
     Oskari.setLang(language);
     Oskari.setLoaderMode('dev');
-    var ajaxUrl = '/?',
-    appSetup,
+    var appSetup,
     appConfig,
     userData,
     dynamicAppSetup,

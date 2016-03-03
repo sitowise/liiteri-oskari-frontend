@@ -5,7 +5,6 @@ div.accordion div.accordion_panel {
   background-color: #F3F3F3;
   border: 1px solid #C0D0D0;
   clear: both;
-  overflow: hidden;
   margin: 0;
   padding: 0; }
   div.accordion div.accordion_panel.open {
