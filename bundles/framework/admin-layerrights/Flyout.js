@@ -254,20 +254,6 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                     table += '<br /><input name="layer-rights-table-select-all-' + this.columns[i].id + '" value="1" id="layer-rights-table-select-all-' + this.columns[i].id + '" type="checkbox">';
                     table += '</th>';
                 }
-
-        handleRoleChange: function (role, operation) {
-            var me = this,
-                select = jQuery(this.container).find('select.admin-layerrights-role'),
-                option = select.find('option[value=' + role.id +']');
-
-            if (operation == 'remove') {
-                option.remove();
-            }
-            if (operation == 'update') {
-                option.html(role.name);
-            }
-            if (operation == 'add') {
-                select.append("<option value=" + role.id +">" + role.name + "</option>");
             }
         },
 

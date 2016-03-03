@@ -72,7 +72,7 @@ Oskari.registerLocalization(
                 "wmts": "WMTS-taso",
                 "arcgis": "ArcGISCache-taso",
                 "arcgis93": "ArcGISRest-taso",
-                "arcgislayer": "ArcGis Taso
+                "arcgislayer": "ArcGis Taso"
             },
             "selectLayer": "Valitse ylätaso",
             "selectSubLayer": "Valitse alataso",

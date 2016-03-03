@@ -151,37 +151,13 @@ if (!Function.prototype.bind) {
              * @param  {String} additionalId additional id used for searching (optional)
              * @return {Boolean}             true if name was found
              */
-            setupCapabilities : function(wmsName, capabilities) {
-              if(!wmsName) {
-                return;
-              }
-              var me = this;
-              if(!capabilities) {
-                capabilities = this.get('capabilities');
-              }
-              // layer node
-              if(capabilities.wmsName == wmsName) {
-                me._setupFromCapabilitiesValues(capabilities);
-                return true;
-              }
-              // group node
-              if(capabilities.self && capabilities.self.wmsName == wmsName) {
-                me._setupFromCapabilitiesValues(capabilities.self);
-                return true;
-              }
-              var found = false;
-
-              // check layers directly under this 
-              _.each(capabilities.layers, function(layer) {
-                if(!found) {
-                    found = me.setupCapabilities(wmsName, layer);
+            setupCapabilities: function (layerName, capabilities, additionalId) {
+                if (!layerName) {
+                    return;
                 }
-              });
-              // if not found, check any groups under this 
-              if(!found) {
-              _.each(capabilities.groups, function(group) {
-                if(!found) {
-                  found = me.setupCapabilities(wmsName, group);
+                var me = this;
+                if (!capabilities) {
+                    capabilities = this.get('capabilities');
                 }
                 // layer node
                 if (capabilities.layerName === layerName) {

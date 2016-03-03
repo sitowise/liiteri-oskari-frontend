@@ -139,18 +139,15 @@ define([
                         me.createGroupForm('baseName');
                     } else if (me.model.isGroupLayer()) {
                         me.createGroupForm('groupName');
-                    } else {
-                        me.$el.empty();
-                        this.createGeneralLayerForm(null, 'wmslayer', 'layerTemplate');
                     } else if (me.model.isLayerOfType('WFS')) {
                         me.$el.empty();
-                        this.createGeneralLayerForm(null, 'wfslayer', 'wfsLayerTemplate');
+                        this.createLayerForm('wfslayer', 'wfsLayerTemplate');
                     } else if(me.model.isLayerOfType('arcgislayer')) {
                         me.$el.empty();
-                        this.createGeneralLayerForm(null, 'arcgislayer', 'arcgisLayerTemplate');
+                        this.createLayerForm('arcgislayer', 'arcgisLayerTemplate');
                     } else if(me.model.isLayerOfType('myplaces') || me.model.isLayerOfType('analysis') || me.model.isLayerOfType('userlayer')) {
                         me.$el.empty();
-                        this.createGeneralLayerForm(null, 'wmslayer', 'gisLayerTemplate');
+                        this.createLayerForm('wmslayer', 'gisLayerTemplate');
 					}
                 } else {
                     // otherwise create a new layer
@@ -202,7 +199,7 @@ define([
                 }
                 else {
                     // Create a normal layer
-                    this.createLayerForm(layerType);
+                    this.createLayerForm(layerType, 'layerTemplate');
                 }
             },
             __isSupportedLayerType : function(layerType) {
@@ -217,7 +214,7 @@ define([
                 }) ;
             },
 
-            createLayerForm: function (layerType) {
+            createLayerForm: function (layerType, modelName) {
                 var me = this,
                     readOnly = false,
                     styles = [],
@@ -236,7 +233,11 @@ define([
                     readOnly = true;
                 }
                 // make sure we have correct layer type (from model)
-                layerType = me.model.getLayerType() + 'layer';
+                if(me.model.getLayerType().endsWith("layer")) {
+                	layerType = me.model.getLayerType();
+                } else { 
+                	layerType = me.model.getLayerType() + 'layer';
+                }
                 if(!this.__isSupportedLayerType(layerType)) {
                     me.$el.append(me.instance.getLocalization('errors').layerTypeNotSupported + me.model.getLayerType());
                     return;
@@ -593,6 +594,12 @@ define([
                     sandbox = me.instance.getSandbox(),
                     admin;
 
+
+                if (lcId === null || lcId === undefined || !lcId.length) {
+                    lcId = me.options.groupId;
+                    accordion = jQuery('.admin-layerselector .accordion[lcid=' + lcId + ']');
+                }
+
                 // If this is a sublayer -> setup parent layers id
                 if (me.options.baseLayerId) {
                     data.parentId = me.options.baseLayerId;
@@ -602,7 +609,11 @@ define([
                 data.version = (interfaceVersion !== '') ? interfaceVersion : form.find('#add-layer-interface-version > option').first().val();
 
                 // base and group are always of type wmslayer
-                data.layerType = me.model.getLayerType() + 'layer';
+                if(me.model.getLayerType().endsWith("layer")) {
+                	data.layerType = me.model.getLayerType();
+                } else { 
+                	data.layerType = me.model.getLayerType() + 'layer';
+                }
                 if (me.model.getId() !== null && me.model.getId() !== undefined) {
                     data.layer_id = me.model.getId();
                 }
@@ -617,10 +628,20 @@ define([
                     data['title_' + lang] = this.value;
                 });
 
-                // type can be either wmslayer, base or groupMap
-                data.type = form.find('#add-layer-type').val() || 'wmslayer';
-                data.wmsName = form.find('#add-layer-wms-id').val();
-                data.wmsUrl = form.find('#add-layer-wms-url').val();
+                data.layerUrl = form.find('#add-layer-url').val();
+                if (typeof data.layerUrl === "undefined") {
+                    data.layerUrl = form.find('#add-layer-interface').val();
+                }
+
+                data.opacity = form.find('#opacity-slider').val();
+
+                data.style = form.find('#add-layer-style').val();
+                data.minScale = form.find('#add-layer-minscale').val();
+                data.maxScale = form.find('#add-layer-maxscale').val();
+                data.legendImage = form.find('#add-layer-legendImage').val();
+                data.inspireTheme = form.find('#add-layer-inspire-theme').val();
+                data.metadataId = form.find('#add-layer-datauuid').val();
+                data.attributes = form.find('#add-layer-attributes').val();
 
                 if (data.type == 'arcgislayer') {
                     if (data.wmsUrl != me.model.getLayerUrls().join() || data.wmsName != me.model.getWmsName()) {
@@ -640,7 +661,7 @@ define([
                        }
                    }
                 } else if (data.type == 'wfs') {
-                    data.type = 'wfslayer';                    
+                    data.type = 'wfslayer';
                     data.username = form.find('#add-layer-wfsusername').val();
                     data.password = form.find('#add-layer-wfspassword').val();
                     data.GMLVersion = form.find('#add-layer-wfsgmlversion').val();
@@ -948,7 +969,7 @@ define([
                             me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
                         }
                     }
-                }
+                });
                 me.service.getCapabilities(me.model.getLayerType(), serviceURL, successCb, errorCb);
             },
             /**

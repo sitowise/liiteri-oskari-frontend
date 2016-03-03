@@ -205,7 +205,7 @@ define([
                 target.parent().addClass('active');
 
                 // change focus and visibility
-                if (type === 'inspire') {
+                /*if (type === 'inspire') {
                     jQuery('.tab-content.organization').hide();
                     jQuery('.tab-content.userThemes').hide();
                     jQuery('.tab-content.inspire').show();

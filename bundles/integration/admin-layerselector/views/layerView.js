@@ -233,13 +233,14 @@ define([
                     element.append(settings.$el);
 
                     // TODO when backend works and we have new jQuery UI
-                    //this.$el.find("#add-layer-inspire-theme").tagit({availableTags: ["Hallinnolliset yksiköt", "Hydrografia", "Kiinteistöt", "Kohteet", "Koordinaattijärjestelmät", "Korkeus", "Liikenneverkot", "Maankäyttö", "Maanpeite","Maaperä","Merialueet", "Metatieto"]});
+                    //this.$el.find("#add-layer-inspire-theme").tagit({availableTags: ["Hallinnolliset yksikï¿½t", "Hydrografia", "Kiinteistï¿½t", "Kohteet", "Koordinaattijï¿½rjestelmï¿½t", "Korkeus", "Liikenneverkot", "Maankï¿½yttï¿½", "Maanpeite","Maaperï¿½","Merialueet", "Metatieto"]});
                     element.addClass('show-edit-sublayer');
                 } else {
                     //hide layer settings
                     element.removeClass('show-edit-sublayer');
                     element.find('.admin-add-layer').remove();
                     groupButtons.show();
+                }
                 }
             },
 
