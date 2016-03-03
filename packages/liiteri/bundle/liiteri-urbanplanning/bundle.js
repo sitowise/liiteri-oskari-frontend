@@ -81,9 +81,6 @@ function() {
             "type" : "text/javascript",
             "src": "../../../../bundles/liiteri/liiteri-urbanplanning/UrbanPlanningToolbar.js"
         }, {
-            "src": "../../../../libraries/jquery/jquery-ui.css",
-            "type": "text/css"
-        }, {
             "src": "../../../../libraries/jquery/plugins/jquery-ui.datepicker.js",
             "type": "text/javascript"
         }, {
