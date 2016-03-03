@@ -23,37 +23,37 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-groupings.LiiteriGroupingsBun
 
         "scripts": [{
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/instance.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/instance.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/Flyout.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/Flyout.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/Tile.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/Tile.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/service/GroupingsService.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/service/GroupingsService.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/request/ShowGroupingsFlyoutRequestHandler.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/request/ShowGroupingsFlyoutRequestHandler.js"
         },{
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/request/ShowGroupingsFlyoutRequest.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/request/ShowGroupingsFlyoutRequest.js"
         },        {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/GroupingsToolbar.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/GroupingsToolbar.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/view/EditView.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/view/EditView.js"
         },/* {
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/event/GroupingUpdatedEvent.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/event/GroupingUpdatedEvent.js"
         },*/ {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-groupings/css/style.css"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/resources/css/style.css"
         }, {
             "type": "text/css",
-            "src": "../../../../resources/liiteri/bundle/liiteri-groupings/css/groupings.css"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/resources/css/groupings.css"
         }, {
 		    "src": "../../../../libraries/jquery/plugins/DataTables-1.10.7/media/js/jquery.dataTables.js",
 		    "type": "text/javascript"
@@ -77,11 +77,11 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-groupings.LiiteriGroupingsBun
         "locales": [{
             "lang": "en",
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/locale/en.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/resources/locale/en.js"
         }, {
             "lang": "fi",
             "type": "text/javascript",
-            "src": "../../../../bundles/liiteri/bundle/liiteri-groupings/locale/fi.js"
+            "src": "../../../../bundles/liiteri/liiteri-groupings/resources/locale/fi.js"
         }]
     },
     "bundle": {
