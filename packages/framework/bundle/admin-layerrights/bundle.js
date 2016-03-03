@@ -50,11 +50,11 @@ function() {
             "src" : "../../../../bundles/framework/admin-layerrights/Tile.js"
         },{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/bundle/admin-layerrights/request/ShowLayerrightsFlyoutRequest.js"
+            "src" : "../../../../bundles/framework/admin-layerrights/request/ShowLayerrightsFlyoutRequest.js"
         },
         {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/framework/bundle/admin-layerrights/request/ShowLayerrightsFlyoutRequestHandler.js"
+            "src" : "../../../../bundles/framework/admin-layerrights/request/ShowLayerrightsFlyoutRequestHandler.js"
         },{
             "type" : "text/css",
             "src" : "../../../../bundles/framework/admin-layerrights/resources/css/style.css"

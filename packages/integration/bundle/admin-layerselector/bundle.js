@@ -50,16 +50,16 @@ Oskari.clazz.define(
                 "src": "../../../../bundles/integration/admin-layerselector/View.js"
             }, {
                 "type": "text/javascript",
-                "src": "../../../../bundles/integration/bundle/admin-layerselector/service/AdminLayerSelectorService.js"
+                "src": "../../../../bundles/integration/admin-layerselector/service/AdminLayerSelectorService.js"
             }, {
                 "type": "text/javascript",
-                "src": "../../../../bundles/integration/bundle/admin-layerselector/models/ExtendedWFSLayer.js"
+                "src": "../../../../bundles/integration/admin-layerselector/models/ExtendedWFSLayer.js"
             },{
                 "type": "text/javascript",
-                "src": "../../../../bundles/integration/bundle/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequest.js"
+                "src": "../../../../bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequest.js"
             },{
                 "type": "text/javascript",
-                "src": "../../../../bundles/integration/bundle/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequestHandler.js"
+                "src": "../../../../bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequestHandler.js"
             }, {
                 "type": "text/css",
                 "src": "../../../../bundles/integration/admin-layerselector/resources/css/style.css"
