@@ -175,7 +175,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 			var content = me.plugins['Oskari.userinterface.View'].prepareView();
 			var first = false;
             var id = "WORKSPACE";
-			var request = sandbox.getRequestBuilder('PersonalData.AddTabRequest')(id, title, content, first);
+			var request = sandbox.getRequestBuilder('PersonalData.AddTabRequest')(title, content, first, id);
 			sandbox.request(this, request);
 
             var buttonGroup = 'sharing';

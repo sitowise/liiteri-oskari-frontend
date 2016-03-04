@@ -160,7 +160,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.user-layers.UserLayersInstance",
             var content = me.plugins['Oskari.userinterface.View'].prepareView();
             var first = false;
             var id = "USERWMS";
-            var request = sandbox.getRequestBuilder('PersonalData.AddTabRequest')(id, title, content, first);
+            var request = sandbox.getRequestBuilder('PersonalData.AddTabRequest')(title, content, first, id);
             sandbox.request(this, request);
         },
 		
