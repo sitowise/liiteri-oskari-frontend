@@ -10,7 +10,7 @@
 	},
 	"mapfull":{
 		"conf":{
-			"globalMapAjaxUrl":"/oskari-map/action?",
+			"globalMapAjaxUrl":"/action?",
 			"imageLocation":"/Oskari/resources",
 			"layers":[
 			],
