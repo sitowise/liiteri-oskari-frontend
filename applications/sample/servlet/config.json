@@ -68,8 +68,8 @@
         "layerDefaults": {
           "wmsName": "oskari:my_places_categories"
         },
-        "queryUrl": "/oskari-map/?action_route=MyPlaces",
-        "wmsUrl": "/oskari-map/?action_route=MyPlacesTile&myCat=",
+        "queryUrl": "/oskari-map/action?action_route=MyPlaces",
+        "wmsUrl": "/oskari-map/action?action_route=MyPlacesTile&myCat=",
         "featureNS": "http://www.oskari.org"
       }
     },
