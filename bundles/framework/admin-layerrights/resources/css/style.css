@@ -69,7 +69,6 @@ div.layer-rights-table-grid-headers {
     height: 35px;
 }
 .admin-layerrights .admin-layerrights-layers {
-    position: absolute;
     top: 35px;
     overflow: auto;
     bottom: 0;  
@@ -79,13 +78,7 @@ div.layer-rights-table-grid-headers {
 
 .admin-layerrights .dataTables_scrollBody {
     overflow: auto;
-    position: absolute;
-    top: 89px;
     bottom: 0;
-}
-
-.admin-layerrights .dataTables_scrollHead {
-    height: 59px;
 }
 
 .admin-layerrights .info-wrapper {
@@ -100,7 +93,6 @@ div.layer-rights-table-grid-headers {
 }
 
 .admin-layerrights .admin-layerrights-layers {
-    position: absolute;
     top: 35px;
     overflow: auto;
     bottom: 0;  
@@ -110,13 +102,7 @@ div.layer-rights-table-grid-headers {
 
 .admin-layerrights .dataTables_scrollBody {
     overflow: auto;
-    position: absolute;
-    top: 89px;
     bottom: 0;
-}
-
-.admin-layerrights .dataTables_scrollHead {
-    height: 59px;
 }
 
 .admin-layerrights .info-wrapper {

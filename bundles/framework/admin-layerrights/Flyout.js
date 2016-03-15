@@ -255,6 +255,12 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                     table += '</th>';
                 }
             }
+            table += "</tr></thead>";
+            table += "<tbody>";
+            table += "</tbody>";
+            table += "</table>";
+
+            return jQuery(table);
         },
 
         /**
