@@ -48,13 +48,8 @@ Oskari.clazz.define(
             "scripts": [{
                 "type": "text/javascript",
                 "src": "../../../../bundles/integration/admin-layerselector/View.js"
+
             }, {
-                "type": "text/javascript",
-                "src": "../../../../bundles/integration/admin-layerselector/service/AdminLayerSelectorService.js"
-            }, {
-                "type": "text/javascript",
-                "src": "../../../../bundles/integration/admin-layerselector/models/ExtendedWFSLayer.js"
-            },{
                 "type": "text/javascript",
                 "src": "../../../../bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequest.js"
             },{

@@ -6,11 +6,11 @@ Oskari.registerLocalization(
         "title": "Karttatasojen ylläpito",
         "desc": "",
         "flyout": {
-            "title": "Karttatasojen hallinta",
-            "fetchingLayers" : "Haetaan tasoja."
+            "title": "Karttatasojen ylläpito",
+            "fetchingLayers": "Haetaan karttatasoja."
         },
         "tile": {
-            "title": "Karttatasot",
+            "title": "A: Karttatasot",
             "tooltip": "NOT TRANSLATED"
         },
         "view": {
@@ -31,8 +31,7 @@ Oskari.registerLocalization(
             "text": "Hae karttatasoja",
             "inspire": "Aiheittain",
             "organization": "Tiedontuottajittain",
-            "published": "Käyttäjät",
-            "userThemes": "Teemat"
+            "published": "Käyttäjät"
         },
         "published": {
             "organization": "Julkaistu taso",
@@ -71,8 +70,7 @@ Oskari.registerLocalization(
                 "wfs": "WFS-taso",
                 "wmts": "WMTS-taso",
                 "arcgis": "ArcGISCache-taso",
-                "arcgis93": "ArcGISRest-taso",
-                "arcgislayer": "ArcGis Taso"
+                "arcgis93": "ArcGISRest-taso"
             },
             "selectLayer": "Valitse ylätaso",
             "selectSubLayer": "Valitse alataso",
@@ -90,16 +88,10 @@ Oskari.registerLocalization(
             "typePlaceholder": "Valittu karttatason tyyppi. Paina \"Peruuta\" ja lisää karttataso uudelleen, jos haluat valita toisen tyypin.",
             "baseLayer": "Taustakarttataso",
             "groupLayer": "Karttatasoryhmä",
-            "wfslayer": "WFS-taso",
-            "arcgisLayer": "ArcGis-taso",
             "interfaceVersion": "Rajapinnan versio",
             "interfaceVersionDesc": "Valitse listalta rajapinnan versio. Valitse ensisijaisesti uusin rajapinnan tukema versio",
             "wms1_1_1": "WMS 1.1.1",
             "wms1_3_0": "WMS 1.3.0",
-            "wfs1_0_0": "WFS 1.0.0",
-            "wfs1_1_0": "WFS 1.1.0",
-//            "wfslayer": "WFS Taso",
-//            "wmtslayer": "WMTS Taso",
             "getInfo": "Hae tiedot",
             "editWfs": "Muokkaa WFS-tiedostoa",
             "selectClass": "Valitse aihe",
@@ -108,6 +100,7 @@ Oskari.registerLocalization(
             "groupName": "Karttatasoryhmän nimi",
             "subLayers": "Alatasot",
             "addSubLayer": "Lisää alataso",
+            "editSubLayer": "Muokkaa alatasoa",
             "wmsInterfaceAddress": "Rajapinnan osoitteet",
             "wmsUrl": "Rajapinnan osoitteet",
             "wmsInterfaceAddressDesc": "Kirjoita tähän WMS-rajapinnan osoite ilman kysymysmerkkiä ja sen jälkeisiä tietoja. Hae rajapinnan tiedot painamalla ”Hae tiedot”.",
@@ -115,12 +108,6 @@ Oskari.registerLocalization(
             "wmsServiceMetaIdDesc": "Anna rajapintapalvelua kuvaavan metatiedon tiedostotunniste.",
             "layerNameAndDesc": "Karttatason nimi ja kuvaus",
             "metaInfoIdDesc": "Metatiedon tiedostotunniste on XML-muotoisen metatietotiedoston tiedostotunniste. Se haetaan automaattisesti GetCapabilities-vastausviestistä.",
-
-			
-			"downloadServiceUrlDesc": "Latauspalvelun osoite",
-			"downloadServiceUrl": "Latauspalvelun osoite",
-			"copyrightInfoDesc": "Tiedontuottaja",
-			"copyrightInfo": "Tiedontuottaja",
             "metaInfoId": "Metatiedon tiedosto&shy;tunniste",
             "wmsName": "Karttatason yksilöivä nimi",
             "wmsNameDesc": "Karttatason on yksilöivä nimi on tekninen tunniste. Se haetaan automaattisesti GetCapabilities-vastausviestistä.",
@@ -129,15 +116,6 @@ Oskari.registerLocalization(
             "attributes": "Attribuutit",
             "selectedTime": "Valittu aika",
             "time": "Tuettu aika",
-            "wfsusername": "Käyttäjänimi",
-            "wfspassword": "Salasana",
-            "wfsgmlversion": "GML versio",
-            "wfsgmlgeometryproperty": "GML geometria-attribuutti",
-            "wfsfeaturenamespaceURI": "Kohteen nimiavaruuden osoite (URI)",
-            "wfsfeaturenamespace": "Kohteen nimiavaruus",
-            "wfsfeatureelement": "Kohde-elementti",
-            "wfsgeometrynamespaceURI": "Geometrian nimiavaruuden osoite (URI)",
-
             "addInspireName": "Aiheen nimi",
             "addInspireNameTitle": "Aiheen nimi",
             "addOrganizationName": "Tiedontuottajan nimi",
@@ -203,11 +181,6 @@ Oskari.registerLocalization(
             },
             "interfaceAddress": "Rajapinnan osoite",
             "interfaceAddressDesc": "Anna rajapinnan osoite ilman ?-merkkiä ja sen jälkeisiä parametreja.",
-            "arcgisMapServerInterfaceAddress": "Karttapalvelimen rajapinnan osoite",
-            "arcgisMapServerAddress": "Karttapalvelimen osoite",
-            "wfsInterfaceAddress": "WFS-rajapinnan osoite",
-            "layersLabel": "Saatavissa olevat tasot",
-            "layerName": "Tason nimi",
             "viewingRightsRoles": "Katseluoikeudet rooleille",
             "metadataReadFailure": "Karttatason metatietoja ei voitu hakea.",
             "permissionFailure": "Käyttäjätunnus tai salasana on virheellinen.",

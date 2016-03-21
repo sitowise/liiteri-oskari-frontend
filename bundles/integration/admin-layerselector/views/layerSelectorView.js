@@ -3,11 +3,9 @@ define([
         "text!_bundle/templates/tabTitleTemplate.html",
         '_bundle/collections/allLayersCollection',
         '_bundle/models/layersTabModel',
-        '_bundle/models/userThemesTabModel',
-        '_bundle/views/tabPanelView',
-		'_bundle/models/userGisDataTabModel'
+        '_bundle/views/tabPanelView'
     ],
-    function (ViewTemplate, TabTitleTemplate, LayerCollection, LayersTabModel, UserThemesTabModel, TabPanelView, UserGisDataTabModel) {
+    function (ViewTemplate, TabTitleTemplate, LayerCollection, LayersTabModel, TabPanelView) {
         return Backbone.View.extend({
 
 
@@ -35,7 +33,7 @@ define([
                 this.el = this.options.el;
                 this.appTemplate = _.template(ViewTemplate);
                 this.tabTitleTemplate = _.template(TabTitleTemplate);
-                this.selectedType = 'userThemes';
+                this.selectedType = 'organization';
                 _.bindAll(this);
                 //render this view immediately after initialization.
                 this.render();
@@ -138,53 +136,32 @@ define([
                 // render inspire classes
                 this._renderLayerGroups(this.inspireTabModel, 'inspire');
 
-                // create tabModel for user themes
-                this.userThemesTabModel = new UserThemesTabModel({
+                // create tabModel for organization
+                this.organizationTabModel = new LayersTabModel({
                     layers: collection,
-                    type: 'userThemes',
-                    baseUrl: this.instance.getSandbox().getAjaxUrl() + '&action_route=',
-                    actions: {
-                        load: "GetUserThemes",
-                        save: "Not implemented",
-                        remove: "Not implemented"
+                    type: 'organization',
+                    baseUrl : this.instance.getSandbox().getAjaxUrl() + '&action_route=',
+                    actions : {
+                        load : "GetMapLayerGroups",
+                        save : "SaveOrganization",
+                        remove : "DeleteOrganization"
                     },
-                    title: this.instance.getLocalization('filter').userThemes
+                    title: this.instance.getLocalization('filter').organization
                 });
                 // render organizations
-                this._renderLayerGroups(this.userThemesTabModel, 'userThemes');
-				
-				// create tabModel for user GIS data
-                // this.userGisDataTabModel = new UserGisDataTabModel({
-                    // layers: collection,
-                    // type: 'userGisData',
-                    // baseUrl: this.instance.getSandbox().getAjaxUrl() + '&action_route=',
-                    // actions: {
-                        // load: "Not implemented",
-                        // save: "Not implemented",
-                        // remove: "Not implemented"
-                    // },
-                    // title: "Own GIS data" //TODO: localization
-                // });
-                // render organizations
-                this._renderLayerGroups(this.userGisDataTabModel, 'userGisData');
+                this._renderLayerGroups(this.organizationTabModel, 'organization');
 
-//                this.instance.models.inspire = this.inspireTabModel;
-//                this.instance.models.organization = this.organizationTabModel;
-                this.instance.models.userThemes = this.userThemesTabModel;
-				//this.instance.models.userGisData = this.userGisDataTabModel;
+                this.instance.models.inspire = this.inspireTabModel;
+                this.instance.models.organization = this.organizationTabModel;
 
                 // activate organization tab
-                jQuery('.admin-layerselectorapp .tabsHeader').find('.userThemes').parent().addClass('active');
-//                jQuery('.tab-content.inspire').hide();
-//                jQuery('.tab-content.organization').hide();
-                jQuery('.tab-content.userThemes').show();
-				jQuery('.tab-content.userGisData').hide();
+                jQuery('.admin-layerselectorapp .tabsHeader').find('.organization').parent().addClass('active');
+                jQuery('.tab-content.inspire').hide();
+                jQuery('.tab-content.organization').show();
 
                 // Check that data for classes is fetched
-//                this.inspireTabModel.getClasses('getInspireName');
-//                this.organizationTabModel.getClasses('getOrganizationName');
-                this.userThemesTabModel.getClasses();
-				//this.userGisDataTabModel.getClasses();
+                this.inspireTabModel.getClasses('getInspireName');
+                this.organizationTabModel.getClasses('getOrganizationName');
                 return true;
             },
 
@@ -205,31 +182,17 @@ define([
                 target.parent().addClass('active');
 
                 // change focus and visibility
-                /*if (type === 'inspire') {
+                if (type === 'inspire') {
                     jQuery('.tab-content.organization').hide();
-                    jQuery('.tab-content.userThemes').hide();
                     jQuery('.tab-content.inspire').show();
                     jQuery('.tab-content.inspire').find('.admin-filter-input').focus();
                     this.selectedType = type;
                 } else if (type === 'organization') {
                     jQuery('.tab-content.inspire').hide();
-                    jQuery('.tab-content.userThemes').hide();
                     jQuery('.tab-content.organization').show();
                     jQuery('.tab-content.organization').find('.admin-filter-input').focus();
                     this.selectedType = type;
-                }*/
-				if (type == 'userThemes') {
-                    jQuery('.tab-content.userGisData').hide();
-                    jQuery('.tab-content.userThemes').show();
-                    jQuery('.tab-content.userThemes').find('.admin-filter-input').focus();
-                    this.selectedType = type;
-                } else if (type == 'userGisData') {
-                    jQuery('.tab-content.userThemes').hide();
-                    jQuery('.tab-content.userGisData').show();
-                    jQuery('.tab-content.userGisData').find('.admin-filter-input').focus();
-                    this.selectedType = type;
                 }
-
 
             },
 

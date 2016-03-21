@@ -1,37 +1,35 @@
 // polyfill for bind - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind -> polyfill
 if (!Function.prototype.bind) {
-  Function.prototype.bind = function (oThis) {
-    if (typeof this !== "function") {
-      // closest thing possible to the ECMAScript 5 internal IsCallable function
-      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-    }
+    Function.prototype.bind = function (oThis) {
+        if (typeof this !== "function") {
+            // closest thing possible to the ECMAScript 5 internal IsCallable function
+            throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+        }
 
-    var aArgs = Array.prototype.slice.call(arguments, 1), 
-        fToBind = this, 
-        fNOP = function () {},
-        fBound = function () {
-          return fToBind.apply(this instanceof fNOP && oThis
-                                 ? this
-                                 : oThis,
-                               aArgs.concat(Array.prototype.slice.call(arguments)));
-        };
+        var aArgs = Array.prototype.slice.call(arguments, 1),
+            fToBind = this,
+            fNOP = function () {},
+            fBound = function () {
+                return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+                    aArgs.concat(Array.prototype.slice.call(arguments)));
+            };
 
-    fNOP.prototype = this.prototype;
-    fBound.prototype = new fNOP();
+        fNOP.prototype = this.prototype;
+        fBound.prototype = new fNOP();
 
-    return fBound;
-  };
+        return fBound;
+    };
 }
 // actual model - uses bind to make Oskari layer object functions call BackBone model.attributes
-(function() {
-    define(function() {
+(function () {
+    define(function () {
         return Backbone.Model.extend({
 
             // Ensure that each todo created has `title`.
-            initialize : function(model) {
+            initialize: function (model) {
                 // exted given object (layer) with this one
-                if(model) {
-                    for(var key in model) {
+                if (model) {
+                    for (var key in model) {
                         if(model[key] && typeof model[key] === 'function') {
                             var prop = model[key];
                             this[key] = prop.bind(this.attributes);
@@ -58,17 +56,17 @@ if (!Function.prototype.bind) {
              * Call setupCapabilities with selected wmslayer to pick one layer def from the whole response after calling this.
              * @param  {Object} capabilities response from server
              */
-            setCapabilitiesResponse : function(resp, skipSort) {
-              if(!skipSort) {
-                this._sortCapabilities(resp);
-              }
+            setCapabilitiesResponse: function (resp, skipSort) {
+                if (!skipSort) {
+                    this._sortCapabilities(resp);
+                }
                 this.set({
-                    "capabilities" : resp
+                    "capabilities": resp
                 });
             },
-            _sortCapabilities : function(capabilities) {
-                var me = this;
-                var sortFunction = me._getPropertyComparatorFor('title');
+            _sortCapabilities: function (capabilities) {
+                var me = this,
+                    sortFunction = me._getPropertyComparatorFor('title');
                 capabilities.layers.sort(sortFunction);
                 if(capabilities.groups) {
                     capabilities.groups.sort(sortFunction);
@@ -77,19 +75,22 @@ if (!Function.prototype.bind) {
                     });
                 }
             },
-            _getPropertyComparatorFor : function(property) {
-                return function(a, b) {
-                    if(a[property] > b[property]) return 1;
-                    else if (a[property] < b[property]) return -1;
+            _getPropertyComparatorFor: function (property) {
+                return function (a, b) {
+                    if (a[property] > b[property]) {
+                        return 1;
+                    } else if (a[property] < b[property]) {
+                        return -1;
+                    }
                     return 0;
-                }
+                };
             },
             /**
              * Internal method to set attributes based on given capabilities node.
              * @private
              * @param  {Object} capabilitiesNode
              */
-            _setupFromCapabilitiesValues : function(capabilitiesNode) {
+            _setupFromCapabilitiesValues: function (capabilitiesNode) {
                 var sb = Oskari.getSandbox();
                 sb.printDebug("Found:", capabilitiesNode);
                 var mapLayerService = sb.getService('Oskari.mapframework.service.MapLayerService'),
@@ -198,9 +199,9 @@ if (!Function.prototype.bind) {
              * Returns XSLT if defined or null if not
              * @return {String} xslt
              */
-            getGfiXslt : function() {
+            getGfiXslt: function () {
                 var adminBlock = this.getAdmin();
-                if(adminBlock) {
+                if (adminBlock) {
                     return adminBlock.xslt;
                 }
                 return null;
@@ -290,9 +291,9 @@ if (!Function.prototype.bind) {
              * @param  {String} type ['organization' | 'inspire']
              * @return {Number} group id
              */
-            getGroupId : function(type) {
+            getGroupId: function (type) {
                 var adminBlock = this.getAdmin();
-                if(adminBlock) {
+                if (adminBlock) {
                     // inspireId or organizationId
                     return adminBlock[type + 'Id'];
                 }
@@ -302,7 +303,7 @@ if (!Function.prototype.bind) {
              * Returns language codes for defined names
              * @return {String[]} language codes
              */
-            getNameLanguages : function() {
+            getNameLanguages: function () {
                 // TODO: maybe cache result?
                 return this._getLanguages(this.get('_name'));
             },
@@ -310,7 +311,7 @@ if (!Function.prototype.bind) {
              * Returns language codes for defined names
              * @return {String[]} language codes
              */
-            getDescLanguages : function() {
+            getDescLanguages: function () {
                 // TODO: maybe cache result?
                 return this._getLanguages(this.get('_description'));
             },
@@ -349,11 +350,11 @@ if (!Function.prototype.bind) {
              * @return {String[]} [description]
              * @private
              */
-            _getLanguages : function(attr) {
+            _getLanguages: function (attr) {
                 var langList = [];
                 // add languages from possible object value
                 if (attr && typeof attr === 'object') {
-                    for(var key in attr) {
+                    for (var key in attr) {
                         if(attr.hasOwnProperty(key)) {
                             langList.push(key);
                         }

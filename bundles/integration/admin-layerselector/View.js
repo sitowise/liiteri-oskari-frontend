@@ -80,26 +80,12 @@ Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', functi
             var layer = mapLayerService.findMapLayer(layerId);
             if (layer) {
                 // layer found -> schedule for update
-                var wrapper = this._getWrappedLayers([layer]);
-                this._scheduledLayers.push(wrapper[0]);
+                this._scheduledLayers.push(layer);
             }
         }
         else {
-            this._scheduledLayers = this._getWrappedLayers(mapLayerService.getAllLayers());
+            this._scheduledLayers = mapLayerService.getAllLayers();
         }
-    },
-    _getWrappedLayers: function(layers) {
-        var result = [];
-        $.each(layers, function (i, l) {
-            if (l.isLayerOfType('WFS')) {
-                var wrapper = Oskari.clazz.create('Oskari.integration.bundle.admin-layerselector.models.ExtendedWFSLayer', l);
-                result.push(wrapper);
-            } else {
-                result.push(l);
-        }
-        });
-
-        return result;
     },
     /**
      * @method _layerUpdateHandler
@@ -114,7 +100,7 @@ Oskari.clazz.define('Oskari.integration.bundle.admin-layerselector.View', functi
         if (this.view !== null && this.view !== undefined) {
             if(blnForceCreate || !this._scheduledLayers || this._scheduledLayers.length > 30) {
                 // if more than 30 layers require update -> make full re-render
-                success = this.view.createUI(this._getWrappedLayers(mapLayerService.getAllLayers()));
+                success = this.view.createUI(mapLayerService.getAllLayers());
             }
             else {
                 success = this.view.addToCollection(this._scheduledLayers);

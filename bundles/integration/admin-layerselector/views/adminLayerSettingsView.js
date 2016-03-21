@@ -1,9 +1,6 @@
 define([
         'text!_bundle/templates/adminTypeSelectTemplate.html',
         'text!_bundle/templates/adminLayerSettingsTemplate.html',
-        'text!_bundle/templates/adminArcgisLayerSettingsTemplate.html',
-        'text!_bundle/templates/adminWFSLayerSettingsTemplate.html',
-        'text!_bundle/templates/adminGisLayerSettingsTemplate.html',
         'text!_bundle/templates/adminGroupSettingsTemplate.html',
         'text!_bundle/templates/group/subLayerTemplate.html',
         'text!_bundle/templates/capabilitiesTemplate.html',
@@ -14,9 +11,6 @@ define([
     function (
         TypeSelectTemplate,
         LayerSettingsTemplate,
-        ArcGisLayerSettingsTemplate,
-        WFSLayerSettingsTemplate,
-		GISLayerSettingsTemplate,
         GroupSettingsTemplate,
         SubLayerTemplate,
         CapabilitiesTemplate,
@@ -73,26 +67,22 @@ define([
              *
              * @method initialize
              */
-            initialize: function () {                
+            initialize: function () {
                 var me = this;
                 this.instance = this.options.instance;
-                this.service = Oskari.clazz.create('Oskari.integration.bundle.admin-layerselector.View.service.AdminLayerSelectorService', this.instance.getSandbox());
                 // for new layers/sublayers, model is always null at this point
                 // if we get baseLayerId -> this is a sublayer
-                if(this.options.baseLayerId && this.options.model) {
+                if (this.options.baseLayerId && this.options.model) {
                     // wrap existing sublayers with model
                     this.model = new layerModel(this.options.model);
-                }
-                else {
+                } else {
                     this.model = this.options.model;
                 }
                 // model to use when creating a new layer
                 this.modelObj = layerModel;
                 this.typeSelectTemplate = _.template(TypeSelectTemplate);
                 this.layerTemplate = _.template(LayerSettingsTemplate);
-                this.arcgisLayerTemplate = _.template(ArcGisLayerSettingsTemplate);
-                this.wfsLayerTemplate = _.template(WFSLayerSettingsTemplate);
-				this.gisLayerTemplate = _.template(GISLayerSettingsTemplate);
+
                 this.groupTemplate = _.template(GroupSettingsTemplate);
                 this.subLayerTemplate = _.template(SubLayerTemplate);
                 this.capabilitiesTemplate = _.template(CapabilitiesTemplate);
@@ -102,7 +92,7 @@ define([
                 this.progressSpinner = Oskari.clazz.create('Oskari.userinterface.component.ProgressSpinner');
 
                 this._rolesUpdateHandler();
-                if(this.model) {
+                if (this.model) {
                     // listenTo will remove dead listeners, use it instead of on()
                     this.listenTo(this.model, 'change', function() {
                         me.render();
@@ -130,6 +120,7 @@ define([
                 // When creating a new sublayer, its type is 'wmslayer'
                 // so no need to show the type select form.
                 if (me.options.baseLayerId) {
+                    me.$el.empty();
                     me.createLayerForm();
                     return;
                 }
@@ -139,16 +130,10 @@ define([
                         me.createGroupForm('baseName');
                     } else if (me.model.isGroupLayer()) {
                         me.createGroupForm('groupName');
-                    } else if (me.model.isLayerOfType('WFS')) {
+                    } else {
                         me.$el.empty();
-                        this.createLayerForm('wfslayer', 'wfsLayerTemplate');
-                    } else if(me.model.isLayerOfType('arcgislayer')) {
-                        me.$el.empty();
-                        this.createLayerForm('arcgislayer', 'arcgisLayerTemplate');
-                    } else if(me.model.isLayerOfType('myplaces') || me.model.isLayerOfType('analysis') || me.model.isLayerOfType('userlayer')) {
-                        me.$el.empty();
-                        this.createLayerForm('wmslayer', 'gisLayerTemplate');
-					}
+                        me.createLayerForm();
+                    }
                 } else {
                     // otherwise create a new layer
                     // add html template
@@ -184,22 +169,15 @@ define([
                 jQuery('.admin-add-group').remove();
                 jQuery('.layer-type-wrapper').remove();
 
-
-                // Create a normal layer
-                if (e.currentTarget.value === 'wmslayer') {
-                    this.createGeneralLayerForm(e, 'wmslayer', 'layerTemplate');
-                } else if (e.currentTarget.value == "arcgislayer") {
-                    this.createGeneralLayerForm(e, 'arcgislayer', 'arcgisLayerTemplate');
-                } else if (e.currentTarget.value === 'wfslayer') {
-                    this.createGeneralLayerForm(e, 'wfslayer', 'wfsLayerTemplate');
-                } else if (e.currentTarget.value === 'base' || e.currentTarget.value === 'groupMap') {
+                var layerType = e.currentTarget.value;
+                if (layerType === 'base' || layerType === 'groupMap') {
                     // Create a base or a group layer
                     var groupTitle = (layerType === 'base' ? 'baseName' : 'groupName');
                     this.createGroupForm(groupTitle, e);
                 }
                 else {
                     // Create a normal layer
-                    this.createLayerForm(layerType, 'layerTemplate');
+                    this.createLayerForm(layerType);
                 }
             },
             __isSupportedLayerType : function(layerType) {
@@ -214,10 +192,8 @@ define([
                 }) ;
             },
 
-            createLayerForm: function (layerType, modelName) {
+            createLayerForm: function (layerType) {
                 var me = this,
-                    readOnly = false,
-                    styles = [],
                     lcId,
                     layerGroups,
                     urlInput,
@@ -229,26 +205,19 @@ define([
                 if (!me.model) {
                     me.model = this._createNewModel(layerType);
                     this.listenTo(this.model, 'change', this.render);
-                } else if (modelName == 'wfslayer') {
-                    readOnly = true;
                 }
                 // make sure we have correct layer type (from model)
-                if(me.model.getLayerType().endsWith("layer")) {
-                	layerType = me.model.getLayerType();
-                } else { 
-                	layerType = me.model.getLayerType() + 'layer';
-                }
+                layerType = me.model.getLayerType() + 'layer';
                 if(!this.__isSupportedLayerType(layerType)) {
                     me.$el.append(me.instance.getLocalization('errors').layerTypeNotSupported + me.model.getLayerType());
                     return;
                 }
 
                 // This propably isn't the best way to get reference to inspire themes
-                var inspireGroups = [],
+                var inspireGroups = this.instance.models.inspire.getGroupTitles(),
                    layerTypeData = me.__getLayerTypeData(layerType);
 
                 me.$el.append(me.layerTemplate({
-                    readOnly: readOnly,
                     model: me.model,
                     header : layerTypeData.headerTemplate,
                     footer : layerTypeData.footerTemplate,
@@ -314,11 +283,10 @@ define([
                 var sandbox = this.instance.sandbox,
                     mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService'),
                     layer = null;
-                if(type === 'base' || type === 'groupMap' ) {
-                    layer = mapLayerService.createMapLayer({ 'type' : type });
-                }
-                else if (type == 'wfslayer') {
-                    layer = Oskari.clazz.create('Oskari.integration.bundle.admin-layerselector.models.ExtendedWFSLayer');
+                if (type === 'base' || type === 'groupMap') {
+                    layer = mapLayerService.createMapLayer({
+                        'type': type
+                    });
                 } else {
                     if(!type) {
                         // if type is not defined, default to wms
@@ -328,13 +296,13 @@ define([
                 }
                 return new this.modelObj(layer);
             },
+
             createGroupForm: function (groupTitle) {
                 var me = this;
                 if (!me.model) {
-                    if(groupTitle === 'baseName') {
+                    if (groupTitle === 'baseName') {
                         me.model = this._createNewModel('base');
-                    }
-                    else {
+                    } else {
                         me.model = this._createNewModel('groupMap');
                     }
                 }
@@ -361,7 +329,7 @@ define([
                 e.stopPropagation();
                 var element = jQuery(e.currentTarget);
                 if (element.parents('.admin-add-layer').hasClass('show-edit-layer') ||
-                        element.parents('.admin-add-layer').hasClass('show-add-layer')) {
+                    element.parents('.admin-add-layer').hasClass('show-add-layer')) {
 
                     element.parents('.create-layer').children('.admin-add-layer-btn').html(this.options.instance.getLocalization('admin').addLayer);
                     element.parents('.create-layer').children('.admin-add-layer-btn').attr('title', this.options.instance.getLocalization('admin').addLayerDesc);
@@ -406,8 +374,10 @@ define([
              *
              * @method removeLayer
              */
-            removeLayer: function (e) {
-                e.stopPropagation();
+            removeLayer: function (e, callback) {
+                if (e && e.stopPropagation) {
+                    e.stopPropagation();
+                }
 
                 var me = this,
                     element = jQuery(e.currentTarget),
@@ -417,6 +387,10 @@ define([
                     btn = dialog.createCloseButton(me.instance.getLocalization().ok),
                     cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                     sandbox = me.options.instance.getSandbox();
+
+                if (callback) {
+                    addLayerDiv = jQuery('.admin-layerselector .admin-add-layer.show-edit-layer[data-id=' + me.options.baseLayerId + ']');
+                }
 
                 btn.addClass('primary');
                 cancelBtn.setTitle(me.instance.getLocalization().cancel);
@@ -516,7 +490,6 @@ define([
                             if (createLayer) {
                                 createLayer.find('.admin-add-layer-btn').html(me.instance.getLocalization('admin').addLayer);
                                 createLayer.find('.admin-add-layer-btn').attr('title', me.instance.getLocalization('admin').addLayerDesc);
-
                             }
                             form.remove();
 
@@ -594,7 +567,6 @@ define([
                     sandbox = me.instance.getSandbox(),
                     admin;
 
-
                 if (lcId === null || lcId === undefined || !lcId.length) {
                     lcId = me.options.groupId;
                     accordion = jQuery('.admin-layerselector .accordion[lcid=' + lcId + ']');
@@ -609,11 +581,7 @@ define([
                 data.version = (interfaceVersion !== '') ? interfaceVersion : form.find('#add-layer-interface-version > option').first().val();
 
                 // base and group are always of type wmslayer
-                if(me.model.getLayerType().endsWith("layer")) {
-                	data.layerType = me.model.getLayerType();
-                } else { 
-                	data.layerType = me.model.getLayerType() + 'layer';
-                }
+                data.layerType = me.model.getLayerType() + 'layer';
                 if (me.model.getId() !== null && me.model.getId() !== undefined) {
                     data.layer_id = me.model.getId();
                 }
@@ -639,47 +607,7 @@ define([
                 data.minScale = form.find('#add-layer-minscale').val();
                 data.maxScale = form.find('#add-layer-maxscale').val();
                 data.legendImage = form.find('#add-layer-legendImage').val();
-                data.inspireTheme = form.find('#add-layer-inspire-theme').val();
-                data.metadataId = form.find('#add-layer-datauuid').val();
-                data.attributes = form.find('#add-layer-attributes').val();
-
-                if (data.type == 'arcgislayer') {
-                    if (data.wmsUrl != me.model.getLayerUrls().join() || data.wmsName != me.model.getWmsName()) {
-                        var confirmMsg = me.instance.getLocalization('admin').confirmResourceKeyChange;
-                        if (me.model.getId() && !confirm(confirmMsg)) {
-                            // existing layer/cancel!!
-                            return;
-                        }
-                    }
-                } else if (data.type == 'wmslayer' || data.type == 'wms') {
-                   if(data.wmsUrl != me.model.getWmsUrls().join() ||
-                   data.wmsName != me.model.getWmsName()) {
-                       var confirmMsg = me.instance.getLocalization('admin').confirmResourceKeyChange;
-                       if(me.model.getId() && !confirm(confirmMsg)) {
-                           // existing layer/cancel!!
-                           return;
-                       }
-                   }
-                } else if (data.type == 'wfs') {
-                    data.type = 'wfslayer';
-                    data.username = form.find('#add-layer-wfsusername').val();
-                    data.password = form.find('#add-layer-wfspassword').val();
-                    data.GMLVersion = form.find('#add-layer-wfsgmlversion').val();
-                    data.GMLGeometryProperty = form.find('#add-layer-wfsgmlgeometryproperty').val();
-                    data.featureNamespaceURI = form.find('#add-layer-wfsfeaturenamespaceURI').val();
-                    data.featureNamespace = form.find('#add-layer-wfsfeaturenamespace').val();
-                    data.featureElement = form.find('#add-layer-wfsfeatureelement').val();
-                    data.WFSVersion = (wmsVersion !== "") ? wmsVersion : form.find('#add-layer-interface-version > option').first().val();
-                    data.geometryNamespaceURI = form.find('#add-layer-wfsgeometrynamespaceURI').val();
-                }
-
-                data.opacity = form.find('#opacity-slider').val();
-
-                data.style = form.find('#add-layer-style').val();
-                data.minScale = form.find('#add-layer-minscale').val();
-                data.maxScale = form.find('#add-layer-maxscale').val();
-                data.legendImage = form.find('#add-layer-legendImage').val();
-                //data.inspireTheme = form.find('#add-layer-inspire-theme').val();
+                data.inspireTheme = data.userThemeId = form.find('#add-layer-inspire-theme').val();
                 data.metadataId = form.find('#add-layer-datauuid').val();
                 data.attributes = form.find('#add-layer-attributes').val();
 
@@ -742,13 +670,6 @@ define([
                         data.publishPermissions += me.roles[i].id + ',';
                     }
                 }
-                
-                data.userThemeId = lcId;
-                data.inspireTheme = lcId;				
-				
-				//Downloading service for GIS data layers
-                data.downloadServiceUrl = form.find('#add-layer-download-service-url').val();
-                data.copyrightInfo = form.find('#add-layer-copyright-info').val();
 
                 // Layer class id aka. orgName id aka groupId
                 data.groupId = lcId;
@@ -791,10 +712,11 @@ define([
 
                 var sandbox = me.options.instance.getSandbox();
                 var data = {
-                    groupId : accordion.attr('lcid'),
-                    layerType : 'collection',
-                    isBase : me.model.isBaseLayer(),
-                    inspireTheme : groupElement.find('#add-layer-inspire-theme').val()
+                    groupId: accordion.attr('lcid'),
+                    layerType: 'collection',
+                    isBase: me.model.isBaseLayer(),
+                    inspireTheme: groupElement.find('#add-layer-inspire-theme').val(),
+                    userThemeId: groupElement.find('#add-layer-inspire-theme').val()
                 };
 
                 if (me.model.getId() !== null && me.model.getId() !== undefined) {
@@ -807,7 +729,7 @@ define([
                 });
 
                 // permissions
-                if(!me.model.getId()) {
+                if (!me.model.getId()) {
                     var checkedPermissions = [];
                     groupElement.find('.layer-view-role').filter(':checked').each(function () {
                         checkedPermissions.push(jQuery(this).data('role-id'));
@@ -815,12 +737,12 @@ define([
 
                     data.viewPermissions = checkedPermissions.join();
                 }
-                
+
                 // make AJAX call
                 jQuery.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    data : data,
+                    data: data,
                     beforeSend: function () {
                         jQuery('body').css({
                             cursor: 'wait'
@@ -854,15 +776,15 @@ define([
             removeLayerCollection: function (e) {
                 var me = this,
                     element = jQuery(e.currentTarget),
-//                    editForm = element.parents('.admin-add-layer').attr('data-id'),
+                    //                    editForm = element.parents('.admin-add-layer').attr('data-id'),
                     accordion = element.parents('.accordion');
                 var sandbox = me.options.instance.getSandbox();
                 // make AJAX call
                 jQuery.ajax({
                     type: 'GET',
                     dataType: 'json',
-                    data : {
-                        layer_id : me.model.getId()
+                    data: {
+                        layer_id: me.model.getId()
                     },
                     url: sandbox.getAjaxUrl() + 'action_route=DeleteLayer',
                     success: function (resp) {
@@ -883,15 +805,16 @@ define([
              * @method fetchCapabilities
              */
             fetchCapabilities: function (e) {
-                e.stopPropagation();
                 var me = this,
                     element = jQuery(e.currentTarget),
                     form = element.parents('.add-layer-wrapper'),
                     baseUrl = me.options.instance.getSandbox().getAjaxUrl();
-                
+
+                e.stopPropagation();
+
                 // Progress spinner
                 me.progressSpinner.start();
-                
+
                 var serviceURL = form.find('#add-layer-interface').val(),
                     layerType = form.find('#add-layer-layertype').val(),
                     user = form.find('#add-layer-username').val(),
@@ -911,66 +834,127 @@ define([
                     silent: true
                 });
 
-                jQuery.ajax({
-                    type: 'POST',
-                    data: {
-                        url: serviceURL,
-                        type : layerType,
-                        user: user,
-                        pw: pw,
-                        version: version
-                    },
-                    url: baseUrl + 'action_route=GetWSCapabilities',
-                    success: function (resp) {
-                        me.progressSpinner.stop();
-                        me.__capabilitiesResponseHandler(layerType, resp);
-                    },
-                    error: function (jqXHR) {
-                        me.progressSpinner.stop();
-                        if (jqXHR.status !== 0) {
-                            me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
-                        }
-                    }
-                });
+                if (layerType == "arcgislayer") {
+                 	jQuery.ajax({
+                		type: 'POST',
+                		data: {
+                			mapServerUrl: serviceURL,
+                			type : layerType,
+                			user: user,
+                			pw: pw,
+                			version: version
+                		},
+                		url: baseUrl + 'action_route=GetArcgisMapServerConfiguration',
+                		success: function (resp) {
+                			me.progressSpinner.stop();
+                			me.__capabilitiesResponseHandler(layerType, me._mapMapServerConfigurationToCapabilities(resp));
+                		},
+                		error: function (jqXHR) {
+                			me.progressSpinner.stop();
+                			if (jqXHR.status !== 0) {
+                				me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
+                			}
+                		}
+                	});
+                } else {
+                	jQuery.ajax({
+                		type: 'POST',
+                		data: {
+                			url: serviceURL,
+                			type : layerType,
+                			user: user,
+                			pw: pw,
+                			version: version
+                		},
+                		url: baseUrl + 'action_route=GetWSCapabilities',
+                		success: function (resp) {
+                			me.progressSpinner.stop();
+                			me.__capabilitiesResponseHandler(layerType, resp);
+                		},
+                		error: function (jqXHR) {
+                			me.progressSpinner.stop();
+                			if (jqXHR.status !== 0) {
+                				me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
+                			}
+                		}
+                	});
+            	}
             },
-            /**
-             * Fetch WFS layer configuration. AJAX call to get configuration for given wfs layer id
-             * Only for wfslayer-type
-             * TODO: add this to button click for wfs spesific editing popup
-             *
-             * @method fetchWfsLayerConfiguration
-             */
-            fetchWfsLayerConfiguration: function (e) {
-                var me = this,
-                    //element = jQuery(e.currentTarget),
-                    //form = element.parents('.add-wfs-layer-wrapper'),
-                    baseUrl = me.options.instance.getSandbox().getAjaxUrl();
+            _mapMapServerConfigurationToCapabilities: function (conf) {
+                var i, layerConf, me = this;
+                var result = {
+                    'groups': [],
+                    'type': 'grouplayer',
+                    'title': 'Layers',
+                    'layers' : [],
+                };
+                //var layers = [];
+                var layersMap = {};
+                var groupsMap = {};
+                var leafLayers = [];
 
-               // e.stopPropagation();
+                for (i = 0; i < conf.layers.length; i ++) {
+                    layerConf = conf.layers[i];
+                    var layerObj = {
+                        'realtime': false,
+                        'isQueryable': false,
+                        'type': 'arcgislayer',
+                        'params': {},
+                        'title': layerConf.name,
+                        'url': conf.serverUrl,
+                        'refreshRate': 0,
+                        'baseLayerId': -1,
+                        'layerName': ""+layerConf.id,
+                        'subtitle': me._getLanguageObject(''),
+                        'name': me._getLanguageObject(layerConf.name),
+                        'options': {},
+                        'styles': [],
+                        'opacity': 1000,
+                        'minScale': layerConf.minScale,
+                        'maxScale': layerConf.maxScale
+                    };
 
-              /*  var serviceURL = form.find('#add-layer-interface').val(),
-                    layerType = form.find('#add-layer-layertype').val(),
-                    user = form.find('#add-layer-username').val(),
-                    pw =  form.find('#add-layer-password').val();  */
+                    if (!conf.supportsDynamicLayers)
+                        layerObj.options['hasNoStyles'] = true;
 
+                    //layers.push(layerObj);
+                    layersMap[layerConf.id] = layerObj;
 
-                jQuery.ajax({
-                    type: 'POST',
-                    data: {
-                        id: me.model.getId(),
-                        redis : 'no'
-                    },
-                    url: baseUrl + 'action_route=GetWFSLayerConfiguration',
-                    success: function (resp) {
-                        me.model.setWfsConfigurationResponse(resp);
-                    },
-                    error: function (jqXHR, textStatus) {
-                        if (jqXHR.status !== 0) {
-                            me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
-                        }
+                    if (layerConf.subLayerIds.length > 0) {
+                        groupsMap[layerConf.id] = {
+                            'groups': [],
+                            'type': 'grouplayer',
+                            'title': layerConf.name,
+                            'layers': [layerObj],
+                        };
+                    } else {
+                        leafLayers.push(layerConf);
                     }
+                }
+
+                for (i = 0; i < leafLayers.length; i++) {
+                    layerConf = leafLayers[i];
+
+                    if (layerConf.parentLayerId != -1) {
+                        groupsMap[layerConf.parentLayerId].layers.push(layersMap[layerConf.id]);
+                    } else {
+                        result.layers.push(layersMap[layerConf.id]);
+                    }
+                }
+
+                $.each(groupsMap, function (id, groupVal) {
+                    result.groups.push(groupVal);
                 });
-                me.service.getCapabilities(me.model.getLayerType(), serviceURL, successCb, errorCb);
+
+                //result.layers = layers;
+                return result;
+            },
+            _getLanguageObject: function (value) {
+                var result = {};
+                $.each(Oskari.getSupportedLanguages(), function(idx, lang) {
+                    result[lang] = value;
+                });
+                return result;
             },
             /**
              * Acts on capabilities response based on layer type
@@ -1003,8 +987,7 @@ define([
                 if (layerName) {
                     // actual layer node -> populate model
                     me.model.setupCapabilities(layerName, null, additionalId);
-                }
-                else {
+                } else {
                     // toggle class to hide submenu
                     current.toggleClass('closed');
                     // toggle open/closed icon

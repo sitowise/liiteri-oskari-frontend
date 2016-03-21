@@ -31,8 +31,7 @@ Oskari.registerLocalization(
             "text": "Search Map Layers",
             "inspire": "By Theme",
             "organization": "By Data Provider",
-            "published": "Users",
-            "userThemes" : "User themes"
+            "published": "Users"
         },
         "published": {
             "organization": "Published",
@@ -71,8 +70,7 @@ Oskari.registerLocalization(
                 "wfs": "WFS layer",
                 "wmts": "WMTS layer",
                 "arcgis": "ArcGISCache layer",
-                "arcgis93": "ArcGISRest layer",
-                "arcgislayer": "ArcGis layer"
+                "arcgis93": "ArcGISRest layer"
             },
             "selectLayer": "Select map layer",
             "selectSubLayer": "Select sub layer",
@@ -90,14 +88,10 @@ Oskari.registerLocalization(
             "typePlaceholder": "The selected map layer type. Please click \"Cancel\" and try again, if you want to change the type.",
             "baseLayer": "Background map layer",
             "groupLayer": "Map layer group",
-            "wfslayer" : "WFS layer",
-            "arcgisLayer": "ArcGis layer",
             "interfaceVersion": "Interface version",
             "interfaceVersionDesc": "Select an appropriate version. Prioritize the newest version that is supported.",
             "wms1_1_1": "WMS 1.1.1",
             "wms1_3_0": "WMS 1.3.0",
-            "wfs1_0_0": "WFS 1.0.0",
-            "wfs1_1_0": "WFS 1.1.0",
             "getInfo": "Get info",
             "editWfs": "Edit WFS",
             "selectClass": "Select theme",

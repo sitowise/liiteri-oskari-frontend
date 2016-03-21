@@ -31,8 +31,7 @@ Oskari.registerLocalization(
             "text": "Sök kartlager",
             "inspire": "Enligt tema",
             "organization": "Enligt dataproducent",
-            "published": "Användare",
-            "userThemes": "User themes"
+            "published": "Användare"
         },
         "published": {
             "organization": "Publicerad kartlager",
@@ -101,16 +100,13 @@ Oskari.registerLocalization(
             "groupName": "Gruppnivåns namn",
             "subLayers": "Undernivå",
             "addSubLayer": "Tillägg en undernivå",
+            "editSubLayer": "Editera undernivå",
             "wmsInterfaceAddress": "Gränssnittets address",
             "wmsUrl": "Gränssnittets address eller addresser",
             "wmsInterfaceAddressDesc": "Gränssnittets URL-addresser separerat med komma",
             "wmsServiceMetaId": "Gränssnittjänstens metadata-tagg",
             "wmsServiceMetaIdDesc": "Gränssnittjänstens metadata-filtagg",
             "layerNameAndDesc": "Lagrets namn och kort beskrivning",
-			
-			"downloadServiceUrlDesc": "Hämta serviceadress",
-			"downloadServiceUrl": "Hämta serviceadress",
-
             "metaInfoIdDesc": "Geodata&shy;registrets metadata filtagg, som unikt identifierar metadatans XML beskrivning",
             "metaInfoId": "Metadatans filtagg",
             "wmsName": "Unik namn för kartlager",

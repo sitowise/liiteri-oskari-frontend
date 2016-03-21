@@ -1,9 +1,9 @@
 define([
-    "text!_bundle/templates/layerRowTemplate.html",
-    "_bundle/views/adminLayerSettingsView",
-    "text!_bundle/templates/group/subLayerTemplate.html",
-    'text!_bundle/templates/adminGroupSettingsTemplate.html'
-],
+        "text!_bundle/templates/layerRowTemplate.html",
+        "_bundle/views/adminLayerSettingsView",
+        "text!_bundle/templates/group/subLayerTemplate.html",
+        'text!_bundle/templates/adminGroupSettingsTemplate.html'
+    ],
     function (ViewTemplate, AdminLayerSettingsView, SubLayerTemplate) {
         return Backbone.View.extend({
             tagName: 'div',
@@ -89,40 +89,36 @@ define([
                 } else if (layer.isLayerOfType('VECTOR')) {
                     icon.attr('title', tooltips['type-wms']);
                 }
-                if (layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) {
+                if (layer.getMetadataIdentifier()) {
                     tools.find('div.layer-info').addClass('icon-info');
                     tools.find('div.layer-info').click(function () {
-                        window.open(layer.getMetadataIdentifier());
+                        var rn = 'catalogue.ShowMetadataRequest',
+                            uuid = layer.getMetadataIdentifier(),
+                            additionalUuids = [],
+                            additionalUuidsCheck = {};
+                        additionalUuidsCheck[uuid] = true;
+                        var subLayers = layer.getSubLayers(),
+                            s,
+                            subUuid;
+                        if (subLayers && subLayers.length > 0) {
+                            for (s = 0; s < subLayers.length; s++) {
+                                subUuid = subLayers[s].getMetadataIdentifier();
+                                if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
+                                    additionalUuidsCheck[subUuid] = true;
+                                    additionalUuids.push({
+                                        uuid: subUuid
+                                    });
+
+                                }
+                            }
+                        }
+
+                        sandbox.postRequestByName(rn, [{
+                                uuid: uuid
+                            },
+                            additionalUuids
+                        ]);
                     });
-//                    tools.find('div.layer-info').click(function () {
-//                        var rn = 'catalogue.ShowMetadataRequest',
-//                            uuid = layer.getMetadataIdentifier(),
-//                            additionalUuids = [],
-//                            additionalUuidsCheck = {};
-//                        additionalUuidsCheck[uuid] = true;
-//                        var subLayers = layer.getSubLayers(),
-//                            s,
-//                            subUuid;
-//                        if (subLayers && subLayers.length > 0) {
-//                            for (s = 0; s < subLayers.length; s++) {
-//                                subUuid = subLayers[s].getMetadataIdentifier();
-//                                if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
-//                                    additionalUuidsCheck[subUuid] = true;
-//                                    additionalUuids.push({
-//                                        uuid: subUuid
-//                                    });
-//
-//                                }
-//                            }
-//                        }
-//
-//                        sandbox.postRequestByName(rn, [
-//                            {
-//                                uuid: uuid
-//                            },
-//                            additionalUuids
-//                        ]);
-//                    });
                 }
             },
             /**
@@ -155,18 +151,16 @@ define([
             },
 
             toggleSubLayerSettings: function (e) {
-                var element = jQuery(e.currentTarget).parents('.add-sublayer-wrapper');
-                var groupElement = jQuery(e.currentTarget).parents('.add-group-wrapper');
-                var groupButtons = groupElement.find('.add-group-send');
+                var me = this,
+                    dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                    element = jQuery(e.currentTarget).parents('.add-sublayer-wrapper');
 
-                //show layer settings
-                if (!element.hasClass('show-edit-sublayer')) {
-                    e.stopPropagation();
-                    groupButtons.hide();
+                e.stopPropagation();
 
-                    var subLayerId = element.attr('sublayer-id'),
-                        subLayer = this._getSubLayerById(subLayerId);
-                    var parentId = this.model.getId();
+                var subLayerId = element.attr('sublayer-id'),
+                    subLayer = this._getSubLayerById(subLayerId),
+                    parentId = this.model.getId(),
+                    isEdit = subLayerId !== null && subLayerId !== undefined;
 
                 // create AdminLayerSettingsView
                 var settings = new AdminLayerSettingsView({
@@ -230,18 +224,16 @@ define([
                             exitPopup();
                         });
                     });
-                    element.append(settings.$el);
-
-                    // TODO when backend works and we have new jQuery UI
-                    //this.$el.find("#add-layer-inspire-theme").tagit({availableTags: ["Hallinnolliset yksik�t", "Hydrografia", "Kiinteist�t", "Kohteet", "Koordinaattij�rjestelm�t", "Korkeus", "Liikenneverkot", "Maank�ytt�", "Maanpeite","Maaper�","Merialueet", "Metatieto"]});
-                    element.addClass('show-edit-sublayer');
-                } else {
-                    //hide layer settings
-                    element.removeClass('show-edit-sublayer');
-                    element.find('.admin-add-layer').remove();
-                    groupButtons.show();
+                    buttons.push(deleteButton);
                 }
-                }
+                buttons.push(cancelButton);
+                container.find('.layer').append(settings.$el);
+                // show the dialog
+                var titleKey = isEdit ? 'editSubLayer' : 'addSubLayer';
+                dialog.show(this.instance.getLocalization('admin')[titleKey], container, buttons);
+                // Move layer next to whatever opened it
+                dialog.moveTo(e.currentTarget, 'right');
+                dialog.makeModal();
             },
 
             /**
