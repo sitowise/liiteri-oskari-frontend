@@ -2428,18 +2428,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var lang = Oskari.getLang();
             var gridYearsPart = "";
             if(me.instance.conf.gridDataAllowed) {
-                gridYearsPart = me._locale.sotka.gridYearsTitle + '</td><td>' + indicator.gridYears.sort(function (a, b) {return b - a;}).join(", ") + '</td></tr><tr><td>'
+                gridYearsPart = me._locale.stats.gridYearsTitle + '</td><td>' + indicator.gridYears.sort(function (a, b) {return b - a;}).join(", ") + '</td></tr><tr><td>'
             }
             var desc = themes + '<table class="table"><tr><td>' +
-                me._locale.sotka.descriptionTitle + '</td><td>' + indicator.description[lang] + '</td></tr><tr><td>' +
-                me._locale.sotka.sourceTitle + '</td><td>' + me._getDataSourcesInfo(indicator.dataSources) + '</td></tr><tr><td>' +
-                me._locale.sotka.additionalInfoTitle + '</td><td>' + indicator.additionalInfo[lang] + '</td></tr><tr><td>' +
-                me._locale.sotka.privacyLimitTitle + '</td><td>' + (indicator.privacyLimit !== null ? indicator.privacyLimit.Description : "") + '</td></tr><tr><td>' +
-                me._locale.sotka.lifeCycleStateTitle + '</td><td>' + indicator.lifeCycleState[lang] + '</td></tr><tr><td>' +
-                me._locale.sotka.unitTitle + '</td><td>' + indicator.unit + '</td></tr><tr><td>' +
-                me._locale.sotka.yearsTitle + '</td><td>' + indicator.years.sort(function (a, b) {return b - a;}).join(", ") + '</td></tr><tr><td>' +
+                me._locale.stats.descriptionTitle + '</td><td>' + indicator.description[lang] + '</td></tr><tr><td>' +
+                me._locale.stats.sourceTitle + '</td><td>' + me._getDataSourcesInfo(indicator.dataSources) + '</td></tr><tr><td>' +
+                me._locale.stats.additionalInfoTitle + '</td><td>' + indicator.additionalInfo[lang] + '</td></tr><tr><td>' +
+                me._locale.stats.privacyLimitTitle + '</td><td>' + (indicator.privacyLimit !== null ? indicator.privacyLimit.Description : "") + '</td></tr><tr><td>' +
+                me._locale.stats.lifeCycleStateTitle + '</td><td>' + indicator.lifeCycleState[lang] + '</td></tr><tr><td>' +
+                me._locale.stats.unitTitle + '</td><td>' + indicator.unit + '</td></tr><tr><td>' +
+                me._locale.stats.yearsTitle + '</td><td>' + indicator.years.sort(function (a, b) {return b - a;}).join(", ") + '</td></tr><tr><td>' +
                 gridYearsPart +
-                me._locale.sotka.annotationsTitle + '</td><td>' + me._getAnnotationsInfo(indicator.timePeriods) + '</td></tr>' +
+                me._locale.stats.annotationsTitle + '</td><td>' + me._getAnnotationsInfo(indicator.timePeriods) + '</td></tr>' +
                 '</table>';
             var dialog = me.showMessage(indicator.title[lang], desc);
             dialog.makeDraggable();
@@ -2471,9 +2471,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             if (result.length > 0) {
-                result = "<table class='table-bordered table-condensed table-striped'>" + "<tr><th>" + me._locale.sotka.annotations.year
-                    + "</th><th>" + me._locale.sotka.annotations.organization
-                    + "</th><th>" + me._locale.sotka.annotations.description + "</th></tr>" + result + "</table>";
+                result = "<table class='table-bordered table-condensed table-striped'>" + "<tr><th>" + me._locale.stats.annotations.year
+                    + "</th><th>" + me._locale.stats.annotations.organization
+                    + "</th><th>" + me._locale.stats.annotations.description + "</th></tr>" + result + "</table>";
             }
 
             return result;
