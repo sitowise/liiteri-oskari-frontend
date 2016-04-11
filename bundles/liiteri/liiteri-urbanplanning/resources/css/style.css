@@ -25,6 +25,7 @@ GENERAL
 
 .oskariui-left {
 	height: 100%;
+	float: none;
 }
 
 .urbanPlansDialog {
