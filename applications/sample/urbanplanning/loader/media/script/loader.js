@@ -68,7 +68,7 @@ $(function () {
             mapBtn.addClass('primary');
             mapBtn.attr('value', 'Näytä kartalla');
             mapBtn.bind('click', function () {
-                var url = instance.sandbox.getAjaxUrl() + "asemakaava=" + resp.tyviId;
+                var url = instance.sandbox.getAjaxUrl().replace('action', '') + "asemakaava=" + resp.tyviId;
                 var win = window.open(url, '_blank');
                 win.focus();
             });  
