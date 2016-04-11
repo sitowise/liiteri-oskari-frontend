@@ -301,6 +301,11 @@ div.urbanPlanDetail div.actions {
 	margin-left: 0px;
 }
 
+.urbanPlanDetail table td {
+    padding: 0;
+    border-bottom: 0 solid black;
+}
+
 .urbanPlanDetail table.collapsed {
     width: 100%;
 }
