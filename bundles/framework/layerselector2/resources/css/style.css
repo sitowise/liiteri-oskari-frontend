@@ -127,4 +127,43 @@ div.layerselector2 div.tab-content {
         background-color: #333438;
         color: white; }
 
+div.layerselector2 div.actionsContainer {
+    margin: 10px 5px 10px 15px;
+}
+
+div.layerselector2 div.actionsContainer span {
+    margin-right: 20px;
+}
+
+div.layerselector2 div.actionsContainer span i {
+    margin-right: 5px;
+}
+
+div.layerselector2 .expand-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/expand-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+}
+
+div.layerselector2 .collapse-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/collapse-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+}
+
+div.layer-accordion {
+    position: absolute;
+    overflow-y: auto;
+    top: 0;
+    bottom: 0;
+    margin-top: 200px;
+    width: 515px;
+}
+
 /*# sourceMappingURL=style.css.map */
