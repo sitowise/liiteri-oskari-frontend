@@ -284,14 +284,14 @@ Oskari.clazz.define('Oskari.userinterface.component.GroupVisualizationForm',
                     for (fClazzName in formClazzes) {
                         fClazz = formClazzes[fClazzName];
                         fClazz.setValues(value[fClazzName]);
-                    }                
+                    }
             }
         },
         setStyleGroups: function (groups) {
-            if (group == null || group.length == 0) {
+            if (groups == null || groups.length == 0) {
                 this._options.groups = [{ id: this.DEFAULT_GROUP, display: '' }];
                 this._groupFormClazzes = this._createGroupFormClazzes(this._options.forms, this._options.formValues, this._options.groups);
-            }                
+            }
             else {
                 var newGroups = [{ id: this.DEFAULT_GROUP, display: '' }];
                 $.merge(newGroups, groups);
@@ -302,7 +302,7 @@ Oskari.clazz.define('Oskari.userinterface.component.GroupVisualizationForm',
                     this._options.groups = newGroups;
                     this._groupFormClazzes = this._createGroupFormClazzes(this._options.forms, this._options.formValues, this._options.groups);
                 }
-            }                
+            }
         },
         setFromStyle: function (style) {
             var i, groups;

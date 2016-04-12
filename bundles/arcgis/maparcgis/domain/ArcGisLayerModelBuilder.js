@@ -15,7 +15,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayerModelBuild
     parseLayerData: function (layer, mapLayerJson, maplayerService) {
         var me = this;
         var toolBuilder = Oskari.clazz.builder('Oskari.mapframework.domain.Tool');
-        if (layer.isLayerOfType("arcgislayer")) {
+        if (layer.isLayerOfType("arcgis")) {
             if (!mapLayerJson.options["hasNoStyles"]) {
                 var locOwnStyle = this.localization['own-style'];
                 var toolOwnStyle = toolBuilder();
