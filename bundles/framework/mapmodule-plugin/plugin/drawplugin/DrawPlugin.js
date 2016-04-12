@@ -298,7 +298,14 @@ Oskari.clazz.define(
                             irregular: true
                         }
                     }
-                )
+                ),
+                circle: new OpenLayers.Control.DrawFeature(me.drawLayer,
+                        OpenLayers.Handler.RegularPolygon, {
+                            handlerOptions: {
+                                sides: 40,
+                                irregular: false
+                            }
+                        })
             };
 
             if (me.graphicFill !== null && me.graphicFill !== undefined) {
