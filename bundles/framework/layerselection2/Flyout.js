@@ -856,33 +856,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                     tools.find('div.layer-description').hide();
                 }
             }
-            if (layer.getMetadataIdentifier() || subLmeta) {
-                tools.find('div.icon-info').bind('click', function () {
-                    var rn = 'catalogue.ShowMetadataRequest',
-                        uuid = layer.getMetadataIdentifier(),
-                        additionalUuids = [],
-                        additionalUuidsCheck = {};
-
-                    additionalUuidsCheck[uuid] = true;
-
-                    subLayers = layer.getSubLayers();
-                    if (subLayers && subLayers.length > 0) {
-                        for (s = 0; s < subLayers.length; s += 1) {
-                            subUuid = subLayers[s].getMetadataIdentifier();
-                            if (subUuid && subUuid !== '' && !additionalUuidsCheck[subUuid]) {
-                                additionalUuidsCheck[subUuid] = true;
-                                additionalUuids.push({
-                                    uuid: subUuid
-                                });
-                            }
-                        }
-                    }
-
-                    sandbox.postRequestByName(rn, [{
-                            uuid: uuid
-                        },
-                        additionalUuids
-                    ]);
+            if ((layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) || subLmeta) {
+            	tools.find('div.icon-info').click(function () {
+                    window.open(layer.getMetadataIdentifier());
                 });
             } else {
                 tools.find('div.icon-info').hide();
