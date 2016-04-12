@@ -89,36 +89,39 @@ define([
                 } else if (layer.isLayerOfType('VECTOR')) {
                     icon.attr('title', tooltips['type-wms']);
                 }
-                if (layer.getMetadataIdentifier()) {
+                if (layer.getMetadataIdentifier() && layer.getMetadataIdentifier().indexOf('http') == 0) {
                     tools.find('div.layer-info').addClass('icon-info');
                     tools.find('div.layer-info').click(function () {
-                        var rn = 'catalogue.ShowMetadataRequest',
-                            uuid = layer.getMetadataIdentifier(),
-                            additionalUuids = [],
-                            additionalUuidsCheck = {};
-                        additionalUuidsCheck[uuid] = true;
-                        var subLayers = layer.getSubLayers(),
-                            s,
-                            subUuid;
-                        if (subLayers && subLayers.length > 0) {
-                            for (s = 0; s < subLayers.length; s++) {
-                                subUuid = subLayers[s].getMetadataIdentifier();
-                                if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
-                                    additionalUuidsCheck[subUuid] = true;
-                                    additionalUuids.push({
-                                        uuid: subUuid
-                                    });
-
-                                }
-                            }
-                        }
-
-                        sandbox.postRequestByName(rn, [{
-                                uuid: uuid
-                            },
-                            additionalUuids
-                        ]);
+                        window.open(layer.getMetadataIdentifier());
                     });
+//                    tools.find('div.layer-info').click(function () {
+//                        var rn = 'catalogue.ShowMetadataRequest',
+//                            uuid = layer.getMetadataIdentifier(),
+//                            additionalUuids = [],
+//                            additionalUuidsCheck = {};
+//                        additionalUuidsCheck[uuid] = true;
+//                        var subLayers = layer.getSubLayers(),
+//                            s,
+//                            subUuid;
+//                        if (subLayers && subLayers.length > 0) {
+//                            for (s = 0; s < subLayers.length; s++) {
+//                                subUuid = subLayers[s].getMetadataIdentifier();
+//                                if (subUuid && subUuid !== "" && !additionalUuidsCheck[subUuid]) {
+//                                    additionalUuidsCheck[subUuid] = true;
+//                                    additionalUuids.push({
+//                                        uuid: subUuid
+//                                    });
+//
+//                                }
+//                            }
+//                        }
+//
+//                        sandbox.postRequestByName(rn, [{
+//                                uuid: uuid
+//                            },
+//                            additionalUuids
+//                        ]);
+//                    });
                 }
             },
             /**
