@@ -1,35 +1,25 @@
-Oskari.clazz.define(
-    'Oskari.analysis.bundle.analyse.view.ContentPanel',
+Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
     function (view) {
-        var me = this;
+        this.view         = undefined;
+        this.instance     = undefined;
+        this.sandbox      = undefined;
+        this.loc          = undefined;
+        this.mapModule    = undefined;
+        this.features     = undefined;
+        this.panel        = undefined;
+        this.drawPluginId = undefined;
+        this.drawPlugin   = undefined;
+        this.featureLayer = undefined;
+        this.layerType    = undefined;
+        this.linkAction   = undefined;
+        this.isStarted    = undefined;
 
-        me.view = undefined;
-        me.instance = undefined;
-        me.sandbox = undefined;
-        me.loc = undefined;
-        me.mapModule = undefined;
-        me.features = undefined;
-        me.dataPanel = undefined;
-        me.drawToolsPanel = undefined;
-        me.drawPluginId = undefined;
-        me.drawPlugin = undefined;
-        me.drawFilterPluginId = undefined;
-        me.drawFilterPlugin = undefined;
-        me.featureLayer = undefined;
-        me.layerType = undefined;
-        me.linkAction = undefined;
-        me.isStarted = undefined;
-        me.selectedGeometry = undefined;
-        me.drawFilterMode = undefined;
-        me.helpDialog = undefined;
-        me.selectionPluginId = undefined;
-        me.selectionPlugin = undefined;
-        me.WFSLayerService = undefined;
-        me.init(view);
-        me.start();
+        this.init(view);
+        this.start();
     }, {
         /**
-         * @static @property _templates
+         * @static
+         * @property _templates
          */
         _templates: {
             'help': '<div class="help icon-info"></div>',
@@ -38,466 +28,235 @@ Oskari.clazz.define(
             'toolContainer': '<div class="toolContainer">' +
                     '<div class="title"></div>' +
                 '</div>',
-            tool: '<div class="tool"></div>',
-            drawFilterContainer: '<div class="drawFilterContainer">' +
-                '  <h4 class="title"></h4>' +
-                '</div>',
-            drawFilter: '<div class="drawFilter"></div>',
-            selectionToolsContainer: '<div class="toolContainer">'+
-                '   <h4 class="title"></h4>'+
-                '   <div class="toolContainerToolDiv"></div>'+
-                '   <div class="toolContainerFooter"></div>'+
-                '   <div class="toolContainerButtons"></div>'+
-                '</div>',
-            search: '<div class="analyse-search"></div>'
+            'tool': '<div class="tool"></div>',
+            'drawControls': '<div class="buttons"></div>',
+            'search': '<div class="analyse-search"></div>'
         },
-
         /**
-         * @public @method getDataPanel
-         *
-         *
+         * @method getPanel
          * @return {Oskari.userinterface.component.AccordionPanel}
          */
-        getDataPanel: function () {
-            return this.dataPanel;
+        getPanel: function() {
+            return this.panel;
         },
-
-        getDrawToolsPanel: function () {
-            return this.drawToolsPanel;
-        },
-
         /**
-         * @method getDataPanelContainer
          * Returns the container where all the stuff is.
-         *
-         *
+         * 
+         * @method getPanelContainer
          * @return {jQuery}
          */
-        getDataPanelContainer: function () {
-            return this.getDataPanel().getContainer();
+        getPanelContainer: function() {
+            return this.getPanel().getContainer();
         },
-
-        getDrawToolsPanelContainer: function () {
-            return this.getDrawToolsPanel().getContainer();
-        },
-
         /**
          * @method getName
-         *
-         *
          * @return {String}
          */
-        getName: function () {
+        getName: function() {
             return this.instance.getName() + 'ContentPanel';
         },
-
         /**
-         * @method getFeatures
          * Returns a list of all temporary features added.
-         *
-         *
+         * 
+         * @method getFeatures
          * @return {Object[]}
          */
-        getFeatures: function () {
+        getFeatures: function() {
             return this.features;
         },
-
         /**
-         * @method getSelectedGeometry
-         * Returns a geometry selected by the user.
-         *
-         *
-         * @return {Object[]}
-         */
-        getSelectedGeometry: function () {
-            return this.selectedGeometry;
-        },
-
-        /**
-         * @method parseFeatureFromClickedFeature
-         * Returns an OpenLayers feature or null.
-         *
-         *
-         * @return {OpenLayers.Feature.Vector}
-         */
-        parseFeatureFromClickedFeature: function(clickedGeometry) {
-            var data = clickedGeometry[1],
-                wkt = new OpenLayers.Format.WKT(),
-                feature = wkt.read(data),
-                gcn = feature.geometry.CLASS_NAME;
-
-            if (gcn === 'OpenLayers.Geometry.LineString') {
-                return new OpenLayers.Feature.Vector(
-                    feature.geometry
-                );
-            } else if (gcn === 'OpenLayers.Geometry.MultiPolygon') {
-                return new OpenLayers.Feature.Vector(
-                    feature.geometry
-                );
-            } else if (gcn === 'OpenLayers.Geometry.Polygon') {
-                return new OpenLayers.Feature.Vector(
-                    new OpenLayers.Geometry.MultiPolygon(
-                        [feature.geometry]
-                    )
-                );
-            }
-            return null;
-        },
-        /**
-         * @method getLayersContainer
          * Returns the element which the layer list is rendered into.
-         *
-         *
+         * 
+         * @method getLayersContainer
          * @return {jQuery}
          */
-        getLayersContainer: function () {
-            return this.getDataPanelContainer().find('div.layers');
+        getLayersContainer: function() {
+            return this.getPanelContainer().find('div.layers');
         },
-
         /**
+         * Returns the type of the layer we fake here for the temporary features.
+         * 
          * @method getLayerType
-         * Returns the type of the layer we fake here for the temporary
-         * features.
-         *
-         *
          * @return {String}
          */
-        getLayerType: function () {
+        getLayerType: function() {
             return this.layerType;
         },
-
         /**
-         * @method emptyLayers
          * Empties the layer list.
-         *
-         *
+         * 
+         * @method emptyLayers
          */
-        emptyLayers: function () {
+        emptyLayers: function() {
             this.getLayersContainer().empty();
         },
-
         /**
          * @method onEvent
-         *
          * @param  {Oskari.Event} event
-         *
          */
-        onEvent: function (event) {
+        onEvent: function(event) {
             var handler = this.eventHandlers[event.getName()];
-            if (handler) {
-                return handler.apply(this, [event]);
-            }
+            if (handler) return handler.apply(this, [event]);
         },
-
         /**
-         * @static @property eventHandlers
+         * @static
+         * @property eventHandlers
          */
         eventHandlers: {
-
-            'DrawPlugin.FinishedDrawingEvent': function (event) {
-                if (this.drawPluginId !== event.getCreatorId()) {
-                    return;
-                }
+            'DrawPlugin.FinishedDrawingEvent': function(event) {
+                if (this.drawPluginId !== event.getCreatorId()) return;
 
                 this.addGeometry(event.getDrawing());
-                this.drawPlugin.stopDrawing();
-            },
-
-            'DrawFilterPlugin.FinishedDrawFilteringEvent': function (event) {
-                if (this.drawFilterPluginId !== event.getCreatorId()) {
-                    return;
-                }
-                var geometries = event.getFiltered();
-                if (geometries === null) {
-                    this._cancelDrawFilter();
-                }
-                this.addGeometry(event.getFiltered());
-                this.drawFilterPlugin.stopDrawFiltering();
-
-            },
-
-            'WFSFeatureGeometriesEvent': function (event) {
-                var me = this,
-                    layerId = event.getMapLayer().getId();
-
-                if (!me.instance.analyse.isEnabled) {
-                    return;
-                }
-                if (me.drawFilterMode) {
-                    return;
-                }
-                // if selection is made from different layer than previous selection, empty selections from previous layer
-                _.forEach(me.sandbox.findAllSelectedMapLayers(), function (layer) {
-                    if (layer.hasFeatureData() && layerId !== layer.getId()) {
-                        me.WFSLayerService.emptyWFSFeatureSelections(layer);
-                    }
-                });
-                // if there are selected features, unselect them
-                me.selectControl.unselectAll();
-
-                //set selected geometry for filter json
-                var geometries = [];
-                _.forEach(event.getGeometries(), function (geometry) {
-                    geometries.push(geometry[1]);
-                });
-                me.view.setFilterGeometry(geometries);
-
-                // set selected geometries for drawFilter function
-                var selectedGeometries = event.getGeometries();
-                if (selectedGeometries.length > 0) {
-                    var selectedGeometry = selectedGeometries[0];
-                    me.selectedGeometry = me.parseFeatureFromClickedFeature(selectedGeometry);
-                    me._operateDrawFilters();
-                }
-                me._toggleEmptySelectionBtn(true);
-            },
-
-            'WFSFeaturesSelectedEvent': function (event) {
-                var me = this,
-                    layerId = event.getMapLayer().getId();
-
-                if (me.drawFilterMode) {
-                    return;
-                }
-                if (event.getWfsFeatureIds().length === 0 && layerId === me.WFSLayerService.getAnalysisWFSLayerId()) {
-                    me.selectedGeometry = null;
-                    me._disableAllDrawFilterButtons();
-                    me._toggleEmptySelectionBtn(false);
-                }
-            },
-
-            'AfterMapMoveEvent': function (event) {
-                if (this.drawFilterMode || !this.instance.analyse.isEnabled) {
-                    return;
-                }
-                var olMap = this.mapModule.getMap(),
-                layer = olMap.getLayersByName('AnalyseFeatureLayer')[0];
-                this.mapModule.bringToTop(layer, 20);
-            },
-            'AfterMapLayerAddEvent': function(event) {
-                this._toggleSelectionTools();
-                this._toggleEmptySelectionBtn((this.WFSLayerService.getWFSSelections() && this.WFSLayerService.getWFSSelections().length > 0));
-            },
-            'AfterMapLayerRemoveEvent': function(event) {
-                this._toggleSelectionTools();
-                this._toggleEmptySelectionBtn((this.WFSLayerService.getWFSSelections() && this.WFSLayerService.getWFSSelections().length > 0));
             }
         },
-
         /**
-         * @method init
          * Initializes the class.
          * Creates draw plugin and feature layer and sets the class/instance variables.
-         *
+         * 
+         * @method init
          * @param  {Oskari.analysis.bundle.analyse.view.StartAnalyse} view
-         *
          */
-        init: function (view) {
-            var me = this,
-                p;
-
-            me.view = view;
-            me.instance = me.view.instance;
-            me.sandbox = me.instance.getSandbox();
-            me.WFSLayerService = me.sandbox.getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService');
-            me.loc = me.view.loc;
-            me.mapModule = me.sandbox.findRegisteredModuleInstance(
-                'MainMapModule'
-            );
-            me.features = [];
-            me.featCounts = {
+        init: function(view) {
+            this.view         = view;
+            this.instance     = this.view.instance;
+            this.sandbox      = this.instance.getSandbox();
+            this.loc          = this.view.loc;
+            this.mapModule    = this.sandbox.findRegisteredModuleInstance('MainMapModule');
+            this.features     = [];
+            this.featCounts   = {
                 point: 0,
                 line: 0,
                 area: 0
             };
-            me.dataPanel = me._createDataPanel(me.loc);
-            me.drawToolsPanel = me._createDrawToolsPanel(me.loc);
-            me.drawPluginId = me.instance.getName();
-            me.drawPlugin = me._createDrawPlugin();
-            me.drawFilterPluginId = me.instance.getName();
-            me.drawFilterPlugin = me._createDrawFilterPlugin();
-            me.featureLayer = me._createFeatureLayer(me.mapModule);
-            me.layerType = 'ANALYSE_TEMP';
-            me.linkAction = me.loc.content.search.resultLink;
-            me.isStarted = false;
+            this.panel        = this._createPanel(this.loc);
+            this.drawPluginId = this.instance.getName();
+            this.drawPlugin   = this._createDrawPlugin();
+            this.featureLayer = this._createFeatureLayer(this.mapModule);
+            this.layerType    = 'ANALYSE_TEMP';
+            this.linkAction   = this.loc.content.search.resultLink;
+            this.isStarted    = false;
 
-            me.selectionPlugin = me.sandbox.findRegisteredModuleInstance('MainMapModuleMapSelectionPlugin');
-
-            if (!me.selectionPlugin) {
-                var config = {
-                    id: "FeatureData"
-                };
-                me.selectionPlugin = Oskari.clazz.create('Oskari.mapframework.bundle.featuredata2.plugin.MapSelectionPlugin', config, sandbox);
-                mapModule.registerPlugin(me.selectionPlugin);
-                mapModule.startPlugin(me.selectionPlugin);
-            }
-
-            me.selectionPluginId = me.instance.getName();
-
-            for (p in me.eventHandlers) {
-                if (me.eventHandlers.hasOwnProperty(p)) {
-                    me.sandbox.registerForEventByName(me, p);
+            for (var p in this.eventHandlers) {
+                if (this.eventHandlers.hasOwnProperty(p)) {
+                    this.sandbox.registerForEventByName(this, p);
                 }
             }
         },
-
         /**
-         * @method start
          * Adds the feature layer to the map, stops all other draw plugins
          * and starts the draw plugin needed here.
-         *
-         *
+         * 
+         * @method start
          */
-        start: function () {
-            var me = this,
-                sandbox = me.sandbox,
+        start: function() {
+            var sandbox = this.sandbox,
                 rn = 'Search.AddSearchResultActionRequest',
                 reqBuilder,
                 request;
 
             // Already started so nothing to do here
-            if (me.isStarted) {
-                return;
-            }
+            if (this.isStarted) return;    
 
-            me._toggleDrawPlugins(false);
-            me._toggleDrawFilterPlugins(false);
-            me.mapModule.getMap().addLayer(me.featureLayer);
+            this._toggleDrawPlugins(false);
+            this.mapModule.getMap().addLayer(this.featureLayer);
 
-            me.mapModule.registerPlugin(me.drawPlugin);
-            me.mapModule.startPlugin(me.drawPlugin);
-
-            me.mapModule.registerPlugin(me.drawFilterPlugin);
-            me.mapModule.startPlugin(me.drawFilterPlugin);
+            this.mapModule.registerPlugin(this.drawPlugin);
+            this.mapModule.startPlugin(this.drawPlugin);
 
             reqBuilder = sandbox.getRequestBuilder(rn);
             if (reqBuilder) {
                 request = reqBuilder(
-                    me.linkAction, me._getSearchResultAction(), me);
-                sandbox.request(me.instance, request);
+                    this.linkAction, this._getSearchResultAction(), this);
+                sandbox.request(this.instance, request);
             }
 
-            me.isStarted = true;
+            this.isStarted = true;
         },
-
         /**
-         * @method destroy
          * Destroys the created components and unsets the class/instance variables.
-         *
-         *
+         * 
+         * @method destroy
          */
-        destroy: function () {
-            var me = this,
-                p;
-
-            for (p in me.eventHandlers) {
-                if (me.eventHandlers.hasOwnProperty(p)) {
-                    me.sandbox.unregisterFromEventByName(me, p);
+        destroy: function() {
+            for (var p in this.eventHandlers) {
+                if (this.eventHandlers.hasOwnProperty(p)) {
+                    this.sandbox.unregisterFromEventByName(this, p);
                 }
             }
 
-            me.stop();
-            me._destroyFeatureLayer();
+            this.stop();
+            this._destroyFeatureLayer();
 
-            me.view = undefined;
-            me.instance = undefined;
-            me.sandbox = undefined;
-            me.loc = undefined;
-            me.mapModule = undefined;
-            me.features = undefined;
-            me.featCounts = undefined;
-            me.dataPanel = undefined;
-            me.drawToolsPanel = undefined;
-            me.drawPluginId = undefined;
-            me.drawPlugin = undefined;
-            me.drawFilterPluginId = undefined;
-            me.drawFilterPlugin = undefined;
-            me.layerType = undefined;
-            me.linkAction = undefined;
-            me.isStarted = undefined;
+            this.view         = undefined;
+            this.instance     = undefined;
+            this.sandbox      = undefined;
+            this.loc          = undefined;
+            this.mapModule    = undefined;
+            this.features     = undefined;
+            this.featCounts   = undefined;
+            this.panel        = undefined;
+            this.drawPluginId = undefined;
+            this.drawPlugin   = undefined;
+            this.layerType    = undefined;
+            this.linkAction   = undefined;
+            this.isStarted    = undefined;
         },
-
         /**
-         * @public @method stop
          * Removes the feature layer, stops the draw plugin and
          * restarts all other draw plugins.
-         *
-         *
+         * 
+         * @method stop
          */
-        stop: function () {
-            var me = this,
-                sandbox = me.sandbox,
+        stop: function() {
+            var sandbox = this.sandbox,
                 rn = 'Search.RemoveSearchResultActionRequest',
                 reqBuilder,
                 request;
 
             // Already stopped so nothing to do here
-            if (!me.isStarted) {
-                return;
-            }
+            if (!this.isStarted) return;
 
-            me.mapModule.stopPlugin(me.drawPlugin);
-            me.mapModule.unregisterPlugin(me.drawPlugin);
+            this.mapModule.stopPlugin(this.drawPlugin);
+            this.mapModule.unregisterPlugin(this.drawPlugin);
 
-            me.mapModule.stopPlugin(me.drawFilterPlugin);
-            me.mapModule.unregisterPlugin(me.drawFilterPlugin);
-
-            me.mapModule.getMap().removeLayer(me.featureLayer);
-            me._toggleDrawPlugins(true);
-            me._toggleDrawFilterPlugins(true);
+            this.mapModule.getMap().removeLayer(this.featureLayer);
+            this._toggleDrawPlugins(true);
 
             reqBuilder = sandbox.getRequestBuilder(rn);
             if (reqBuilder) {
-                request = reqBuilder(me.linkAction);
-                sandbox.request(me.instance, request);
+                request = reqBuilder(this.linkAction);
+                sandbox.request(this.instance, request);
             }
 
-            me.isStarted = false;
+            this.isStarted = false;
         },
-
         /**
-         * @public @method findFeatureById
          * Returns the feature object by its id.
-         *
+         * 
+         * @method findFeatureById
          * @param  {String} id
-         *
          * @return {Object}
          */
-        findFeatureById: function (id) {
-            return _.find(
-                this.getFeatures(),
-                function (feature) {
-                    return feature.getId() === id;
-                }
-            );
+        findFeatureById: function(id) {
+            return _.find(this.getFeatures(), function(feature) {
+                return feature.getId() === id;
+            });
         },
-
         /**
-         * @private @method addGeometry
          * Adds the given geometry to the feature layer
          * and to the internal list of features.
-         *
+         * 
+         * @method addGeometry
+         * @private
          * @param {OpenLayers.Geometry} geometry
          * @param {String} name optional name for the temp feature
-         *
          */
-        addGeometry: function (geometry, name) {
-            var me = this,
-                feature,
-                mode = this._getDrawModeFromGeometry(geometry),
-                style;
+        addGeometry: function(geometry, name) {
+            var mode = this._getDrawModeFromGeometry(geometry),
+                feature;
 
             if (mode) {
-                style = OpenLayers.Util.extend(
-                    {},
-                    OpenLayers.Feature.Vector.style['default']
-                );
-                style.fillOpacity = 0.7;
-                style.graphicOpacity = 1;
-                style.strokeWidth = 2;
-                style.strokeColor = '#000000';
-                style.strokeOpacity = 1;
-                feature = new OpenLayers.Feature.Vector(geometry, null);
+                feature = new OpenLayers.Feature.Vector(geometry);
                 this.getFeatures().push(
                     this._createFakeLayer(feature.id, mode, name)
                 );
@@ -505,45 +264,25 @@ Oskari.clazz.define(
                 if (this.featureLayer) {
                     this.featureLayer.addFeatures([feature]);
                 }
-                this.featureLayer.events.on({
-                    'featureselected': function (event) {
-                        var wkt = new OpenLayers.Format.WKT(),
-                            featureWKT = wkt.write(event.feature);
-                            map = me.mapModule.getMap(),
-                            sandbox = me.mapModule.getSandbox(),
-                            layers = sandbox.findAllSelectedMapLayers();
+                this.drawPlugin.stopDrawing();
 
-                        //set geometry for drawFilter
-                        me.selectedGeometry = featureWKT;
-                        //set geometry for filter Json
-                        var geometries = [];
-                        geometries.push(featureWKT);
-                        me.view.setFilterGeometry(geometries);
-                        me.WFSLayerService.emptyAllWFSFeatureSelections();
-                    },
-                    'featureunselected': function(feature) {
-                        me.selectedGeometry = undefined;
-                    }
-                });
                 this.view.refreshAnalyseData(feature.id);
             }
         },
-
         /**
-         * @method removeGeometry
          * Removes the feature by given id from the feature layer
          * and from the internal feature list.
-         *
+         * 
+         * @method removeGeometry
          * @param  {String} id
-         *
          */
-        removeGeometry: function (id) {
+        removeGeometry: function(id) {
             var arr = this.features || [],
                 i,
                 arrLen,
                 feature;
 
-            for (i = 0, arrLen = arr.length; i < arrLen; i += 1) {
+            for (i = 0, arrLen = arr.length; i < arrLen; ++i) {
                 if (arr[i].getId() === id) {
                     arr.splice(i, 1);
                     break;
@@ -566,113 +305,63 @@ Oskari.clazz.define(
 
         /**
          * Creates the content layer selection panel for analyse
-         *
-         * @method _createDataPanel
+         * 
+         * @method _createPanel
          * @private
          * @param {Object} loc
          * @return {Oskari.userinterface.component.AccordionPanel}
          *         Returns the created panel
          */
-        _createDataPanel: function (loc) {
+        _createPanel: function (loc) {
             var panel = Oskari.clazz.create(
-                    'Oskari.userinterface.component.AccordionPanel'
-                ),
-                panelHeader = panel.getHeader(),
+                    'Oskari.userinterface.component.AccordionPanel'),
                 panelContainer = panel.getContainer(),
                 layersCont = jQuery(this._templates.layersContainer).clone();
                 //var tooltipCont = jQuery(this._templates.help).clone();
 
             panel.setTitle(loc.content.label);
             //tooltipCont.attr('title', loc.content.tooltip);
-            tooltipCont.addClass('header-icon-info');
 
-            //panelHeader.append(tooltipCont);
+            //panelContainer.append(tooltipCont);
             panelContainer.append(layersCont);
             //panelContainer.append(this._createDataButtons(loc));
-
-            return panel;
-        },
-
-        _createDrawToolsPanel: function (loc) {
-            var panel = Oskari.clazz.create(
-                    'Oskari.userinterface.component.AccordionPanel'
-                ),
-                panelHeader = panel.getHeader(),
-                panelContainer = panel.getContainer(),
-                tooltipCont = jQuery(this._templates.help).clone();
-
-            panel.setTitle(loc.content.drawToolsLabel);
-            tooltipCont.attr('title', loc.content.drawToolsTooltip);
-            tooltipCont.addClass('header-icon-info');
-
-            panelHeader.append(tooltipCont);
             panelContainer.append(this._createDrawButtons(loc));
-            panelContainer.append(this._createDrawFilterButtons(loc));
-            panelContainer.append(this._createSelectToolButtons(loc));
 
             return panel;
         },
-
         /**
          * Creates and returns the draw plugin needed here.
-         *
+         * 
          * @method _createDrawPlugin
          * @private
          * @return {Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin}
          */
-        _createDrawPlugin: function () {
+        _createDrawPlugin: function() {
             var drawPlugin = Oskari.clazz.create(
-                'Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
-                {
-                    id: this.drawPluginId,
-                    multipart: true,
-                    requests : false
-                }
-            );
-
+                    'Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin', {
+                        id: this.drawPluginId,
+                        multipart: true
+                    });
+            
             return drawPlugin;
         },
-
-        /**
-         * Creates and returns the draw filter plugin needed here.
-         *
-         * @method _createDrawFilterPlugin
-         * @private
-         * @return {Oskari.mapframework.ui.module.common.geometryeditor.DrawFilterPlugin}
-         */
-        _createDrawFilterPlugin: function () {
-            var drawFilterPlugin = Oskari.clazz.create(
-                'Oskari.mapframework.ui.module.common.geometryeditor.DrawFilterPlugin',
-                {
-                    id: this.drawFilterPluginId
-                }
-            );
-
-            return drawFilterPlugin;
-        },
-
         /**
          * Creates and returns the data button which opens the layer selector
          * and the search button which opens the search flyout.
-         *
+         * 
          * @method _createDataButtons
          * @private
          * @param {Object} loc
          * @return {jQuery}
          */
-        _createDataButtons: function (loc) {
+        _createDataButtons: function(loc) {
             var me = this,
                 buttons = jQuery(this._templates.buttons).clone(),
                 dataButton = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Button'
-                ),
+                    'Oskari.userinterface.component.Button'),
                 searchButton = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Button'
-                );
+                    'Oskari.userinterface.component.Button');
 
-            dataButton.setId(
-                'oskari_analysis_analyse_view_analyse_buttons_data'
-            );
             dataButton.setTitle(loc.buttons.data);
             dataButton.addClass('primary');
             dataButton.setHandler(function () {
@@ -680,29 +369,25 @@ Oskari.clazz.define(
             });
             dataButton.insertTo(buttons);
 
-//            searchButton.setId(
-//                'oskari_analysis_analyse_view_analyse_content_search_title'
-//            );
 //            searchButton.setTitle(loc.content.search.title);
 //            searchButton.addClass('primary');
-//            searchButton.setHandler(function () {
+//            searchButton.setHandler(function() {
 //                me._openFlyoutAs('Search');
 //            });
 //            searchButton.insertTo(buttons);
 
             return buttons;
         },
-
         /**
          * Creates and returns the draw buttons from which the user can draw
          * temporary features which can be used in analysis.
-         *
+         * 
          * @method _createDrawButtons
          * @private
          * @param {Object} loc
          * @return {jQuery}
          */
-        _createDrawButtons: function (loc) {
+        _createDrawButtons: function(loc) {
             var me = this,
                 toolContainer = jQuery(this._templates.toolContainer).clone(),
                 toolTemplate = jQuery(this._templates.tool),
@@ -710,17 +395,10 @@ Oskari.clazz.define(
 
             toolContainer.find('.title').html(loc.content.features.title);
 
-            return _.foldl(tools, function (container, tool) {
+            return _.foldl(tools, function(container, tool) {
                 var toolDiv = toolTemplate.clone();
                 toolDiv.addClass('add-' + tool);
-                toolDiv.attr({
-                    'title': loc.content.features.tooltips[tool],
-                    'id': 'oskari_analysis_analyse_view_analyse_content_features_' + tool
-                });
-                toolDiv.click(function () {
-                    //if selection tool is left active, deactivate it
-                    me._deactivateSelectTools();
-
+                toolDiv.click(function() {
                     me._startNewDrawing({
                         drawMode: tool
                     });
@@ -730,429 +408,132 @@ Oskari.clazz.define(
                 return container;
             }, toolContainer);
         },
-
         /**
-         * Creates and returns the draw filter buttons from which the user can filter
-         * by drawing which features are going to be used in analysis.
-         *
-         * @method _createDrawFilterButtons
-         * @private
-         * @param {Object} loc
-         * @return {jQuery}
-         */
-        _createDrawFilterButtons: function (loc) {
-            var me = this,
-                drawFilterContainer = jQuery(me._templates.drawFilterContainer).clone(),
-                drawFilterTemplate = jQuery(me._templates.drawFilter),
-                drawFilters = ['point', 'line', 'edit'];
-
-            drawFilterContainer.find('h4').html(loc.content.drawFilter.title);
-
-            return _.foldl(drawFilters, function (container, drawFilter) {
-                var drawFilterDiv = drawFilterTemplate.clone(),
-                    groupName = 'analysis-selection-';
-                drawFilterDiv.addClass(groupName + drawFilter);
-
-                //disabled by default
-                drawFilterDiv.addClass('disabled');
-                drawFilterDiv.attr('title', me.loc.content.drawFilter.tooltip[drawFilter]);
-                drawFilterDiv.click(function () {
-                    //if selection tool is left active, deactivate it
-                    me._deactivateSelectTools();
-
-                    if (jQuery(this).hasClass('disabled')) {
-                        return;
-                    }
-
-                    //notify WFSLayerService that the selection tools ain't on any more.
-                    me.WFSLayerService.setSelectionToolsActive(false);
-
-
-                    me._startNewDrawFiltering({
-                        mode: drawFilter,
-                        sourceGeometry: me.getSelectedGeometry()
-                    });
-                });
-                container.append(drawFilterDiv);
-
-                return container;
-            }, drawFilterContainer);
-        },
-
-        /**
-         * Creates and returns the selection tool buttons from which the user can select features from wfs map layers
-         *
-         * @method _createSelectToolButtons
-         * @private
-         * @param {Object} loc
-         * @return {jQuery}
-         */
-        _createSelectToolButtons: function (loc) {
-            var me = this,
-                selectionToolsContainer = jQuery(me._templates.selectionToolsContainer).clone(),
-                selectionToolDiv = jQuery(me._templates.tool).clone(),
-                selectionToolButtonsContainer = selectionToolsContainer.find('div.toolContainerButtons'),
-                hasWFSLayers = (me.WFSLayerService.getTopWFSLayer() !== undefined && me.WFSLayerService.getTopWFSLayer() !== null),
-                WFSSelections = (me.WFSLayerService.getWFSSelections() && me.WFSLayerService.getWFSSelections().length > 0);
-
-            //use the existing component to render selection buttons
-            me.selectionButtonsRenderer = Oskari.clazz.create("Oskari.mapframework.bundle.featuredata2.PopupHandler", me.instance);
-            me.selectionButtonsRenderer.renderSelectionToolButtons(selectionToolDiv);
-
-            var emptyBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.CancelButton');
-            emptyBtn.setHandler(function () {
-                if (me.WFSLayerService.getAnalysisWFSLayerId()) {
-                    me.WFSLayerService.emptyWFSFeatureSelections(me.sandbox.findMapLayerFromSelectedMapLayers(me.WFSLayerService.getAnalysisWFSLayerId()));
-                } else {
-                    me.selectControl.unselectAll();
-                }
-            });
-            emptyBtn.setTitle(loc.content.selectionTools.button.empty);
-            emptyBtn.insertTo(selectionToolButtonsContainer);
-
-            if (!WFSSelections) {
-                emptyBtn.setEnabled(false);
-            }
-
-            selectionToolsContainer.find('div.toolContainerToolDiv').append(selectionToolDiv);
-            selectionToolsContainer.find('div.toolContainerButtons').append(emptyBtn);
-            selectionToolsContainer.find('h4').html(loc.content.selectionTools.title);
-            selectionToolsContainer.find('div.toolContainerFooter').html(loc.content.selectionTools.description);
-
-
-            return selectionToolsContainer;
-        },
-        /**
-         * Deactivates select tools
-         *
-         * @method _deactivateSelectTools
-         * @private
-         */
-        _deactivateSelectTools: function () {
-            var me = this,
-                toolsPanel = me.getDrawToolsPanel();
-
-            if (toolsPanel.html.find('div[class*=selection-]').hasClass('active')) {
-                toolsPanel.html.find('div[class*=selection-]').removeClass('active');
-                me.selectionPlugin.stopDrawing();
-            }
-        },
-        /**
-         * @private @method _toggleSelectionTools
-         * Sets the selection tools' status after a map layer has been added or removed. Disables controls if no wfs layers selected, enables tools otherwise
-         *
-         */
-        _toggleSelectionTools: function() {
-            var me = this,
-                selectionToolsToolContainer = jQuery('div.toolContainerToolDiv'),
-                analysisWFSLayerSelected = (me.WFSLayerService.getAnalysisWFSLayerId() !== undefined && me.WFSLayerService.getAnalysisWFSLayerId() !== null);
-
-            if (analysisWFSLayerSelected) {
-                selectionToolsToolContainer.find('div[class*=selection-]').removeClass('disabled');
-                if (!_.isEmpty(me.WFSLayerService.getSelectedFeatureIds(me.WFSLayerService.getAnalysisWFSLayerId()))) {
-                    me._toggleEmptySelectionBtn(true);
-                } else {
-                    me._toggleEmptySelectionBtn(false);
-                }
-            } else {
-                me._deactivateSelectTools();
-                selectionToolsToolContainer.find('div[class*=selection-]').addClass('disabled');
-            }
-            me.WFSLayerService.setSelectionToolsActive(analysisWFSLayerSelected);
-        },
-        /**
-         * @private @method _toggleEmptySelectionBtn
-         * Enables / disables the empty selections - button in selection tools
-         */
-        _toggleEmptySelectionBtn: function(enable) {
-            var selectionToolsContainer = jQuery('div.toolContainer');
-            if (enable) {
-                selectionToolsContainer.find(".toolContainerButtons").find("input[type=button]").prop({'disabled': false});
-            } else {
-                selectionToolsContainer.find(".toolContainerButtons").find("input[type=button]").prop({'disabled': true});
-            }
-        },
-        /**
-         * @private @method _createDrawControls
          * Creates and returns the draw control buttons where the user
          * can either save or discard the drawn feature.
-         *
-         *
-         * @return {Oskari.userinterface.component.Button[]}
+         * 
+         * @method _createDrawControls
+         * @private
+         * @return {jQuery}
          */
         _createDrawControls: function () {
             var me = this,
                 loc = this.loc.content.features.buttons,
-                cancelBtn = Oskari.clazz.create(
-                    'Oskari.userinterface.component.buttons.CancelButton'),
-                finishBtn = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Button'
-                );
+                container = jQuery(this._templates.drawControls).clone(),
+                cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                finishBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
 
-            cancelBtn.setId(
-                'oskari_analysis_analyse_view_analyse_content_features_cancel'
-            );
+            cancelBtn.setTitle(loc.cancel);
             cancelBtn.setHandler(function () {
                 me._sendStopDrawRequest(true);
-                me._closeHelpDialog();
-                me._activateWFSLayer(true);
-            });
-
-            finishBtn.setTitle(loc.finish);
-            finishBtn.setId(
-                'oskari_analysis_analyse_view_analyse_content_features_finish'
-            );
-            finishBtn.addClass('primary');
-            finishBtn.setHandler(function () {
-                me._sendStopDrawRequest(false);
-                me._closeHelpDialog();
-                me._activateWFSLayer(true);
-            });
-
-            return [cancelBtn, finishBtn];
-        },
-        /**
-         * Creates and returns the filter control buttons.
-         *
-         * @method _createDrawFilterControls
-         * @private
-         * @return {Oskari.userinterface.component.Button[]}
-         */
-        _createDrawFilterControls: function () {
-            var me = this,
-                loc = me.loc.content.drawFilter.buttons,
-                finishBtn = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Button'
-                ),
-                cancelBtn = Oskari.clazz.create(
-                    'Oskari.userinterface.component.buttons.CancelButton'
-                );
-
-            me.drawFilterMode = true;
-
-            cancelBtn.setHandler(function () {
-                me._cancelDrawFilter();
             });
 
             finishBtn.setTitle(loc.finish);
             finishBtn.addClass('primary');
             finishBtn.setHandler(function () {
-                me.drawFilterMode = false;
-                // Disable all buttons
-                me._disableAllDrawFilterButtons();
-                me._sendStopDrawFilterRequest(false);
-                me._activateWFSLayer(true);
+                me._sendStopDrawRequest();
             });
 
-            return [cancelBtn, finishBtn];
-        },
+            cancelBtn.insertTo(container);
+            finishBtn.insertTo(container);
 
+            return container;
+        },
         /**
          * Sends a request to open a Flyout impersonating
          * as the bundle provided in the name param.
-         *
+         * 
          * @method _openFlyoutAs
          * @private
          * @param  {String} name
          */
-        _openFlyoutAs: function (name) {
-            var me = this,
-                extension = {
+        _openFlyoutAs: function(name) {
+            var extension = {
                     getName: function () {
                         return name;
                     }
                 },
                 rn = 'userinterface.UpdateExtensionRequest';
 
-            if(name === 'LayerSelector') {
-                var requestName = 'ShowFilteredLayerListRequest';
-                me.sandbox.postRequestByName(
-                    requestName,
-                    [null, 'stats']
-                );
-                clearTimeout(this._flyoutTimeOut);
-                this._flyoutTimeOut = setTimeout(function(){
-                    me.sandbox.postRequestByName(rn, [extension, 'attach', rn, '0', '424']);
-                },100);
-            } else {
-                me.sandbox.postRequestByName(rn, [extension, 'attach', rn, '0', '424']);
-            }
+            this.sandbox.postRequestByName(
+                rn, [extension, 'attach', rn, '0', '424']);
         },
-
         /**
-         * @private @method _startNewDrawing
          * Resets currently selected place and sends a draw request to plugin
          * with given config.
-         *
+         * 
+         * @method _startNewDrawing
+         * @private
          * @param {Object} config params for StartDrawRequest
-         *
          */
         _startNewDrawing: function (config) {
-            if (this.helpDialog) {
-                this._sendStopDrawRequest(true);
-                this._closeHelpDialog();
-                this._activateWFSLayer(true);
-                return;
-            }
+            var sandbox = this.sandbox,
+                evtB = sandbox.getEventBuilder(
+                    'DrawPlugin.SelectedDrawingEvent'),
+                gfiReqBuilder = sandbox.getRequestBuilder(
+                    'MapModulePlugin.GetFeatureInfoActivationRequest');
 
-            var controlButtons = this._createDrawControls(),
-                loc = this.loc.content.drawDialog,
-                dialogTitle = loc[config.drawMode].title,
-                dialogText = loc[config.drawMode].add;
-
-            // Disable WFS highlight and GFI dialog
-            this._activateWFSLayer(false);
+            // notify components to reset any saved "selected place" data
+            if (evtB) sandbox.notifyAll(evtB());
 
             // notify plugin to start drawing new geometry
             this._sendDrawRequest(config);
 
-            this.helpDialog = Oskari.clazz.create(
-                'Oskari.userinterface.component.Popup'
-            );
-            this.helpDialog.show(dialogTitle, dialogText, controlButtons);
-            this.helpDialog.addClass('analyse-draw-dialog');
-            this.helpDialog.moveTo('div.tool.add-' + config.drawMode, 'bottom');
-        },
-
-        _startNewDrawFiltering: function (config) {
-            if (this.helpDialog) {
-                me._cancelDrawFilter();
-                return;
+            // disable gfi requests
+            if (gfiReqBuilder) {
+                sandbox.request(this.instance, gfiReqBuilder(false));
             }
 
-
-            var me = this,
-                diaLoc = this.loc.content.drawFilter.dialog,
-                controlButtons = [],
-                dialogTitle,
-                dialogText;
-
-            // Enable and disable correct buttons
-            if (config.mode === 'remove') {
-                this._cancelDrawFilter();
-            } else {
-                // Enable only the remove button
-                this._disableAllDrawFilterButtons();
-                this._activateWFSLayer(false);
-                jQuery('div.drawFilter.analysis-selection-remove').removeClass('disabled');
-                jQuery('div.drawFilter.analysis-selection-' + config.mode).addClass('selected');
-
-                // Create help dialog
-                this.helpDialog = Oskari.clazz.create(
-                    'Oskari.userinterface.component.Popup'
-                );
-                dialogTitle = diaLoc.modes[config.mode].title;
-                dialogText = diaLoc.modes[config.mode].message;
-                controlButtons = this._createDrawFilterControls();
-                this.helpDialog.addClass('drawfilterdialog');
-                this.helpDialog.show(dialogTitle, dialogText, controlButtons);
-                this.helpDialog.
-                moveTo('div.drawFilter.analysis-selection-' + config.mode, 'bottom');
-            }
-
-            // Disable WFS highlight and GFI dialog
-            this._activateWFSLayer(false);
-
-            // notify plugin to start draw filtering new geometries
-            this._sendDrawFilterRequest(config);
+            // remove old draw buttons and append new ones
+            this.getPanelContainer()
+                .find('div.toolContainer')
+                .find('div.buttons').remove().end()
+                .append(this._createDrawControls());
         },
-
-        _cancelDrawFilter: function () {
-            this.drawFilterMode = false;
-            this._sendStopDrawFilterRequest(true);
-            this._disableAllDrawFilterButtons();
-            this._activateWFSLayer(true);
-            this.selectedGeometry = null;
-            // Disable the remove button
-            jQuery('div.drawFilter.analysis-selection-remove').addClass('disabled');
-            // Remove the finish button
-            this.getDrawToolsPanelContainer()
-                .find('div.drawFilterContainer')
-                .find('div.buttons').remove();
-            delete this.helpDialog;
-        },
-
         /**
          * Sends a StartDrawRequest with given params.
-         *
+         * 
          * @method _sendDrawRequest
          * @private
          * @param {Object} config params for StartDrawRequest
          */
         _sendDrawRequest: function (config) {
-            if(this.drawPlugin) {
-                this.drawPlugin.startDrawing(config);
+            var sandbox = this.sandbox,
+                reqBuilder = sandbox.getRequestBuilder(
+                    'DrawPlugin.StartDrawingRequest'),
+                request;
+
+            if (reqBuilder) {
+                request = reqBuilder(config);
+                sandbox.request(this.instance, request);
             }
         },
-
         /**
          * Sends a StopDrawingRequest.
-         *
+         * 
          * @method _sendStopDrawRequest
          * @private
          * @param {Boolean} isCancel boolean param for StopDrawingRequest, true == canceled, false = finish drawing (dblclick)
          */
         _sendStopDrawRequest: function (isCancel) {
-            this.getDrawToolsPanelContainer()
+            var sandbox = this.sandbox,
+                reqBuilder = sandbox.getRequestBuilder('DrawPlugin.StopDrawingRequest'),
+                request;
+
+            this.getPanelContainer()
                 .find('div.toolContainer div.buttons')
                 .remove();
 
-            if(this.drawPlugin) {
-                if (isCancel) {
-                    // we wish to clear the drawing without sending further events
-                    this.drawPlugin.stopDrawing();
-                } else {
-                    // pressed finished drawing, act like dblclick
-                    this.drawPlugin.forceFinishDraw();
-                }
-            }
-        },
-
-        /**
-         * Sends a StartDrawFilteringRequest with given params.
-         *
-         * @method _sendDrawFilterRequest
-         * @private
-         * @param {Object} config params for StartDrawFilteringRequest
-         */
-        _sendDrawFilterRequest: function (config) {
-            var sandbox = this.sandbox,
-                reqBuilder = sandbox.getRequestBuilder(
-                    'DrawFilterPlugin.StartDrawFilteringRequest'
-                ),
-                request;
-
             if (reqBuilder) {
-                request = reqBuilder(config);
+                request = reqBuilder(isCancel);
                 sandbox.request(this.instance, request);
             }
         },
-
-        /**
-         * Sends a StopDrawFilteringRequest with given params.
-         *
-         * @method _sendStopDrawFilterRequest
-         * @private
-         * @param {Object} config params for StopDrawFilteringRequest
-         */
-        _sendStopDrawFilterRequest: function (config) {
-            var sandbox = this.sandbox,
-                reqBuilder = sandbox.getRequestBuilder(
-                    'DrawFilterPlugin.StopDrawFilteringRequest'
-                ),
-                request;
-
-            if (reqBuilder) {
-                request = reqBuilder(config);
-                sandbox.request(this.instance, request);
-            }
-        },
-
         /**
          * Creates a fake layer for analyse view which behaves
          * like an Oskari layer in some sense
          * (has all the methods needed in the view).
-         *
+         * 
          * @method _createFakeLayer
          * @private
          * @param  {String} id the OpenLayers.Feature.Vector id
@@ -1160,123 +541,82 @@ Oskari.clazz.define(
          * @param {String} name fake layer's name (optional, generates it if not given)
          * @return {Object}
          */
-        _createFakeLayer: function (id, mode, name) {
+        _createFakeLayer: function(id, mode, name) {
             var loc = this.loc.content.features.modes,
-                nonNullName = name || (loc[mode] + ' ' + (this.featCounts[mode] += 1)),
+                name = name || (loc[mode] + ' ' + (++this.featCounts[mode])),
                 layerType = this.getLayerType(),
                 featureLayer = this.featureLayer,
-                formatter = new OpenLayers.Format.GeoJSON();
+                formatter = new OpenLayers.Format.GeoJSON;
 
             return {
-                getId: function () {
+                getId: function() {
                     return id;
                 },
-                getName: function () {
-                    return nonNullName;
+                getName: function() {
+                    return name;
                 },
-                isLayerOfType: function (type) {
+                isLayerOfType: function(type) {
                     return type === layerType;
                 },
-                getLayerType: function () {
+                getLayerType: function() {
                     return 'temp';
                 },
-                getMode: function () {
+                getMode: function() {
                     return mode;
                 },
-                hasFeatureData: function () {
+                hasFeatureData: function() {
                     return false;
                 },
-                getOpacity: function () {
+                getOpacity: function() {
                     return (featureLayer.opacity * 100);
                 },
-                getFeature: function () {
+                getFeature: function() {
                     return formatter.write(featureLayer.getFeatureById(id));
                 }
             };
         },
-
         /**
          * Maps OpenLayers geometries into strings (draw modes).
-         *
+         * 
          * @method _getDrawModeFromGeometry
          * @private
          * @param  {OpenLayers.Geometry} geometry
          * @return {String} 'area'|'line'|'point'
          */
-        _getDrawModeFromGeometry: function (geometry) {
+        _getDrawModeFromGeometry : function(geometry) {
             var modes = {
-                'OpenLayers.Geometry.MultiPoint': 'point',
-                'OpenLayers.Geometry.Point': 'point',
-                'OpenLayers.Geometry.MultiLineString': 'line',
-                'OpenLayers.Geometry.LineString': 'line',
-                'OpenLayers.Geometry.MultiPolygon': 'area',
-                'OpenLayers.Geometry.Polygon': 'area'
+                'OpenLayers.Geometry.MultiPoint'      : 'point',
+                'OpenLayers.Geometry.Point'           : 'point',
+                'OpenLayers.Geometry.MultiLineString' : 'line',
+                'OpenLayers.Geometry.LineString'      : 'line',
+                'OpenLayers.Geometry.MultiPolygon'    : 'area',
+                'OpenLayers.Geometry.Polygon'         : 'area'
             };
 
             return (geometry ? modes[geometry.CLASS_NAME] : undefined);
         },
-
         /**
          * Creates the feature layer where the drawn features are added to
          * and adds it to the map.
-         *
+         * 
          * @method _createFeatureLayer
          * @private
          * @return {OpenLayers.Layer.Vector}
          */
-        _createFeatureLayer: function (mapModule) {
-            var me = this,
-                layer = new OpenLayers.Layer.Vector('AnalyseFeatureLayer');
+        _createFeatureLayer: function(mapModule) {
+            var layer = new OpenLayers.Layer.Vector('AnalyseFeatureLayer');
 
-            //add select possibility to temp layers
-            // requires highlight refactoring so is not in use yet
-            me.highlightControl = new OpenLayers.Control.SelectFeature(
-                    layer,
-                    {
-                        hover: true,
-                        highlightOnly: true,
-                        renderIntent: "temporary"
-                    });
-
-            me.selectControl = new OpenLayers.Control.SelectFeature(
-                    layer,
-                    {
-                        clickout: true
-                    });
-
-            me.mapModule.getMap().addControl(this.highlightControl);
-            me.mapModule.getMap().addControl(this.selectControl);
-            me._activateSelectControls();
+            mapModule.getMap().addLayer(layer);
 
             return layer;
         },
         /**
-         * Activates featureLayer Highlight and Select Controls
-         *
-         * @method _activateSelectControls
-         * @private
-         */
-        _activateSelectControls: function () {
-            this.highlightControl.activate();
-            this.selectControl.activate();
-        },
-        /**
-         * Deactivates featureLayer Highlight and Select Controls
-         *
-         * @method _deactivateSelectControls
-         * @private
-         */
-        _deactivateSelectControls: function () {
-            this.highlightControl.deactivate();
-            this.selectControl.deactivate();
-        },
-        /**
          * Destroys the feature layer and removes it from the map.
-         *
+         * 
          * @method _destroyFeatureLayer
          * @private
          */
-        _destroyFeatureLayer: function () {
+        _destroyFeatureLayer: function() {
             var map = this.mapModule.getMap();
 
             if (this.featureLayer) {
@@ -1286,157 +626,49 @@ Oskari.clazz.define(
                 this.featureLayer = undefined;
             }
         },
-
         /**
          * Either starts or stops draw plugins which are added to the map module
          * (except the one created in this class).
-         *
+         * 
          * @method _toggleDrawPlugins
          * @private
          * @param  {Boolean} enabled
          */
-        _toggleDrawPlugins: function (enabled) {
-            var me = this,
-                sandbox = me.sandbox,
-                mapModule = me.mapModule,
-                drawPlugins = _.filter(
-                    mapModule.getPluginInstances(),
-                    function (plugin) {
-                        return (plugin.getName().match(/DrawPlugin$/) &&
-                            plugin.getName() !== me.drawPlugin.getName());
-                    }
-                );
-
-            _.each(drawPlugins, function (plugin) {
-                if (enabled) {
-                    mapModule.startPlugin(plugin);
-                } else {
-                    mapModule.stopPlugin(plugin);
-                }
-            });
-        },
-
-        /**
-         * Either starts or stops draw filter plugins which are added to the map module
-         *
-         * @method _toggleDrawFilterPlugins
-         * @private
-         * @param  {Boolean} enabled
-         */
-        _toggleDrawFilterPlugins: function (enabled) {
+        _toggleDrawPlugins: function(enabled) {
             var me = this,
                 sandbox = this.sandbox,
                 mapModule = this.mapModule,
-                drawFilterPlugins = _.filter(
-                    mapModule.getPluginInstances(),
-                    function (plugin) {
-                        return (plugin.getName().match(/DrawFilterPlugin$/) &&
-                            plugin.getName() !== me.drawFilterPlugin.getName());
-                    }
-                );
+                drawPlugins = _.filter(mapModule.getPluginInstances(), function(plugin) {
+                    return (plugin.getName().match(/DrawPlugin$/) &&
+                            plugin.getName() !== me.drawPlugin.getName());
+                });
 
-            _.each(drawFilterPlugins, function (plugin) {
-                if (enabled) {
-                    mapModule.startPlugin(plugin);
-                } else {
-                    mapModule.stopPlugin(plugin);
-                }
+            _.each(drawPlugins, function(plugin) {
+                if (enabled) mapModule.startPlugin(plugin);
+                else mapModule.stopPlugin(plugin);
             });
         },
-
         /**
          * Returns a function that gets called in search bundle with
          * the search result as an argument which in turn returns
          * a function that gets called when the user clicks on the link
          * in the search result popup.
-         *
+         * 
          * @method _getSearchResultAction
          * @private
          * @return {Function}
          */
-        _getSearchResultAction: function () {
+        _getSearchResultAction: function() {
             var me = this;
 
-            return function (result) {
-                return function () {
+            return function(result) {
+                return function() {
                     var geometry = new OpenLayers.Geometry.Point(
-                            result.lon, result.lat
-                        ),
+                            result.lon, result.lat),
                         name = (result.name + ' (' + result.village + ')');
 
                     me.addGeometry(geometry, name);
                 };
             };
-        },
-
-        _operateDrawFilters: function () {
-            var preSelector = 'div.drawFilter.analysis-selection-',
-                pointButton = jQuery(preSelector + 'point'),
-                lineButton = jQuery(preSelector + 'line'),
-                editButton = jQuery(preSelector + 'edit'),
-                removeButton = jQuery(preSelector + 'remove');
-
-            if ((typeof this.selectedGeometry === 'undefined') || (this.selectedGeometry === null)) {
-                // Disable all buttons
-                this._disableAllDrawFilterButtons();
-                return;
-            }
-            var type = this.selectedGeometry.geometry.CLASS_NAME;
-            // Enable or disable buttons depending on the selected feature type
-            switch (type) {
-                case 'OpenLayers.Geometry.LineString':
-                    pointButton.removeClass('disabled');
-                    lineButton.addClass('disabled');
-                    editButton.addClass('disabled');
-                    removeButton.addClass('disabled');
-                    break;
-                case 'OpenLayers.Geometry.MultiPolygon':
-                    pointButton.addClass('disabled');
-                    lineButton.removeClass('disabled');
-                    editButton.removeClass('disabled');
-                    removeButton.addClass('disabled');
-                    break;
-                default:
-                    pointButton.addClass('disabled');
-                    lineButton.addClass('disabled');
-                    editButton.addClass('disabled');
-                    removeButton.addClass('disabled');
-                    break;
-            }
-        },
-
-        _disableAllDrawFilterButtons: function () {
-            jQuery('div.drawFilter').addClass('disabled');
-            jQuery('div.drawFilter').removeClass('selected');
-            // Close the help dialog
-            this._closeHelpDialog();
-        },
-
-        _closeHelpDialog: function () {
-            if (this.helpDialog) {
-                this.helpDialog.close(true);
-                delete this.helpDialog;
-            }
-        },
-
-        _activateWFSLayer: function (activate) {
-            var sandbox = this.sandbox,
-                evtB = sandbox.getEventBuilder(
-                    'DrawFilterPlugin.SelectedDrawingEvent'
-                ),
-                gfiReqBuilder = sandbox.getRequestBuilder(
-                    'MapModulePlugin.GetFeatureInfoActivationRequest'
-                );
-
-            // notify components to reset any saved "selected place" data
-            if (evtB) {
-                sandbox.notifyAll(evtB());
-            }
-
-            // enable or disable gfi requests
-            if (gfiReqBuilder) {
-                sandbox.request(this.instance, gfiReqBuilder(activate));
-            }
         }
-    }
-);
+});

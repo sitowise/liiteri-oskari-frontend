@@ -2,89 +2,26 @@ Oskari.registerLocalization({
     "lang": "it",
     "key": "Analyse",
     "value": {
-        "title": "Analisi <font color=red>(BETA)</font>",
-        "flyouttitle": "Analisi <font color=red>(BETA)</font>",
+        "title": "Analisi",
+        "flyouttitle": "Analisi",
         "desc": "",
         "btnTooltip": "Analisi",
-        "NotLoggedView": {
-            "text": "Solo gli utenti registrati possono fare analisi.",
-            "signup": "Accedi",
-            "signupUrl": "/web/en/login",
-            "register": "Registrati",
-            "registerUrl": "/web/en/login?p_p_id=58&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&p_p_col_id=column-1&p_p_col_count=1&saveLastPath=0&_58_struts_action=%2Flogin%2Fcreate_account"
-        },
+        "notLoggedIn": "Solo gli utenti registrati possono fare analisi. <a href='/web/en/login'>Log in</a>.",
         "AnalyseView": {
             "title": "Analisi",
             "content": {
                 "label": "Dati",
-                "drawToolsLabel": "NOT TRANSLATED",
                 "tooltip": "Aggiungi dati da analizzare",
-                "drawToolsTooltip": "NOT TRANSLATED",
                 "features": {
                     "title": "Draw a feature",
                     "buttons": {
                         "cancel": "Cancel",
                         "finish": "Done"
                     },
-                    "tooltips": {
-                        "point": "NOT TRANSLATED",
-                        "line": "NOT TRANSLATED",
-                        "area": "NOT TRANSLATED"
-                    },
                     "modes": {
                         "area": "Area",
                         "line": "Line",
                         "point": "Point"
-                    }
-                },
-                "drawDialog": {
-                    "point": {
-                        "title": "NOT TRANSLATED",
-                        "add": "NOT TRANSLATED"
-                    },
-                    "line": {
-                        "title": "NOT TRANSLATED",
-                        "add": "NOT TRANSLATED"
-                    },
-                    "area": {
-                        "title": "NOT TRANSLATED",
-                        "add": "NOT TRANSLATED"
-                    }
-                },
-                "drawFilter": {
-                    "title": "NOT TRANSLATED",
-                    "buttons": {
-                        "cancel": "NOT TRANSLATED",
-                        "finish": "NOT TRANSLATED"
-                    },
-                    "tooltip": {
-                        "point": "NOT TRANSLATED",
-                        "line": "NOT TRANSLATED",
-                        "edit": "NOT TRANSLATED",
-                        "remove": "NOT TRANSLATED"
-                    },
-                    "dialog": {
-                        "modes": {
-                            "point": {
-                                "title": "NOT TRANSLATED",
-                                "message": "NOT TRANSLATED"
-                            },
-                            "line": {
-                                "title": "NOT TRANSLATED",
-                                "message": "NOT TRANSLATED"
-                            },
-                            "edit": {
-                                "title": "NOT TRANSLATED",
-                                "message": "NOT TRANSLATED"
-                            }
-                        }
-                    }
-                },
-                "selectionTools": {
-                    "title": "NOT TRANSLATED",
-                    "description": "NOT TRANSLATED",
-                    "button": {
-                        "empty": "Rimuovi selezione"
                     }
                 },
                 "search": {
@@ -122,21 +59,6 @@ Oskari.registerLocalization({
                     "label": "Union of analyse layers",
                     "classForPreview": "layer_union",
                     "tooltip": "Unifica i layer con gli stessi attributi"
-                }, {
-                    "id": "oskari_analyse_areas_and_sectors",
-                    "label": "Areas and sectors",
-                    "classForPreview": "areas_and_sectors",
-                    "tooltip": "NOT TRANSLATED"
-                }, {
-                    "id": "oskari_analyse_difference",
-                    "label": "Difference computation",
-                    "classForPreview": "difference",
-                    "tooltip": ""
-                }, {
-                    "id": "oskari_analyse_spatial_join",
-                    "label": "Spatial join",
-                    "classForPreview": "spatial_join",
-                    "tooltip": ""
                 }]
             },
             "aggregate": {
@@ -160,23 +82,12 @@ Oskari.registerLocalization({
                 }, {
                     "id": "oskari_analyse_StdDev",
                     "label": "Deviazione standard"
-                }, {
-                    "id": "oskari_analyse_Median",
-                    "label": "NOT TRANSLATED"
-                }, {
-                    "id": "oskari_analyse_NoDataCnt",
-                    "label": "Unauthorized features"
                 }],
-                "attribute": "Scegli un attributo",
-                "footer" : "Authorised features are not counted"
+                "attribute": "Scegli un attributo"
             },
             "buffer_size": {
-                "label": "Dimensione Buffer",
+                "label": "Dimensione Buffer (metri)",
                 "tooltip": "Enter buffer size"
-            },
-            "buffer_units": {
-                "m": "Metri",
-                "km": "Chilometri"
             },
             "analyse_name": {
                 "label": "Nome dell'analisi",
@@ -187,7 +98,6 @@ Oskari.registerLocalization({
                 "tooltip": "Inserisci i parametri dell'analisi"
             },
             "intersect": {
-                "target": "Layer di base",
                 "label": "Layer da incrociare"
             },
             "union": {
@@ -197,14 +107,6 @@ Oskari.registerLocalization({
                 "label": "Scegli un layer per l'unione",
                 "notAnalyseLayer": "Scegli un layer da analizzare",
                 "noLayersAvailable": "Nessun layer trovato con gli stessi attributi"
-            },
-            "areas_and_sectors": {
-                "area_count": "NOT TRANSLATED",
-                "area_count_tooltip": "NOT TRANSLATED",
-                "area_size": "NOT TRANSLATED",
-                "area_size_tooltip": "NOT TRANSLATED",
-                "sector_count": "NOT TRANSLATED",
-                "sector_count_tooltip": "NOT TRANSLATED"
             },
             "spatial": {
                 "label": "Operatore spaziale",
@@ -219,7 +121,6 @@ Oskari.registerLocalization({
             },
             "params": {
                 "label": "Selected columns",
-                "aggreLabel": "Aggregate attributes",
                 "tooltip": "",
                 "options": [{
                     "id": "oskari_analyse_all",
@@ -243,7 +144,9 @@ Oskari.registerLocalization({
             "buttons": {
                 "save": "Salva",
                 "analyse": "Analizza",
-                "data": "Aggiungi dati"
+                "data": "Aggiungi dati",
+                "cancel": "Annulla",
+                "ok": "OK"
             },
             "filter": {
                 "title": "Filtri",
@@ -252,18 +155,14 @@ Oskari.registerLocalization({
                 "refreshButton": "Aggiorna filtri",
                 "addFilter": "Aggiungi un nuovo filtro",
                 "removeFilter": "Rimuovi filtri",
-                "content": {
-                    "title": "NOT TRANSLATED"
-                },
                 "bbox": {
+                    "title": "Mappa dei filtri",
                     "on": "In uso",
                     "off": "Non in uso"
                 },
                 "clickedFeatures": {
-                    "clickedFeaturesLabel": "Includi solo le feature selezionate",
-                    "filterByGeometryLabel": "NOT TRANSLATED",
-                    "filterByGeometryIntersect": "NOT TRANSLATED",
-                    "filterByGeometryContains": "NOT TRANSLATED"
+                    "title": "Filtri sulle feature",
+                    "label": "Includi solo le feature selezionate"
                 },
                 "values": {
                     "title": "Filter",
@@ -273,27 +172,14 @@ Oskari.registerLocalization({
                         "boolean": "Operatore logico",
                         "operator": "Operatore",
                         "attribute-value": "Valore"
-                    },
-                    "info": {
-                        "bboxOff":"NOT TRANSLATED",
-                        "filterByGeometrySelected":"NOT TRANSLATED"
-                    },
-                    "equals": "=",
-                    "like": "~=",
-                    "notEquals": "≠",
-                    "notLike": "~≠",
-                    "greaterThan": ">",
-                    "lessThan": "<",
-                    "greaterThanOrEqualTo": "≥",
-                    "lessThanOrEqualTo": "≤"
+                    }
                 },
                 "validation": {
                     "title": "I seguenti errori impediscono l'aggiornamento del filtro:",
                     "attribute_missing": "Manca l'attributo",
                     "operator_missing": "Manca l'operatore",
                     "value_missing": "Manca il valore",
-                    "boolean_operator_missing": "Manca l'operatore logico",
-                    "bbox_selected_with_no_properties":"NOT TRANSLATED"
+                    "boolean_operator_missing": "Manca l'operatore logico"
                 }
             },
             "help": "Help",
@@ -324,10 +210,7 @@ Oskari.registerLocalization({
                 "Unable_to_process_aggregate_union": "Impossibile processare l'unione",
                 "Unable_to_get_features_for_union": "Impossibile ottenere feature dall'unione",
                 "Unable_to_store_analysis_data": "Impossibile memorizzare i parametri dell'analisi",
-                "Unable_to_get_analysisLayer_data": "Impossibile ottenere i dati del layer da analizzare",
-                "timeout": "Analysis request timed out",
-                "error": "Analysis failed for an unknown reason",
-                "parsererror": "Server returned invalid analysis data"
+                "Unable_to_get_analysisLayer_data": "Impossibile ottenere i dati del layer da analizzare"
             },
             "infos": {
                 "title": "Info",
@@ -378,7 +261,7 @@ Oskari.registerLocalization({
         "personalDataTab": {
             "grid": {
                 "name": "Nome",
-                "delete": "Cancella"
+                "delete": " "
             },
             "title": "Analisi",
             "confirmDeleteMsg": "Vuoi cancellare:",
