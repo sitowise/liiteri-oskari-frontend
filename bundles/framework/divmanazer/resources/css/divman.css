@@ -174,11 +174,7 @@ body {
   margin: 7px 0 7px 16px;
   padding: 0;
   width: 112px;
-  /* This is not in the styleguide, but it's a must-have... */
-  font-weight: bold;
-  font-size: 11px;
-  text-align: left;
-  text-transform: uppercase; }
+  text-align: left; }
   
 #footer-nav .oskari-tile-title {
 	font-size: 11px;
@@ -202,9 +198,6 @@ body {
 .oskari-tile-status {
   text-align: center;
   display: inline-block;
-  /* This is not in the styleguide, but it's a must-have... */
-  font-size: 11px;
-  font-weight: bold;
   height: 19px !important;
   line-height: 19px;
   width: 20px !important;
