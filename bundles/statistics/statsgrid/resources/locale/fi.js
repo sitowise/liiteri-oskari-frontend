@@ -226,6 +226,8 @@ Oskari.registerLocalization(
         "noAreaFilterSet": "Tilastojen rajaus on tällä hetkellä koko Suomi. Voit rajata tilastojen hakualuetta joko tekemällä aluerajauksen tai rajaamalla oman alueen kartalta",
         "noAreaFilterSetNoGrid": "Tilastojen rajaus on tällä hetkellä koko Suomi. Voit rajata tilastojen hakualuetta tekemällä aluerajauksen",
         "areaFilterLimitBySelected": "Rajaa valituilla alueilla",
+        "areaFilterItemsSelected": "kohdetta valittuna",
+        "areaFilterNoItemsSelected": "Valituilla tasoilla ei ole valittuja kohteita",
         "areaFilterDrawNewFromCrop": "Piirrä uusi aluerajaus",
         "areaFilterDrawNew": "Lisää aluerajaus",
         "areaFilterRemove": "Poista rajaukset",
