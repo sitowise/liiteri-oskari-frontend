@@ -314,52 +314,27 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
         var sandbox = this.plugin.getSandbox(),
             me = this,
             layer = sandbox.findMapLayerFromSelectedMapLayers(data.data.layerId),
-            topWFSLayerId = me.WFSLayerService.getTopWFSLayer(),
-            analysisWFSLayerId = me.WFSLayerService.getAnalysisWFSLayerId(),
             selectionMode = data.data.keepPrevious,
-            featureIds = [],
-            selectFeatures;
-		var featureSelected = false;
-
-        if (data.data.features !== 'empty') {
-            for (i = 0; i < data.data.features.length; i += 1) {
-			
-				if($.inArray(data.data.features[i][0], layer.getClickedFeatureIds()) === -1) {
-					featureIds.push(data.data.features[i][0]);
-					featureSelected = true;
-				} else if (keepPrevious) {
-					//remove clicked feature Id from layer.getClickedFeatureIds()
-					for (var j = 0; j < layer.getClickedFeatureIds().length; j++) {
-						var selectedFeatureId = layer.getClickedFeatureIds()[j];
-						if (selectedFeatureId === data.data.features[i][0]) {
-							layer.getClickedFeatureIds().splice(j, 1);
-						}
-					}
-					
-				}
-            }
-        }
+            featureIds = [];
 
         /*Ugly -> instead try to figure out _why_ the first click in the selection tool ends up in here*/
         if (this.WFSLayerService && this.WFSLayerService.isSelectionToolsActive()) {
             return;
         }
-		
-		var event = sandbox.getEventBuilder("WFSFeaturesSelectedEvent")(featureIds, layer, keepPrevious);
-		sandbox.notifyAll(event);
 
         // handle CTRL click (selection) and normal click (getInfo) differently
         if (selectionMode) {
-            selectFeatures = true;
 
-            if (analysisWFSLayerId && layer._id !== analysisWFSLayerId) {
-                return;
-            } else if (topWFSLayerId && layer._id !== topWFSLayerId) {
+            if (!this.__isSelectionLayer(layer.getId())) {
                 return;
             }
-
-            me.WFSLayerService.setWFSFeaturesSelections(layer._id, featureIds);
-            var event = sandbox.getEventBuilder('WFSFeaturesSelectedEvent')(me.WFSLayerService.getSelectedFeatureIds(layer._id), layer, selectFeatures);
+            if (data.data.features !== 'empty') {
+                data.data.features.forEach(function(featureData) {
+                    featureIds.push(featureData[0]);
+                });
+            }
+            me.WFSLayerService.setWFSFeaturesSelections(layer.getId(), featureIds);
+            var event = sandbox.getEventBuilder('WFSFeaturesSelectedEvent')(me.WFSLayerService.getSelectedFeatureIds(layer.getId()), layer, true);
             sandbox.notifyAll(event);
         } else {
             // FIXME: pass coordinates from server in response, but not like this
