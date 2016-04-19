@@ -219,7 +219,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselector2.view.Layer",
             }
 			
 			var downloadService = tools.find('.layer-download-service a');
-			if (layer.getPermission('download') == true && layer.getDownloadServiceUrl() != null && layer.getDownloadServiceUrl() != '') {
+			if (layer.getPermission('download') === "download_permission_ok" && layer.getDownloadServiceUrl() != null && layer.getDownloadServiceUrl() != '') {
 				downloadService.attr('href', layer.getDownloadServiceUrl());
 				downloadService.attr('style', 'font-size: 13px; text-decoration: underline');
 				downloadService.attr('target', '_blank');
