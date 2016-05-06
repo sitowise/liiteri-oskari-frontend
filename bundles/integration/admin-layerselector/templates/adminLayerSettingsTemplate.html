@@ -278,6 +278,24 @@
             </div>
         </div>
     </div>
+    
+    <div class="add-layer-record">
+        <div class="add-layer-label-area">
+            <label for="add-layer-download-service-url" class="add-layer-label" title="<%= instance.getLocalization('admin').downloadServiceUrlDesc%>"><%= instance.getLocalization('admin').downloadServiceUrl %></label>
+        </div>
+        <div class="add-layer-input-area">
+            <textarea rows="3" cols="40" id="add-layer-download-service-url" class="add-layer-input long" required><%= model.getDownloadServiceUrl() %></textarea>
+        </div>
+    </div>
+    
+    <div class="add-layer-record">
+        <div class="add-layer-label-area">
+            <label for="add-layer-copyright-info" class="add-layer-label" title="<%= instance.getLocalization('admin').copyrightInfoDesc %>"><%= instance.getLocalization('admin').copyrightInfo %></label>
+        </div>
+        <div class="add-layer-input-area">
+            <input type="text" id="add-layer-copyright-info" class="add-layer-input long" required value="<%= model.getCopyrightInfo() %>" />
+        </div>
+    </div>
 
     <% if(!model.getId() && !isSubLayer) { %>
     <!-- roles - only for new layers (not sublayers) -->

@@ -673,6 +673,10 @@ define([
 
                 // Layer class id aka. orgName id aka groupId
                 data.groupId = lcId;
+                
+                //Downloading service for GIS data layers
+                data.downloadServiceUrl = form.find('#add-layer-download-service-url').val();
+                data.copyrightInfo = form.find('#add-layer-copyright-info').val();
 
                 if ((data.layerUrl !== me.model.getInterfaceUrl() && me.model.getInterfaceUrl() )||
                     (data.layerName !== me.model.getLayerName() && me.model.getLayerName()) ) {
@@ -835,50 +839,50 @@ define([
                 });
 
                 if (layerType == "arcgislayer") {
-                 	jQuery.ajax({
-                		type: 'POST',
-                		data: {
-                			mapServerUrl: serviceURL,
-                			type : layerType,
-                			user: user,
-                			pw: pw,
-                			version: version
-                		},
-                		url: baseUrl + 'action_route=GetArcgisMapServerConfiguration',
-                		success: function (resp) {
-                			me.progressSpinner.stop();
-                			me.__capabilitiesResponseHandler(layerType, me._mapMapServerConfigurationToCapabilities(resp));
-                		},
-                		error: function (jqXHR) {
-                			me.progressSpinner.stop();
-                			if (jqXHR.status !== 0) {
-                				me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
-                			}
-                		}
-                	});
+                     jQuery.ajax({
+                        type: 'POST',
+                        data: {
+                            mapServerUrl: serviceURL,
+                            type : layerType,
+                            user: user,
+                            pw: pw,
+                            version: version
+                        },
+                        url: baseUrl + 'action_route=GetArcgisMapServerConfiguration',
+                        success: function (resp) {
+                            me.progressSpinner.stop();
+                            me.__capabilitiesResponseHandler(layerType, me._mapMapServerConfigurationToCapabilities(resp));
+                        },
+                        error: function (jqXHR) {
+                            me.progressSpinner.stop();
+                            if (jqXHR.status !== 0) {
+                                me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
+                            }
+                        }
+                    });
                 } else {
-                	jQuery.ajax({
-                		type: 'POST',
-                		data: {
-                			url: serviceURL,
-                			type : layerType,
-                			user: user,
-                			pw: pw,
-                			version: version
-                		},
-                		url: baseUrl + 'action_route=GetWSCapabilities',
-                		success: function (resp) {
-                			me.progressSpinner.stop();
-                			me.__capabilitiesResponseHandler(layerType, resp);
-                		},
-                		error: function (jqXHR) {
-                			me.progressSpinner.stop();
-                			if (jqXHR.status !== 0) {
-                				me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
-                			}
-                		}
-                	});
-            	}
+                    jQuery.ajax({
+                        type: 'POST',
+                        data: {
+                            url: serviceURL,
+                            type : layerType,
+                            user: user,
+                            pw: pw,
+                            version: version
+                        },
+                        url: baseUrl + 'action_route=GetWSCapabilities',
+                        success: function (resp) {
+                            me.progressSpinner.stop();
+                            me.__capabilitiesResponseHandler(layerType, resp);
+                        },
+                        error: function (jqXHR) {
+                            me.progressSpinner.stop();
+                            if (jqXHR.status !== 0) {
+                                me._showDialog(me.instance.getLocalization('admin')['errorTitle'], me.instance.getLocalization('admin').metadataReadFailure);
+                            }
+                        }
+                    });
+                }
             },
             _mapMapServerConfigurationToCapabilities: function (conf) {
                 var i, layerConf, me = this;
