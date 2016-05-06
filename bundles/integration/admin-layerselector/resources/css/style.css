@@ -84,7 +84,6 @@ div.admin-layerselector {
     div.admin-layerselector div.layer .add-layer-input, div.admin-layerselector div.create-layer .add-layer-input {
       float: none;
       width: 140px;
-      height: 16px;
       margin: 0;
       margin-bottom: 4px; }
       div.admin-layerselector div.layer .add-layer-input.mid, div.admin-layerselector div.create-layer .add-layer-input.mid {
