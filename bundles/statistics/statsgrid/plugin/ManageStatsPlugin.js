@@ -5429,13 +5429,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             dialogButtons.push(filterBtn);
 
             filterContainer.append(jQuery('<div>' + layerFilterContainer + '</div>'));
-            
+
             if(me.mode === 'twoway') {
-                var typeSelectDiv = jQuery('<div>' + me._locale.areaFilterType + ' </div>');
+                var typeSelectDiv = jQuery('<div>' + me._locale.filterForm.selectType + ' </div>');
                 var typeSelector = jQuery('<select class="type"></select>');
                 
-                typeSelector.append(jQuery('<option value="home">' + me._locale.areaFilterHome + '</option>'));
-                typeSelector.append(jQuery('<option value="work">' + me._locale.areaFilterWork + '</option>'));
+                typeSelector.append(jQuery('<option value="home">' + me._locale.filterForm.typeHome + '</option>'));
+                typeSelector.append(jQuery('<option value="work">' + me._locale.filterForm.typeWork + '</option>'));
                 
                 typeSelectDiv.append(typeSelector);
                 filterContainer.append(typeSelectDiv);
