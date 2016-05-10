@@ -97,10 +97,6 @@
 		<file>
 			<source>bundles${file.separator}bundle.js</source>
 			<outputDirectory>bundles</outputDirectory>
-		</file>
-		<file>
-			<source>packages${file.separator}openlayers${file.separator}startup.js</source>
-			<outputDirectory>packages${file.separator}openlayers</outputDirectory>
-		</file>		
+		</file>	
 	</files>	
 </assembly>
