@@ -411,7 +411,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             if (elems.find('option:selected').attr('disabled') === "disabled") {
                 elems.find('option:selected').removeAttr("selected");
                 if (areaFilterLevels.length != 0) {
-                    elems.val(areaFilterLevels[0]).change();
+                    elems.val(areaFilterLevels[0]);
+                    if (elems.find('option:selected').attr('disabled') !== "disabled") {
+                        elems.change();
+                    }
                 } else {
                     elems.val(elems.find("option:not([disabled]):first")).change();
                 }
@@ -3082,7 +3085,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
             
-            if($.inArray(group, commonRegions) < 0) {
+            if(commonRegions !== null && $.inArray(group, commonRegions) < 0) {
                 var elems = $('select.innerSelector[name="filterCategorySelector"]');
                 var oldCategory = elems.val();
                 var newCategory;
