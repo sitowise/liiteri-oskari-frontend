@@ -441,7 +441,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnDataLayer
 						expDay = '0' + expDay;
 					}
 
-					var expMonth = expDate.getMonth() + '';
+					var expMonth = (expDate.getMonth() + 1) + ''; //month is 0-11
 					if (expMonth.length == 1) {
 						expMonth = '0' + expMonth;
 					}
