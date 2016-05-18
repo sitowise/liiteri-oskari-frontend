@@ -793,6 +793,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                     'placeholder': me.loc.buffer_size.tooltip
                 });
 
+                bufferTitle.prepend($('<label><input type="checkbox" name="mergeBuffers"/>' + me.loc.mergeBuffers.label + '</label>'));
                 bufferTitle.prepend($('<label><input type="checkbox" name="includeOriginal" checked="checked"/>' + me.loc.includeOriginal.label + '</label>'));
                 bufferTitle.prepend('<div class="info">Valitse sisällytetäänkö alkuperäinen kohde puskuroinnissa, valitse luotavan vyöhykkeen koko ja säilytettävät ominaisuustiedot</div>');
 
@@ -1493,6 +1494,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
 
             // buffer
             var bufferSize = container.find('.settings_buffer_field').val();
+            var mergeBuffers = container.find('input[name=mergeBuffers]').is(':checked');
             var includeOriginal = container.find('input[name=includeOriginal]').is(':checked');
             // aggregate
             var aggregateFunctions = container.find('input[name=aggre]:checked');
@@ -1522,7 +1524,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 'buffer': {
                     methodParams: {
                         distance: bufferSize,
-                        includeOriginal: includeOriginal
+                        includeOriginal: includeOriginal,
+                        mergeBuffers: mergeBuffers
                     },
                     opacity: layer.getOpacity()
                 },

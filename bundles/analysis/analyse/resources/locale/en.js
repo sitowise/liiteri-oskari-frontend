@@ -92,6 +92,9 @@ Oskari.registerLocalization({
             "includeOriginal": {
                 "label": "Include original"
             },
+            "mergeBuffers": {
+                "label": "Merge buffer geometries"
+            },
             "analyse_name": {
                 "label": "Name of analysis",
                 "tooltip": "Enter analysis name"

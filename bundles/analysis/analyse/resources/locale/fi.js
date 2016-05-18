@@ -91,6 +91,9 @@ Oskari.registerLocalization({
             "includeOriginal": {
                 "label": "Sisällytä alkuperäinen kohde"
             },
+            "mergeBuffers": {
+                "label": "Yhdistä puskurivyöhykkeet"
+            },
             "analyse_name": {
                 "label": "Vyöhykkeen nimi",
                 "tooltip": "Anna vyöhykkeen nimi"
