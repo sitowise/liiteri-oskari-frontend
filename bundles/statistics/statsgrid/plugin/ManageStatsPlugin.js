@@ -3940,18 +3940,36 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 						// find region
 					    // if region is whole Finland and geometry filter is turned on then add new item for each filter
 					    if (regionId === "finland:-1" && column.indicatorData.geometry != null && column.indicatorData.geometry.length > 0) {
-					        me.dataView.addItem({
-					            availabilityYears: undefined,
-					            category: "FINLAND",
-					            code: "",
-					            id: "geomFilter" + i,
-					            memberOf: Array[0],
-					            municipality: indicData['title'],
-					            orderNumber: 0,
-					            sel: "empty",
-					            title: indicData['title']
-					        });
-					        item = me.dataView.getItemById("geomFilter" + i);
+
+					        //check if the item for the current filter exists in the grid, if not - add it
+					        //this checking is to prevent duplicating items in the grid
+					        var items = me.dataView.getItems(),
+                                geomFilterItemId = null;
+
+					        for (var j = 0; j < items.length; j++) {
+					            if (items[j].title == indicData['title']) {
+					                geomFilterItemId = items[j].id;
+					                break;
+					            }
+					        }
+
+					        if (geomFilterItemId != null) {
+					            item = me.dataView.getItemById(geomFilterItemId);
+					        } else {
+					            me.dataView.addItem({
+					                availabilityYears: undefined,
+					                category: "FINLAND",
+					                code: "",
+					                id: "geomFilter" + i,
+					                memberOf: Array[0],
+					                municipality: indicData['title'],
+					                orderNumber: 0,
+					                sel: "empty",
+					                title: indicData['title']
+					            });
+					            item = me.dataView.getItemById("geomFilter" + i);
+					        }
+
 					    } else {
 					        item = me.dataView.getItemById(regionId);
 					    }
