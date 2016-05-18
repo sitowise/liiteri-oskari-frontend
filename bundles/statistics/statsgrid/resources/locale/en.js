@@ -410,6 +410,15 @@ Oskari.registerLocalization(
                 "title": "Error",
                 "general" : "There was an error during retrieving data"
             }
+        },
+        "geometryFilter": {
+            "error": "Error",
+            "warning": "Warning",
+            "manyGeometries": "You selected more than {0} geometries. Loading the statistics might take few minutes",
+            "tooManyGeometries": "Too many geometries selected. Maximum valid amount is {0}.",
+            "selectAttrInstr": "Select identyfying attribute",
+            "selectAttrWarn": "You should select an identyfying attribute",
+            "drawnAreaFilterId": "Drawn area {0}"
         }
     }
 }

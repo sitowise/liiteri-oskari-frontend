@@ -207,7 +207,16 @@ Oskari.registerLocalization(
         "connectionProblem": "Data kunde inte lagras för nättförbindelseproblemens skull.",
         "parsedDataInfo": "Laddade regioner finns totalt",
         "parsedDataUnrecognized": "Obekanta regioner",
-        "loginToSaveIndicator": "Att lagra din egen indikator måste du logga in."
+        "loginToSaveIndicator": "Att lagra din egen indikator måste du logga in.",
+        "geometryFilter": {
+            "error": "Error",
+            "warning": "Warning",
+            "manyGeometries": "You selected more than {0} geometries. Loading the statistics might take few minutes",
+            "tooManyGeometries": "Too many geometries selected. Maximum valid amount is {0}.",
+            "selectAttrInstr": "Select identyfying attribute",
+            "selectAttrWarn": "You should select an identyfying attribute",
+            "drawnAreaFilterId": "Drawn area {0}"
+        }
     },
     "filterForm" : {
         "selectValue": "Select value",

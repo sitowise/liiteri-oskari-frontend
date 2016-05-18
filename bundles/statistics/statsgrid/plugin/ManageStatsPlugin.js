@@ -89,7 +89,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             'filterOption': '<option></option>',
             'filterInputs': '<input type="text" class="filter-input filter-input1" /><span class="filter-between" style="display:none;">-</span><input type="text" class="filter-input filter-input2" style="display:none;" />',
             'filterLink': '<a href="javascript:void(0);"></a>',
-            'filterByRegion': '<div id="statsgrid-filter-by-region"><p class="filter-desc"></p><div class="filter-container"></div></div>',
+            'filterByRegion': '<div id="statsgrid-filter-by-region"><p class="filter-desc"></p><div class="filter-container"><div class="layerFilterContainer"></div></div></div>',
             'regionCatSelect': '<div class="filter-region-category-select"><select></select></div>',
             'regionSelect': '<div class="filter-region-select"><select class="filter-region-select" multiple tabindex="3"></select></div>',
             'addOwnIndicator': '<div class="new-indicator-cont"><input type="button"/></div>',
@@ -118,6 +118,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.ignoreCache = false;        
 
         this.collapse = null;
+
+        this.geomFilterIdAttributes = [];
     }, {
         /**
          * @property __name module name
@@ -190,7 +192,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         _geometryFilterDrawn: function (event) {
             this.geometryFilter.reset(true);
             for (var i = 0; i < event.getDrawing().components.length; ++i) {
-                this.geometryFilter.addGeometry(event.getDrawing().components[i].toString());
+                var drawnAreaFilterId = this._locale.geometryFilter.drawnAreaFilterId.replace('{0}', i + 1);
+                this.geometryFilter.addGeometry(event.getDrawing().components[i].toString(), drawnAreaFilterId);
             }
             this._updateGeometryFilter();
         },
@@ -597,7 +600,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 var me = this,
 		            index = me._getPopupIndex('filterBySelectedAreaPopup'),
 		            popup = null,
-		            filterContainer = null,
+		            layerFilterContainer = null,
                     filterBtn = null,
                     clickedGeometries = 0;
 
@@ -606,10 +609,30 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
 
                 if (popup && popup.content && popup.popup && popup.popup.dialog) {
-                    filterContainer = popup.content.find('.filter-container');
+                    layerFilterContainer = popup.content.find('.filter-container .layerFilterContainer'),
+
+                    layerFilterContainer.empty();
+                    layerFilterContainer.append(me._locale.areaFilterNoItemsSelected);
+                }
+            },
+            'WFSFeatureGeometriesEvent': function (event) {
+                //update the status of selected geometries in the geometry filter popup
+                var me = this,
+		            index = me._getPopupIndex('filterBySelectedAreaPopup'),
+		            popup = null,
+		            layerFilterContainer = null,
+                    filterBtn = null,
+                    clickedGeometries = 0;
+
+                if (index != null) {
+                    popup = me.popups[index];
+                }
+
+                if (popup && popup.content && popup.popup && popup.popup.dialog) {
+                    layerFilterContainer = popup.content.find('.filter-container .layerFilterContainer'),
                     filterBtn = popup.popup.dialog.find('div.actions input.filterBtn');
 
-                    clickedGeometries = me._updateGeometriesInfoInPopup(filterContainer);
+                    clickedGeometries = me._updateGeometriesInfoInPopup(layerFilterContainer);
 
                     if (clickedGeometries > 0) {
                         filterBtn.removeAttr('disabled');
@@ -3151,7 +3174,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if(me.mode !== 'twoway') {
                         me.getSotkaIndicatorData(container,
                             indicatorItem,
-                            indicatorItem.id, gender, selectedYears[j], !me.geometryFilter.isEmpty() ? group : null, me.geometryFilter.getWktKey(), me.currentAreaFilter.getKey(), type, direction,
+                            //indicatorItem.id, gender, selectedYears[j], !me.geometryFilter.isEmpty() ? group : null, me.geometryFilter.getWktKey(), me.currentAreaFilter.getKey(), type, direction,
+                            indicatorItem.id, gender, selectedYears[j], !me.geometryFilter.isEmpty() ? group : null, me.geometryFilter.getGeometries(), me.currentAreaFilter.getKey(), type, direction,
                             function (item) {
                                 me.addIndicatorMeta(item);
                                 if(++loadedIndicators >= totalSelected && me._state.functionalRows.length === 0) {
@@ -3163,7 +3187,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         for (var type in types) {
                             me.getSotkaIndicatorData(container,
                                 indicatorItem,
-                                indicatorItem.id, gender, selectedYears[j], group, me.geometryFilter.getWktKey(), me.currentAreaFilter.getKey(), types[type], direction,
+                                //indicatorItem.id, gender, selectedYears[j], group, me.geometryFilter.getWktKey(), me.currentAreaFilter.getKey(), types[type], direction,
+                                indicatorItem.id, gender, selectedYears[j], group, me.geometryFilter.getGeometries(), me.currentAreaFilter.getKey(), types[type], direction,
                                 function (item) {
                                     me.addIndicatorMeta(item);
                                     if(++loadedIndicators >= totalSelected) {
@@ -3913,7 +3938,24 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 					
 					if (regionId !== null && regionId !== undefined) {
 						// find region
-						item = me.dataView.getItemById(regionId);
+					    // if region is whole Finland and geometry filter is turned on then add new item for each filter
+					    if (regionId === "finland:-1" && column.indicatorData.geometry != null && column.indicatorData.geometry.length > 0) {
+					        me.dataView.addItem({
+					            availabilityYears: undefined,
+					            category: "FINLAND",
+					            code: "",
+					            id: "geomFilter" + i,
+					            memberOf: Array[0],
+					            municipality: indicData['title'],
+					            orderNumber: 0,
+					            sel: "empty",
+					            title: indicData['title']
+					        });
+					        item = me.dataView.getItemById("geomFilter" + i);
+					    } else {
+					        item = me.dataView.getItemById(regionId);
+					    }
+
 						if (item) {
 							hasNoData = false;
 							// update row
@@ -5353,7 +5395,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 drawLoc = me._locale.areaFilterDrawNewFromCrop,
                 clearBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 clearLoc = me._locale.areaFilterRemove,
-                content = jQuery('<div id="statsgrid-filter-by-region"><p class="filter-desc"></p><div class="filter-container"></div></div>').clone(),
+                content = jQuery(me.templates.filterByRegion),
+                layerFilterContainer = content.find('.filter-container .layerFilterContainer'),
                 selectionGeometries = [],
                 dialogButtons = [],
                 direction = null,
@@ -5394,18 +5437,86 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me.geometryFilter.reset();
 
                 var selectedLayers = me.instance.sandbox.findAllSelectedMapLayers();
+                var layerFilterContainer = content.find('.filter-container .layerFilterContainer');
+
+                var allDropdownsSelected = true;
+                //check if all dropdowns have selected value
+                var dropdowns = layerFilterContainer.find('.attributeSelector');
+                for (var i = 0; i < dropdowns.length; i++) {
+                    if (jQuery(dropdowns[i]).val() == '') {
+                        allDropdownsSelected = false;
+                    }
+                }
+
+                var MAX_GEOMETRIES = 5;
+                var OPT_GEOMETRIES = 2;
+                var numberOfSelectedGeoms = 0;
+                //check number of selected geometries of all layers
+                //TODO do it in more efficient way - avoid looping layers 2 times
                 for (var i = 0; i < selectedLayers.length; i++) {
                     var l = selectedLayers[i];
-
                     if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
                         && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
-                        for (var j = 0; j < l.getClickedGeometries().length; ++j) {
-                            me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1]);
+
+                        numberOfSelectedGeoms += l.getClickedGeometries().length;
+                    }
+                }
+
+                if (numberOfSelectedGeoms > MAX_GEOMETRIES || !allDropdownsSelected) {
+                    var errFilterDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                        errFilterBtn = errFilterDialog.createCloseButton(me._locale.buttons.ok),
+                        message = '';
+                    errFilterBtn.addClass('primary');
+                    if (!allDropdownsSelected) {
+                        message = me._locale.geometryFilter.selectAttrWarn;
+                    } else {
+                        message = me._locale.geometryFilter.tooManyGeometries.replace('{0}', MAX_GEOMETRIES);
+                    }
+                    errFilterDialog.show(me._locale.geometryFilter.error, message, [errFilterBtn]);
+
+                } else {
+
+                    me.geomFilterIdAttributes = [];
+
+                    if (numberOfSelectedGeoms > OPT_GEOMETRIES) {
+                        var warnFilterDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                        warnFilterBtn = warnFilterDialog.createCloseButton('OK');
+                        warnFilterBtn.addClass('primary');
+                        warnFilterDialog.show(me._locale.geometryFilter.warning, me._locale.geometryFilter.manyGeometries.replace('{0}', OPT_GEOMETRIES), [warnFilterBtn]);
+                    }
+
+                    for (var i = 0; i < selectedLayers.length; i++) {
+                        var l = selectedLayers[i];
+
+                        if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
+                            && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+
+                            var identyfyingNameAttr = layerFilterContainer.find('#attributeSelector_' + l.getId()).val();
+
+                            //adding info about selected attrubite, which identify geometries
+                            me.geomFilterIdAttributes.push({
+                                "id": l.getId(),
+                                "attr": identyfyingNameAttr
+                            });
+
+                            for (var j = 0; j < l.getClickedGeometries().length; ++j) {
+                                //me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1]);
+
+                                var fields = l.getFields();
+                                var attrIndex = fields.indexOf(identyfyingNameAttr);
+                                var activeFeatures = l.getActiveFeatures();
+
+                                for (var k = 0; k < activeFeatures.length; k++) {
+                                    if (activeFeatures[k][0] == l.getClickedGeometries()[j][0]) {
+                                        me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1], activeFeatures[k][attrIndex]);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
 
-                if(me.mode === 'twoway') {
+                if (me.mode === 'twoway') {
                     me.geometryFilter.setDirection(content.find('.type').val());
                 }
                 me._updateGeometryFilter();
@@ -5416,12 +5527,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             
             // Description text
             content.find('.filter-desc').text(me._locale.areaFilterDescription);
-
-            var filterContainer = content.find('.filter-container');
-            
-            var layerFilterContainer = '';
 	
-            clickedGeometries = me._updateGeometriesInfoInPopup(filterContainer);
+            clickedGeometries = me._updateGeometriesInfoInPopup(layerFilterContainer);
 	
             if (clickedGeometries == 0) {
                 filterBtn.setEnabled(false);
@@ -5429,11 +5536,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             dialogButtons.push(filterBtn);
 
-            filterContainer.append(jQuery('<div>' + layerFilterContainer + '</div>'));
-
             if(me.mode === 'twoway') {
-                var typeSelectDiv = jQuery('<div>' + me._locale.filterForm.selectType + ' </div>');
-                var typeSelector = jQuery('<select class="type"></select>');
+                var typeSelectDiv = jQuery('<div>' + me._locale.filterForm.selectType + ' </div>'),
+                    typeSelector = jQuery('<select class="type"></select>'),
+                    filterContainer = content.find('.filter-container');
                 
                 typeSelector.append(jQuery('<option value="home">' + me._locale.filterForm.typeHome + '</option>'));
                 typeSelector.append(jQuery('<option value="work">' + me._locale.filterForm.typeWork + '</option>'));
@@ -5477,29 +5583,104 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @param filterContainer
          * @return number of selected geometries
          */
-        _updateGeometriesInfoInPopup: function (filterContainer) {
+        _updateGeometriesInfoInPopup: function (layerFilterContainer) {
             var me = this,
                 selectedLayers = me.instance.sandbox.findAllSelectedMapLayers(),
                 clickedGeometries = 0,
-                layerFilterContainer = '';
+                layerRow = null;
+
+            layerFilterContainer.empty();
 
             for (var i = 0; i < selectedLayers.length; i++) {
                 var l = selectedLayers[i];
                 if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
                     && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
-                    layerFilterContainer = layerFilterContainer + l.getName() + "  " + l.getClickedGeometries().length + " " + me._locale.areaFilterItemsSelected + "<br/>";
-                    clickedGeometries = l.getClickedGeometries().length;
+
+                    layerRow = jQuery("<div class='lfcRow'></div>");
+                    layerRow.append(l.getName() + "  " + l.getClickedGeometries().length + " " + me._locale.areaFilterItemsSelected + " ");
+
+                    var attributeSelector = jQuery("<select id='attributeSelector_" + l.getId() + "' class='attributeSelector'></select>")
+
+                    var attributes = me._getLayerAttributes(l);
+
+                    me._appendOptionValues(attributeSelector, me._locale.geometryFilter.selectAttrInstr, attributes);
+
+                    var selectedAttr = me._getIdAttributeForSelectedLayer(l.getId());
+                    if (selectedAttr != null) {
+                        attributeSelector.val(selectedAttr);
+                    }
+
+
+                    layerRow.append(attributeSelector);
+
+                    layerFilterContainer.append(layerRow);
+                    clickedGeometries += l.getClickedGeometries().length;
                 }
             }
 
-            if (layerFilterContainer.length == 0) {
-                layerFilterContainer = me._locale.areaFilterNoItemsSelected;
+            if (clickedGeometries == 0) {
+                layerFilterContainer.append(me._locale.areaFilterNoItemsSelected);
             }
 
-            filterContainer.empty();
-            filterContainer.append(jQuery('<div>' + layerFilterContainer + '</div>'));
-
             return clickedGeometries;
+        },
+
+        _getIdAttributeForSelectedLayer: function (layerId) {
+
+            for (var i = 0; i < this.geomFilterIdAttributes.length; i++) {
+                if (this.geomFilterIdAttributes[i].id == layerId) {
+                    return this.geomFilterIdAttributes[i].attr;
+                }
+            }
+
+            return null;
+        },
+
+        _appendOptionValues: function (select, placeHolder, values) {
+            var option = jQuery("<option></option>"),
+                i;
+            // Append the first, empty value to work as a placeholder
+            if (placeHolder) {
+                option.attr('value', '');
+                option.html(placeHolder);
+                select.append(option);
+            }
+
+            // Iterate the list of given values
+            for (i = 0; values && i < values.length; ++i) {
+                option = jQuery("<option></option>");
+                // Array of strings.
+                if (typeof values[i] === 'string') {
+                    option.attr('value', values[i]);
+                    option.html(values[i]);
+                } else {
+                    // Otherwise we're assuming an array of objects.
+                    option.attr('value', values[i].id);
+                    option.html(values[i].name);
+                }
+                select.append(option);
+            }
+        },
+
+        _getLayerAttributes: function (layer) {
+            // Make copies of fields and locales
+            var fields = (layer.getFields && layer.getFields()) ? layer.getFields().slice(0) : [],
+                locales = (layer.getLocales && layer.getLocales()) ? layer.getLocales().slice(0) : [],
+                attributes = [],
+                i;
+
+            for (i = 0; i < fields.length; i += 1) {
+                // Get only the fields which originate from the service,
+                // that is, exclude those which are added by Oskari (starts with '__').
+                if (!fields[i].match(/^__/)) {
+                    attributes.push({
+                        id: fields[i],
+                        name: (locales[i] || fields[i])
+                    });
+                }
+            }
+
+            return attributes;
         },
         
         _createFilterExistsPopup: function (type, callback) {
