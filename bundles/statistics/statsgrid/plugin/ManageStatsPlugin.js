@@ -634,7 +634,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @method getLayer
          * @return {Object} layer
          */
-        getLayer: function() {
+        getLayer: function(layer) {
             return this._layer;
         },
 
@@ -5397,7 +5397,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 for (var i = 0; i < selectedLayers.length; i++) {
                     var l = selectedLayers[i];
 
-                    if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                    if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
+                        && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
                         for (var j = 0; j < l.getClickedGeometries().length; ++j) {
                             me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1]);
                         }
@@ -5484,7 +5485,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             for (var i = 0; i < selectedLayers.length; i++) {
                 var l = selectedLayers[i];
-                if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
+                    && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
                     layerFilterContainer = layerFilterContainer + l.getName() + "  " + l.getClickedGeometries().length + " " + me._locale.areaFilterItemsSelected + "<br/>";
                     clickedGeometries = l.getClickedGeometries().length;
                 }
