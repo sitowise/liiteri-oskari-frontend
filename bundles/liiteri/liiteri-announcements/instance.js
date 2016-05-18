@@ -655,7 +655,7 @@ Oskari.clazz.define(
 					me._guideSteps = [];
 					
 					for (var i=0; i < dataArray.length; i++) {
-						if (jQuery.cookie('liiteri-announcements-id_' + dataArray[i].id) != '1') {
+					    if (jQuery.cookie('liiteri-announcements-id_' + dataArray[i].id) != '1') {
 							me._guideSteps.push({
 								appendTourSeenCheckbox: true,
 	
@@ -663,7 +663,7 @@ Oskari.clazz.define(
 									this.ref = inst;
 								},
 								title: dataArray[i].title,
-								content: jQuery('<div></div>').append(dataArray[i].message),
+								content: jQuery('<div/>').html(dataArray[i].message),
 								announcementId: dataArray[i].id
 							});
 						}

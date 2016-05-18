@@ -53,6 +53,12 @@ Oskari.clazz.define(
             }, {
                 "src": "../../../../libraries/jquery/plugins/DataTables-1.10.7/media/css/jquery.dataTables.css",
                 "type": "text/css"
+            }, {
+                "src": "../../../../libraries/jquery-te/jquery-te-1.4.0.min.js",
+                "type": "text/javascript"
+            }, {
+                "src": "../../../../libraries/jquery-te/jquery-te-1.4.0.css",
+                "type": "text/css"
             }
             ],
             "locales": [{
