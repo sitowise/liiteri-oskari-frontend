@@ -292,12 +292,20 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-announcements.Flyout',
 			}
 		
 			//Message
-			var messageField = jQuery('<div class="oskarifield"><label for="messageField">Viesti</label><br>' + 
-				'<textarea name="messageField" cols="40" rows="5" autofocus=""></textarea></div>');//TODO: to locale file
+			var messageField = jQuery('<div class="oskarifield"><label for="messageField">Viesti</label>' +
+		    	'<textarea name="messageField" autofocus=""></textarea></div>');//TODO: to locale file
+			messageField.find('textarea').jqte({
+			    focus: function () {
+			        sandbox.postRequestByName('DisableMapKeyboardMovementRequest');
+			    },
+			    blur: function () {
+			        sandbox.postRequestByName('EnableMapKeyboardMovementRequest');
+			    }
+			});
 			content.append(messageField);
-			
+
 			if (data) {
-				messageField.find('textarea').val(data.message);
+			    messageField.find('textarea').jqteVal(data.message);
 			}
 			
 			//Expiration date
@@ -321,8 +329,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-announcements.Flyout',
 					savingData.id = data.id;
 				}
 				savingData.title = titleField.getValue();
-				//savingData.message = messageField.getValue();
-				savingData.message = $('textarea[name=messageField]').val();
+				savingData.message = $('<div/>').text($('textarea[name=messageField]').val()).html();
 				savingData.expirationDate = expirationDateField.getValue();
 
 				if (me._validateData(savingData)) {

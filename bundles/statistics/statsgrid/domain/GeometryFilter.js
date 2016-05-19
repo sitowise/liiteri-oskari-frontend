@@ -7,11 +7,19 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.domain.GeometryFilter',
     }, {
         reset: function(dontResetDirection) {
             this._geometries = [];
+            this._geomObjects = [];
             if (!dontResetDirection)
                 this._direction = undefined;
         },
-        addGeometry: function(geom) {
+        /**
+         * Adds the geometry with specified id to geometry filter
+         */
+        addGeometry: function (geom, id) {
             this._geometries.push(geom);
+            this._geomObjects.push({
+                "id": id,
+                "geom": geom
+            });
         },
         setDirection: function (direction) {
             this._direction = direction;
@@ -36,5 +44,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.domain.GeometryFilter',
                 result = this._geometries.join('|');
 
             return result;
+        },
+        getGeometries: function () {
+            return this._geomObjects;
         }
     });

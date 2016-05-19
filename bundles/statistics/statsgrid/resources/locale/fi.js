@@ -419,6 +419,15 @@ Oskari.registerLocalization(
                 "title": "Error",
                 "general" : "There was an error during retrieving data"
             }
+        },
+        "geometryFilter": {
+            "error": "Virhe",
+            "warning": "Varoitus",
+            "manyGeometries": "Yli {0} geometriaa valittuna. Tilastojen laskenta voi kestää useita minuutteja.",
+            "tooManyGeometries": "Liian monta geometriaa valittuna. Suurin sallittu määrä on {0}.",
+            "selectAttrInstr": "Valitse yksilöivä ominaisuustieto.",
+            "selectAttrWarn": "Yksilöivä ominaisuustieto tulee valita ennen jatkamista.",
+            "drawnAreaFilterId": "Piirretty alue {0}"
         }
     }
 }

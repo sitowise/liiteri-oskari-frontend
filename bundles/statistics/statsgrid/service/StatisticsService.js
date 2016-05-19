@@ -201,7 +201,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
                         indicator: params.indicator,
                         years: params.year,
                         group: ((params.group == null) ? "" : params.group),
-                        geometryFilter: ((params.wktGeometry == null) ? "" : params.wktGeometry),
+                        //geometryFilter: ((params.wktGeometry == null) ? "" : params.wktGeometry),
+                        geometryFilter: ((params.wktGeometry == null || params.wktGeometry.length == 0) ? "" : JSON.stringify(params.wktGeometry)),
                         filter : ((params.filter == null || params.filter == []) ? "" : params.filter),
                         areaYear : params.areaYear
             };
@@ -222,7 +223,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
                         years: params.year,
                         group: params.direction + ":" + params.group,
                         filter : ((params.filter == null || params.filter == []) ? "" : params.filter),
-                        geometryFilter : params.wktGeometry,
+                        //geometryFilter : params.wktGeometry,
+                        geometryFilter: ((params.wktGeometry == null || params.wktGeometry.length == 0) ? "" : JSON.stringify(params.wktGeometry)),
                         gender: params.gender
             };
             me.fetchStatsData2(url, data, params.successCb, params.errorCb, params.ignoreCache);

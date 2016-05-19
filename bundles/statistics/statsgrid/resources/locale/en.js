@@ -226,6 +226,8 @@ Oskari.registerLocalization(
         "areaFilterDrawNew": "Draw new filter",
         "areaFilterRemove": "Clear filter",
         "areaFilterDescription": "You can limit the statistics counting area either selected subjects, or draw a new area delimitation",
+        "areaFilterItemsSelected": "items selected",
+        "areaFilterNoItemsSelected": "There are no selected items at given map layers",
         "geometryFilterSet": "Olet rajannut tilastohaun alueeksi omat alueet joita on valittuna [{0}] kappaletta",
         "areaFilterSet": "Olet rajannut tilastohaun aluerajauksella jonka ehdot ovat: ",
         "filterTitle": "Filter out column data",
@@ -367,9 +369,9 @@ Oskari.registerLocalization(
             "clear": "Clear",
             "and": "AND",
             "or": "OR",
-            "selectType": "Tarkastelusuunta",
-            "typeHome": "Asuinpaikka",
-            "typeWork": "Työpaikka",
+            "selectType": "Type of area:",
+            "typeHome": "Home",
+            "typeWork": "Work",
             "validateKeyMissing": "Valitse aluetyyppi",
             "validateValuesMissing": "Valitse alueet",
             "validateTypeMissing": "Valitse tarkastelusuunta",
@@ -408,6 +410,15 @@ Oskari.registerLocalization(
                 "title": "Error",
                 "general" : "There was an error during retrieving data"
             }
+        },
+        "geometryFilter": {
+            "error": "Error",
+            "warning": "Warning",
+            "manyGeometries": "You selected more than {0} geometries. Loading the statistics might take few minutes",
+            "tooManyGeometries": "Too many geometries selected. Maximum valid amount is {0}.",
+            "selectAttrInstr": "Select identyfying attribute",
+            "selectAttrWarn": "You should select an identyfying attribute",
+            "drawnAreaFilterId": "Drawn area {0}"
         }
     }
 }
