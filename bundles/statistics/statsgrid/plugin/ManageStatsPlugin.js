@@ -241,37 +241,25 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 indicator = [indicator];
             }
 
-            if (typeof indicator !== 'undefined' && typeof year !== 'undefined') {
+            if (typeof indicator !== 'undefined') {
                 for (var j = 0; j < this.indicators.length; ++j) {
                     for (var i = 0; i < indicator.length; ++i) {
                         if (this.indicators[j].id == indicator[i].id && typeof this.indicators[j].timePeriods !== 'undefined') {
                             for (var k = 0; k < this.indicators[j].timePeriods.length; ++k) {
-                                if (this.indicators[j].timePeriods[k].Id == year) {
-                                    timePeriods.push(this.indicators[j].timePeriods[k].AreaTypes);
-                                }
+                                timePeriods.push(this.indicators[j].timePeriods[k].AreaTypes);
                             }
                         }
                     }
                 }
             }
 
-            var commonRegions = null;
+            var commonRegions = [];
 
             for (var i = 0; i < timePeriods.length; ++i) {
-                if (commonRegions == null) {
-                    commonRegions = [];
-                    for (var j = 0; j < timePeriods[i].length; ++j) {
-                        commonRegions.push(timePeriods[i][j].Id);
-                    }
-                } else {
-                    var regions = [];
-                    for (var j = 0; j < timePeriods[i].length; ++j) {
-                        regions.push(timePeriods[i][j].Id);
-                    }
-                    commonRegions = $.grep(commonRegions, function(element) {
-                        return $.inArray(element, regions) !== -1;
-                    });
+                for (var j = 0; j < timePeriods[i].length; ++j) {
+                    commonRegions.push(timePeriods[i][j].Id);
                 }
+                commonRegions = _.uniq(commonRegions);
             }
 
             var me = this,
@@ -426,7 +414,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             if (elems.find('option:selected').attr('disabled') === "disabled") {
                 elems.find('option:selected').removeAttr("selected");
                 if (areaFilterLevels.length != 0) {
-                    elems.val(areaFilterLevels[0]).change();
+                    elems.val(areaFilterLevels[0]);
+                    if (elems.find('option:selected').attr('disabled') !== "disabled") {
+                        elems.change();
+                    }
                 } else {
                     elems.val(elems.find("option:not([disabled]):first")).change();
                 }
@@ -3040,7 +3031,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             
             var indicatorYearPairs = [],
                 totalSelected = 0,
-                impossibleIndicatorYearPairs = [];
+                impossibleIndicatorYearPairs = [],
+                possibleRegions = [];
     
             for(var i = 0; i < indicator.length; ++i) {
                 var indi = indicator[i];
@@ -3087,7 +3079,75 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 } else {
                     totalSelected += arrayYears.length * types.length;
                 }
+                
+                if(typeof indi.timePeriods !== 'undefined') {
+                    for (var ix = 0; ix < indi.timePeriods.length; ++ix) {
+                       if($.inArray(""+indi.timePeriods[ix].Id, arrayYears) > -1) {
+                           possibleRegions.push(indi.timePeriods[ix].AreaTypes);
+                       }
+                   }
+               }
             }
+            
+            var commonRegions = null;
+
+            for (var i = 0; i < possibleRegions.length; ++i) {
+                if (commonRegions == null) {
+                    commonRegions = [];
+                    for (var j = 0; j < possibleRegions[i].length; ++j) {
+                        commonRegions.push(possibleRegions[i][j].Id);
+                    }
+                } else {
+                    var regions = [];
+                    for (var j = 0; j < possibleRegions[i].length; ++j) {
+                        regions.push(possibleRegions[i][j].Id);
+                    }
+                    commonRegions = $.grep(commonRegions, function(element) {
+                        return $.inArray(element, regions) !== -1;
+                    });
+                }
+            }
+            
+            if(commonRegions !== null && $.inArray(group, commonRegions) < 0) {
+                var elems = $('select.innerSelector[name="filterCategorySelector"]');
+                var oldCategory = elems.val();
+                var newCategory;
+                $.each(me._categoriesGroupKeys, function(key, value) {
+                    if(value === commonRegions[0]) {
+                        newCategory = key;
+                        return false;
+                    }
+                });
+                
+                grp = newCategory;
+                group = me._categoriesGroupKeys[grp];
+                
+                var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                dialogTitle = 'Virhe',
+                continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                continueLoc = "Jatka",
+                content = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '</div>').clone(),
+                dialogButtons = [];
+
+                // destroy possible open instance
+                me._destroyPopup('categoryNotAvailable');
+                
+                continueBtn.setTitle(continueLoc);
+                continueBtn.addClass('primary');
+                continueBtn.setHandler(function (e) {
+                    me._destroyPopup('categoryNotAvailable');
+                });
+    
+                dialogButtons.push(continueBtn);
+                
+                dialog.show(dialogTitle, content, dialogButtons);
+                me.popups.push({
+                    name: 'categoryNotAvailable',
+                    popup: dialog,
+                    content: content
+                });
+            }
+            
     
             if(totalSelected > 25) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
