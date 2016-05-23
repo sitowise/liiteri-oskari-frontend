@@ -62,4 +62,4 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-urbanplanning.plugin.TilePlug
         'protocol': [
             "Oskari.mapframework.module.Module", 'Oskari.mapframework.ui.module.common.mapmodule.Plugin'
         ]
-    })
+    });
