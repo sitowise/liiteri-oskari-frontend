@@ -5533,8 +5533,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 //TODO do it in more efficient way - avoid looping layers 2 times
                 for (var i = 0; i < selectedLayers.length; i++) {
                     var l = selectedLayers[i];
-                    if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
-                        && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                    if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
 
                         numberOfSelectedGeoms += l.getClickedGeometries().length;
                     }
@@ -5566,8 +5565,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     for (var i = 0; i < selectedLayers.length; i++) {
                         var l = selectedLayers[i];
 
-                        if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
-                            && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                        if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
 
                             var identyfyingNameAttr = layerFilterContainer.find('#attributeSelector_' + l.getId()).val();
 
@@ -5671,8 +5669,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             for (var i = 0; i < selectedLayers.length; i++) {
                 var l = selectedLayers[i];
-                if (l.getClickedFeatureIds !== null && l.getClickedFeatureIds !== undefined && l.getClickedFeatureIds().length > 0
-                    && l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
 
                     layerRow = jQuery("<div class='lfcRow'></div>");
                     layerRow.append(l.getName() + "  " + l.getClickedGeometries().length + " " + me._locale.areaFilterItemsSelected + " ");
