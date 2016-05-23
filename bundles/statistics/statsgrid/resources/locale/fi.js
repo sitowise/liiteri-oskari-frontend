@@ -211,6 +211,7 @@ Oskari.registerLocalization(
         "values": "arvoa",
         "included": "Arvot",
         "municipality": "Kunnat",
+        "not_included": "Poistettu laskuista",
         "selectRows": "Valitse rivit",
         "select4Municipalities": "Valitse vähintään kaksi aluetta tarkasteluun.",
         "showSelected": "Näytä vain valitut alueet taulukossa",
