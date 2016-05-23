@@ -714,15 +714,5 @@ bundles/integration/admin-layerselector/View.js
 bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequest.js
 bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequestHandler.js
 bundles/integration/admin-layerselector/resources/locale/fi.js
-bundles/integration/admin-layerselector/views/layerSelectorView.js
-bundles/integration/admin-layerselector/collections/allLayersCollection.js
-bundles/integration/admin-layerselector/models/layersTabModel.js
-bundles/integration/admin-layerselector/views/tabPanelView.js
-bundles/integration/admin-layerselector/models/layerModel.js
-bundles/integration/admin-layerselector/collections/layerGroupCollection.js
-bundles/integration/admin-layerselector/views/adminLayerSettingsView.js
-bundles/integration/admin-layerselector/views/layerView.js
-bundles/integration/admin-layerselector/collections/userRoleCollection.js
-bundles/integration/admin-layerselector/models/roleModel.js
 libraries/jquery-te/jquery-te-1.4.0.min.js
 empty.js
