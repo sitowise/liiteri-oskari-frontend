@@ -21,34 +21,34 @@
 			<directory>libraries${file.separator}jquery${file.separator}plugins${file.separator}DataTables-1.10.2${file.separator}locale</directory>
 		</fileSet>	
 		<fileSet>
-			<directory>bundles${file.separator}integration${file.separator}bundle${file.separator}admin-layerselector</directory>
+			<directory>bundles${file.separator}integration${file.separator}admin-layerselector</directory>
 		</fileSet>							
     <fileSet>
-      <directory>bundles${file.separator}framework${file.separator}bundle${file.separator}divmanazer</directory>
+      <directory>bundles${file.separator}framework${file.separator}divmanazer</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}framework${file.separator}bundle${file.separator}mapfull</directory>
+      <directory>bundles${file.separator}framework${file.separator}mapfull</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}framework${file.separator}bundle${file.separator}mapmodule-plugin</directory>
+      <directory>bundles${file.separator}framework${file.separator}mapmodule-plugin</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}framework${file.separator}bundle${file.separator}oskariui</directory>
+      <directory>bundles${file.separator}framework${file.separator}oskariui</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}framework${file.separator}bundle${file.separator}search</directory>
+      <directory>bundles${file.separator}framework${file.separator}search</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}framework${file.separator}bundle${file.separator}toolbar</directory>
+      <directory>bundles${file.separator}framework${file.separator}toolbar</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}liiteri${file.separator}bundle${file.separator}liiteri-ui</directory>
+      <directory>bundles${file.separator}liiteri${file.separator}liiteri-ui</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}liiteri${file.separator}bundle${file.separator}liiteri-urbanplanning</directory>
+      <directory>bundles${file.separator}liiteri${file.separator}liiteri-urbanplanning</directory>
     </fileSet>
     <fileSet>
-      <directory>bundles${file.separator}liiteri${file.separator}bundle${file.separator}liiteri-feedback</directory>
+      <directory>bundles${file.separator}liiteri${file.separator}liiteri-feedback</directory>
     </fileSet>
     <fileSet>
       <directory>libraries${file.separator}OpenLayers</directory>
