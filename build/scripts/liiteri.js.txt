@@ -714,6 +714,7 @@ bundles/integration/admin-layerselector/View.js
 bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequest.js
 bundles/integration/admin-layerselector/request/ShowAdminLayerselectorFlyoutRequestHandler.js
 bundles/integration/admin-layerselector/resources/locale/fi.js
+packages/framework/bundle/postprocessor/bundle.js
 bundles/framework/postprocessor/instance.js
 libraries/jquery-te/jquery-te-1.4.0.min.js
 empty.js
