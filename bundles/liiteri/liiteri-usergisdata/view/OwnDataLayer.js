@@ -35,7 +35,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnDataLayer
 		this.linkTemplate = jQuery('<a href="JavaScript:void(0);"></a>');
         this.iconTemplate = jQuery('<div class="icon"></div>');
 		this.editOperation = editOperation;
-		this.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.2/locale/";
+		this.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.7/locale/";
 		this.templates = {
 			'layerRow': '<div class="layer"><input type="checkbox" /> ' + 
 				'<div class="layer-title"></div>' + 

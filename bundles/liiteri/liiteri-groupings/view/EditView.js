@@ -27,7 +27,7 @@ function (instance) {
 	
 	me.activeTheme = null;
 	me.addThemeButton = null;
-	me.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.2/locale/";
+	me.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.7/locale/";
 	me.templates = { //TODO localization
 		'table': '<table id="groupings-table"><thead><tr>' +
 			'<th>' + 'Tunnus' + '</th>' +

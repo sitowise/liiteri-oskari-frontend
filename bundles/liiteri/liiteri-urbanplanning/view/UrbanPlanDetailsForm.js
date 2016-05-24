@@ -2,7 +2,7 @@
     function (instance) {
         this.instance = instance;
         this.locale = instance.getLocalization('view');
-        this.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.2/locale/";
+        this.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.7/locale/";
         this.template = {
             "container": "<div class='urbanPlanDetail'></div>",
             "header": "<div class='urbanPlanDetailHeader'></div>",
