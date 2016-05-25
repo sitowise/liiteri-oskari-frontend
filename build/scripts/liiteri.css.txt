@@ -74,5 +74,6 @@ bundles/liiteri/liiteri-groupings/resources/css/groupings.css
 libraries/dynatree/skin-vista/ui.dynatree.css
 bundles/framework/admin-layerrights/resources/css/style.css
 bundles/integration/admin-layerselector/resources/css/style.css
+bundles/framework/featuredata2/resources/css/style.css
 libraries/jquery-te/jquery-te-1.4.0.css
 empty.js
