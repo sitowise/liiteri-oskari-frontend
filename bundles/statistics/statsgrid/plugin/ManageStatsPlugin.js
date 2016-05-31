@@ -120,6 +120,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.collapse = null;
 
         this.geomFilterIdAttributes = [];
+        
+        this.WFSLayerService = null;
     }, {
         /**
          * @property __name module name
@@ -492,6 +494,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             this._state = (this.conf.state || {});
             this._layer = (this.conf.layer || null);
             this.selectMunicipalitiesMode = false;
+            this.WFSLayerService = sandbox.getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService');
         },
 
         /**
@@ -5533,9 +5536,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 //TODO do it in more efficient way - avoid looping layers 2 times
                 for (var i = 0; i < selectedLayers.length; i++) {
                     var l = selectedLayers[i];
-                    if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                    if (me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== null && me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== undefined && me.WFSLayerService.getSelectedFeatureIds(l.getId()).length > 0) {
 
-                        numberOfSelectedGeoms += l.getClickedGeometries().length;
+                        numberOfSelectedGeoms += me.WFSLayerService.getSelectedFeatureIds(l.getId()).length;
                     }
                 }
 
@@ -5565,7 +5568,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     for (var i = 0; i < selectedLayers.length; i++) {
                         var l = selectedLayers[i];
 
-                        if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                        if (me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== null && me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== undefined && me.WFSLayerService.getSelectedFeatureIds(l.getId()).length > 0) {
 
                             var identyfyingNameAttr = layerFilterContainer.find('#attributeSelector_' + l.getId()).val();
 
@@ -5575,7 +5578,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 "attr": identyfyingNameAttr
                             });
 
-                            for (var j = 0; j < l.getClickedGeometries().length; ++j) {
+                            for (var j = 0; j < me.WFSLayerService.getSelectedFeatureIds(l.getId()).length; ++j) {
                                 //me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1]);
 
                                 var fields = l.getFields();
@@ -5669,10 +5672,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             for (var i = 0; i < selectedLayers.length; i++) {
                 var l = selectedLayers[i];
-                if (l.getClickedGeometries !== null && l.getClickedGeometries !== undefined && l.getClickedGeometries().length > 0) {
+                if (me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== null && me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== undefined && me.WFSLayerService.getSelectedFeatureIds(l.getId()).length > 0) {
 
                     layerRow = jQuery("<div class='lfcRow'></div>");
-                    layerRow.append(l.getName() + "  " + l.getClickedGeometries().length + " " + me._locale.areaFilterItemsSelected + " ");
+                    layerRow.append(l.getName() + "  " + me.WFSLayerService.getSelectedFeatureIds(l.getId()).length + " " + me._locale.areaFilterItemsSelected + " ");
 
                     var attributeSelector = jQuery("<select id='attributeSelector_" + l.getId() + "' class='attributeSelector'></select>")
 
@@ -5689,7 +5692,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     layerRow.append(attributeSelector);
 
                     layerFilterContainer.append(layerRow);
-                    clickedGeometries += l.getClickedGeometries().length;
+                    clickedGeometries += me.WFSLayerService.getSelectedFeatureIds(l.getId()).length;
                 }
             }
 

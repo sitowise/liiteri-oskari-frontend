@@ -89,6 +89,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
 
         me._filterJsons = {};
         me._filterPopups = {};
+        
+        me.WFSLayerService = me.instance.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService');
 
     }, {
         __templates: {
@@ -1589,7 +1591,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                     if (filterJson.featureIds) {
                         this._getSelectedFeatureIds(layer, filterJson);
                     }
-                    data.filter = JSON.stringify(filterJson);
+                    data.filter1 = JSON.stringify(filterJson);
                 }
 
                 // Send the data for analysis to the backend
@@ -1782,7 +1784,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             if (!layer || !filterJson) {
                 return;
             }
-            filterJson.featureIds = (layer.getClickedFeatureListIds ? layer.getClickedFeatureListIds().slice() : []);
+            var featureIds = this.WFSLayerService.getSelectedFeatureIds(layer.getId());
+            filterJson.featureIds = (featureIds ? featureIds : []);
         },
         /**
          * Add field property types {fieldname1:type1,...} to layer
