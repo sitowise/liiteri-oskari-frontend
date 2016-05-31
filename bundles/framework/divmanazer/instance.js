@@ -753,8 +753,9 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
             }            
 
             flyoutInfo = extensionInfo.plugins['Oskari.userinterface.Flyout'];
-            /* opening  flyouts 'attached' closes previously attachily opened  flyout(s) */
-            if (state === 'attach' && flyoutInfo) {
+            viewInfo = extensionInfo.plugins['Oskari.userinterface.View'];
+            /* opening  flyouts/views 'attached' closes previously attachily opened  flyout(s) */
+            if (state === 'attach' && (flyoutInfo || viewInfo)) {
                 var extTop = null,
                     extLeft = null;
 
@@ -762,18 +763,20 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
                     me.origExtensionLocation = {};
                 }
 
-                var extLocation = function (request, me, axis) {
-                    if (me.origExtensionLocation) {
-                        if (request.getExtensionLocation()[axis]) {
-                            me.origExtensionLocation[axis] = jQuery(flyoutInfo.el).css(axis);
-                            jQuery(flyoutInfo.el).css(axis, request.getExtensionLocation()[axis] + 'px');
-                        } else if (me.origExtensionLocation[axis]) {
-                            jQuery(flyoutInfo.el).css(axis, me.origExtensionLocation[axis]);
-                        }
-                    }
-                };
-                extLocation(request, me, 'top');
-                extLocation(request, me, 'left');
+				if (flyoutInfo) {
+					var extLocation = function (request, me, axis) {
+						if (me.origExtensionLocation) {
+							if (request.getExtensionLocation()[axis]) {
+								me.origExtensionLocation[axis] = jQuery(flyoutInfo.el).css(axis);
+								jQuery(flyoutInfo.el).css(axis, request.getExtensionLocation()[axis] + 'px');
+							} else if (me.origExtensionLocation[axis]) {
+								jQuery(flyoutInfo.el).css(axis, me.origExtensionLocation[axis]);
+							}
+						}
+					};
+					extLocation(request, me, 'top');
+					extLocation(request, me, 'left');
+				}
 
                 ops = me.flyoutOps;
                 closeOp = ops.close;
@@ -855,7 +858,6 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
             }
 
             /* let's transition menu tile if one exists */
-            viewInfo = extensionInfo.plugins['Oskari.userinterface.View'];
             if (viewInfo) {
                 viewPlugin = viewInfo.plugin;
                 view = viewInfo.el;
