@@ -5529,8 +5529,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     }
                 }
 
-                var MAX_GEOMETRIES = 5;
-                var OPT_GEOMETRIES = 2;
+                var MAX_GEOMETRIES = 60;
+                var OPT_GEOMETRIES = 5;
                 var numberOfSelectedGeoms = 0;
                 //check number of selected geometries of all layers
                 //TODO do it in more efficient way - avoid looping layers 2 times
