@@ -97,13 +97,7 @@ Oskari.clazz.category(
             							    tooltip: loc.clear,
             							    sticky: false,
             							    callback: function () {
-            							        me.getSandbox().request(me, gfiReqBuilder(false));
-            							        $.each(me.getSandbox().findAllSelectedMapLayers(), function (idx, layer) {
-            							            if (layer.hasFeatureData && layer.hasFeatureData()) {
-            							                var event = me.getSandbox().getEventBuilder("WFSFeaturesSelectedEvent")([], layer, false);
-            							                me.getSandbox().notifyAll(event);
-            							            }
-            							        });
+            							        me.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService').emptyAllWFSFeatureSelections();
             							    }
             							}
                                     }
