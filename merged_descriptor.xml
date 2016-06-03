@@ -54,6 +54,9 @@
       <directory>bundles${file.separator}mapping${file.separator}mapmodule</directory>
     </fileSet>
     <fileSet>
+      <directory>bundles${file.separator}framework${file.separator}mapstats</directory>
+    </fileSet>
+    <fileSet>
       <directory>libraries${file.separator}OpenLayers</directory>
     </fileSet>
     <fileSet>
