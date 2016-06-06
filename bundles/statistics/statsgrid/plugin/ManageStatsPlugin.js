@@ -651,7 +651,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @method getLayer
          * @return {Object} layer
          */
-        getLayer: function(layer) {
+        getLayer: function() {
             return this._layer;
         },
 
