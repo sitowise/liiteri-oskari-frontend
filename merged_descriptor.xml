@@ -75,6 +75,9 @@
       <directory>libraries${file.separator}raphaeljs</directory>
     </fileSet>
     <fileSet>
+      <directory>libraries${file.separator}bootstrap</directory>
+    </fileSet>
+    <fileSet>
       <directory>packages</directory>
     </fileSet>
     <fileSet>
