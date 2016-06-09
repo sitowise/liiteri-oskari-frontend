@@ -3248,10 +3248,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             });
                     } else {
                         for (var type in types) {
+                            var geoms = me.geometryFilter.getGeometries().slice();
+                            $.each(geoms, function(index, obj) {
+                                obj.direction = me.geometryFilter.getDirection();
+                            });
+
                             me.getSotkaIndicatorData(container,
                                 indicatorItem,
                                 //indicatorItem.id, gender, selectedYears[j], group, me.geometryFilter.getWktKey(), me.currentAreaFilter.getKey(), types[type], direction,
-                                indicatorItem.id, gender, selectedYears[j], group, me.geometryFilter.getGeometries(), me.currentAreaFilter.getKey(), types[type], direction,
+                                indicatorItem.id, gender, selectedYears[j], group, geoms, me.currentAreaFilter.getKey(), types[type], direction,
                                 function (item) {
                                     me.addIndicatorMeta(item);
                                     if(++loadedIndicators >= totalSelected) {
