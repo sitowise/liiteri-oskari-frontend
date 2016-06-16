@@ -3111,10 +3111,69 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
             
+            
+            if(commonRegions !== null && (!me.geometryFilter.isEmpty() || !me.currentAreaFilter.isEmpty())) {
+                if(!me.geometryFilter.isEmpty()) {
+                    commonRegions = $.grep(commonRegions, function(element) {
+                        return element === 'finland';
+                    });
+                } else if (!me.currentAreaFilter.isEmpty()) {
+                    var areaFilterLevels = [];
+                    $.each(me.currentAreaFilter.getData(), function(index, value) {
+                        var levels = [];
+                        if (value.hasOwnProperty("key")) {
+                            levels.push(me._categoriesGroupKeys[value.key]);
+                            var v = me._categoriesHierarchy[value.key];
+                            while (v.child) {
+                                levels.push(me._categoriesGroupKeys[v.child]);
+                                v = me._categoriesHierarchy[v.child];
+                            }
+
+                            if (areaFilterLevels.length == 0 || levels.length < areaFilterLevels.length) {
+                                areaFilterLevels = levels;
+                            }
+                        }
+                    });
+
+                    commonRegions = $.grep(commonRegions, function(element) {
+                        return $.inArray(element, areaFilterLevels) !== -1;
+                    });
+                }
+            }
+            
+            if(possibleRegions.length === 0 || commonRegions === null || commonRegions.length === 0) {
+                var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                dialogTitle = 'Virhe',
+                continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                continueLoc = "Jatka",
+                content = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Valituilla tilastoilla ei ole yhteisiä esitystasoja tai valitut aluerajaukset eivät ole mahdollisia valituille tilastoille.</div>').clone(),
+                dialogButtons = [];
+                
+                // destroy possible open instance
+                me._destroyPopup('impossibleSelections');
+                
+                continueBtn.setTitle(continueLoc);
+                continueBtn.addClass('primary');
+                continueBtn.setHandler(function (e) {
+                    me._destroyPopup('impossibleSelections');
+                });
+    
+                dialogButtons.push(continueBtn);
+                
+                dialog.show(dialogTitle, content, dialogButtons);
+                me.popups.push({
+                    name: 'impossibleSelections',
+                    popup: dialog,
+                    content: content
+                });
+
+                return;
+            }
+            
             if(commonRegions !== null && $.inArray(group, commonRegions) < 0) {
                 var elems = $('select.innerSelector[name="filterCategorySelector"]');
                 var oldCategory = elems.val();
-                var newCategory;
+                var newCategory = null;
                 $.each(me._categoriesGroupKeys, function(key, value) {
                     if(value === commonRegions[0]) {
                         newCategory = key;
@@ -3122,16 +3181,26 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     }
                 });
                 
-                grp = newCategory;
-                group = me._categoriesGroupKeys[grp];
+                if(newCategory !== null) {
+                    grp = newCategory;
+                    group = me._categoriesGroupKeys[grp];
+                }
                 
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
                 continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 continueLoc = "Jatka",
-                content = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '</div>').clone(),
+                content,
+                contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '</div>').clone(),
+                contentNotPossible = jQuery('<div>Valittuja tilastoja ei voida näyttää yhtäaikaa, koska niille ei ole saatavilla yhteistä esitystasoa.</div>').clone(),
                 dialogButtons = [];
 
+                if(newCategory === null) {
+                    content = contentNotPossible;
+                } else {
+                    content = contentLevelChanged;
+                }
+                
                 // destroy possible open instance
                 me._destroyPopup('categoryNotAvailable');
                 
@@ -3149,6 +3218,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     popup: dialog,
                     content: content
                 });
+                
+                if(newCategory === null) {
+                    return;
+                }
             }
             
     
@@ -3194,10 +3267,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                    var years = item.impossibleYears;
                    list.append(indi.title[Oskari.getLang()]);
                    $.each(years, function(index, item) {
-                       if(index > 0) {
-                           list.append(",");
+                       if(typeof item !== 'undefined') {
+                           if(index > 0) {
+                               list.append(",");
+                           }
+                           list.append(" " + item);
                        }
-                       list.append(" " + item);
                    });
                    list.append('<br/>');
                 });
