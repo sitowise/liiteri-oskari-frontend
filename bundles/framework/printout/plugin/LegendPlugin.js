@@ -19,6 +19,11 @@ Oskari.clazz.define(
         if (!me._config ) {
             me._config = {};
         }
+
+        me._config.general = $.extend({},
+                                      {"minLegendItemHeight": 11, "defaultItemWidth": 14, "defaultItemHeight": 14},
+                                      me._config.general);
+
         me.instance = instance;
         me.locale = locale;
         me._name = 'LegendPlugin';
@@ -107,15 +112,11 @@ Oskari.clazz.define(
 
             // remove old, if any
             this.clearLegendLayers();
-
-            this.conf.general.minLegendItemHeight = 11;
-            this.conf.general.defaultItemWidth = 14;
-            this.conf.general.defaultItemHeight = 14;
             for (var i = 0; i < ranges.length; i++) {
                 if (!ranges[i].hasOwnProperty('width'))
-                    ranges[i].width = this.conf.general.defaultItemWidth;
+                    ranges[i].width = this.getConfig().general.defaultItemWidth;
                 if (!ranges[i].hasOwnProperty('height'))
-                    ranges[i].height = this.conf.general.defaultItemHeight;
+                    ranges[i].height = this.getConfig().general.defaultItemHeight;
             }
 
             // Legend box coordinates
@@ -209,15 +210,15 @@ Oskari.clazz.define(
             var lside = Math.max(width, height);
 
             // legend height in meters based on # of color box rows and map area size
-            var l_height = this.getConfig().general.legendRowHeight * lside * (ranges.length + titles.length + 1);
+            var l_height = this.getConfig().general.legendRowHeight * lside * (titles.length + 1);
             var titlebox_size = l_height / (titles.length + 1);
             for (var ix = 0; ix < ranges.length; ix++) {
                 if (ranges[ix].height > this.getConfig().general.minLegendItemHeight)
-                    l_height += 1.2 * (ranges[ix].height * height / pixel_height);
+                    l_height += (ranges[ix].height * height / pixel_height);
                 else
-                    l_height += 1.2 * (this.getConfig().general.minLegendItemHeight * height / pixel_height);
+                    l_height += (this.getConfig().general.minLegendItemHeight * height / pixel_height);
             }
-            
+
             // Legend width in meters
             var l_width = this.getConfig().general.legendWidth * lside,
                 box_size = l_height / (ranges.length + titles.length + 1),
@@ -431,7 +432,7 @@ Oskari.clazz.define(
                 var geomWidth = (legend_geom.width * ranges[i].width) / legend_geom.pixel_width;
                 var geomHeight = (legend_geom.height * ranges[i].height) / legend_geom.pixel_height;
                 var outerGeomWidth = 1.2 * geomWidth;
-                var lineHeight = (legend_geom.height * (this.conf.general.minLegendItemHeight > ranges[i].height ? this.conf.general.minLegendItemHeight : ranges[i].height)) / legend_geom.pixel_height;
+                var lineHeight = (legend_geom.height * (this.getConfig().general.minLegendItemHeight > ranges[i].height ? this.getConfig().general.minLegendItemHeight : ranges[i].height)) / legend_geom.pixel_height;
                 var outerLineHeight = 1.2 * lineHeight;
                 var x = x_LU;
                 var y = y_LU;
