@@ -236,7 +236,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
 
         updateFilterRegionCategorySelector: function(indicator, year) {
-            var timePeriods = [];
+            var timePeriods = {};
             var selector = 'select.innerSelector[name="filterCategorySelector"]';
 
             if (typeof indicator !== 'undefined' && indicator.constructor !== Array) {
@@ -248,21 +248,35 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     for (var i = 0; i < indicator.length; ++i) {
                         if (this.indicators[j].id == indicator[i].id && typeof this.indicators[j].timePeriods !== 'undefined') {
                             for (var k = 0; k < this.indicators[j].timePeriods.length; ++k) {
-                                timePeriods.push(this.indicators[j].timePeriods[k].AreaTypes);
+                                if(typeof timePeriods[j] === 'undefined') {
+                                    timePeriods[j] = [];
+                                }
+                                timePeriods[j] = timePeriods[j].concat(this.indicators[j].timePeriods[k].AreaTypes);
+                                timePeriods[j] = _.uniq(timePeriods[j]);
                             }
                         }
                     }
                 }
             }
 
-            var commonRegions = [];
+            var commonRegions = null;
 
-            for (var i = 0; i < timePeriods.length; ++i) {
-                for (var j = 0; j < timePeriods[i].length; ++j) {
-                    commonRegions.push(timePeriods[i][j].Id);
+            $.each(timePeriods, function(key, timePeriod) {
+                if (commonRegions == null) {
+                    commonRegions = [];
+                    for (var j = 0; j < timePeriod.length; ++j) {
+                        commonRegions.push(timePeriod[j].Id);
+                    }
+                } else {
+                    var regions = [];
+                    for (var j = 0; j < timePeriod.length; ++j) {
+                        regions.push(timePeriod[j].Id);
+                    }
+                    commonRegions = $.grep(commonRegions, function(element) {
+                        return $.inArray(element, regions) !== -1;
+                    });
                 }
-                commonRegions = _.uniq(commonRegions);
-            }
+            });
 
             var me = this,
                 areaFilterLevels = [];
@@ -294,7 +308,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             
             elems.find('option').attr('disabled', false);
 
-            if (timePeriods.length > 0) {
+            if (Object.keys(timePeriods).length > 0) {
                 jQuery.each(elems.find('option'), function(index, value) {
                     if (jQuery.inArray(me._categoriesGroupKeys[value.value], commonRegions) == -1) {
                         jQuery(value).attr('disabled', true);
