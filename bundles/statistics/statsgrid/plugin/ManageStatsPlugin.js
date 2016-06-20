@@ -311,15 +311,54 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             if (elems.find('option:selected').attr('disabled') === "disabled") {
+                var oldCategory = elems.val();
                 elems.find('option:selected').removeAttr("selected");
                 if (areaFilterLevels.length != 0) {
                     elems.val(areaFilterLevels[0]).change();
+                    me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
                 } else {
                     elems.val(elems.find("option:not([disabled]):first")).change();
+                    me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
                 }
             }
         },
         
+        displayFilterCategoryChangedNotification: function(oldCategory, newCategory) {
+            var me = this,
+                dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+                dialogTitle = 'Virhe',
+                continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                continueLoc = "Jatka",
+                content,
+                contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '.</div>').clone(),
+                contentNotPossible = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Valituilla tilastoilla ei ole yhteisiä esitystasoja tai valitut aluerajaukset eivät ole mahdollisia valituille tilastoille.</div>').clone(),
+                dialogButtons = [];
+
+            if(newCategory === oldCategory) {
+                content = contentNotPossible;
+            } else {
+                content = contentLevelChanged;
+            }
+
+            // destroy possible open instance
+            me._destroyPopup('filterCategoryNotAvailable');
+
+            continueBtn.setTitle(continueLoc);
+            continueBtn.addClass('primary');
+            continueBtn.setHandler(function (e) {
+                me._destroyPopup('filterCategoryNotAvailable');
+            });
+
+            dialogButtons.push(continueBtn);
+
+            dialog.show(dialogTitle, content, dialogButtons);
+            me.popups.push({
+                name: 'filterCategoryNotAvailable',
+                popup: dialog,
+                content: content
+            });
+        },
+
         updateGridRegionCategorySelector: function() {
             var timePeriods = [];
             var selector = 'select.innerSelector[name="categorySelector"]';
@@ -3191,7 +3230,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 continueLoc = "Jatka",
                 content,
-                contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '</div>').clone(),
+                contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '.</div>').clone(),
                 contentNotPossible = jQuery('<div>Valittuja tilastoja ei voida näyttää yhtäaikaa, koska niille ei ole saatavilla yhteistä esitystasoa.</div>').clone(),
                 dialogButtons = [];
 
