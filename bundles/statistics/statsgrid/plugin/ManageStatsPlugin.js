@@ -3854,7 +3854,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (isNaN(numValue) || columnDef.decimals === null || columnDef.decimals === undefined) {
                         ret = value;
                     } else {
-                        ret = numValue.toFixed(columnDef.decimals);
+                        ret = me.statsService.formatThousandSeparators(numValue.toFixed(columnDef.decimals));
                     }
                     return ret;
                 },
@@ -5038,7 +5038,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @private _getStatistic
          */
         _getStatistic: function (gridTotals, columnId, type) {            
-            var value = {},
+            var me = this,
+                value = {},
                 totalsItem = null,
                 result = gridTotals[type],
                 decimals = this._getColumnById(columnId).decimals,
@@ -5053,8 +5054,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         value[indicatorId][type] = result[indicatorId];
                         totalsItem = jQuery(this.templates.statsgridTotalsVar);
                         var val = value[columnId][type];
-                        if (!isNaN(val) && !this._isInt(val)) {
-                            val = val.toFixed && decimals !== null && decimals !== undefined ? val.toFixed(decimals) : val;
+                        if (!isNaN(val)) {
+                            if (this._isInt(val)) {
+                                val = me.statsService.formatThousandSeparators(val);
+                            } else {
+                                val = val.toFixed && decimals !== null && decimals !== undefined ? me.statsService.formatThousandSeparators(val.toFixed(decimals)) : val;
+                            }
                         }
                         if (_.isNaN(val)) {
                             val = '-';
