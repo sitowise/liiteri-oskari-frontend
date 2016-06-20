@@ -329,8 +329,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 dialogTitle = 'Virhe',
                 continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 continueLoc = "Jatka",
-                content = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '.</div>').clone(),
+                content,
+                contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '.</div>').clone(),
+                contentNotPossible = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Valituilla tilastoilla ei ole yhteisiä esitystasoja tai valitut aluerajaukset eivät ole mahdollisia valituille tilastoille.</div>').clone(),
                 dialogButtons = [];
+
+            if(newCategory === oldCategory) {
+                content = contentNotPossible;
+            } else {
+                content = contentLevelChanged;
+            }
 
             // destroy possible open instance
             me._destroyPopup('filterCategoryNotAvailable');
