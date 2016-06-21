@@ -214,9 +214,9 @@ Oskari.clazz.define(
             var titlebox_size = l_height / (titles.length + 1);
             for (var ix = 0; ix < ranges.length; ix++) {
                 if (ranges[ix].height > this.getConfig().general.minLegendItemHeight)
-                    l_height += (ranges[ix].height * height / pixel_height);
+                    l_height += 1.1 * (ranges[ix].height * height / pixel_height);
                 else
-                    l_height += (this.getConfig().general.minLegendItemHeight * height / pixel_height);
+                    l_height += 1.1 * (this.getConfig().general.minLegendItemHeight * height / pixel_height);
             }
 
             // Legend width in meters
