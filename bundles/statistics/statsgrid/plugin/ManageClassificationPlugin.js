@@ -1024,10 +1024,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             if (params.COL_VALUES.length >= 2) {
                 var legendRounder = function (i) {
                     var ret;
-                    if (isNaN(i) || (i % 1 === 0)) {
+                    if (isNaN(i)) {
                         ret = i;
+                    } else if (i % 1 === 0) {
+                        ret = me.statsService.formatThousandSeparators(i);
                     } else {
-                        ret = (Math.round(i * 100) / 100);
+                        ret = me.statsService.formatThousandSeparators(Math.round(i * 100) / 100);
                     }
                     return ret;
                 };

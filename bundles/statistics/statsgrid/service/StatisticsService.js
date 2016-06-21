@@ -314,6 +314,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatisticsService',
                     }
                 }
             });
+        },
+
+        formatThousandSeparators: function (inputNumber) {
+            var formattedNumber = ('' + Math.abs(inputNumber)).split('.');
+            formattedNumber[0] = formattedNumber[0].replace(new RegExp("^(\\d{" + (formattedNumber[0].length % 3 ? formattedNumber[0].length % 3 : 0) + "})(\\d{3})", "g"), "$1 $2").replace(/(\d{3})+?/gi, "$1 ").trim();
+            if (inputNumber < 0) {
+                formattedNumber[0] = "-" + formattedNumber[0];
+            }
+            return formattedNumber.join('.');
         }
 
     }, {
