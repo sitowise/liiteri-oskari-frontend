@@ -22,9 +22,9 @@ Oskari.registerLocalization(
             "page1": {
                 "welcomeTitle": "Tervetuloa Liiteri tietopalveluun",
                 "welcomeMessage": "",
-                "oivaLogin": "Kirjaudu Oiva-tunnuksilla &#8250;",
+                "oivaLogin": "Kirjaudu SYKEn Avoin tieto / OIVA -tunnuksilla &#8250;",
                 "idaLogin": "Kirjaudu sopimusasiakkaana &#8250;",
-                "oivaRegister": "Hanki Oiva-tunnukset tästä &#8250;",
+                "oivaRegister": "Hanki tunnukset tästä &#8250;",
                 "idaRegister": "Liity sopimusasiakkaaksi &#8250;",
                 "username": "Käyttäjänimi",
                 "password": "Salasana",

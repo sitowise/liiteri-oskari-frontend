@@ -156,7 +156,6 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
 
 .loging-window .form-item span.link {
     cursor: pointer;
-    margin-left: 10px;
     color: #00bce9;
     font-size: large;
 }
@@ -164,11 +163,6 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
 .loging-window .form-item span.link-extra {
     color: initial;
     font-size: small;
-    margin-left: 10px;
-}
-
-.loging-window .form-item div.extraMessage {
-    margin-left: 10px;
 }
 
 .loging-window .form-item span.link:hover {
@@ -198,21 +192,20 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
     display: inline-block;
 }
 
-.loging-window .form-item span {
-    margin-left: 5px;
-}
-
 .loging-window .form-item {
     overflow: hidden;
     clear: both;
+    width: 570px;
 }
 
 .loging-window .form-item .form-tile {
     float: left;
-    margin-right: 20px;
+    margin-right: 15px;
     margin-bottom: 15px;
     margin-top: 15px;
-    max-width: 270px;
+    margin-left: 10px;
+    max-width: 260px;
+    height: 60px;
 }
 
 .loging-window .packageSelection {
@@ -220,7 +213,7 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
 }
 
 .loging-window .bodyContainer {
-    width: 575px;
+    width: 600px;
 }
 
 .loging-window .loginContainer .errorMessage {
