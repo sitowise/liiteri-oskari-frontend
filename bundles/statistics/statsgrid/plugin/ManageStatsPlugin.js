@@ -327,13 +327,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             if (elems.find('option:selected').attr('disabled') === "disabled") {
                 var oldCategory = elems.val();
                 elems.find('option:selected').removeAttr("selected");
-                if (areaFilterLevels.length != 0) {
-                    elems.val(areaFilterLevels[0]).change();
-                    me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
-                } else {
-                    elems.val(elems.find("option:not([disabled]):first")).change();
-                    me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
-                }
+                elems.val(elems.find("option:not([disabled]):first")).change();
+                me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
             }
         },
         
@@ -348,7 +343,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 contentNotPossible = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Tilastojen laskenta voi olla mahdollista vaihtamalla valittu vuosi, valitsemalla vähemmän tilastoja tai poistamalla mahdollinen aluerajaus käytöstä.</div>').clone(),
                 dialogButtons = [];
 
-            if(newCategory === oldCategory) {
+            if(newCategory === oldCategory || typeof newCategory === 'undefined' || newCategory === null) {
                 content = contentNotPossible;
             } else {
                 content = contentLevelChanged;
