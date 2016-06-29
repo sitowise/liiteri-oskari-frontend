@@ -345,7 +345,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 continueLoc = "Jatka",
                 content,
                 contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '.</div>').clone(),
-                contentNotPossible = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Valituilla tilastoilla ei ole yhteisiä esitystasoja tai valitut aluerajaukset eivät ole mahdollisia valituille tilastoille.</div>').clone(),
+                contentNotPossible = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Tilastojen laskenta voi olla mahdollista vaihtamalla valittu vuosi, valitsemalla vähemmän tilastoja tai poistamalla mahdollinen aluerajaus käytöstä.</div>').clone(),
                 dialogButtons = [];
 
             if(newCategory === oldCategory) {
@@ -3199,7 +3199,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 dialogTitle = 'Virhe',
                 continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 continueLoc = "Jatka",
-                content = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Valituilla tilastoilla ei ole yhteisiä esitystasoja tai valitut aluerajaukset eivät ole mahdollisia valituille tilastoille.</div>').clone(),
+                content = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Tilastojen laskenta voi olla mahdollista vaihtamalla valittu vuosi, valitsemalla vähemmän tilastoja tai poistamalla mahdollinen aluerajaus käytöstä.</div>').clone(),
                 dialogButtons = [];
                 
                 // destroy possible open instance
@@ -3245,7 +3245,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 continueLoc = "Jatka",
                 content,
                 contentLevelChanged = jQuery('<div>Kaikkia valittuja tilastoja ei voida näyttää valitulla esitystasolla ' + me._locale.regionSelectorCategories[oldCategory] + '. Esitystasoksi on vaihdettu ' + me._locale.regionSelectorCategories[newCategory] + '.</div>').clone(),
-                contentNotPossible = jQuery('<div>Valittuja tilastoja ei voida näyttää yhtäaikaa, koska niille ei ole saatavilla yhteistä esitystasoa.</div>').clone(),
+                contentNotPossible = jQuery('<div>Valittuja tilastoja ei voida näyttää yhtäaikaa, koska niille ei ole saatavilla yhteistä esitystasoa. Tilastojen laskenta voi olla mahdollista vaihtamalla valittu vuosi tai valitsemalla vähemmän tilastoja.</div>').clone(),
                 dialogButtons = [];
 
                 if(newCategory === null) {
