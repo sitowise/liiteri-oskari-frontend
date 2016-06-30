@@ -326,9 +326,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             if (elems.find('option:selected').attr('disabled') === "disabled") {
                 var oldCategory = elems.val();
-                elems.find('option:selected').removeAttr("selected");
-                elems.val(elems.find("option:not([disabled]):first")).change();
-                me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
+                if(typeof elems.find("option:not([disabled]):first").val() !== 'undefined') {
+                    elems.find('option:selected').removeAttr("selected");
+                    elems.val(elems.find("option:not([disabled]):first").val()).change();
+                    me.displayFilterCategoryChangedNotification(oldCategory, elems.val());
+                } else {
+                    me.displayFilterCategoryChangedNotification(oldCategory);
+                }
             }
         },
         
@@ -469,7 +473,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         elems.change();
                     }
                 } else {
-                    elems.val(elems.find("option:not([disabled]):first")).change();
+                    elems.val(elems.find("option:not([disabled]):first").val()).change();
                 }
             }
         },
@@ -3243,32 +3247,34 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 contentNotPossible = jQuery('<div>Valittuja tilastoja ei voida näyttää yhtäaikaa, koska niille ei ole saatavilla yhteistä esitystasoa. Tilastojen laskenta voi olla mahdollista vaihtamalla valittu vuosi tai valitsemalla vähemmän tilastoja.</div>').clone(),
                 dialogButtons = [];
 
-                if(newCategory === null) {
-                    content = contentNotPossible;
-                } else {
-                    content = contentLevelChanged;
-                }
-                
-                // destroy possible open instance
-                me._destroyPopup('categoryNotAvailable');
-                
-                continueBtn.setTitle(continueLoc);
-                continueBtn.addClass('primary');
-                continueBtn.setHandler(function (e) {
+                if(oldCategory !== null && typeof oldCategory !== 'undefined') {
+                    if(newCategory === null) {
+                        content = contentNotPossible;
+                    } else {
+                        content = contentLevelChanged;
+                    }
+                    
+                    // destroy possible open instance
                     me._destroyPopup('categoryNotAvailable');
-                });
-    
-                dialogButtons.push(continueBtn);
-                
-                dialog.show(dialogTitle, content, dialogButtons);
-                me.popups.push({
-                    name: 'categoryNotAvailable',
-                    popup: dialog,
-                    content: content
-                });
-                
-                if(newCategory === null) {
-                    return;
+                    
+                    continueBtn.setTitle(continueLoc);
+                    continueBtn.addClass('primary');
+                    continueBtn.setHandler(function (e) {
+                        me._destroyPopup('categoryNotAvailable');
+                    });
+        
+                    dialogButtons.push(continueBtn);
+                    
+                    dialog.show(dialogTitle, content, dialogButtons);
+                    me.popups.push({
+                        name: 'categoryNotAvailable',
+                        popup: dialog,
+                        content: content
+                    });
+                    
+                    if(newCategory === null) {
+                        return;
+                    }
                 }
             }
             
