@@ -3133,7 +3133,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 
                 if(typeof indi.timePeriods !== 'undefined') {
                     for (var ix = 0; ix < indi.timePeriods.length; ++ix) {
-                       if($.inArray(""+indi.timePeriods[ix].Id, arrayYears) > -1) {
+                       if($.inArray(""+indi.timePeriods[ix].Id, arrayYears) > -1 || $.inArray(indi.timePeriods[ix].Id, arrayYears) > -1) {
                            possibleRegions.push(indi.timePeriods[ix].AreaTypes);
                        }
                    }
