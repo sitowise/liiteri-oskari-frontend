@@ -3193,7 +3193,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
             
-            if(possibleRegions.length === 0 || commonRegions === null || commonRegions.length === 0) {
+            if(me.mode !== 'twoway' && (possibleRegions.length === 0 || commonRegions === null || commonRegions.length === 0)) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
                 continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
