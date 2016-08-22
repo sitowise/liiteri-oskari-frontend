@@ -645,7 +645,7 @@ if (typeof Slick === "undefined") {
                 var subheader = $("<div class='headerBorder' />")
                 .html(m.name)
                 .attr("title", m.toolTip || "")
-                .data("column", n)
+                .data("column", m)
                 .addClass(m.headerCssClass || "")
                 .appendTo(header);
                 subheader.width(headerWidth);

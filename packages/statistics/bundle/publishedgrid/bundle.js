@@ -27,7 +27,7 @@ function() {
             "src" : "../../../../bundles/statistics/publishedgrid/instance.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/bundle/statsgrid/domain/RequestQueue.js"
+            "src": "../../../../bundles/statistics/statsgrid/domain/RequestQueue.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/statistics/statsgrid/plugin/ManageClassificationPlugin.js"
@@ -42,7 +42,7 @@ function() {
             "src" : "../../../../bundles/statistics/statsgrid/event/IndicatorsEvent.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/bundle/statsgrid/event/IndicatorAdded.js"
+            "src": "../../../../bundles/statistics/statsgrid/event/IndicatorAdded.js"
         }, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/statistics/statsgrid/service/StatisticsService.js"
@@ -63,10 +63,10 @@ function() {
             "src": "../../../../bundles/framework/divmanazer/component/buttons/CloseButton.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/bundle/statsgrid/domain/AreaFilter.js"
+            "src": "../../../../bundles/statistics/statsgrid/domain/AreaFilter.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/bundle/statsgrid/domain/GeometryFilter.js"
+            "src": "../../../../bundles/statistics/statsgrid/domain/GeometryFilter.js"
         }, {
             "type" : "text/css",
             "src" : "../../../../bundles/statistics/statsgrid/resources/css/style.css"
