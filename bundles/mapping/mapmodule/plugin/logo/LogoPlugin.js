@@ -126,11 +126,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.LogoPlugin',
 
             for (p in me.eventHandlers) {
                 if (me.eventHandlers.hasOwnProperty(p)) {
-                    me._sandbox.unregisterFromEventByName(me, p);
+                    sandbox.unregisterFromEventByName(me, p);
                 }
             }
 
-            me._sandbox.unregister(me);
+            sandbox.unregister(me);
             me._map = null;
             me._sandbox = null;
 

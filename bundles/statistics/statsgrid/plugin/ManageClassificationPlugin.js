@@ -1355,7 +1355,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     if ($.inArray(zoneTypes[i], scaleZoneTypes) == -1) {
                         opt.attr('disabled', 'disabled');
                     }
-                    if(me.statsService.instance.conf.gridDataAllowed || zoneTypes[i] === this.ZONE_ADMINISTRATIVE) {
+                    if((me.statsService.instance.conf && me.statsService.instance.conf.gridDataAllowed) || zoneTypes[i] === this.ZONE_ADMINISTRATIVE) {
                         zoneTypeSelect.append(opt);
                     }
                 }
