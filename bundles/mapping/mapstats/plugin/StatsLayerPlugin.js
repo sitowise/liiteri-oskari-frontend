@@ -438,9 +438,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             }
             if (geoJsonData != null) {
                 var eventBuilder = this._sandbox.getEventBuilder('Printout.PrintableContentEvent');
-                var event = eventBuilder(this.getName(), null, null, geoJsonData);
-                this._sandbox.notifyAll(event);
-            }            
+                if(eventBuilder) {
+	                var event = eventBuilder(this.getName(), null, null, geoJsonData);
+	                this._sandbox.notifyAll(event);
+                }
+            }
         },
         _createGridMapLayer: function(layer) {
             var me = this;
