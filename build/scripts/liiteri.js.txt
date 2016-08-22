@@ -732,5 +732,7 @@ bundles/framework/featuredata2/plugin/FeaturedataPlugin.js
 bundles/framework/featuredata2/request/ShowFeatureDataRequest.js
 bundles/framework/featuredata2/request/ShowFeatureDataRequestHandler.js
 bundles/framework/featuredata2/resources/locale/fi.js
+packages/statistics/bundle/publishedgrid/bundle.js
+bundles/statistics/publishedgrid/instance.js
 libraries/jquery-te/jquery-te-1.4.0.min.js
 empty.js
