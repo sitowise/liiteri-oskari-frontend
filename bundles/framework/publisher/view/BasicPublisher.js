@@ -271,7 +271,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher.view.BasicPublisher',
         var logoPluginConfig = {};
         var mainMapLogoPlugin = me.instance.getSandbox().findRegisteredModuleInstance("MainMapModuleLogoPlugin");
         if(mainMapLogoPlugin) {
-            logoPluginConfig = _.cloneDeep(mainMapLogoPlugin.getConfig());
+            logoPluginConfig = _.cloneDeep(mainMapLogoPlugin.conf);
         }
         // override location
         logoPluginConfig.location = {
