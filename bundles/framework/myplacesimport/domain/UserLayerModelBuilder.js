@@ -30,6 +30,7 @@ Oskari.clazz.define(
             layer.setSource(mapLayerJson.source);
             layer.setRenderingElement(mapLayerJson.renderingElement);
             layer.addLayerUrl(mapLayerJson.renderingUrl);
+            layer.setAttributes({'fields': mapLayerJson.fields});
         }
     }
 );
