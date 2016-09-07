@@ -5709,24 +5709,33 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                         if (me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== null && me.WFSLayerService.getSelectedFeatureIds(l.getId()) !== undefined && me.WFSLayerService.getSelectedFeatureIds(l.getId()).length > 0) {
 
-                            var identyfyingNameAttr = layerFilterContainer.find('#attributeSelector_' + l.getId()).val();
+                            var identifyingNameAttr = layerFilterContainer.find('#attributeSelector_' + l.getId()).val();
 
                             //adding info about selected attrubite, which identify geometries
                             me.geomFilterIdAttributes.push({
                                 "id": l.getId(),
-                                "attr": identyfyingNameAttr
+                                "attr": identifyingNameAttr
                             });
 
                             for (var j = 0; j < me.WFSLayerService.getSelectedFeatureIds(l.getId()).length; ++j) {
                                 //me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1]);
 
                                 var fields = l.getFields();
-                                var attrIndex = fields.indexOf(identyfyingNameAttr);
+                                var attrIndex = fields.indexOf(identifyingNameAttr);
                                 var activeFeatures = l.getActiveFeatures();
 
                                 for (var k = 0; k < activeFeatures.length; k++) {
                                     if (activeFeatures[k][0] == l.getClickedGeometries()[j][0]) {
-                                        me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1], activeFeatures[k][attrIndex]);
+                                        var id = null;
+                                        if(attrIndex === -1 && identifyingNameAttr.startsWith("property_json.")) {
+                                            var jsonIndex = fields.indexOf("property_json");
+                                            var json = activeFeatures[k][jsonIndex];
+                                            id = json[identifyingNameAttr.split(".")[1]];
+                                            debugger;
+                                        } else {
+                                            id = activeFeatures[k][attrIndex];
+                                        }
+                                        me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1], id);
                                     }
                                 }
                             }
@@ -5818,7 +5827,21 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                     var attributeSelector = jQuery("<select id='attributeSelector_" + l.getId() + "' class='attributeSelector'></select>")
 
-                    var attributes = me._getLayerAttributes(l);
+                    var attributes = me._getLayerAttributes(l).slice(0);
+
+                    if(l.getLayerType() === "userlayer") {
+                        //userlayer can have imported json attributes, allow user to select from those too
+                        attributes = $.grep(attributes, function (elem) {
+                            return elem.id !== "property_json";
+                        });
+
+                        var fields = l.getAttributes().fields;
+                        $.each(fields, function(index, field) {
+                            if(field !== 'the_geom') {
+                                attributes.push({'id': 'property_json.' + field, 'name': field});
+                            }
+                        });
+                    }
 
                     me._appendOptionValues(attributeSelector, me._locale.geometryFilter.selectAttrInstr, attributes);
 
