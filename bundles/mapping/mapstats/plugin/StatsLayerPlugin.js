@@ -272,16 +272,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             var openLayer;
 
             var layerScales = me.getMapModule().calculateLayerScales(layer.getMaxScale(), layer.getMinScale());
-            var layerInfo = {};
-            layerInfo.spatialReference = {};
-            layerInfo.spatialReference.wkid = me._map.projection.substr(me._map.projection.indexOf(':') + 1);
             openLayer = new OpenLayers.Layer.ArcGIS93Rest("layer_" + layer.getId(), layerUrl, {
                 TRANSPARENT: true,
                 LAYERS: me.defaultLayerId,
                 VIS_METHOD: 'administrative'
             }, {
                 tileOptions : {
-                    maxGetUrlLength: 3072
+                    maxGetUrlLength: 2048
                 },
                 scales: layerScales,
                 isBaseLayer: false,
@@ -449,16 +446,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             var layerUrl = me.ajaxUrl + "&LAYERID=" + layer.getId();
             var openLayer;
             var layerScales = me.getMapModule().calculateLayerScales(layer.getMaxScale(), layer.getMinScale());
-            var layerInfo = {};
-            layerInfo.spatialReference = {};
-            layerInfo.spatialReference.wkid = me._map.projection.substr(me._map.projection.indexOf(':') + 1);
             openLayer = new OpenLayers.Layer.ArcGIS93Rest("layer_grid_" + layer.getId(), layerUrl, {
                 TRANSPARENT: true,
                 LAYERS: me.defaultLayerId,
                 XLAYERTYPE: 'grid'
             }, {
                 tileOptions: {
-                    maxGetUrlLength: 3072
+                    maxGetUrlLength: 2048
                 },
                 scales: layerScales,
                 isBaseLayer: false,
