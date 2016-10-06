@@ -1522,7 +1522,7 @@ Oskari.clazz.define(
             var style = layer.getCurrentStyle().getName();
             var result = [];
             for (var i = 0; i < grid.bounds.length; i++) {
-                var bboxKey = grid.bounds[i].join(",");
+                var bboxKey = this.bboxkeyStrip(grid.bounds[i]);
                 var dataForTile = this._tileData.mget(layerId, style, bboxKey);
                 if (dataForTile) {
                     result.push({
