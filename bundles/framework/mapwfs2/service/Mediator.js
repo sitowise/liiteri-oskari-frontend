@@ -566,6 +566,7 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
                 var valueItem = {};
                 valueItem.group = group;
                 valueItem.symbol = this._mapFromSymbol(style.uniqueValuesInfo[group]);
+                valueItem.label = style.uniqueValuesInfo[group].name;
                 result.values.push(valueItem);
             }
         } else if (style.type == 'group') {

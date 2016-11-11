@@ -323,7 +323,7 @@ Oskari.clazz.define('Oskari.userinterface.component.GroupVisualizationForm',
                 for (i = 0; i < style.values.length; i++) {
                     groups.push({
                         id: style.values[i].group,
-                        display: style.values[i].group,
+                        display: style.values[i].label
                     });
                 }
                 this.setStyleGroups(groups);
@@ -337,7 +337,7 @@ Oskari.clazz.define('Oskari.userinterface.component.GroupVisualizationForm',
                 for (i = 0; i < style.values.length; i++) {
                     groups.push({
                         id: style.values[i].group,
-                        display: style.values[i].group,
+                        display: style.values[i].label
                     });
                 }
                 this.setStyleGroups(groups);
