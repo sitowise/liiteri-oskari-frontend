@@ -125,7 +125,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
                             me.popupHandler.showSelectionTools();
                         }
                     };
-                sandbox.request(this, addBtnRequestBuilder('dialog', 'selectiontools', btn));
+                sandbox.request(this, addBtnRequestBuilder('dialog', 'basictools', btn));
 
                 this.selectionPlugin = this.sandbox.findRegisteredModuleInstance("MainMapModuleMapSelectionPlugin");
 
