@@ -13,7 +13,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.ButtonHandler",
     function (instance) {
         this.instance = instance;
         this.buttonGroup = 'myplaces';
-        this.measureButtonGroup = 'basictools';
+        this.measureButtonGroup = 'measuretools';
         this.ignoreEvents = false;
         this.dialog = null;
         var me = this;

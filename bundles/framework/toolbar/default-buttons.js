@@ -64,6 +64,27 @@ Oskari.clazz.category(
                                                 me.getSandbox().request(me, reqBuilder(rn));
                                             }
                                         },
+            							'featureinfo' : {
+            								iconCls: 'tool-feature-info',
+                                            tooltip: loc.featureinfo,
+                                            sticky: true,
+                                            callback: function () {
+                                                me.getSandbox().request(me, gfiReqBuilder(true));
+                                            }
+            							},
+            							'clear': {
+            							    iconCls: 'tool-clear',
+            							    tooltip: loc.clear,
+            							    sticky: false,
+            							    callback: function () {
+            							        me.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService').emptyAllWFSFeatureSelections();
+            							    }
+            							}
+                                    }
+                                },
+                                {
+                                    'name' : 'measuretools',
+                                    'buttons': {
                                         'measureline' : {
                                             iconCls: 'tool-measure-line',
                                             tooltip: loc.measure.line,
@@ -83,23 +104,7 @@ Oskari.clazz.category(
                                                 me.getSandbox().request(me, gfiReqBuilder(false));
                                                 me.getSandbox().request(me, reqBuilder(rn));
                                             }
-                                        },
-            							'featureinfo' : {
-            								iconCls: 'tool-feature-info',
-                                            tooltip: loc.featureinfo,
-                                            sticky: true,
-                                            callback: function () {
-                                                me.getSandbox().request(me, gfiReqBuilder(true));
-                                            }
-            							},
-            							'clear': {
-            							    iconCls: 'tool-clear',
-            							    tooltip: loc.clear,
-            							    sticky: false,
-            							    callback: function () {
-            							        me.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService').emptyAllWFSFeatureSelections();
-            							    }
-            							}
+                                        }
                                     }
                                 },
                                 {
