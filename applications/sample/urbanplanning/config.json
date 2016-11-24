@@ -54,8 +54,8 @@
 			"history": false,
             "basictools": false,
             "viewtools": false,
-			"sharing": false
-			
+			"sharing": false,
+			"measuretools": false
 		},
 		"state":{
 			"selected":{
