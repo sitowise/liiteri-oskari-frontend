@@ -155,11 +155,13 @@ function() {
                     "render": function (data, type, row) {
 						var operationsLinks = jQuery('<div class="operationsLinks"></div>');
 						var editLink = jQuery('<a class="editLink glyphicon glyphicon-pencil" title="' + me.locale.table.edit + '"></a>');
+						var postponeLink = jQuery('<a class="postponeLink glyphicon glyphicon-calendar" title="' + me.locale.table.postpone + '"></a>');
 						var shareLink = jQuery('<a class="shareLink glyphicon glyphicon-share-alt" title="' + me.locale.table.share + '"></a>');
 						var removeLink = jQuery('<a class="removeLink glyphicon glyphicon-remove-sign" title="' + me.locale.table.remove + '"></a>');
 						var transformLink = jQuery('<a class="transformLink glyphicon glyphicon-transfer" title="' + me.locale.table.transform + '"></a>');
 						
 						operationsLinks.append(editLink);
+						operationsLinks.append(postponeLink);
 						operationsLinks.append(shareLink);
 						operationsLinks.append(removeLink);
 
@@ -196,6 +198,15 @@ function() {
 			
 			if (data) {
 				me._showEditPopUp(data);
+			}
+			
+        });
+		
+		tableElement.find('tbody').on('click', 'a.postponeLink', function () {
+            var data = dataTable.row($(this).parents('tr')).data();
+			
+			if (data) {
+				me._postponeWorkspace(data);
 			}
 			
         });
@@ -745,6 +756,51 @@ function() {
 
 		dialog.show(me.locale.saveDialog.saveWorkspace, content, [saveBtn, cancelBtn]);
 		//dialog.makeModal();
+	},
+	
+	_postponeWorkspace: function(data) {
+		var me = this,
+			sandbox = this.instance.getSandbox(),
+			dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+			closeBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+
+		var content = jQuery('<div></div>');
+		var title = "";
+		
+		closeBtn.addClass('primary');
+
+		closeBtn.setTitle(me.locale.postponeDialog.close);
+		closeBtn.setHandler(function() {
+			dialog.close();
+		});
+		
+		var url = me.instance.getSandbox().getAjaxUrl() + 'action_route=PostponeWorkspace';
+		jQuery.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: url,
+			beforeSend: function (x) {
+				if (x && x.overrideMimeType) {
+					x.overrideMimeType("application/j-son;charset=UTF-8");
+				}
+			},
+			data: {
+				"id": data.id
+			},
+			success: function (data) {
+				var message = me.locale.postponeDialog.success;
+				message = message.replace('{0}', data.expirationDate);
+				content.append(jQuery('<div class="info">' + message + '</div>'));
+				title = me.locale.postponeDialog.successTitle;
+				dialog.show(title, content, [closeBtn]);
+				me.refreshList();
+			},
+			error: function (jqXHR, textStatus, errorThrown) {
+				content.append(jQuery('<div class="info">' + me.locale.postponeDialog.error + '</div>'));
+				title = me.locale.postponeDialog.errorTitle;
+				dialog.show(title, content, [closeBtn]);
+			}
+		});
 	},
 	
 	_showSharingPopUp: function(data) {

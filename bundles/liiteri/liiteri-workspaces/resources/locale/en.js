@@ -17,7 +17,8 @@ Oskari.registerLocalization({
 			"share": "Share",
 			"remove": "Remove",
 			"transform": "Transform",
-			"sharedWorkspaces": "Workspaces shared with me"
+			"sharedWorkspaces": "Workspaces shared with me",
+			"postpone": "Update the expiry date"
 		},
 		"userstable": {
 			"name": "Name",
@@ -28,6 +29,13 @@ Oskari.registerLocalization({
 		    "save": "Save",
             "saveWorkspace": "Save workspace",
 		    "saveWorkspaceInfo": "Are you sure you want to replace saved workspace with current view?"
+		},
+		"postponeDialog": {
+		    "success": "Update was successful. New expiry date is {0}.",
+		    "successTitle": "Success",
+		    "close": "Close",
+		    "error": "Update failed",
+		    "errorTitle": "Error"
 		},
 		"shareDialog": {
 		    "shareByEmail": "Share by email",
