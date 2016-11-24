@@ -26,7 +26,8 @@ Oskari.registerLocalization({
 		"saveDialog": {
 		    "nameField": "Name",
 		    "save": "Save",
-            "saveWorkspace": "Save workspace"
+            "saveWorkspace": "Save workspace",
+		    "saveWorkspaceInfo": "Are you sure you want to replace saved workspace with current view?"
 		},
 		"shareDialog": {
 		    "shareByEmail": "Share by email",
