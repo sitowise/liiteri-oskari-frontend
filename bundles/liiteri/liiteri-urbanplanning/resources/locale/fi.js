@@ -64,7 +64,8 @@ Oskari.registerLocalization({
                 "show": "Hae",
                 "clear": "Tyhjennä valinnat",
                 "apply": "Hyväksy ajanjakso",                
-                "noResultText": "Ei hakutuloksia"
+                "noResultText": "Ei hakutuloksia",
+                "add": "Lisää hakuehdoksi"
             },
             "table": {
                 "searchresult": "Hakutulokset - Asemakaavat listana",

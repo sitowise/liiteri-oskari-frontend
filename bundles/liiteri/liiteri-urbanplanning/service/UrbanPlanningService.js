@@ -68,8 +68,8 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-urbanplanning.service.UrbanPl
             var result = "";
             if (filter.planName != null && filter.planName != "")
                 result += "&planName=" + encodeURIComponent(filter.planName);
-            if (filter.keyword != null && filter.keyword != "")
-                result += "&keyword=" + encodeURIComponent(filter.keyword);
+            if (filter.keyword.length > 0)
+                result += "&keyword=" + encodeURIComponent(filter.keyword.join(","));
             if (filter.planType.length > 0)
                 result += "&planType=" + encodeURIComponent(filter.planType.join(","));
             if (filter.approver.length > 0)

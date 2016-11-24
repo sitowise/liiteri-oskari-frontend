@@ -339,6 +339,7 @@ div.urbanPlanDetail div.actions {
 .filterContainer button{
 	color: white;
     margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 .filterRow {
