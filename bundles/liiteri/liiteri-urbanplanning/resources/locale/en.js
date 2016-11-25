@@ -65,7 +65,8 @@ Oskari.registerLocalization({
                 "show": "apply",
                 "clear": "clear",
                 "apply": "apply",                
-                "noResultText" : "Upsi, no result set"
+                "noResultText" : "Upsi, no result set",
+                "add": "Add"
             },
             "table" : {
                 "searchresult": "Search result",

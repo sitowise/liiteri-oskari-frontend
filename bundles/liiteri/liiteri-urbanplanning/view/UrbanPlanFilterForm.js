@@ -92,11 +92,20 @@
             nameFilter.setPlaceholder(this.locale.search.entername);
             nameFilter.getField().find('input').attr('id', 'enterNameIdInput');
             nameFilter.getField().find('input').attr('class', 'filterRow');
-            nameFilter.bindChange(function(e) {
+            nameFilter.bindEnterKey(function(e) {
                 me._addTextToFilter($(e.target));
+                $(e.target).val('');
             }, true);
 
+            var addNameFilterButton = jQuery('<button>' + this.locale.search.add + '</button>');
+
+            addNameFilterButton.click(function (e) {
+                me._addTextToFilter($(nameFilter.getField().find('input')));
+                $(nameFilter.getField().find('input')).val('');
+            });
+
             formatFilter.append(nameFilter.getField());
+            formatFilter.append(addNameFilterButton);
 
             var typeFilter = jQuery(this.template.select("typeFilter", this.locale.search.selecttype));
             typeFilter.change(function (e) {
@@ -303,21 +312,24 @@
             me.view.showMessage(me.locale.info.title, message, null, {"draggable": true});
         },
         _addTextToFilter: function (element) {
+            var me = this;
             var elementType = element.prop('id');
             var elementTypeText = element.attr('placeholder');
-            var item = {};
-            item.id = elementType;
-            item.text = elementTypeText + " : " + element.val();
-            item.data = {
-                'group': elementType,
-                'value': element.val(),
-            };
-
-            if (item.data.value == "") {
-                this.filterCloud.removeItem(item);
-            } else {
-                this.filterCloud.addItem(item, { 'duplicateAction': 'replace' });
-            }            
+            var values = element.val().split(",");
+            $.each(values, function(index, value) {
+                if(value.trim().length === 0) {
+                    return true;
+                }
+                var item = {};
+                item.id = elementType + "__" + value.trim();
+                item.text = elementTypeText + " : " + value.trim();
+                item.data = {
+                    'group': elementType,
+                    'value': value.trim(),
+                };
+                
+                me.filterCloud.addItem(item, { 'duplicateAction': 'replace' });
+            });
         },
         _addToFilter: function (element) {
             var option = element.find('option:selected');
@@ -545,7 +557,7 @@
                         && $.isEmptyObject(this.area) && $.isEmptyObject(this.date);
                 }
             };
-            filters.keyword = "";
+            filters.keyword = [];
             filters.planType = [];
             filters.approver = [];
             filters.area = {};
@@ -554,7 +566,7 @@
             var filterItems = this.filterCloud.getItems();
             _.each(filterItems, function (item) {
                 if (item.data.group == "enterNameIdInput") {
-                    filters.keyword = item.data.value;
+                    filters.keyword.push(item.data.value);
                 }
 
                 if (item.data.group == "typeFilter") {
