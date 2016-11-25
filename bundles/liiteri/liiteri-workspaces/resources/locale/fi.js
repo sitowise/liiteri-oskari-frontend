@@ -17,7 +17,8 @@ Oskari.registerLocalization({
 			"share": "Jaa",
 			"remove": "Poista",
 			"transform": "Muunna palvelupaketiksi",
-			"sharedWorkspaces": "Minulle jaetut työtilat"
+			"sharedWorkspaces": "Minulle jaetut työtilat",
+			"postpone": "Päivitä päättymisajankohta"
 		},
 		"userstable": {
 			"name": "Nimi",
@@ -26,7 +27,15 @@ Oskari.registerLocalization({
 		"saveDialog": {
 		    "nameField": "Nimi",
 		    "save": "Tallenna",
-		    "saveWorkspace": "Tallenna työtila"
+		    "saveWorkspace": "Tallenna työtila",
+		    "saveWorkspaceInfo": "<p>Oletko varma, että haluat tallentaa nykyisen näkymän aiemmin tallentamasi työtilan päälle?</p><p>Jos et, avaa ensin haluamasi työtila klikkaamalla työtilan nimeä. Kun olet avannut työtilan, voit muokata työtilaa ja tallentaa muutokset klikkaamalla kynän kuvaa. Voit pidentää työtilan voimassaoloaikaa klikkaamalla kalenterin kuvaa.<p>"
+		},
+		"postponeDialog": {
+		    "success": "Voimassaolojan päivittäminen onnistui. Uusi päättymispäivä on {0}.",
+		    "successTitle": "Voimassaolojan päivittäminen onnistui",
+		    "close": "Sulje",
+		    "error": "Voimassaolojan päivittäminen epäonnistui.",
+		    "errorTitle": "Virhe"
 		},
 		"shareDialog": {
 		    "shareByEmail": "Jaa sähköpostilla",
