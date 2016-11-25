@@ -94,8 +94,9 @@
             nameFilter.getField().find('input').attr('class', 'filterRow');
             nameFilter.bindEnterKey(function(e) {
                 me._addTextToFilter($(e.target));
+                $(e.target).val('');
             }, true);
-            
+
             var addNameFilterButton = jQuery('<button>' + this.locale.search.add + '</button>');
 
             addNameFilterButton.click(function (e) {
