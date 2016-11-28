@@ -49,6 +49,7 @@ Oskari.registerLocalization({
                 "empty_filter": "Filter is empty",
                 "max_limit_reached": "Maximum limit of 2100 urban plans has been reached",
                 "incorrectDateFormat": "Incorrect date format",
+                "max_keywords": "Maximum amount for keywords is 100"
             },
             "search" : {
                 "searchtitle": "Search and Filter",

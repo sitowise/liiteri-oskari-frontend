@@ -94,14 +94,12 @@
             nameFilter.getField().find('input').attr('class', 'filterRow');
             nameFilter.bindEnterKey(function(e) {
                 me._addTextToFilter($(e.target));
-                $(e.target).val('');
             }, true);
 
             var addNameFilterButton = jQuery('<button>' + this.locale.search.add + '</button>');
 
             addNameFilterButton.click(function (e) {
                 me._addTextToFilter($(nameFilter.getField().find('input')));
-                $(nameFilter.getField().find('input')).val('');
             });
 
             formatFilter.append(nameFilter.getField());
@@ -316,6 +314,15 @@
             var elementType = element.prop('id');
             var elementTypeText = element.attr('placeholder');
             var values = element.val().split(",");
+            var maxTexts = 100;
+
+            if(values.length + me._getFilterSelections().keyword.length > maxTexts) {
+                var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+                dialog.show(me.locale.error.title, me.locale.error.max_keywords, null, {"draggable": true});
+                dialog.fadeout();
+                return;
+            }
+
             $.each(values, function(index, value) {
                 if(value.trim().length === 0) {
                     return true;
@@ -330,6 +337,7 @@
                 
                 me.filterCloud.addItem(item, { 'duplicateAction': 'replace' });
             });
+            element.val('');
         },
         _addToFilter: function (element) {
             var option = element.find('option:selected');
