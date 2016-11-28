@@ -125,14 +125,14 @@ Oskari.registerLocalization(
                         "id": "oskari_legend_NO",
                         "loca": "NO",
                         "label": "Ingen kartlegend",
-                        "tooltip": "Kartlegenden visas inte i kart utskriften.",
-                        "selected": true
+                        "tooltip": "Kartlegenden visas inte i kart utskriften."
                     },
                     {
                         "id": "oskari_legend_LL",
                         "loca": "LL",
                         "label": "Nedre vänstra hörn",
-                        "tooltip": "Kartlegenden visas i det nedre vänstra hörnet av utskriften."
+                        "tooltip": "Kartlegenden visas i det nedre vänstra hörnet av utskriften.",
+                        "selected": true
                     },
                     {
                         "id": "oskari_legend_LU",
