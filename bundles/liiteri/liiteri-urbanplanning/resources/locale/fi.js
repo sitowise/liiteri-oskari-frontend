@@ -47,7 +47,8 @@ Oskari.registerLocalization({
                 "empty_filter": "Anna ainakin yksi hakukriteeri ennen haun aloittamista",
                 "max_limit_reached": "Hakusi tuotti yli 2100 tulosta, muuta hakukriiterejä pienentääksesi tulosjoukkoa",
                 "incorrectDateFormat": "Annettu päivämäärä on virheellinen",
-                "csvLoadingError": "Tietojen haussa tapahtui virhe. Yritä myöhemmin uudelleen."
+                "csvLoadingError": "Tietojen haussa tapahtui virhe. Yritä myöhemmin uudelleen.",
+                "max_keywords": "Hakuehtoihin voi lisätä korkeintaan 100 nimeä tai tunnusta"
             },
             "search": {
                 "searchtitle": "Asemakaavojen haku",
