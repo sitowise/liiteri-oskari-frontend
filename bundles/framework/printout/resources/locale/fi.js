@@ -134,14 +134,14 @@ Oskari.registerLocalization(
                         "id": "oskari_legend_NO",
                         "loca": "NO",
                         "label": "Ei karttaselitettä",
-                        "tooltip": "Karttaselitettä ei näytetä tulosteessa.",
-                        "selected": true
+                        "tooltip": "Karttaselitettä ei näytetä tulosteessa."
                     },
                     {
                         "id": "oskari_legend_LL",
                         "loca": "LL",
                         "label": "Vasemmassa alanurkassa",
-                        "tooltip": "Karttaselite näytetään tulosteen vasemmassa alanurkassa."
+                        "tooltip": "Karttaselite näytetään tulosteen vasemmassa alanurkassa.",
+                        "selected": true
                     },
                     {
                         "id": "oskari_legend_LU",

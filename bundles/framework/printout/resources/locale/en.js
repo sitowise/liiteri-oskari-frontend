@@ -130,33 +130,33 @@ Oskari.registerLocalization(
                 "tooltip": "Select a position for the map legend. If any position is not selected, a map legend is not shown in the map printout.",
                 "options": [
                     {
-                    "id": "oskari_legend_NO",
-                    "loca": "NO",
+                        "id": "oskari_legend_NO",
+                        "loca": "NO",
                         "label": "No map legend",
-                        "tooltip": "The map legend is not shown in the map printout.",
-                    "selected": true
+                        "tooltip": "The map legend is not shown in the map printout."
                     },
                     {
-                    "id": "oskari_legend_LL",
-                    "loca": "LL",
+                        "id": "oskari_legend_LL",
+                        "loca": "LL",
                         "label": "Left lower corner",
-                        "tooltip": "The map legend is shown in the left lower corner of the printout."
+                        "tooltip": "The map legend is shown in the left lower corner of the printout.",
+                        "selected": true
                     },
                     {
-                    "id": "oskari_legend_LU",
-                    "loca": "LU",
+                        "id": "oskari_legend_LU",
+                        "loca": "LU",
                         "label": "Left upper corner",
                         "tooltip": "The map legend is shown in the left upper corner of the printout."
                     },
                     {
-                    "id": "oskari_legend_RU",
-                    "loca": "RU",
+                        "id": "oskari_legend_RU",
+                        "loca": "RU",
                         "label": "Right upper corner",
                         "tooltip": "The map legend is shown in the right upper corner of the printout."
                     },
                     {
-                    "id": "oskari_legend_RL",
-                    "loca": "RL",
+                        "id": "oskari_legend_RL",
+                        "loca": "RL",
                         "label": "Right lower corner",
                         "tooltip": "The map legend is shown in the right upper corner of the printout."
                     }
