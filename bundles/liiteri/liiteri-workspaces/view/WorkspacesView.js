@@ -729,7 +729,9 @@ function() {
 		sandbox.postRequestByName('StatsGrid.CurrentStateRequest');
 
 		var content = jQuery('<div></div>');
-		content.append(jQuery('<div class="info">' + me.locale.saveDialog.saveWorkspaceInfo + '</div>'));
+		if(data) {
+			content.append(jQuery('<div class="info">' + me.locale.saveDialog.saveWorkspaceInfo + '</div>'));
+		}
 		var workspaceNameField = Oskari.clazz.create('Oskari.userinterface.component.FormInput', 'workspaceNameField');
 		workspaceNameField.getField().find('input').before('<br />');
 		workspaceNameField.setLabel(me.locale.saveDialog.nameField);
