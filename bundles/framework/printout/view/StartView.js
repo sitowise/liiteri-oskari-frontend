@@ -28,12 +28,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.StartView',
     }, {
         _isTooManyLayers: function () {
             var layerCount = this.instance.getSandbox().findAllSelectedMapLayers().length;
-            var isMaxLayersExceeded = layerCount > 7;
+            var isMaxLayersExceeded = layerCount > 15;
             return isMaxLayersExceeded;
         },
         _isManyLayers: function () {
             var layerCount = this.instance.getSandbox().findAllSelectedMapLayers().length;
-            var isManyLayersExceeded = layerCount > 2;
+            var isManyLayersExceeded = layerCount > 5;
             return isManyLayersExceeded;
         },
         /**

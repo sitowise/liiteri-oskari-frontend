@@ -175,7 +175,7 @@ Oskari.registerLocalization(
         "StartView": {
             "text": "You can print out the Map view you just created as a PNG image or a PDF file.",
             "info": {
-                "maxLayers": "You can use at most eight map layers in the printout.",
+                "maxLayers": "You can use at most 15 map layers in the printout.",
                 "printoutProcessingTime": "Printing out the map view may take some time when multiple layers are selected."
             },
             "buttons": {

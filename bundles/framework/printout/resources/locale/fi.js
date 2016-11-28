@@ -177,7 +177,7 @@ Oskari.registerLocalization(
         "StartView": {
             "text": "Tulosta karttanäkymä tiedostoon. Tiedosto voi olla joko PNG-kuva tai PDF-tiedosto.",
             "info": {
-                "maxLayers": "Tulosteessa voi olla enintään kahdeksan karttatasoa.",
+                "maxLayers": "Tulosteessa voi olla enintään 15 karttatasoa.",
                 "printoutProcessingTime": "Tulostus voi kestää hetken, jos valittuna on useita karttatasoja."
             },
             "buttons" : {
