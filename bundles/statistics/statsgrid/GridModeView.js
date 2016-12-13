@@ -101,7 +101,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                         // Save the changed layer to the state.
                         me.instance.state.layerId = me._layer.getId();
                         //me.toolbar.changeName(me.instance.getLocalization('tile').title + ' - ' + me._layer.getName());
-                        me._layer.setOpacity(100);
+                        //me._layer.setOpacity(100);
                     }
                 } else if (!me.isVisible && me._layer) {
                     me._layer = null;
