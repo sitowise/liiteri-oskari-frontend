@@ -146,7 +146,7 @@ function() {
 				{
 					"targets": 0,
 					"render": function (data, type, row) {
-						var loadLink = jQuery('<a class="loadLink">' + data + '</a>');
+						var loadLink = jQuery('<a class="loadLink" title="' + me.locale.table.open + '">' + data + '</a>');
 						return loadLink.outerHTML();
 					}
 				},

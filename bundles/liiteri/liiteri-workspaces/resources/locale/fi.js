@@ -18,7 +18,8 @@ Oskari.registerLocalization({
 			"remove": "Poista",
 			"transform": "Muunna palvelupaketiksi",
 			"sharedWorkspaces": "Minulle jaetut työtilat",
-			"postpone": "Päivitä päättymisajankohta"
+			"postpone": "Päivitä päättymisajankohta",
+			"open": "Avaa"
 		},
 		"userstable": {
 			"name": "Nimi",
