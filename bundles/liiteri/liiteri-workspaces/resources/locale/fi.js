@@ -13,12 +13,13 @@ Oskari.registerLocalization({
 			"name": "Nimi",
 			"expirationDate": "Voimassa",
 			"operations": "Toiminnot",
-			"edit": "Muokkaa",
+			"edit": "Tallenna",
 			"share": "Jaa",
 			"remove": "Poista",
 			"transform": "Muunna palvelupaketiksi",
 			"sharedWorkspaces": "Minulle jaetut työtilat",
-			"postpone": "Päivitä päättymisajankohta"
+			"postpone": "Päivitä päättymisajankohta",
+			"open": "Avaa"
 		},
 		"userstable": {
 			"name": "Nimi",
