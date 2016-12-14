@@ -841,11 +841,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                 //Legend layers go at the end
                 var legendLayers = ['LegendHeader', 'LegendBoxes'];
                 $.each(geoJson, function (id, value) {
-                    if (legendLayers.indexOf(value.id) == -1)
+                    if (value != null && legendLayers.indexOf(value.id) == -1)
                         geoJsonArray.push(value);
                 });
                 $.each(geoJson, function (id, value) {
-                    if (legendLayers.indexOf(value.id) > -1)
+                    if (value != null && legendLayers.indexOf(value.id) > -1)
                         geoJsonArray.push(value);
                 });
 
@@ -961,7 +961,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
          *
          */
         _createLegend: function () {
-            var me = this;
+            var me = this,
+                legendLayers = ['LegendHeader', 'LegendBoxes'];
             // only if any statslayer visible
             me._setLegendVisibility();
             if (!me._hasStatsLayers()) {
@@ -981,6 +982,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                     me.instance.getSandbox().getMap().GeoJSON = null;
                 }
                 me.instance.legendPlugin.clearLegendLayers();
+
+                //clean legend layers in geojson parameter
+                $.each(me.instance.geoJson, function (id, value) {
+                    if (value != null && legendLayers.indexOf(value.id) > -1)
+                        me.instance.geoJson[id] = null;
+                });
             } else {
                 var legend = parentContainer.find('div.geostats-legend');
                 if (legend.length > 0) {
@@ -988,6 +995,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                         return;
                     }
                     me.legendInProcess = true;
+                    me.mainPanel.find('input[type=submit]').prop('disabled', true);
+
                     me._printMapInfo(legend, function (data) {
                         var title = legend.find('.geostats-legend-title').html();
                         // ranges
@@ -1031,6 +1040,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                             me.instance.geoJson[id] = value;
                         });                        
                         me.legendInProcess = false;
+                        me.mainPanel.find('input[type=submit]').prop('disabled', false);
+
+                    }, function () {
+                        //clean legend layers in geojson parameter
+                        $.each(me.instance.geoJson, function (id, value) {
+                            if (value != null && legendLayers.indexOf(value.id) > -1)
+                                me.instance.geoJson[id] = null;
+                        });
+
+                        me.legendInProcess = false;
+                        me.mainPanel.find('input[type=submit]').prop('disabled', false);
                     });
                 }
             }
@@ -1064,7 +1084,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
          * @param {String} url  print url string
          *
          */
-        _printMapInfo: function (legend, callback) {
+        _printMapInfo: function (legend, callback, errorCallback) {
             var me = this,
                 selections = me._gatherSelections(),
                 sandbox = me.instance.getSandbox(),
@@ -1107,6 +1127,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
 
                 function (jqXHR, textStatus) {
                     alert('Error to fetch print info: ');
+
+                    if (errorCallback) {
+                        errorCallback();
+                    }
 
                 }
             );
