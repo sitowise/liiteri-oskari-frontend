@@ -154,7 +154,7 @@ function() {
 					"targets": 2,
                     "render": function (data, type, row) {
 						var operationsLinks = jQuery('<div class="operationsLinks"></div>');
-						var editLink = jQuery('<a class="editLink glyphicon glyphicon-pencil" title="' + me.locale.table.edit + '"></a>');
+						var editLink = jQuery('<a class="editLink glyphicon glyphicon-floppy-disk" title="' + me.locale.table.edit + '"></a>');
 						var postponeLink = jQuery('<a class="postponeLink glyphicon glyphicon-calendar" title="' + me.locale.table.postpone + '"></a>');
 						var shareLink = jQuery('<a class="shareLink glyphicon glyphicon-share-alt" title="' + me.locale.table.share + '"></a>');
 						var removeLink = jQuery('<a class="removeLink glyphicon glyphicon-remove-sign" title="' + me.locale.table.remove + '"></a>');
