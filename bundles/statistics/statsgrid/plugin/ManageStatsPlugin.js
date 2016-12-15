@@ -2888,6 +2888,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             me.indicators = [];
             me.indicatorsMeta = {};
             me.indicatorsData = {};
+            //clear map
+            me.instance.classifyPlugin.administrative_sendEmptyValues();
         },
         resetSelections: function () {
             var me = this;
@@ -4358,7 +4360,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
 
         resetLayer: function () {
-            if (!this.grid || this.grid.getColumns().length < 3) {
+            if (this.instance.state.indicators == null || this.instance.state.indicators.length == 0) {
                 this._sandbox.postRequestByName('RemoveMapLayerRequest', [this._layer.getId()]);
             }
         },

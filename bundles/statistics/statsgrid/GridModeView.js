@@ -279,8 +279,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                     }
                 }
                 // remove stats layer if we added it and there's no active indicators
-                // this breaks published stats...
-                //me.instance.gridPlugin.resetLayer();
+                me.instance.gridPlugin.resetLayer(); 
 
                 me.instance.state.hiddenLayers = [];
                 me.instance.gridPlugin.destroyPopups(); // This is ugly, whose responsibility should this be?
