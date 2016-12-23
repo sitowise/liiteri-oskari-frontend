@@ -49,6 +49,7 @@
         this.options = $.extend(this.defaultOptions, options);
         this.itemsById = {};
         this.uiById = {};
+        this.onRemoveItemCallback = null;
 
         var me = this;
         var header = me.html.find('div.header');
@@ -93,6 +94,11 @@
         getTitle: function () {
             return this.title;
         },
+
+        setOnRemoveItemCallback: function(callback) {
+            this.onRemoveItemCallback = callback;
+        },
+
         addItem: function (item, options) {
             var me = this;
             if (!this._validateItem(item))
@@ -131,6 +137,9 @@
                 delete me.itemsById[item.id];
                 itemui.remove();
                 delete me.uiById[item.id];
+                if (me.onRemoveItemCallback != null) {
+                    me.onRemoveItemCallback(item);
+                }
             });
 
             this.uiById[item.id] = itemui;

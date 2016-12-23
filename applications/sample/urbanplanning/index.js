@@ -1,5 +1,21 @@
 jQuery(document).ready(function () {
 
+    //default language: Finnish
+    var language = 'fi';
+    
+    
+    //Get the language parameter from URL
+    var langParamName = 'lang'; 
+    
+    langParamName = langParamName.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + langParamName + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.href);
+    
+    if (results != null) {    
+      language = results[1];
+    }
+
     Oskari.setLang(language);
     Oskari.setLoaderMode('dev');
     var appSetup,

@@ -25,8 +25,9 @@ Oskari.clazz.define(
     }, {
         getForm: function() {
             if (this.container == null) {
-                this.container = this._createUI();
+                this._createUI();
             }
+
             return this.container;
         },
         _createUI: function() {
@@ -67,11 +68,11 @@ Oskari.clazz.define(
             });
             
             undergroundCheckbox.change(function() {
-                me.fillMarkNames(areaCheckbox.is(':checked'), undergroundCheckbox.is(':checked'), $('#markingsMainMarkNameInput').val());
+                me.fillMarkNames();
             });
             
             areaCheckbox.change(function() {
-                me.fillMarkNames(areaCheckbox.is(':checked'), undergroundCheckbox.is(':checked'), $('#markingsMainMarkNameInput').val());
+                me.fillMarkNames();
             });
 
             filterRowMarkingType.append(jQuery("<br/>"));
@@ -86,6 +87,9 @@ Oskari.clazz.define(
             var municipalityId = jQuery(this.templates.select(
                 'markingsMunicipalityIdInput',
                 this.locale.markingssearch.municipalityid));
+            municipalityId.change(function (e) {
+                me.instance.addFilterToUrl('municipalityId', $(e.target).val());
+            });
             filterMunicipalityId.append(municipalityId);
             filterMunicipalityId.hide();
             panelBody.append(filterMunicipalityId);
@@ -95,24 +99,31 @@ Oskari.clazz.define(
             var mainMarkName = jQuery(this.templates.select(
                 'markingsMainMarkNameInput',
                 this.locale.markingssearch.mainmarkname));
+            mainMarkName.change(function (e) {
+                me.instance.addFilterToUrl('mainMarkName', $(e.target).val());
+            });
             filterMainMarkName.append(mainMarkName);
             filterMainMarkName.hide();
             panelBody.append(filterMainMarkName);
 
             // Hide/show stuff based on selection
-            typeFilter.find("input:radio[value='municipality']").click(function () {
+            typeFilter.find("input:radio[value='municipality']").change(function () {
                 if ($(this).is(':checked')) {
                     //filterName.show();
                     filterMunicipalityId.show();
                     filterMainMarkName.show();
                 }
+
+                me.instance.addFilterToUrl('type', $(this).prop('value'));
             });
-            typeFilter.find("input:radio[value='standard']").click(function () {
+            typeFilter.find("input:radio[value='standard']").change(function () {
                 if ($(this).is(':checked')) {
                     //filterName.hide();
                     filterMunicipalityId.hide();
                     filterMainMarkName.hide();
                 }
+
+                me.instance.addFilterToUrl('type', $(this).prop('value'));
             });
 
             // by default 'standard' radio value is selected
@@ -179,20 +190,32 @@ Oskari.clazz.define(
                 });
                 $('#markingsMainMarkNameInput').chosen(
                     { allow_single_deselect: true, no_results_text: me.locale.search.noResultText });
-            }
-            this.instance.service.getMarkingsStartingData(fillCb, this.errorCb);
 
-            return container;
+                //select filters based on URL params
+                me._selectFilters();
+            };
+            var errorCb = function() {
+                //select filters based on URL params
+                me._selectFilters();
+            };
+
+            this.container = container;
+
+            this.instance.service.getMarkingsStartingData(fillCb, errorCb);
         },
         
         fillMarkNames: function(area, underground, selected) {
+            var area = this.container.find('input:checkbox[name="urbanPlanMarkingsMarkingType"][value="areaReservations"]'),
+                underground = this.container.find('input:checkbox[name="urbanPlanMarkingsMarkingType"][value="undergroundAreas"]'),
+                selected = $('#markingsMainMarkNameInput').val();
+
             if(this.markNames === null) {
                 return;
             }
             $('#markingsMainMarkNameInput').find('option').remove();
             $('#markingsMainMarkNameInput').append($('<option value=""/>'));
             $.each(this.markNames, function(idx, item) {
-                if(area && item !== 'ma' || underground && item === 'ma') {
+                if(area.is(':checked') && item !== 'ma' || underground.is(':checked') && item === 'ma') {
                     $('#markingsMainMarkNameInput').append($('<option/>', {
                         'value':    item,
                         'text':     item
@@ -204,5 +227,47 @@ Oskari.clazz.define(
             });
             $('#markingsMainMarkNameInput').trigger("liszt:updated");
             
+            if (area.is(':checked')) {
+                this.instance.addFilterToUrl('areaType', area.prop('value'), true);    
+            } else {
+                this.instance.removeFilterFromUrl('areaType', area.prop('value'));
+            }
+
+            if (underground.is(':checked')) {
+                this.instance.addFilterToUrl('areaType', underground.prop('value'), true);    
+            } else {
+                this.instance.removeFilterFromUrl('areaType', underground.prop('value'));
+            }
+        },
+
+        _selectFilters: function () {
+            var param,
+                splittedParam,
+                i;
+                
+            //type
+            param = this.instance.getUrlParameter('type');
+            if (param != null) {
+                this.container.find('input:radio[name="urbanPlanMarkingsType"][value="' + param + '"]').prop('checked', true).change();
+
+                param = this.instance.getUrlParameter('municipalityId');
+                if (param != null) {
+                    this.container.find('#markingsMunicipalityIdInput').val(param).trigger("liszt:updated");;
+                }
+                param = this.instance.getUrlParameter('mainMarkName');
+                if (param != null) {
+                    this.container.find('#markingsMainMarkNameInput').val(param).trigger("liszt:updated");;
+                }
+            }
+            
+            //area type
+            param = this.instance.getUrlParameter('areaType');
+            if (param != null) {
+                this.container.find('input:checkbox[name="urbanPlanMarkingsMarkingType"]').prop('checked', false);
+                splittedParam = param.split(',');
+                for (i = 0; i < splittedParam.length; i++) {
+                    this.container.find('input:checkbox[name="urbanPlanMarkingsMarkingType"][value="' + splittedParam[i] + '"]').prop('checked', true).change();
+                }
+            }
         }
     });
