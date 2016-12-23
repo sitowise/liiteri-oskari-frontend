@@ -53,6 +53,9 @@
 
             this.filterCloud = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-ui.component.FilterCloud');
             this.filterCloud.insertTo(selectedFilter);
+            this.filterCloud.setOnRemoveItemCallback(function(filter) {
+                me.clearFilterFromUrl(filter);
+            });
 
             var buttonsContainer = jQuery("<div class='filterRow buttons'></div>");
             var showButton = jQuery('<button>' + this.locale.search.show + '</button>');
@@ -93,13 +96,13 @@
             nameFilter.getField().find('input').attr('id', 'enterNameIdInput');
             nameFilter.getField().find('input').attr('class', 'filterRow');
             nameFilter.bindEnterKey(function(e) {
-                me._addTextToFilter($(e.target));
+                me._addTextToFilter($(e.target), true);
             }, true);
 
             var addNameFilterButton = jQuery('<button>' + this.locale.search.add + '</button>');
 
             addNameFilterButton.click(function (e) {
-                me._addTextToFilter($(nameFilter.getField().find('input')));
+                me._addTextToFilter($(nameFilter.getField().find('input')), true);
             });
 
             formatFilter.append(nameFilter.getField());
@@ -107,13 +110,13 @@
 
             var typeFilter = jQuery(this.template.select("typeFilter", this.locale.search.selecttype));
             typeFilter.change(function (e) {
-                me._addToFilter($(e.target));
+                me._addToFilter($(e.target), true);
             });
             formatFilter.append(typeFilter);
 
             var acceptorFilter = jQuery(this.template.select("acceptorFilter", this.locale.search.acceptedby));
             acceptorFilter.change(function (e) {
-                me._addToFilter($(e.target));
+                me._addToFilter($(e.target), true);
             });
             formatFilter.append(acceptorFilter);
 
@@ -164,66 +167,7 @@
             timeFilter.append(addTimeFilterContainer);
 
             addTimeFilterButton.click(function (e) {
-                var timeFilterEl = $("#timeFilter");
-                var selectedTime = timeFilterEl.find(':selected').val();
-
-                if (selectedTime == "")
-                    return;
-
-                var timeFromText = $("#timeFromInput").val();
-                var timeToText = $("#timeToInput").val();
-
-
-                if ((timeFromText != '' && !me._validateDate('dd.mm.yy', timeFromText))
-                    || (timeToText != '' && !me._validateDate('dd.mm.yy', timeToText))) {
-                    me._showError("incorrectDateFormat");
-                    return;
-                }
-
-                var timeFromEl = $("#actualTimeFromInput");
-                var timeToEl = $("#actualTimeToInput");
-
-                var selectedTimeText = timeFilterEl.find(':selected').text();
-                var timeFrom = timeFromText === '' ? '' : timeFromEl.val();
-                var timeTo = timeToText === '' ? '' : timeToEl.val();
-                
-
-                if (timeFrom == '') {
-                    timeFrom = '1753-01-01';
-                    timeFromText = '';
-                }
-
-                if (timeTo == '') {
-                    timeTo = '9999-01-01';
-                    timeToText = '';
-                }
-
-                var item = {};
-                item.id = "Date" + "__" + selectedTime;
-                item.text = selectedTimeText + " : " + timeFromText + " - " + timeToText;
-                item.data = {
-                    'group': "dateFilter",
-                    'value': {
-                        'type': selectedTime,
-                        'from': timeFrom,
-                        'to': timeTo
-                    }
-                };
-
-                if(me.filterCloud.addItem(item, {
-                        'duplicateAction': 'callback',
-                        'duplicateCallback': function (i) { me._showError('duplicate_date'); }
-                        })) {
-                    $("#actualTimeFromInput").val('');
-                    $("#actualTimeToInput").val('');
-                    $("#timeFromInput").val('');
-                    $("#timeToInput").val('');
-                    timeFilterEl.val('');
-                    timeFilterEl.trigger("liszt:updated");
-                    timeFromInput.setEnabled(false);
-                    timeToInput.setEnabled(false);
-                }
-
+                me._addTimeToFilter(true);
             });
 
             timeFilterPanel.setContent(timeFilter);
@@ -292,12 +236,16 @@
             if (this.container == null) {
                 return;
             }
+            
             this._addOptions("typeFilter", data.planType);
             this._addOptions("acceptorFilter", data.approver);
             this._addOptions("timeFilter", data.timeSelectorType);
             this._addMultiOptions("areaFilter", data.region);
 
             this._updateComponents();
+
+            //select filters based on URL params
+            this._selectFilters();
         },
         _showError: function (errorMsg) {
             var me = this;
@@ -309,7 +257,7 @@
             var message = me.locale.info[key];
             me.view.showMessage(me.locale.info.title, message, null, {"draggable": true});
         },
-        _addTextToFilter: function (element) {
+        _addTextToFilter: function (element, addToUrl) {
             var me = this;
             var elementType = element.prop('id');
             var elementTypeText = element.attr('placeholder');
@@ -336,10 +284,14 @@
                 };
                 
                 me.filterCloud.addItem(item, { 'duplicateAction': 'replace' });
+
+                if (addToUrl) {
+                    me.instance.addFilterToUrl(elementType, value.trim(), true);
+                }
             });
             element.val('');
         },
-        _addToFilter: function (element) {
+        _addToFilter: function (element, addToUrl) {
             var option = element.find('option:selected');
             if (option == null || element.val() == "")
                 return;
@@ -357,47 +309,102 @@
 
             this.filterCloud.addItem(item, { 'duplicateAction': 'replace' });
 
+            if (addToUrl) {
+                this.instance.addFilterToUrl(elementType, element.val(), true);
+            }
+            
+            element.val('');
+            element.trigger("liszt:updated");
+
+
+        },
+        _addTimeToFilter: function (addToUrl) {
+            var me = this;
+            var timeFilterEl = $("#timeFilter");
+            var selectedTime = timeFilterEl.find(':selected').val();
+
+            if (selectedTime == "")
+                return;
+
+            var timeFromText = $("#timeFromInput").val();
+            var timeToText = $("#timeToInput").val();
+
+            if ((timeFromText != '' && !me._validateDate('dd.mm.yy', timeFromText))
+                || (timeToText != '' && !me._validateDate('dd.mm.yy', timeToText))) {
+                me._showError("incorrectDateFormat");
+                return;
+            }
+
+            var timeFromEl = $("#actualTimeFromInput");
+            var timeToEl = $("#actualTimeToInput");
+
+            var selectedTimeText = timeFilterEl.find(':selected').text();
+            var timeFrom = timeFromText === '' ? '1753-01-01' : timeFromEl.val();
+            var timeTo = timeToText === '' ? '9999-01-01' : timeToEl.val();
+            
+            var item = {};
+            item.id = "Date" + "__" + selectedTime;
+            item.text = selectedTimeText + " : " + timeFromText + " - " + timeToText;
+            item.data = {
+                'group': "dateFilter",
+                'value': {
+                    'type': selectedTime,
+                    'from': timeFrom,
+                    'to': timeTo
+                }
+            };
+
+            if(me.filterCloud.addItem(item, {
+                    'duplicateAction': 'callback',
+                    'duplicateCallback': function (i) { me._showError('duplicate_date'); }
+                    })) {
+                $("#actualTimeFromInput").val('');
+                $("#actualTimeToInput").val('');
+                $("#timeFromInput").val('');
+                $("#timeToInput").val('');
+                timeFilterEl.val('');
+                timeFilterEl.trigger("liszt:updated");
+                $("#timeFromInput").prop('disabled', 'disabled');
+                $("#timeToInput").prop('disabled', 'disabled');
+
+                if (addToUrl) {
+                    me.instance.addFilterToUrl(selectedTime + '_from', timeFrom);
+                    me.instance.addFilterToUrl(selectedTime + '_to', timeTo);
+                }
+            }
+        },
+
+        _addAreaToFilter: function(element, addToUrl) {
+            var me = this,
+                option = element.find('option:selected');
+            if (option == null || element.val() == "")
+                return;
+
+            var elementType = element.prop('id');
+            var elementTypeText = element.attr('data-placeholder');
+
+            var filterItem = {};
+            filterItem.id = elementType + "__" + element.val();
+            filterItem.text = elementTypeText + " : " + option.text();
+            filterItem.data = {
+                'group': 'area',
+                'value': {
+                    'type': elementType,
+                    'id': element.val()
+                },
+            };
+
+            me.filterCloud.addItem(filterItem, { 'duplicateAction': 'replace' });
+
+            if (addToUrl) {
+                me.instance.addFilterToUrl(elementType, element.val(), true);
+            }
+
             element.val('');
             element.trigger("liszt:updated");
         },
-        _showAreaFilter: function () {
-            var me = this;
-            var options = {
-                'showBooleanOperators': true,
-                'isFilterEditable': true,
-                'showClearButton': false
-            };
-            var form = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-ui.component.FilterForm', null, options);
-            form.setFilterParams(me.areaFilterParams);
-   
-            var saveButton = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            saveButton.setTitle('Save');
-            saveButton.setHandler(function (e) {
-                me.currentAreaFilter = form.getFilterValues();
-                _.each(me.currentAreaFilter.data, function (i) {
-                    if (i.boolean)
-                        return;
 
-                    _.each(i.values, function(val) {
-                        var item = {
-                            id: i.key + "__" + val,
-                            text: i.key + " : " + val,
-                            data: {
-                                group: i.key,
-                                value: i.val
-                            },
-                        };
-                        me.filterCloud.addItem(item, { 'duplicateAction': 'replace' });
-                    });                    
-                });              
-            });
-
-            form.displayAsPopup("Filter by area", [saveButton]);
-            if (me.currentAreaFilter != null) {
-                form.setFilterValues(me.currentAreaFilter.data);
-            }            
-        },
-        _areaFilterToText: function(filter) {
+        /*_areaFilterToText: function(filter) {
             var result = "";
 
             _.each(filter, function(i) {
@@ -426,7 +433,7 @@
             }
 
             this.areaFilterParams = params;
-        },
+        },*/
         _addOptions: function (id, array) {
             var select = this.container.find("#" + id);
             var i = 0;
@@ -450,28 +457,7 @@
 
                 selectEl.change(function(e) {
                     var element = $(e.target);
-                    var option = element.find('option:selected');
-                    if (option == null || element.val() == "")
-                        return;
-
-                    var elementType = element.prop('id');
-                    var elementTypeText = element.attr('data-placeholder');
-
-                    var filterItem = {};
-                    filterItem.id = elementType + "__" + element.val();
-                    filterItem.text = elementTypeText + " : " + option.text();
-                    filterItem.data = {
-                        'group': 'area',
-                        'value': {
-                            'type': elementType,
-                            'id': element.val()
-                        },
-                    };
-
-                    me.filterCloud.addItem(filterItem, { 'duplicateAction': 'replace' });
-
-                    element.val('');
-                    element.trigger("liszt:updated");
+                    me._addAreaToFilter(element, true);
                 });
 
                 itemContainer.append(selectEl);
@@ -510,7 +496,7 @@
 
             this.container.find("select").chosen({ allow_single_deselect: true, no_results_text: me.locale.search.noResultText });
         },
-
+/*
         _changeRegionType: function (name, greaterAreaChkArray, administrativeCourtChkArray, elyChkArray, countyChkArray, subRegionChkArray) {
             var me = this;
             me.instance.service.getRegionData(
@@ -536,7 +522,7 @@
             var countEl = $('#' + countId);
             countEl.text(resp.data.length);
         },
-
+*/
         clearFilter: function() {
             this.container.find("#enterNameIdInput").val("");
             this.container.find('option:selected').removeAttr("selected");
@@ -550,7 +536,26 @@
             this.container.find("#actualTimeFromInput").val("");
             this.container.find("#actualTimeToInput").val("");
 
+            var items = this.filterCloud.getItems();
+            for (var item in items) {
+                this.clearFilterFromUrl(item);
+            }
+
             this.filterCloud.clear();
+        },
+
+        clearFilterFromUrl: function (filter) {
+            if (filter.data.group == 'dateFilter') {
+                this.instance.removeFilterFromUrl(filter.data.value.type + '_from');
+                this.instance.removeFilterFromUrl(filter.data.value.type + '_to');
+            } else if (filter.data.group == 'area') {
+                this.instance.removeFilterFromUrl(filter.data.value.type, filter.data.value.id);
+            } else if (filter.data.group == 'enterNameIdInput') {
+                this.instance.removeFilterFromUrl(filter.data.group, filter.data.value);
+            } else {
+                this.instance.removeFilterFromUrl(filter.data.group, filter.data.value);
+            }
+
         },
 
         raiseFilterChanged: function (filter) {
@@ -616,6 +621,75 @@
             });
 
             return filters;
+        },
+
+        _selectFilters: function () {
+            var param,
+                splittedParam,
+                dateTypeParam,
+                dateFromParam,
+                dateToParam,
+                areaParamNames = ['greaterArea', 'administrativeCourt', 'ely', 'county', 'subRegion', 'municipality'],
+                timeParamNames = ['ACCEPTDATE', 'SUGGESTIONDATE', 'ANNOUNCEDATE', 'UPDATETIME'],
+                element,
+                i,
+                j;
+
+            //keyword
+            param = this.instance.getUrlParameter('enterNameIdInput');
+            if (param != null) {
+                splittedParam = param.split(',');
+                for (i = 0; i < splittedParam.length; i++) {
+                    element = this.container.find('#enterNameIdInput');
+                    element.val(splittedParam[i]);
+                    this._addTextToFilter(element, false);
+                }
+            }
+
+            //type
+            param = this.instance.getUrlParameter('typeFilter');
+            if (param != null) {
+                element = this.container.find('#typeFilter');
+                element.val(param);
+                this._addToFilter(element, false);
+            }
+
+            //acceptor
+            param = this.instance.getUrlParameter('acceptorFilter');
+            if (param != null) {
+                element = this.container.find('#acceptorFilter');
+                element.val(param);
+                this._addToFilter(element, false);
+            }
+
+            //time
+            for (i = 0; i < timeParamNames.length; i++) {
+                dateFromParam = this.instance.getUrlParameter(timeParamNames[i] + '_from');
+                dateToParam = this.instance.getUrlParameter(timeParamNames[i] + '_to');
+                if (dateFromParam != null && dateToParam != null) {
+                    this.container.find('#timeFilter').val(timeParamNames[i]);
+                    this.container.find('#actualTimeFromInput').val(dateFromParam);
+                    this.container.find('#timeFromInput').val($.datepicker.formatDate("dd.mm.yy", new Date(dateFromParam)));
+                    this.container.find('#actualTimeToInput').val(dateToParam);
+                    this.container.find('#timeToInput').val($.datepicker.formatDate("dd.mm.yy", new Date(dateToParam)));
+                    this._addTimeToFilter(false);
+                }
+            }
+            
+
+            //area
+            for (i = 0; i < areaParamNames.length; i++) {
+                param = this.instance.getUrlParameter(areaParamNames[i]);
+                if (param != null) {
+                    splittedParam = param.split(',');
+                    for (j = 0; j < splittedParam.length; j++) {
+                        element = this.container.find('#' + areaParamNames[i]);
+                        element.val(splittedParam[j]);
+                        this._addAreaToFilter(element, false);
+                    }
+                    
+                }
+            }
         },
 
         /**

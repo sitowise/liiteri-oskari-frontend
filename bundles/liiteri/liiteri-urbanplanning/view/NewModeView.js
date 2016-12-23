@@ -96,7 +96,13 @@ function (instance) {
             elLeft.removeClass('oskari-closed');
             elCenter.addClass('oskari-closed');
             elLeft.empty();
-            this.showSubpage('plans');
+            var searchParam = this.instance.getUrlParameter('search');
+            if (searchParam != null) {
+                this.showSubpage(searchParam);
+            } else {
+                this.showSubpage('plans');
+            }
+            
         } else {
             elLeft.addClass('oskari-closed').removeClass('span12');
             elCenter.removeClass('oskari-closed').addClass('span12');
@@ -750,6 +756,8 @@ function (instance) {
             }
             this.peopleContainer.show();
         }
+
+        me.instance.addFilterToUrl('search', pageName);
 
         //if (isResizeNeeded) {
             window.setTimeout(function() {
