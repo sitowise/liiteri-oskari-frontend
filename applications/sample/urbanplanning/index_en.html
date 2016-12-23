@@ -7,12 +7,12 @@
 <head>
     <title>Liiteri-tietopalvelu, Asemakaavat</title>
 
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.min.js">
+    <script type="text/javascript" src="/Oskari/libraries/jquery/jquery-1.7.2.min.js">
     </script>
-	
+    
 
     <!-- ############# css ################# -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600,400italic,600italic' rel='stylesheet' type='text/css' />
     
     <link
             rel="stylesheet"
@@ -31,23 +31,23 @@
             rel="stylesheet"
             type="text/css"
             href="/Oskari/applications/sample/servlet/css/overwritten.css"/>
-			
+            
     <link
             rel="stylesheet"
             type="text/css"
-            href="/Oskari/applications/sample/servlet/css/bootstrap/bootstrap.css"/>			
+            href="/Oskari/applications/sample/servlet/css/bootstrap/bootstrap.css"/>            
 
-	<link
+    <link
             rel="stylesheet"
             type="text/css"
             href="/Oskari/applications/sample/servlet/css/bootstrap/bootstrap-theme.css"/>
 
-	<link rel="stylesheet"
-		type="text/css"
-		href="/Oskari/libraries/jquery/jquery-ui.css" />
+    <link rel="stylesheet"
+        type="text/css"
+        href="/Oskari/libraries/jquery/jquery-ui.css" />
 
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>			
-	
+    <script src="/Oskari/libraries/bootstrap/bootstrap.min.js"></script>            
+    
     <style type="text/css">
         @media screen {
             body {
@@ -67,34 +67,34 @@
                 width: 180px;
                 z-index: 2;
             }
-			
+            
             #minimized_maptools {
-				display: none;
-				background-color: #00bce9;
+                display: none;
+                background-color: #00bce9;
                 height: 100%;
                 position: absolute;
                 top: 0;
                 width: 16px;
                 z-index: 2;
-			}
-			
-			#access_nav_show {
-				margin-top: 5px;
-				width: 15px;
-				height: 8px;
-				background-image: url("/Oskari/resources/show_view.png");
-				display: block;
-			}
-			
-			#access_nav_hide {
-				margin-top: 5px;
-				margin-right: 5px;
-				height: 8px;
-				background-image: url("/Oskari/resources/hide_view.png");
-				display: block;
-				background-repeat: no-repeat;
-  				background-position: right;
-			}
+            }
+            
+            #access_nav_show {
+                margin-top: 5px;
+                width: 15px;
+                height: 8px;
+                background-image: url("/Oskari/resources/show_view.png");
+                display: block;
+            }
+            
+            #access_nav_hide {
+                margin-top: 5px;
+                margin-right: 5px;
+                height: 8px;
+                background-image: url("/Oskari/resources/hide_view.png");
+                display: block;
+                background-repeat: no-repeat;
+                background-position: right;
+            }
 
             #contentMap {
                 height: 100%;
@@ -141,9 +141,9 @@
                 padding: 5px;
             }
 
-			.oskari-tile-closed {
-				background-color: #0186d1;
-			}
+            .oskari-tile-closed {
+                background-color: #0186d1;
+            }
         }
     </style>
     <!-- ############# /css ################# -->
@@ -151,26 +151,28 @@
 <body class="oskariui">
 
 <nav id="minimized_maptools">
-	<a id="access_nav_show" href="#"></a>
+    <a id="access_nav_show" href="#"></a>
 </nav>
 
 <nav id="maptools">
-	<div>
-		<a id="access_nav_hide" href="#"></a>
-	</div>
-	<div id="logo">
-		<a href="/">
-			<img src="/Oskari/resources/2014_Liiteri_logo_153x55px.png" />
-		</a>
-	</div>
-    <div id="loginbar">
-    </div>
-    <div id="menubar">
-    </div>
-    <div id="divider">
-    </div>
-    <div id="footer-nav">
-        <div id="toolbar">
+    <div id="maptools-container">
+        <div>
+            <a id="access_nav_hide" href="#"></a>
+        </div>
+        <div id="logo">
+        <a href="/">
+            <img src="/Oskari/resources/2014_Liiteri_logo_153x55px.png" alt="Liiteri logo" />
+        </a>
+        </div>
+        <div id="loginbar">
+        </div>
+        <div id="menubar">
+        </div>
+        <div id="divider">
+        </div>
+        <div id="footer-nav">
+            <div id="toolbar">
+            </div>
         </div>
     </div>
 </nav>
@@ -193,7 +195,8 @@
 <!--  OSKARI -->
 
 <script type="text/javascript">
-    var ajaxUrl = '/?';
+    var baseUrl = '/';
+    var ajaxUrl = '/action?';
     var viewId = '1';
     var language = 'en';
     var preloaded = false;
@@ -204,17 +207,10 @@
         src="/Oskari/bundles/bundle.js">
 </script>
 
-<!--  OPENLAYERS -->
-<script type="text/javascript"
-        src="/Oskari/packages/openlayers/startup.js">
-</script>
-
-
 
 <script type="text/javascript"
         src="index.js">
 </script>
-
 
 <!-- ############# /Javascript ################# -->
 </body>
