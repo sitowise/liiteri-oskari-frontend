@@ -358,6 +358,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     var blnVisible = event.getMapLayer().isVisible();
                     if (blnVisible) {
                         this._visibilityOn();
+                        //TODO Is recalculating of classification needed when enabling theme map layer?
+                        this._recalculateClassification();
                     } else {
                         this._visibilityOff();
                     }
@@ -378,25 +380,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 // check if scale changed and disable visualization values
                 var me = this;
                 me._initState();
-                var params = me._state._params;
-                var zoneType = this._state.zoneTypeId;
-                var visualizationMethod = this._state.visualizationmethodId;
 
-                if (zoneType.indexOf(me.ZONE_GRID) == 0) {
-                    switch (visualizationMethod) {
-                    case this.VISMETHOD_CHOROPLETIC:
-                        me._queue.pushJob(function() {
-                            me.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
-                        });
-                        break;
-                    case this.VISMETHOD_GRADUATED:
-                        me._queue.pushJob(function() {
-                            me.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
-                        });
-                        break;
-                    default:
-                        break;
-                    }
+                //TODO Is recalculating of classification needed for every move of the map?
+                if (me._layer.isVisible()) {
+                    me._recalculateClassification();
                 }
                 
                 if (me._currentScale != event.getScale()) {
@@ -455,6 +442,30 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
          */
         onEvent: function (event) {
             return this.eventHandlers[event.getName()].apply(this, [event]);
+        },
+
+        _recalculateClassification: function () {
+            var me = this,
+                params = me._state._params,
+                zoneType = me._state.zoneTypeId,
+                visualizationMethod = me._state.visualizationmethodId;
+
+            if (zoneType.indexOf(me.ZONE_GRID) == 0) {
+                switch (visualizationMethod) {
+                case me.VISMETHOD_CHOROPLETIC:
+                    me._queue.pushJob(function() {
+                        me.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                    });
+                    break;
+                case me.VISMETHOD_GRADUATED:
+                    me._queue.pushJob(function() {
+                        me.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                    });
+                    break;
+                default:
+                    break;
+                }
+            }
         },
         
         _updateVisualizationRowSelector: function (visualizationRows) {
