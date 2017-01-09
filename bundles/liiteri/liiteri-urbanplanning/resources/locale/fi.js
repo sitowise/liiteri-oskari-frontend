@@ -20,7 +20,7 @@ Oskari.registerLocalization({
         },
         "tilePlugin": {
             "tiles": {
-                "urbanPlans": {
+                "plans": {
                     "title": "Asemakaavojen seurantalomakkeet"
                 },
                 "markings": {

@@ -66,7 +66,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
             var conf = this.conf,
                 sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName),
-                request;
+                request,
+                searchParam = null;
 
             this.sandbox = sandbox;
             sandbox.register(this);
@@ -83,18 +84,19 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
             sandbox.request(this, request(this));            
             
             if (conf && conf.mapView === false) {
+                searchParam = this.getUrlParameter('search');
+                
                 this.tilePlugin = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-urbanplanning.plugin.TilePlugin',
-                this.plugins['Oskari.userinterface.View'], this._getTilePluginConfig(), this.getLocalization('tilePlugin'));
+                this.plugins['Oskari.userinterface.View'], this._getTilePluginConfig(searchParam), this.getLocalization('tilePlugin'), this);
                 this.tilePlugin.start();
-                this.plugins['Oskari.userinterface.View'].showMode(true, true);
+                this.plugins['Oskari.userinterface.View'].showMode(true, true, searchParam);
             }
         },
-        _getTilePluginConfig: function () {
+        _getTilePluginConfig: function (tileToSelection) {
             var defaultConf = {
                 "tiles": {
-                    "urbanPlans": {
-                        "subPage": "plans",
-                        "isSelected" : true
+                    "plans": {
+                        "subPage": "plans"
                     },
                     "markings" : {
                         "subPage": "markings"
@@ -106,6 +108,12 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
                 defaultConf.tiles["people"] = {
                     "subPage": "people"
                 };
+            }
+
+            if (tileToSelection != null && tileToSelection != '' && defaultConf.tiles[tileToSelection] != null) {
+                defaultConf.tiles[tileToSelection].isSelected = true;
+            } else {
+                defaultConf.tiles["plans"].isSelected = true;
             }
 
             return defaultConf;
@@ -171,6 +179,14 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
             } else {
                 this.addFilterToUrl(filterName, null);
             }
+        },
+        
+        removeAllFiltersFromUrl: function () {
+            var me = this,
+                urlParams = me.getUrlParameters();
+            $.each(urlParams, function(i) {
+                me.removeFilterFromUrl(i);
+            });
         },
 
         getUrlParameters: function () {
