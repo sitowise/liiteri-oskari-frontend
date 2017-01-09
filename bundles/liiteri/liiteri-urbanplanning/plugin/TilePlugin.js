@@ -1,8 +1,9 @@
 Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-urbanplanning.plugin.TilePlugin',
-    function (view, config, locale) {
+    function (view, config, locale, instance) {
         this.view = view;
         this.config = config;
         this.locale = locale;
+        this.instance = instance;
         this.templates = {
             "tile": '<div class="oskari-tile oskari-tile-closed">' + '<div class="oskari-tile-title"></div>' + '<div class="oskari-tile-status"></div>' + '</div>'
         };
@@ -34,7 +35,9 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-urbanplanning.plugin.TilePlug
             var me = this;
             var tile = $(me.templates['tile']);
             var title = tile.children('.oskari-tile-title');
-            var tileClick = function () {    
+            var tileClick = function () {
+                me.instance.removeAllFiltersFromUrl();
+                me.instance.addFilterToUrl('search', desc.subPage); 
                 me.view.showSubpage(desc.subPage);          
                 me._selectTile(tile);
             };

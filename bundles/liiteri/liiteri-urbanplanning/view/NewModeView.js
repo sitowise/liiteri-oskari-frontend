@@ -84,7 +84,7 @@ function (instance) {
         //this.toolbar.destroy();
         //this.instance.getSandbox().removeRequestHandler('<bundle-identifier>.MyRequest', this.requestHandler);
     },
-    showMode: function(isShown, madeUpdateExtensionRequest) {
+    showMode: function(isShown, madeUpdateExtensionRequest, subPageName) {
         var sandbox = this.instance.getSandbox(),
             mapModule = sandbox.findRegisteredModuleInstance('MainMapModule'),
             map = mapModule.getMap(),
@@ -96,9 +96,9 @@ function (instance) {
             elLeft.removeClass('oskari-closed');
             elCenter.addClass('oskari-closed');
             elLeft.empty();
-            var searchParam = this.instance.getUrlParameter('search');
-            if (searchParam != null) {
-                this.showSubpage(searchParam);
+            
+            if (subPageName != null && subPageName != '') {
+                this.showSubpage(subPageName);
             } else {
                 this.showSubpage('plans');
             }
@@ -745,7 +745,7 @@ function (instance) {
                 isResizeNeeded = true;
             }
             this.markingsContainer.show();
-        } else if (pageName == 'people') {            
+        } else if (pageName == 'people' && this.instance.service.hasRightToSeeContactPeople()) {
             if (this.urbanPlansContainer != null)
                 this.urbanPlansContainer.hide();
             if (this.markingsContainer != null)
@@ -756,8 +756,6 @@ function (instance) {
             }
             this.peopleContainer.show();
         }
-
-        me.instance.addFilterToUrl('search', pageName);
 
         //if (isResizeNeeded) {
             window.setTimeout(function() {
