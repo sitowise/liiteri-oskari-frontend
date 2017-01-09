@@ -745,7 +745,7 @@ function (instance) {
                 isResizeNeeded = true;
             }
             this.markingsContainer.show();
-        } else if (pageName == 'people') {            
+        } else if (pageName == 'people' && this.instance.service.hasRightToSeeContactPeople()) {
             if (this.urbanPlansContainer != null)
                 this.urbanPlansContainer.hide();
             if (this.markingsContainer != null)
