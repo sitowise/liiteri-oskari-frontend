@@ -10,7 +10,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             "name": "liiteri-servicepackages",
             "sandbox": "sandbox",
             "stateful": false,
-            "tileClazz": null, //"Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
+            "tileClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
             "flyoutClazz": null, //"Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
             "viewClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.View",
             "isFullScreenExtension": false
@@ -44,26 +44,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             this.sandbox = sandbox;
 
             this.localization = Oskari.getLocalization(this.getName());
-            
-            var showTile = false,
-                user = sandbox.getUser();
-
-            if (user !== null && user.getRoles() !== null) {    
-                var adminRoles = ["liiteri_groupings_admin", "liiteri_admin"];
-                var roles = user.getRoles();
-
-                for (var i = 0; i < roles.length; i++) {
-                    var role = roles[i];
-                    if ($.inArray(role.name, adminRoles) != -1) {
-                        showTile = true;
-                        break;
-                    }
-                }
-            }
-            
-            if(showTile) {
-                conf.tileClazz = "Oskari.liiteri.bundle.liiteri-servicepackages.Tile";
-            }
 
             // register to sandbox as a module
             sandbox.register(me);
