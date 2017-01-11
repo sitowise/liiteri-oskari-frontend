@@ -66,7 +66,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
             var conf = this.conf,
                 sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName),
-                request;
+                request,
+                searchParam = null;
 
             this.sandbox = sandbox;
             sandbox.register(this);
@@ -83,18 +84,19 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
             sandbox.request(this, request(this));            
             
             if (conf && conf.mapView === false) {
+                searchParam = this.getUrlParameter('search');
+                
                 this.tilePlugin = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-urbanplanning.plugin.TilePlugin',
-                this.plugins['Oskari.userinterface.View'], this._getTilePluginConfig(), this.getLocalization('tilePlugin'));
+                this.plugins['Oskari.userinterface.View'], this._getTilePluginConfig(searchParam), this.getLocalization('tilePlugin'), this);
                 this.tilePlugin.start();
-                this.plugins['Oskari.userinterface.View'].showMode(true, true);
+                this.plugins['Oskari.userinterface.View'].showMode(true, true, searchParam);
             }
         },
-        _getTilePluginConfig: function () {
+        _getTilePluginConfig: function (tileToSelection) {
             var defaultConf = {
                 "tiles": {
-                    "urbanPlans": {
-                        "subPage": "plans",
-                        "isSelected" : true
+                    "plans": {
+                        "subPage": "plans"
                     },
                     "markings" : {
                         "subPage": "markings"
@@ -106,6 +108,12 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
                 defaultConf.tiles["people"] = {
                     "subPage": "people"
                 };
+            }
+
+            if (tileToSelection != null && tileToSelection != '' && defaultConf.tiles[tileToSelection] != null) {
+                defaultConf.tiles[tileToSelection].isSelected = true;
+            } else {
+                defaultConf.tiles["plans"].isSelected = true;
             }
 
             return defaultConf;
@@ -127,6 +135,81 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-urbanplanning.LiiteriUrbanPla
                 me.dialog = dialog;
             }
         },
+
+        addFilterToUrl: function (filterName, filterValue, avoidOverwriting) {
+            //Get currentUrl params and change them to object
+            var currentFilters = this.getUrlParameters();
+            //Replace value or add new one
+            if (avoidOverwriting && currentFilters[filterName] != null && currentFilters[filterName] != '') {
+                var values = currentFilters[filterName].split(',');
+                values.push(filterValue);
+                var uniqueValues = [];
+                $.each(values, function(i, el){
+                    if($.inArray(el, uniqueValues) === -1) uniqueValues.push(el);
+                });
+                currentFilters[filterName] = uniqueValues.join();
+            } else {
+                currentFilters[filterName] = filterValue;
+            }
+            //Change object to URL query string and exclude null properties
+            var resultFiltersUri = _.reduce(currentFilters, function(result, value, key) {
+                if (value != null && value != '') {
+                    if (result != '?') {
+                        result += '&';
+                    }
+                    result += key + '=' + value;
+                }
+                return result;
+            }, '?');
+            //Add new state
+            window.history.pushState(null, '', encodeURI(resultFiltersUri));
+        },
+
+        removeFilterFromUrl: function (filterName, filterValue) {
+            if (filterValue != null) {
+                var currentParameter = this.getUrlParameter(filterName);
+                if (currentParameter != null) {
+                    var values = currentParameter.split(',');
+                    var position = values.indexOf(filterValue);
+                    if (position > -1) {
+                        values.splice(position, 1);
+                        this.addFilterToUrl(filterName, values.join());
+                    }
+                }
+            } else {
+                this.addFilterToUrl(filterName, null);
+            }
+        },
+        
+        removeAllFiltersFromUrl: function () {
+            var me = this,
+                urlParams = me.getUrlParameters();
+            $.each(urlParams, function(i) {
+                me.removeFilterFromUrl(i);
+            });
+        },
+
+        getUrlParameters: function () {
+            var urlParams = {};
+            window.location.search.replace(
+            new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+                function($0, $1, $2, $3) {
+                urlParams[$1] = decodeURI($3);
+                }
+            );
+
+            return urlParams;
+        },
+
+        getUrlParameter: function(paramName) {
+            paramName = paramName.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + paramName + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(decodeURI(window.location.href));
+            
+            return results == null ? null : results[1];
+        }
+
     }, {
         "extend": ["Oskari.userinterface.extension.DefaultExtension"]
     });

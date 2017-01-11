@@ -658,6 +658,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
             }
             var link = printUrl;
             me.mainPanel.find('#oskari_print_formID').attr('action', link);
+            me.mainPanel.find('#oskari_print_formID').attr('target', 'map_popup_111');
 
             if (geoJson) {
                 // UTF-8 Base64 encoding
@@ -670,8 +671,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
             if (tableData) {
                 me.mainPanel.find('input[name=tabledata]').val(tableData);
             }
+            
             if (!me.isParcelMode) {
-            window.open('about:blank', 'map_popup_111', wopParm);
+                if (selections.format != 'image/png') {
+                    window.open('about:blank', 'map_popup_111', wopParm);
+                } else {
+                    me.mainPanel.find('#oskari_print_formID').attr('target', '_self');
+                }
             }
             me.mainPanel.find('#oskari_print_formID').submit();
         },

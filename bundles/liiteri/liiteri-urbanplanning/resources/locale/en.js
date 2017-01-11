@@ -22,7 +22,7 @@ Oskari.registerLocalization({
         },
         "tilePlugin": {
             "tiles": {
-                "urbanPlans": {
+                "plans": {
                     "title": "Urban Plans"
                 },
                 "markings": {

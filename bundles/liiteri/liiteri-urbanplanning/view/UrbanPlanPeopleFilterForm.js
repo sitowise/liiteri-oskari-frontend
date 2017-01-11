@@ -25,7 +25,7 @@ Oskari.clazz.define(
     }, {
         getForm: function() {
             if (this.container == null) {
-                this.container = this._createUI();
+                this._createUI();
             }
             return this.container;
         },
@@ -69,6 +69,8 @@ Oskari.clazz.define(
                         item.name + '</option>'));
                 });
                 selectEly.chosen({ allow_single_deselect: true, no_results_text: me.locale.search.noResultText });
+
+                me._selectFilter('ely');
             };
 
             var fillMunicipalitySelectCb = function(data) {
@@ -94,6 +96,8 @@ Oskari.clazz.define(
                 } else {
                     selectMunicipality.trigger('liszt:updated');
                 }
+
+                me._selectFilter('municipality');
             };
 
             var fillConsultSelectCb =  function(data) {
@@ -121,6 +125,8 @@ Oskari.clazz.define(
                 } else {
                     selectConsult.trigger('liszt:updated');
                 }
+
+                me._selectFilter('consult');
             };
 
             //Filter: ELY
@@ -128,7 +134,7 @@ Oskari.clazz.define(
             selectEly = jQuery(this.templates.select(
                 'peopleElyInput', this.locale.peoplesearch.ely));
 
-            selectEly.change(function() {
+            selectEly.change(function(e) {
                 var selectedElyValues = [$("#peopleElyInput").val()];
                 me.instance.service.getRegionData(
                     "municipality", [], [], selectedElyValues, [], [],
@@ -136,6 +142,8 @@ Oskari.clazz.define(
 
                 selectMunicipality.find('option').remove();
                 selectMunicipality.trigger('liszt:updated');
+
+                me.instance.addFilterToUrl('ely', $(e.target).val());
             });
             filterEly.append(selectEly);
             rowContainer.append(filterEly);
@@ -145,6 +153,9 @@ Oskari.clazz.define(
             selectMunicipality = jQuery(this.templates.select(
                 'peopleMunicipalityInput',
                 this.locale.peoplesearch.municipality));
+            selectMunicipality.change(function (e) {
+                me.instance.addFilterToUrl('municipality', $(e.target).val());
+            });
             filterMunicipality.append(selectMunicipality);
             rowContainer.append(filterMunicipality);
 
@@ -154,8 +165,15 @@ Oskari.clazz.define(
             filterConsult = jQuery("<div class='filterRow'></div>");            
             selectConsult = jQuery(this.templates.select(
                 'peopleConsultInput', this.locale.peoplesearch.consult));
+            selectConsult.change(function (e) {
+                me.instance.addFilterToUrl('consult', $(e.target).val());
+            });
             filterConsult.append(selectConsult);
             rowContainer.append(filterConsult);
+
+            rowContainer.find("input:radio[name='urbanPlanPeopleType']").change(function () {
+                me.instance.addFilterToUrl('personType', $(this).prop('value'));
+            });
 
 
             //Filter: Free word search
@@ -182,6 +200,8 @@ Oskari.clazz.define(
             rowContainer.append(buttonsContainer);
             panelBody.append(rowContainer);
 
+            this.container = container;
+
             // Fill the dropdowns
             this.instance.service.getRegionData(
                 "ely", [], [], [], [], [],
@@ -193,7 +213,7 @@ Oskari.clazz.define(
                 [], [], [],
                 fillConsultSelectCb, this.view.errorCb);
 
-            return container;
+            me._selectFilter('personType');
         },
         _validateSelections: function (selections) {
             return true;
@@ -236,4 +256,39 @@ Oskari.clazz.define(
             var me = this;
             $(this).trigger("UrbanPlanPeopleFilterForm.FilterChanged", [me, filter]);
         },
+
+        _selectFilter: function (filterName) {
+            var param;
+            //person type
+            if (filterName == 'personType') {
+                param = this.instance.getUrlParameter('personType');
+                if (param != null) {
+                    this.container.find('input:radio[name="urbanPlanPeopleType"][value="' + param + '"]').prop('checked', true).change();
+                }
+            }
+            
+            //ely
+            if (filterName == 'ely') {
+                param = this.instance.getUrlParameter('ely');
+                if (param != null) {
+                    this.container.find('#peopleElyInput').val(param).trigger("liszt:updated");;
+                }
+            }
+
+            //municipality
+            if (filterName == 'municipality') {
+                param = this.instance.getUrlParameter('municipality');
+                if (param != null) {
+                    this.container.find('#peopleMunicipalityInput').val(param).trigger("liszt:updated");;
+                }
+            }
+
+            //consult
+            if (filterName == 'consult') {
+                param = this.instance.getUrlParameter('consult');
+                if (param != null) {
+                    this.container.find('#peopleConsultInput').val(param).trigger("liszt:updated");;
+                }
+            }
+        }
     });
