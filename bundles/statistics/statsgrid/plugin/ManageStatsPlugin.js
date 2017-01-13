@@ -126,27 +126,27 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.WFSLayerService = null;
 
         this.columnComparisonOptions = [{
-            type: 'difference',
+            type: 'statsgridDifference',
             selected: true,
             getValue: function(a, b) {
                 return b-a;
             }
         }, {
-            type: 'division',
+            type: 'statsgridDivision',
             decimalCount: 3,
             unit: '',
             getValue: function(a, b) {
                 return b/a;
             }
         }, {
-            type: 'relativeChange',
+            type: 'statsgridRelativeChange',
             unit: '%',
             decimalCount: 1,
             getValue: function(a, b) {
                 return (b-a)/a*100;
             }
         }, {
-            type: 'sum',
+            type: 'statsgridSum',
             getValue: function(a, b) {
                 return a+b;
             }
@@ -2679,15 +2679,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 columnComparison: true
             };
             meta.title[Oskari.getLang()] = loc.columnComparison[compareOption.type+'Title']+': '+indicator.name;
-            var year = columns[0].indicatorData.year.trim() + ' -> ' + indicator.year.trim() ;
+            var year = columns[0].indicatorData.year.trim() + ' -> ' + indicator.year.trim();
+            var indicatorId = indicator.id;
+            var gender = indicator.gender;
+            var geometry = indicator.geometry;
+            var filter = indicator.filter;
+            var type = compareOption.type;
+            var direction = indicator.direction;
+            var resultColumnId = me._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction);
+            var gridColumns = me.grid.getColumns();
+            var numGridColumns = gridColumns.length;
+            // Remove existing duplicate column
+            for (var i = 0; i < numGridColumns; i++) {
+                if (resultColumnId === gridColumns[i].id) {
+                    if (gridColumns[i].deleteHandler) {
+                        gridColumns[i].deleteHandler();
+                    }
+                }
+            }
             var data = [];
             _.each(me.regionCategories, function(regions, category) {
                 regions.forEach(function(region) {
                     var items = [];
                     var values = [];
                     var privacyLimitTriggered = false;
-                    for (var i=0; i<2; i++) {
-                        var item = _.find(me.indicatorsData[columns[i].id], function(dataItem) {
+                    for (var j=0; j<2; j++) {
+                        var item = _.find(me.indicatorsData[columns[j].id], function(dataItem) {
                             return region.id === dataItem.region;
                         });
                         if (item == null) {
@@ -2713,7 +2730,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     data.push(dataItem);
                 });
             });
-            me.addIndicatorDataToGrid(null, indicator.id, indicator.gender, year, indicator.geometry, indicator.filter, compareOption.type, indicator.direction, data, meta);
+            me.addIndicatorDataToGrid(null, indicatorId, gender, year, geometry, filter, type, direction, data, meta);
         },
 
         /**
@@ -2725,8 +2742,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         _showColumnComparisonDialog: function(column) {
             var me = this;
             var loc = me._locale;
-            var columns = me.grid.getColumns();
-            var currentColumn;
             var showErrorMessage = function(error) {
                 var guideDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
             	var closeBtn = guideDialog.createCloseButton(loc.btnCancel);
@@ -2747,11 +2762,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 showErrorMessage('notValid');
                 return;
             }
+            var columns = me.grid.getColumns();
             if (currentColumnIndex > columns.length) {
                 showErrorMessage('unknown');
                 return;
             }
-            currentColumn = columns[currentColumnIndex];
+            var currentColumn = columns[currentColumnIndex];
             if (currentColumn.indicatorData.id !== column.indicatorData.id) {
                 showErrorMessage('differentIndicators');
                 return;
