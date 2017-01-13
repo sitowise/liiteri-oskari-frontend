@@ -577,3 +577,11 @@ color: #898989;
   max-height: 200px !important;
   overflow-y: auto;
 }
+
+div.divmanazerpopup.stats-compare-dialog {
+  max-width: 280px;
+}
+
+div.stats-compare-instructions {
+  margin-bottom: 10px;
+}
