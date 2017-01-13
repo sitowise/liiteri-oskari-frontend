@@ -444,7 +444,9 @@ Oskari.registerLocalization(
             "divisionTitle": "Jako",
             "relativeChangeTitle": "Muutossuhde",
             "sumTitle": "Summa",
-            "tasksElementTitle": "Vertaa valittuun sarakkeeseen"
+            "tasksElementTitle": "Vertaa valittuun sarakkeeseen",
+            "cancel": "Peruuta",
+            "ok": "Laske"
         }
     }
 }

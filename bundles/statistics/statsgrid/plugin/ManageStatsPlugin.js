@@ -2764,7 +2764,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var optionDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
             optionDialog.addClass('stats-compare-dialog');
         	var cancelBtn = optionDialog.createCloseButton(loc.btnCancel);
+        	cancelBtn.setTitle(loc.columnComparison.cancel);
             var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+            okBtn.setTitle(loc.columnComparison.ok);
             okBtn.setHandler(function () {
                 var selectedCompareOption = _.find(me.columnComparisonOptions, {
                     selected: true
