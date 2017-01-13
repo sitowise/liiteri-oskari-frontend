@@ -4085,6 +4085,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     type: type,
                     direction: direction,
                     name: indicatorName,
+                    unit: unit,
                     themes: themes,
                     orderNumber: orderNumber,
                     decimalCount: meta.decimalCount,
@@ -6393,7 +6394,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             
                             indicatorName = item.indicatorData.name;
                             
-                            var unit = me.indicatorsMeta[item.indicatorData.id].unit;
+                            var unit = item.indicatorData.unit == null ? me.indicatorsMeta[item.indicatorData.id].unit : item.indicatorData.unit;
                             if (unit && unit != '') {
                                 indicatorName += ' [' + unit + ']';
                             }
