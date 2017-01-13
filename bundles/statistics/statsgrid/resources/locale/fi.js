@@ -436,15 +436,17 @@ Oskari.registerLocalization(
             "compared": "Aikaisemman vertailun tuloksia ei voi käyttää uudessa vertailussa.",
             "unknown": "Tuntematon virhetilanne.",
             "instructions": "Valitse muutostyyppi edellisen sarakevalinnan (a) ja tämän sarakkeen (b) väliselle vertailulle",
-            "difference": "Erotus b-a",
-            "division": "Jako b/a",
-            "relativeChange": "Suhteellinen muutos (b-a)/a x 100 %",
-            "sum": "Summa a+b",
-            "differenceTitle": "Erotus",
-            "divisionTitle": "Jako",
-            "relativeChangeTitle": "Muutossuhde",
-            "sumTitle": "Summa",
-            "tasksElementTitle": "Vertaa valittuun sarakkeeseen"
+            "statsgridDifference": "Erotus b-a",
+            "statsgridDivision": "Jako b/a",
+            "statsgridRelativeChange": "Suhteellinen muutos (b-a)/a x 100 %",
+            "statsgridSum": "Summa a+b",
+            "statsgridDifferenceTitle": "Erotus",
+            "statsgridDivisionTitle": "Jako",
+            "statsgridRelativeChangeTitle": "Muutossuhde",
+            "statsgridSumTitle": "Summa",
+            "tasksElementTitle": "Vertaa valittuun sarakkeeseen",
+            "cancel": "Peruuta",
+            "ok": "Laske"
         }
     }
 }
