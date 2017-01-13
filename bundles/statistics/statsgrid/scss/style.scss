@@ -381,3 +381,13 @@ form.add-indicator {
   color: #0085d1;
   cursor: pointer;
 }
+
+div {
+  &.divmanazerpopup.stats-compare-dialog {
+    max-width: 280px;
+  }
+
+  &.stats-compare-instructions {
+    margin-bottom: 10px;
+  }
+}

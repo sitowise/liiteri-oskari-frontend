@@ -180,7 +180,7 @@ Oskari.registerLocalization(
         "additionalInfo" :{
             "copyright": "Tietolähde",
             "tooltip": {
-                "copyright": "Tietolähde",
+                "copyright": "Tietolähde"
             }
         },
 		"indicatorFilters": {
@@ -205,7 +205,7 @@ Oskari.registerLocalization(
 		},
 		"errors": {
 		    "title": "Virhe",
-		    "regionWithoutVisualization": "Kyseiselle jaottelulle ei ole saatavilla teemakarttoja",
+		    "regionWithoutVisualization": "Kyseiselle jaottelulle ei ole saatavilla teemakarttoja"
 		},
         "noIndicatorData": "Tilastoa ei voi tarkastella tässä aluejaossa",
         "values": "arvoa",
@@ -429,6 +429,22 @@ Oskari.registerLocalization(
             "selectAttrInstr": "Valitse yksilöivä ominaisuustieto.",
             "selectAttrWarn": "Yksilöivä ominaisuustieto tulee valita ennen jatkamista.",
             "drawnAreaFilterId": "Piirretty alue {0}"
+        },
+        "columnComparison": {
+            "notValid": "Saraketta ei voi verrata itseensä. Klikkaa vertailupainiketta sarakkeessa, jota haluat verrata valittuun sarakkeeseen.",
+            "differentIndicators": "Eri indikaattoreita ei voi verrata keskenään.",
+            "compared": "Aikaisemman vertailun tuloksia ei voi käyttää uudessa vertailussa.",
+            "unknown": "Tuntematon virhetilanne.",
+            "instructions": "Valitse muutostyyppi edellisen sarakevalinnan (a) ja tämän sarakkeen (b) väliselle vertailulle",
+            "difference": "Erotus b-a",
+            "division": "Jako b/a",
+            "relativeChange": "Suhteellinen muutos (b-a)/a x 100 %",
+            "sum": "Summa a+b",
+            "differenceTitle": "Erotus",
+            "divisionTitle": "Jako",
+            "relativeChangeTitle": "Muutossuhde",
+            "sumTitle": "Summa",
+            "tasksElementTitle": "Vertaa valittuun sarakkeeseen"
         }
     }
 }

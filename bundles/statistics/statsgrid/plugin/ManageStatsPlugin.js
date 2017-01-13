@@ -100,7 +100,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             'filterInput': '<input type="text" class="innerSelector" value="Syötä alueen nimi..."/>',
             'selectorContainer': '<div class="selector"></div>',
             'indicatorHeader': '<div></div>',
-            'leftMenuSelector': '<div class="selectors-container"><h5 class="open"><span class="glyphicon"></span>' + this._locale.areaRestrictions + '</h5><div id="selectors-area"></div><h5><span class="glyphicon"></span>' + this._locale.presentationLevel + '</h5><div id="level-area"></div><h5><span class="glyphicon"></span>' + this._locale.selectIndicator + '</h5><div id="selectors-statistic"><div style="text-align: center"><img src="/Oskari/resources/ajax-loader-small.gif"/></div></div><h5><span class="glyphicon"></span>' + this._locale.yearSelector + '</h5><div id="selectors-year"></div><h5 class="selectors-functional-area"><span class="glyphicon"></span>' + this._locale.functionalAreas + '</h5><div id="selectors-functional-area"></div></div>'
+            'leftMenuSelector': '<div class="selectors-container"><h5 class="open"><span class="glyphicon"></span>' + this._locale.areaRestrictions + '</h5><div id="selectors-area"></div><h5><span class="glyphicon"></span>' + this._locale.presentationLevel + '</h5><div id="level-area"></div><h5><span class="glyphicon"></span>' + this._locale.selectIndicator + '</h5><div id="selectors-statistic"><div style="text-align: center"><img src="/Oskari/resources/ajax-loader-small.gif"/></div></div><h5><span class="glyphicon"></span>' + this._locale.yearSelector + '</h5><div id="selectors-year"></div><h5 class="selectors-functional-area"><span class="glyphicon"></span>' + this._locale.functionalAreas + '</h5><div id="selectors-functional-area"></div></div>',
+            'columnComparisonPopup': '<div></div>',
+            'columnComparisonPopupInstructions': '<div class="stats-compare-instructions"></div>'
         };
 
         this.regionCategories = {};
@@ -122,6 +124,33 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.geomFilterIdAttributes = [];
         
         this.WFSLayerService = null;
+
+        this.columnComparisonOptions = [{
+            type: 'difference',
+            selected: true,
+            getValue: function(a, b) {
+                return b-a;
+            }
+        }, {
+            type: 'division',
+            decimalCount: 3,
+            unit: '',
+            getValue: function(a, b) {
+                return b/a;
+            }
+        }, {
+            type: 'relativeChange',
+            unit: '%',
+            decimalCount: 1,
+            getValue: function(a, b) {
+                return (b-a)/a*100;
+            }
+        }, {
+            type: 'sum',
+            getValue: function(a, b) {
+                return a+b;
+            }
+        }];
     }, {
         /**
          * @property __name module name
@@ -1230,6 +1259,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
         _renderIndicatorColumn: function(cont, column) {
             var me = this;
+            var loc = me._locale;
             var nameElement = jQuery("<div class='statistic-name-header'></div>");
             nameElement.html(column.name);
             cont.append(nameElement);
@@ -1252,12 +1282,20 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var sortElement = jQuery('<span class="glyphicon glyphicon-sort sorter" title="Järjestä"></span>');
             var chartElement = jQuery('<span class="glyphicon glyphicon-stats" title="Luo diagrammi"></span>');
             var infoElement = jQuery("<span style='display: inline-block;vertical-align: top;' class='icon-info' title='Taustatiedot'></span>");
+            var tasksElement = jQuery('<span class="glyphicon glyphicon-tasks" id=' + column.id + ' title="'+loc.columnComparison.tasksElementTitle+'"></span>');
+            if (column.indicatorData.columnComparison) {
+                tasksElement.addClass('hidden');
+            }
 
             trashElement.click(function(event) {
                 if (column.deleteHandler) {
                     column.deleteHandler();
                     event.stopPropagation(); //prevent error from sorting column that has been removed
                 }
+            });
+
+            tasksElement.click(function(event) {
+                me._showColumnComparisonDialog(column);
             });
 
             chartElement.click(function(event) {
@@ -1270,6 +1308,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             iconContainer.append(trashElement);
             iconContainer.append(sortElement);
+            iconContainer.append(tasksElement);
             iconContainer.append(chartElement);
             iconContainer.append(infoElement);
 
@@ -2298,7 +2337,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (data.node && data.node.ul) {
                         $(data.node.ul).removeAttr('style');
                     }
-                },
+                }
             });
         },
 
@@ -2620,6 +2659,144 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
 
         /**
+         * Compares column values using the given method.
+         *
+         * @method _createColumnComparison
+         * @param compareOption Comparison method.
+         * @param columns Columns to use in the comparison.
+         */
+        _createColumnComparison: function(compareOption, columns) {
+            var me = this;
+            var loc = me._locale;
+            var indicator = columns[1].indicatorData;
+            var meta = {
+                title: {
+                },
+                decimalCount: compareOption.decimalCount == null ? indicator.decimalCount : compareOption.decimalCount,
+                privacyLimit: indicator.privacyLimit,
+                orderNumber: indicator.orderNumber,
+                unit: compareOption.unit,
+                columnComparison: true
+            };
+            meta.title[Oskari.getLang()] = loc.columnComparison[compareOption.type+'Title']+': '+indicator.name;
+            var year = columns[0].indicatorData.year.trim() + ' -> ' + indicator.year.trim() ;
+            var data = [];
+            _.each(me.regionCategories, function(regions, category) {
+                regions.forEach(function(region) {
+                    var items = [];
+                    var values = [];
+                    var privacyLimitTriggered = false;
+                    for (var i=0; i<2; i++) {
+                        var item = _.find(me.indicatorsData[columns[i].id], function(dataItem) {
+                            return region.id === dataItem.region;
+                        });
+                        if (item == null) {
+                            return;
+                        }
+                        if (item.PrivacyLimitTriggered) {
+                            privacyLimitTriggered = true;
+                        }
+                        items.push(item);
+                        values.push(item['primary value'] == null ? NaN : parseFloat(item['primary value']));
+                    }
+                    var dataItem = {
+                        indicator: items[1].indicator,
+                        gender: items[1].gender,
+                        region: items[1].region,
+                        year: year
+                    };
+                    if (privacyLimitTriggered) {
+                        dataItem.PrivacyLimitTriggered = true;
+                    } else if ((!isNaN(values[0]))&&(!isNaN(values[1]))) {
+                        dataItem['primary value'] = compareOption.getValue(values[0], values[1]).toString();
+                    }
+                    data.push(dataItem);
+                });
+            });
+            me.addIndicatorDataToGrid(null, indicator.id, indicator.gender, year, indicator.geometry, indicator.filter, compareOption.type, indicator.direction, data, meta);
+        },
+
+        /**
+         * Lets the user to select column comparison method.
+         *
+         * @method _showColumnComparisonDialog
+         * @param column Column to add to the comparison.
+         */
+        _showColumnComparisonDialog: function(column) {
+            var me = this;
+            var loc = me._locale;
+            var columns = me.grid.getColumns();
+            var currentColumn;
+            var showErrorMessage = function(error) {
+                var guideDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+            	var closeBtn = guideDialog.createCloseButton(loc.btnCancel);
+                guideDialog.addClass('stats-compare-dialog');
+                guideDialog.show('', loc.columnComparison[error], [closeBtn]);
+                guideDialog.moveTo('span#'+column.id, 'bottom');
+                guideDialog.makeModal();
+            };
+
+            // Parameter validity checks
+            var currentColumnId = this.getState().currentColumn;
+            if ((column == null)||(column.indicatorData == null)||(column.indicatorData.id == null)||(currentColumnId == null)) {
+                showErrorMessage('unknown');
+                return;
+            }
+            var currentColumnIndex = me.grid.getColumnIndex(currentColumnId);
+            if ((currentColumnIndex == null)||(currentColumnId === column.id)) {
+                showErrorMessage('notValid');
+                return;
+            }
+            if (currentColumnIndex > columns.length) {
+                showErrorMessage('unknown');
+                return;
+            }
+            currentColumn = columns[currentColumnIndex];
+            if (currentColumn.indicatorData.id !== column.indicatorData.id) {
+                showErrorMessage('differentIndicators');
+                return;
+            }
+            if (currentColumn.indicatorData.columnComparison) {
+                showErrorMessage('compared');
+                return;
+            }
+            // Create option dialog
+            var optionDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+            optionDialog.addClass('stats-compare-dialog');
+        	var cancelBtn = optionDialog.createCloseButton(loc.btnCancel);
+            var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+            okBtn.setHandler(function () {
+                var selectedCompareOption = _.find(me.columnComparisonOptions, {
+                    selected: true
+                });
+                optionDialog.close(true);
+                me._createColumnComparison(selectedCompareOption, [currentColumn, column]);
+            });
+        	var popupContent = jQuery(me.templates.columnComparisonPopup).clone();
+        	var popupInstructions = jQuery(me.templates.columnComparisonPopupInstructions).clone();
+        	popupInstructions.append(loc.columnComparison.instructions);
+        	popupContent.append(popupInstructions);
+            var radioButtonGroup = Oskari.clazz.create('Oskari.userinterface.component.RadioButtonGroup');
+            radioButtonGroup.setName('stats-compare-option');
+            radioButtonGroup.setOptions(me.columnComparisonOptions.map(function (option) {
+                return {
+                    title: loc.columnComparison[option.type],
+                    value: option.type
+                };
+            }));
+            radioButtonGroup.setValue(me.columnComparisonOptions[0].type);
+            radioButtonGroup.setHandler(function (value) {
+                me.columnComparisonOptions.forEach(function (option) {
+                    option.selected = option.type === value;
+                });
+            });
+            radioButtonGroup.insertTo(popupContent);
+            optionDialog.show('', popupContent, [cancelBtn, okBtn]);
+            optionDialog.moveTo('span#'+column.id, 'bottom');
+            optionDialog.makeModal();
+        },
+
+        /**
          * Create drop down selects for demographics (year & gender)
          *
          * @method createDemographicsSelects
@@ -2656,7 +2833,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         sex: { values: [] },
                         type: [],
                         direction: { values: [] }
-                    },
+                    }
                 };
 
                 for (var i = 0; i < indicator.length; ++i) {
@@ -3802,11 +3979,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @param indicatorId id
          * @param gender (male/female/total)
          * @param year selected year
-         * @return columnId unique column id
+         * @return String columnId unique column id
          */
         _getIndicatorColumnId: function (indicatorId, gender, year, geometry, filter, type, direction) {
-            var columnId = "indicator" + indicatorId + year + gender + geometry + filter + type + direction;
-            return columnId;
+            return "indicator" + indicatorId + year.replace(/\D/g, '') + gender + geometry + filter + type + direction;
         },
 
         /**
@@ -3850,13 +4026,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
             
             var fullName = "",
-                unit = me.indicatorsMeta[indicatorId].unit,
+                unit = meta.unit == null ? me.indicatorsMeta[indicatorId].unit : meta.unit,
                 name = indicatorName + '<br/>';
             if (unit && unit != '') {
                 name += '[' + unit + ']<br/>';
             }
             name += year;
-            
+
+            var columnComparison = meta.columnComparison == null ? false : meta.columnComparison;
             if(me.mode === 'twoway') {
                 var typename = $.grep(meta.classifications.type, function(item, index) {
                     return type === item.id;
@@ -3888,7 +4065,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     themes: themes,
                     orderNumber: orderNumber,
                     decimalCount: meta.decimalCount,
-                    privacyLimit: meta.privacyLimit
+                    privacyLimit: meta.privacyLimit,
+                    columnComparison: columnComparison
                 },
                 id: columnId,
                 name: name,
@@ -4295,10 +4473,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 found = false,
                 i = 0,
                 ilen = 0,
-                j = 0;
+                j = 0,
+                columnComparison = false;
 
             for (i = 0, ilen = columns.length, j = 0; i < ilen; i++) {
                 if (columnId === columns[i].id) {
+                    if (typeof columns[i].indicatorData.columnComparison !== 'undefined') {
+                        columnComparison = columns[i].indicatorData.columnComparison
+                    }
                     // Skip the column that is to be deleted
                     found = true;
                 } else {
@@ -4339,7 +4521,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             // remove from metadata hash as well
-            this.removeIndicatorMeta(indicatorId);
+            if (!columnComparison) {
+                this.removeIndicatorMeta(indicatorId);
+            }
 
             delete this.indicatorsData[columnId];
 
@@ -5733,7 +5917,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                             var jsonIndex = fields.indexOf("property_json");
                                             var json = activeFeatures[k][jsonIndex];
                                             id = json[identifyingNameAttr.split(".")[1]];
-                                            debugger;
                                         } else {
                                             id = activeFeatures[k][attrIndex];
                                         }
