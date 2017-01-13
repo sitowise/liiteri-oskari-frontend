@@ -2786,11 +2786,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     value: option.type
                 };
             }));
-            radioButtonGroup.setValue(me.columnComparisonOptions[0].type);
-            radioButtonGroup.setHandler(function (value) {
+            var defaultComparison = me.columnComparisonOptions[0].type;
+            radioButtonGroup.setValue(defaultComparison);
+            var updateSelectedComparison = function(selectedValue) {
                 me.columnComparisonOptions.forEach(function (option) {
-                    option.selected = option.type === value;
+                    option.selected = option.type === selectedValue;
                 });
+            };
+            updateSelectedComparison(defaultComparison);
+            radioButtonGroup.setHandler(function (value) {
+                updateSelectedComparison(value)
             });
             radioButtonGroup.insertTo(popupContent);
             optionDialog.show('', popupContent, [cancelBtn, okBtn]);
