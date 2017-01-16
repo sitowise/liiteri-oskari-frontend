@@ -126,27 +126,27 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.WFSLayerService = null;
 
         this.columnComparisonOptions = [{
-            type: 'statsgridDifference',
+            type: 'difference',
             selected: true,
             getValue: function(a, b) {
                 return b-a;
             }
         }, {
-            type: 'statsgridDivision',
+            type: 'division',
             decimalCount: 3,
             unit: '',
             getValue: function(a, b) {
                 return b/a;
             }
         }, {
-            type: 'statsgridRelativeChange',
+            type: 'relativeChange',
             unit: '%',
             decimalCount: 1,
             getValue: function(a, b) {
                 return (b-a)/a*100;
             }
         }, {
-            type: 'statsgridSum',
+            type: 'sum',
             getValue: function(a, b) {
                 return a+b;
             }
@@ -2662,31 +2662,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * Compares column values using the given method.
          *
          * @method _createColumnComparison
-         * @param compareOption Comparison method.
+         * @param comparisonOption Comparison method.
          * @param columns Columns to use in the comparison.
          */
-        _createColumnComparison: function(compareOption, columns) {
+        _createColumnComparison: function(comparisonOption, columns) {
             var me = this;
             var loc = me._locale;
             var indicator = columns[1].indicatorData;
             var meta = {
                 title: {
                 },
-                decimalCount: compareOption.decimalCount == null ? indicator.decimalCount : compareOption.decimalCount,
+                decimalCount: comparisonOption.decimalCount == null ? indicator.decimalCount : comparisonOption.decimalCount,
                 privacyLimit: indicator.privacyLimit,
                 orderNumber: indicator.orderNumber,
-                unit: compareOption.unit,
-                columnComparison: true
+                unit: comparisonOption.unit,
+                columnComparison: true,
+                comparisonType: comparisonOption.type
             };
-            meta.title[Oskari.getLang()] = loc.columnComparison[compareOption.type+'Title']+': '+indicator.name;
+            meta.title[Oskari.getLang()] = loc.columnComparison[comparisonOption.type+'Title']+': '+indicator.name;
             var year = columns[0].indicatorData.year.trim() + ' -> ' + indicator.year.trim();
             var indicatorId = indicator.id;
             var gender = indicator.gender;
             var geometry = indicator.geometry;
             var filter = indicator.filter;
-            var type = compareOption.type;
+            var type = indicator.type;
             var direction = indicator.direction;
-            var resultColumnId = me._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction);
+            var resultColumnId = me._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction, comparisonOption.type);
             var gridColumns = me.grid.getColumns();
             var numGridColumns = gridColumns.length;
             // Remove existing duplicate column
@@ -2725,7 +2726,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (privacyLimitTriggered) {
                         dataItem.PrivacyLimitTriggered = true;
                     } else if ((!isNaN(values[0]))&&(!isNaN(values[1]))) {
-                        dataItem['primary value'] = compareOption.getValue(values[0], values[1]).toString();
+                        dataItem['primary value'] = comparisonOption.getValue(values[0], values[1]).toString();
                     }
                     data.push(dataItem);
                 });
@@ -4004,8 +4005,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @param year selected year
          * @return String columnId unique column id
          */
-        _getIndicatorColumnId: function (indicatorId, gender, year, geometry, filter, type, direction) {
-            return "indicator" + indicatorId + year.replace(/\D/g, '') + gender + geometry + filter + type + direction;
+        _getIndicatorColumnId: function (indicatorId, gender, year, geometry, filter, type, direction, comparisonType) {
+            var comparison = typeof comparisonType === 'undefined' ? '' : comparisonType;
+            return "indicator" + indicatorId + year.replace(/\D/g, '') + gender + geometry + filter + type + direction + comparison;
         },
 
         /**
@@ -4021,7 +4023,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         addIndicatorDataToGrid: function (container, indicatorId, gender, year, geometry, filter, type, direction, data, meta, silent) {
 
             var me = this,
-                columnId = me._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction),
+                comparisonType = meta.columnComparison ? meta.comparisonType : '',
+                columnId = me._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction, comparisonType),
                 columns = me.grid.getColumns(),
                 indicatorName = meta.title[Oskari.getLang()],
                 themes = [],
@@ -4057,7 +4060,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             name += year;
 
             var columnComparison = meta.columnComparison == null ? false : meta.columnComparison;
-            if(me.mode === 'twoway') {
+            if ((me.mode === 'twoway')&&(!meta.columnComparison)) {
                 var typename = $.grep(meta.classifications.type, function(item, index) {
                     return type === item.id;
                 });
@@ -4101,7 +4104,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 toolTip: indicatorName,
                 sortable: true,
                 deleteHandler : function (e) {
-                    me.removeIndicatorDataFromGrid(indicatorId, gender, year, geometry, filter, type, direction);
+                    me.removeIndicatorDataFromGrid(indicatorId, gender, year, geometry, filter, type, direction, columnComparison, comparisonType);
                 },
                 formatter: function (row, cell, value, columnDef, dataContext) {
                     var numValue = Number(value),
@@ -4490,21 +4493,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @param gender (male / female / total)
          * @param year selected year
          */
-        removeIndicatorDataFromGrid: function (indicatorId, gender, year, geometry, filter, type, direction) {
-            var columnId = this._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction),
+        removeIndicatorDataFromGrid: function (indicatorId, gender, year, geometry, filter, type, direction, columnComparison, comparisonType) {
+            var comparison = columnComparison ? comparisonType : '',
+                columnId = this._getIndicatorColumnId(indicatorId, gender, year, geometry, filter, type, direction, comparison),
                 columns = this.grid.getColumns(),
                 allOtherColumns = [],
                 found = false,
                 i = 0,
                 ilen = 0,
-                j = 0,
-                columnComparison = false;
+                j = 0;
 
             for (i = 0, ilen = columns.length, j = 0; i < ilen; i++) {
                 if (columnId === columns[i].id) {
-                    if (typeof columns[i].indicatorData.columnComparison !== 'undefined') {
-                        columnComparison = columns[i].indicatorData.columnComparison
-                    }
                     // Skip the column that is to be deleted
                     found = true;
                 } else {
