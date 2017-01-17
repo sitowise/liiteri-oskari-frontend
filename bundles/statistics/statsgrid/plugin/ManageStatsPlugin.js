@@ -2680,7 +2680,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 comparisonType: comparisonOption.type
             };
             meta.title[Oskari.getLang()] = loc.columnComparison[comparisonOption.type+'Title']+': '+indicator.name;
-            var year = columns[0].indicatorData.year.trim() + ' -> ' + indicator.year.trim();
+            var year = columns[0].indicatorData.year.trim() + ' &rarr; ' + indicator.year.trim();
             var indicatorId = indicator.id;
             var gender = indicator.gender;
             var geometry = indicator.geometry;
