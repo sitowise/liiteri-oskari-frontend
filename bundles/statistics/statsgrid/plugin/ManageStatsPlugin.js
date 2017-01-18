@@ -925,6 +925,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         // Data loaded and grid created, now it's time to load the indicators from the state if any.
                         if (me._state) {
                             me.loadStateIndicators(me._state, container);
+                            me.loadStateComparisons(me._state);
                         }
                     } else {
                         me.showMessage(me._locale.connectionErrors.errorTitle, me._locale.connectionErrors.regionDataError);
@@ -2680,7 +2681,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 comparisonType: comparisonOption.type
             };
             meta.title[Oskari.getLang()] = loc.columnComparison[comparisonOption.type+'Title']+': '+indicator.name;
-            var year = columns[0].indicatorData.year.trim() + ' -> ' + indicator.year.trim();
+            var year = columns[0].indicatorData.year.trim() + ' &rArr; ' + indicator.year.trim();
             var indicatorId = indicator.id;
             var gender = indicator.gender;
             var geometry = indicator.geometry;
@@ -2731,6 +2732,30 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     data.push(dataItem);
                 });
             });
+            // Save comparisons to the state
+            var comparisons = me.getState().comparisons;
+            if (comparisons == null) {
+                comparisons = [];
+            }
+            var found = false;
+            var numComparisons = comparisons.length;
+            for (var j=0; j<numComparisons; j++) {
+                if ((comparisons[j].indicatorId === indicatorId)&&
+                    (comparisons[j].comparisonOption.type === comparisonOption.type)&&
+                    (comparisons[j].year === year)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                comparisons.push({
+                    indicatorId: indicatorId,
+                    comparisonOption: comparisonOption,
+                    year: year,
+                    columnIds: [columns[0].id, columns[1].id]
+                });
+                me.getState().comparisons = comparisons;
+            }
             me.addIndicatorDataToGrid(null, indicatorId, gender, year, geometry, filter, type, direction, data, meta);
         },
 
@@ -4543,6 +4568,17 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     }
                 }
             }
+            if (this._state.comparisons) {
+                for (i = 0, ilen = this._state.comparisons.length; i < ilen; i++) {
+                    var statedComparison = this._state.comparisons[i];
+                    if ((statedComparison.indicatorId === indicatorId)&&
+                    (statedComparison.comparisonOption.type === comparisonType)&&
+                    (statedComparison.year === year)) {
+                        this._state.comparisons.splice(i, 1);
+                        break;
+                    }
+                }
+            }
 
             // remove from metadata hash as well
             if (!columnComparison) {
@@ -5206,6 +5242,41 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me.stateIndicatorsLoaded = true;
             }
         },
+
+        /**
+         * Loads column comparisons from the plugin state.
+         *
+         * @method loadStateIndicators
+         * @param state Current state.
+         * @param container Grid container.
+         */
+        loadStateComparisons: function (state) {
+            var me = this,
+                comparisons = state.comparisons || [],
+                columns = me.grid.getColumns();
+            _.forEach(comparisons, function (comparison) {
+                if ((comparison == null)||(comparison.columnIds == null)) {
+                    return;
+                }
+                var comparedColumns = [];
+                for (var i=0; i<2; i++) {
+                    var id = comparison.columnIds[i];
+                    if (id == null) {
+                        return;
+                    }
+                    var index = me.grid.getColumnIndex(id);
+                    if (index == null) {
+                        return;
+                    }
+                    if (columns[index] == null) {
+                        return;
+                    }
+                    comparedColumns.push(columns[index]);
+                }
+                me._createColumnComparison(comparison.comparisonOption, comparedColumns);
+            });
+        },
+
         /**
          * Loop through first group (municipalities) and create header row for
          * @private _updateTotals
@@ -6399,7 +6470,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 indicatorName += ' [' + unit + ']';
                             }
                             
-                            indicatorName += ' (' + item.indicatorData.year + ')';
+                            indicatorName += ' (' + item.indicatorData.year.replace('&rArr;', '->') + ')';
                         }
                         columnNames.push(indicatorName);
                         columnIds.push(item.id);
