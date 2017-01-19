@@ -136,14 +136,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             decimalCount: 3,
             unit: '',
             getValue: function(a, b) {
-                return b/a;
+                return Math.round(b/a*1e3)/1e3;
             }
         }, {
             type: 'relativeChange',
             unit: '%',
             decimalCount: 1,
             getValue: function(a, b) {
-                return (b-a)/a*100;
+                return Math.round((b-a)/a*1e3)/10;
             }
         }, {
             type: 'sum',
