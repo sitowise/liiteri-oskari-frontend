@@ -2681,7 +2681,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 comparisonType: comparisonOption.type
             };
             meta.title[Oskari.getLang()] = loc.columnComparison[comparisonOption.type+'Title']+': '+indicator.name;
-            var year = columns[0].indicatorData.year.trim() + ' &rArr; ' + indicator.year.trim();
+            var year = columns[0].indicatorData.year.trim() + ' &#9658; ' + indicator.year.trim();
             var indicatorId = indicator.id;
             var gender = indicator.gender;
             var geometry = indicator.geometry;
@@ -6470,7 +6470,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 indicatorName += ' [' + unit + ']';
                             }
                             
-                            indicatorName += ' (' + item.indicatorData.year.replace('&rArr;', '->') + ')';
+                            indicatorName += ' (' + item.indicatorData.year.replace('&#9658;', '->') + ')';
                         }
                         columnNames.push(indicatorName);
                         columnIds.push(item.id);
