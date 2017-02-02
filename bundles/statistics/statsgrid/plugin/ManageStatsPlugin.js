@@ -645,6 +645,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     });
 
                     if (statsThemes.length > 0) {
+                        me.stateIndicatorsLoaded = false;
                         me._setStateFromServicePackage(servicePackageData);
                         var exists = 0 != indicatorsSourceSelect.find("option[value='servicePackage']").length;
                         if (!exists) {
@@ -745,6 +746,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
 
         setState: function(state) {
+            this.clearIndicators();
+            this.indicators = [];
+            this.indicatorsmeta = {};
+            this.indicatorsData = {};
+            this.stateIndicatorsLoaded = false;
             this._state = state;
         },
         getState: function() {
@@ -1586,7 +1592,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         _setStateFromServicePackage: function (servicePackageData) {
             var me = this;
             me._state.indicators = [];
-            console.log(servicePackageData);
             var stack = [];
             var el, i;
 
@@ -1622,7 +1627,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                             'year': newestYear,
                                         });
                                         var indicator = me._state.indicators[me._state.indicators.length - 1];
-                                        me._state.currentColumn = me._getIndicatorColumnId(indicator.id, indicator.gender, indicator.year, indicator.geometry, indicator.filter, indicator.type, indicator.direction);
                                     }
                                 }
                                 var metadataUrl = me._sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=indicator_metadata&indicator=' + elementId + '&version=1.1';

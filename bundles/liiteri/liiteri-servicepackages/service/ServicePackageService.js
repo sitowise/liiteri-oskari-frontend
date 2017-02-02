@@ -105,6 +105,14 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
             this.getGroupings(successWrapper, errorCb);
         },
 
+        _sendRequest(name, params) {
+            var reqBuilder = this.sandbox.getRequestBuilder(name);
+            if (reqBuilder) {
+                var request = reqBuilder.apply(this.sandbox, params);
+                this.sandbox.request(this.instance, request);
+            }
+        },
+
         _restoreServicePackageState: function (state) {
             var sandbox = this.sandbox;
 
@@ -114,24 +122,24 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
 
                 for (var i = 0; i < previousSelectedLayers.length; i++) {
                     var itemLayer = previousSelectedLayers[i];
-                    sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
+                    this._sendRequest('RemoveMapLayerRequest', [itemLayer.getId()]);
                 }
 
                 for (var i = 0; i < state.selectedLayers.length; i++) {
                     //add map layer
-                    sandbox.postRequestByName('AddMapLayerRequest', [state.selectedLayers[i].id, false, state.selectedLayers[i].baseLayer]);
+                    this._sendRequest('AddMapLayerRequest', [state.selectedLayers[i].id, true, state.selectedLayers[i].baseLayer]);
                     //set opacity
-                    sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].opacity]);
+                    this._sendRequest('ChangeMapLayerOpacityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].opacity]);
                     //add custom style
                     if (state.selectedLayers[i].customStyle) {
-                        sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].customStyle]);
+                        this._sendRequest('ChangeMapLayerOwnStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].customStyle]);
                     }
                     //change style
                     if (state.selectedLayers[i].style) {
-                        sandbox.postRequestByName('ChangeMapLayerStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].style._name]);
+                        this._sendRequest('ChangeMapLayerStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].style._name]);
                     }
-                    //set visibility					
-                    sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].visible]);
+                    //set visibility
+                    this._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].visible]);
                 }
             }
 
