@@ -382,7 +382,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 me._initState();
 
                 //TODO Is recalculating of classification needed for every move of the map?
-                if (me._layer.isVisible()) {
+                if (me._layer && me._layer.isVisible()) {
                     me._recalculateClassification();
                 }
                 

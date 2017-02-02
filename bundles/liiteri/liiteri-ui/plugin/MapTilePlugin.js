@@ -5,7 +5,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-ui.plugin.MapTilePlugin',
             'containerId': 'menubar',
             'tileClass': 'oskari-tile',
             'titleTileClass': 'oskari-tile-title',
-            'extensions': ['maplegend', 'LayerSelector', 'liiteri-servicepackages']
+            'extensions': ['maplegend', 'LayerSelector']
         };
         $.extend(this.config, config);
         this.instance = instance;

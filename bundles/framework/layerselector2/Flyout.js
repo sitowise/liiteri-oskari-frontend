@@ -478,8 +478,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
         },
 		populateLayersFromServicePackage: function(themesDataArray, cb) {		
 		    if (themesDataArray) {
-		        this.servicePackageTab.selectAllLayers(false, true);
-
 			    var groupList = [];
 			    var layers = [];
 					

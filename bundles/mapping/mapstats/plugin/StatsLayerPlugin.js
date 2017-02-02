@@ -786,7 +786,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          */
         getOLMapLayers: function (layer) {
             var me = this;
-            if (!layer.isLayerOfType(this._layerType)) {
+            if (!layer || !layer.isLayerOfType(this._layerType)) {
                 return null;
             }
 
