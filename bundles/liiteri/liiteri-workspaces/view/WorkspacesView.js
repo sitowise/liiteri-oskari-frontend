@@ -520,7 +520,7 @@ function() {
 					'baseLayer': selectedLayers[i].isBaseLayer(),
 					'opacity': selectedLayers[i].getOpacity(),
 					'style': selectedLayers[i].getCurrentStyle(),
-					'customStyle': selectedLayers[i].getCustomStyle ? selectedLayers[i].getCustomStyle() : null,
+					'customStyle': selectedLayers[i].getCustomStyle && selectedLayers[i].getCurrentStyle().getName() === "oskari_custom" ? selectedLayers[i].getCustomStyle() : null,
 					'visible': selectedLayers[i].isVisible(),
 					'type': selectedLayers[i].getLayerType()
 				});
