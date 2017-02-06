@@ -127,8 +127,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             mapModule.startPlugin(classifyPlugin);
             this.classifyPlugin = classifyPlugin;
 
-            this.setState(this.state);
-
             this.buttons = Oskari.clazz.create("Oskari.statistics.bundle.statsgrid.ButtonHandler", this);
             this.buttons.start();
 
@@ -311,8 +309,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
          * @method setState
          * @param {Object} state bundle state as JSON
          * @param {Boolean} ignoreLocation true to NOT set map location based on state
+         * @param {Boolean} stateIndicatorsLoaded
          */
-        setState: function (state, ignoreLocation) {
+        setState: function (state, ignoreLocation, stateIndicatorsLoaded) {
             this.state = jQuery.extend({}, {
                 indicators: [],
                 layerId: null
@@ -322,7 +321,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             // so it can load the right indicators.
 
             //this.visualizationPlugin.setState(this.state);
-            this.gridPlugin.setState(this.state);
+            this.gridPlugin.setState(this.state, stateIndicatorsLoaded);
             this.classifyPlugin.setState(this.state);
             // Reset the classify plugin
             this.classifyPlugin.resetUI(this.state);
