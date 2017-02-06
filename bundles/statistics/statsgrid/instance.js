@@ -127,8 +127,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             mapModule.startPlugin(classifyPlugin);
             this.classifyPlugin = classifyPlugin;
 
-            this.setState(this.state);
-
             this.buttons = Oskari.clazz.create("Oskari.statistics.bundle.statsgrid.ButtonHandler", this);
             this.buttons.start();
 

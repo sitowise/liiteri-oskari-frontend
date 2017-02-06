@@ -1069,18 +1069,20 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 params = this._state._params;
             }
 
-            var returnObject = {
-                ZONE_TYPE: this.ZONE_ADMINISTRATIVE,
-                VIS_METHOD: this.VISMETHOD_CHOROPLETIC,
-                VIS_ID: -1,
-                VIS_NAME: params.VIS_NAME,
-                VIS_ATTR: params.VIS_ATTR,
-                VIS_CLASSES: "",
-                VIS_COLORS: "choro:"
-            };
+            if (params != null && layer != null) {
+                var returnObject = {
+                    ZONE_TYPE: this.ZONE_ADMINISTRATIVE,
+                    VIS_METHOD: this.VISMETHOD_CHOROPLETIC,
+                    VIS_ID: -1,
+                    VIS_NAME: params.VIS_NAME,
+                    VIS_ATTR: params.VIS_ATTR,
+                    VIS_CLASSES: "",
+                    VIS_COLORS: "choro:"
+                };
 
-            this.statsService.sendVisualizationData(layer, returnObject);
-            this.resetUI();
+                this.statsService.sendVisualizationData(layer, returnObject);
+                this.resetUI();
+            }
         },
         _classifySeries: function (series, codes, numberOfClasses, method, isNonNumeric) {
             var classes = numberOfClasses,
