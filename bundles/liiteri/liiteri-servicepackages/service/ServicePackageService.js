@@ -105,7 +105,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
             this.getGroupings(successWrapper, errorCb);
         },
 
-        _sendRequest(name, params) {
+        _sendRequest: function(name, params) {
             var reqBuilder = this.sandbox.getRequestBuilder(name);
             if (reqBuilder) {
                 var request = reqBuilder.apply(this.sandbox, params);
