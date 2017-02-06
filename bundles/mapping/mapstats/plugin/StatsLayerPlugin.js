@@ -263,8 +263,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          * @method deactivateControls
          */
         deactivateControls: function () {
-            this._getFeatureControlHover.deactivate();
-            this._loadingControl.deactivate();
+            if(this._getFeatureControlHover) {
+                this._getFeatureControlHover.deactivate();
+            }
+            if(this._loadingControl) {
+                this._loadingControl.deactivate();
+            }
         },
         addMapLayerArcGisToMap: function (layer, keepLayerOnTop, isBaseMap) {
             var me = this;

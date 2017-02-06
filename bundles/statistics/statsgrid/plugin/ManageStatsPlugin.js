@@ -4608,7 +4608,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
 
         resetLayer: function () {
-            if (this.instance.state.indicators == null || this.instance.state.indicators.length == 0) {
+            if ((this.instance.state.indicators == null || this.instance.state.indicators.length == 0) && this._layer) {
                 this._sandbox.postRequestByName('RemoveMapLayerRequest', [this._layer.getId()]);
             }
         },
