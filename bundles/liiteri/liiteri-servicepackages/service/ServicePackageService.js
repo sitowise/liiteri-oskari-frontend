@@ -43,8 +43,12 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
                     servicePackageId = servicePackageJson.id;
                 }
 
-                if (restoreState && servicePackageJson.mapState) {
-                    this._restoreServicePackageState(JSON.parse(servicePackageJson.mapState));
+                if (restoreState) {
+                    if(servicePackageJson.mapState) {
+                        this._restoreServicePackageState(JSON.parse(servicePackageJson.mapState));
+                    } else {
+                        this._restoreServicePackageState({});
+                    }
                 }
             }
 
@@ -158,6 +162,9 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
                         }, 500);
                     }
                 }
+            } else {
+                sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
+                sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
             }
 
             //Current position on the screen (zoom and coordinates)
