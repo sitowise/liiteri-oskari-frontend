@@ -13,7 +13,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             "tileClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
             "flyoutClazz": null, //"Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
             "viewClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.View",
-            "isFullScreenExtension": false
+            "isFullScreenExtension": false,
+            "autoLoad": null
         };
         this.state = {};
         this.service = null;
@@ -41,6 +42,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             var conf = $.extend(this.conf, this.defaults),
                 sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName);
+			this.defaults.autoLoad = this._getParameterValueFromUrl('service_package');
             this.sandbox = sandbox;
 
             this.localization = Oskari.getLocalization(this.getName());

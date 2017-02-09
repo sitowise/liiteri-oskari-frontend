@@ -169,6 +169,9 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
 							var editLink = jQuery('<a class="editLink glyphicon glyphicon-pencil"></a>');
 							operationsLinks.append(editLink);
 							
+							var copyLink = jQuery('<a class="copyLink glyphicon glyphicon-link"></a>');
+							operationsLinks.append(copyLink);
+
 							var removeLink = jQuery('<a class="removeLink glyphicon glyphicon-remove-sign"></a>');
 							operationsLinks.append(removeLink);
 							
@@ -216,6 +219,31 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
 				
 			});
 			
+			tableElement.find('tbody').on('click', 'a.copyLink', function () {
+				var data = dataTable.row($(this).parents('tr')).data();
+				if (data == null) {
+                    return;
+                }
+                var url = window.location.protocol+'//'+window.location.host+'/?service_package='+data.id;
+				// From http://www.jomendez.com/2017/01/25/copy-clipboard-using-javascript/
+				if (window.clipboardData && window.clipboardData.setData) { // IE
+					return clipboardData.setData("Text", text);
+				} else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+					var textarea = document.createElement("textarea");
+					textarea.textContent = url;
+					textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+					document.body.appendChild(textarea);
+					textarea.select();
+					try {
+						return document.execCommand("copy"); // Security exception may be thrown by some browsers.
+					} catch (ex) {
+						return false;
+					} finally {
+						document.body.removeChild(textarea);
+					}
+				}
+	        });
+
 			tableElement.find('tbody').on('click', 'a.removeLink', function () {
 				var data = dataTable.row($(this).parents('tr')).data();
 				
