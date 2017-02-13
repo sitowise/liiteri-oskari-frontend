@@ -454,12 +454,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 switch (visualizationMethod) {
                 case me.VISMETHOD_CHOROPLETIC:
                     me._queue.pushJob(function() {
-                        me.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        me.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.fullName);
                     });
                     break;
                 case me.VISMETHOD_GRADUATED:
                     me._queue.pushJob(function() {
-                        me.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        me.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.fullName);
                     });
                     break;
                 default:
@@ -541,7 +541,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                         }
                         break;
                     case this.VISMETHOD_GRADUATED:
-                        this.graduated_administrative_classifyData(me._layer, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        this.graduated_administrative_classifyData(me._layer, params.CUR_COL.indicatorData, params.CUR_COL.fullName);
                         break;
                     default:
                         break;
@@ -551,10 +551,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             {
                 switch (visualizationMethod) {
                     case this.VISMETHOD_CHOROPLETIC:
-                        this.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        this.grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.fullName);
                         break;
                     case this.VISMETHOD_GRADUATED:
-                        this.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.name);
+                        this.graduated_grid_classifyData(me._layer, zoneType, visualizationMethod, me._state.methodId, params.CUR_COL.indicatorData, params.CUR_COL.fullName);
                         break;
                     default:
                         break;
@@ -1044,8 +1044,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     }
                     return ret;
                 };
-
-                var colortab = gstats.getHtmlLegend(null, sortcol.name, true, legendRounder, classificationMode);
+                var colortab = gstats.getHtmlLegend(null, sortcol.fullName, true, legendRounder, classificationMode);
                 classify = me.element.find('.classifications');
                 classify.find('.block').remove();
                 block = jQuery(me.templates.block).clone();
