@@ -797,7 +797,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     classifyParam.items[j].description = colorsArray[j];
                 }
 
-                me.grid_administrative_setLegend(classifyParam, indicatorName);
+                me.grid_administrative_setLegend(classifyParam, indicatorName, indicatorData.decimalCount);
                 me.grid_visualize(classifyParam, layer, zoneType, visualizationMethod, indicatorData);
             };
             var errorCb = function() {
@@ -823,12 +823,21 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             }
             return true;
         },
-        grid_administrative_setLegend: function (classifyParams, name) {
+        grid_administrative_setLegend: function (classifyParams, name, decimalCount) {
             var me = this;
             var colortab = '<div class="geostats-legend"><div class="geostats-legend-title">' + name + '</div>';
 
+            if (decimalCount == null) {
+                decimalCount = 0;
+            }
+
             _.each(classifyParams.items, function (item) {
-                colortab += '<div><div class="geostats-legend-block" style="background-color:#' + item.description + '"></div> ' + item.ranges[0] + " - " + item.ranges[1] + '</div>';
+                //Grid cells with value equals 0 are fully transparent, so fix the legend to not show 0 value:
+                //if range value equals 0, then show the smallest possible value for 'range from' or the negative smallest possible value for 'range to'
+                var rangeFrom = item.ranges[0] != 0 ? item.ranges[0] : Math.pow(10, decimalCount * (-1)),
+                    rangeTo = item.ranges[1] != 0 ? item.ranges[1] : 0 - Math.pow(10, decimalCount * (-1));
+                    
+                colortab += '<div><div class="geostats-legend-block" style="background-color:#' + item.description + '"></div> ' + rangeFrom + " - " + rangeTo + '</div>';
             });
             colortab += '</div>';
             var classify = me.element.find('.classifications');
