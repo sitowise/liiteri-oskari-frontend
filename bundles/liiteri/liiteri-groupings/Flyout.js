@@ -17,6 +17,8 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
         this.template = jQuery("<div class='startview'>" + "<div class='content'></div>" +
             "<div class='tou'><a href='JavaScript:void(0;)'></a></div>" +
             "<div class='buttons'></div>" + "</div>");
+	    this.operationPopup = jQuery('<div class="operation-popup"></div>');
+    	this.operationPopupText = jQuery('<div class="operation-popup-text"></div>');
 		this.loc = this.instance.getLocalization("StartView");
 		this.dataTable = null;
 		
@@ -219,38 +221,65 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
 			});
 			
 			tableElement.find('tbody').on('click', 'a.copyLink', function () {
+				var message;
 				var data = dataTable.row($(this).parents('tr')).data();
 				if (data == null) {
-                    return;
+                    message = me.loc.noData;
+                } else {
+                    message = me.loc.linkCopied;
+                    var url = window.location.protocol + '//' + window.location.host + '/?service_package=' + data.id;
+                    // From http://www.jomendez.com/2017/01/25/copy-clipboard-using-javascript/
+                    if (window.clipboardData && window.clipboardData.setData) { // IE
+                        clipboardData.setData('Text', text);
+                    } else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+                        var textarea = document.createElement('textarea');
+                        textarea.textContent = url;
+                        textarea.style.position = 'fixed';  // Prevent scrolling to bottom of page in MS Edge.
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        try {
+                            document.execCommand('copy'); // Security exception may be thrown by some browsers.
+                        } catch (ex) {
+                            message = me.loc.directLink + ': ' + url;
+                        } finally {
+                            document.body.removeChild(textarea);
+                        }
+                    }
                 }
-                var url = window.location.protocol+'//'+window.location.host+'/?service_package='+data.id;
-				// From http://www.jomendez.com/2017/01/25/copy-clipboard-using-javascript/
-				if (window.clipboardData && window.clipboardData.setData) { // IE
-					return clipboardData.setData("Text", text);
-				} else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
-					var textarea = document.createElement("textarea");
-					textarea.textContent = url;
-					textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
-					document.body.appendChild(textarea);
-					textarea.select();
-					try {
-						return document.execCommand("copy"); // Security exception may be thrown by some browsers.
-					} catch (ex) {
-						return false;
-					} finally {
-						document.body.removeChild(textarea);
-					}
-				}
+				var copyInfoDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+				copyInfoDialog.addClass('servicepackage-copied-dialog');
+				var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+				okBtn.setTitle(me.loc.close);
+				okBtn.setHandler(function () {
+					copyInfoDialog.close(true);
+				});
+				var popupContent = me.operationPopup.clone();
+				var copyInfo = me.operationPopupText.clone();
+				copyInfo.append(message);
+				popupContent.append(copyInfo);
+				copyInfoDialog.show('', popupContent, [okBtn]);
+				copyInfoDialog.makeModal();
 	        });
 
 			tableElement.find('tbody').on('click', 'a.removeLink', function () {
 				var data = dataTable.row($(this).parents('tr')).data();
 				
 				if (data.id) {
-					var delConfirm = confirm(me.loc.DeleteConfirm);
-					if (delConfirm == true) {
+					var confirmDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+					confirmDialog.addClass('servicepackage-remove-dialog');
+					var cancelBtn = confirmDialog.createCloseButton(me.loc.Cancel);
+					var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+					okBtn.setTitle(me.loc.Yes);
+					okBtn.setHandler(function () {
+						confirmDialog.close(true);
 						me._deleteServicePackage(data.id, data.mainType);
-					}
+					});
+					var popupContent = me.operationPopup.clone();
+					var confirmRemove = me.operationPopupText.clone();
+					confirmRemove.append(me.loc.DeleteConfirm);
+					popupContent.append(confirmRemove);
+					confirmDialog.show('', popupContent, [cancelBtn, okBtn]);
+					confirmDialog.makeModal();
 				}
 			});
 			
