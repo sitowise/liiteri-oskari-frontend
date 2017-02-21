@@ -649,7 +649,7 @@ function() {
 				//set opacity
 				sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
 				//add custom style
-				if (workspace.selectedLayers[i].customStyle) {
+				if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
 					//postpone the adding custom style, because handling of 'AddMapLayerRequest' request (which must be done first) is also postponed by Oskari framework
 					//FIXME: add proper request to framework instead postpone the action
 					/*window.setTimeout(function() {
