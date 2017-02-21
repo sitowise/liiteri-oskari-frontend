@@ -12,7 +12,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             "stateful": false,
             "tileClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
             "flyoutClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
-            "isFullScreenExtension": false
+            "isFullScreenExtension": false,
+			"autoLoad": null
         };
         this.state = {};
         this.service = null;
