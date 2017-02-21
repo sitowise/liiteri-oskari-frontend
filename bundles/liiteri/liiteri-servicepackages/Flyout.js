@@ -18,6 +18,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         this.tabContainer = null;
 		this.isShown = false;
 		this.packages = [];
+        this.packagesById = {};
 		this.groupings = [];
         this._templates = {
             base: jQuery('<div id="oskari-service-packages-list-container"></div>'),
@@ -60,22 +61,27 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         },
         stopPlugin: function () {
             me.packages = [];
+            me.packagesById = {};
         },
         _cachePackages: function() {
             var me = this;
             me.packages = [];
+            me.packagesById = {};
             me.service.getServicePackages(function (packages) {
                 me.packages = packages;
-            });
-            if (me.instance.defaults != null) {
-                var autoLoadId = me.instance.defaults.autoLoad;
-                if (autoLoadId != null) {
-                    var autoLoadPackage = me.packagesById[autoLoadId];
-                    if (autoLoadPackage != null) {
-                        me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
+                for (var i = 0; i < packages.length; i++) {
+                    me.packagesById[packages[i].id] = packages[i];
+                }
+                if (me.instance.defaults != null) {
+                    var autoLoadId = me.instance.defaults.autoLoad;
+                    if (autoLoadId != null) {
+                        var autoLoadPackage = me.packagesById[autoLoadId];
+                        if (autoLoadPackage != null) {
+                            me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
+                        }
                     }
                 }
-            }
+            });
         },
         createUI: function () {
             var me = this;
