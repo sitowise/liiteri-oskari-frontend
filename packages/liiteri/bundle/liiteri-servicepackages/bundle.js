@@ -46,11 +46,20 @@ function() {
             "type" : "text/javascript",
             "src" : "../../../../bundles/liiteri/liiteri-servicepackages/Tile.js"
 		}, {
-            "type" : "text/javascript",
-            "src": "../../../../bundles/liiteri/liiteri-servicepackages/Flyout.js"
+		    "type": "text/javascript",
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/Flyout.js"
 		}, {
 		    "type": "text/javascript",
-		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/View.js"
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/view/ServicePackageTabView.js"
+		}, {
+		    "type": "text/javascript",
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/view/ServicePackageView.js"
+		}, {
+		    "type": "text/javascript",
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/model/ServicePackageModel.js"
+		}, {
+		    "type": "text/javascript",
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/model/ServicePackageGroupModel.js"
 		}, {
 		    "type": "text/javascript",
 		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/service/ServicePackageService.js"            
@@ -69,6 +78,9 @@ function() {
 		}, {
             "type": "text/css",
             "src": "../../../../bundles/liiteri/liiteri-servicepackages/resources/css/style.css"
+        }, {
+            "type": "text/css",
+            "src": "../../../../bundles/liiteri/liiteri-servicepackages/resources/css/selector.css"
         }],
         "locales" : [{
             "lang" : "fi",

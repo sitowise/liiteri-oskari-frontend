@@ -165,13 +165,12 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
 						"targets": 5,
 						"render": function (data, type, row) {
 							var operationsLinks = jQuery('<div class="operationsLinks"></div>');
-							
+							if (row.mainType === 'package') {
+								var copyLink = jQuery('<a class="copyLink glyphicon glyphicon-link"></a>');
+								operationsLinks.append(copyLink);
+							}
 							var editLink = jQuery('<a class="editLink glyphicon glyphicon-pencil"></a>');
 							operationsLinks.append(editLink);
-							
-							var copyLink = jQuery('<a class="copyLink glyphicon glyphicon-link"></a>');
-							operationsLinks.append(copyLink);
-
 							var removeLink = jQuery('<a class="removeLink glyphicon glyphicon-remove-sign"></a>');
 							operationsLinks.append(removeLink);
 							

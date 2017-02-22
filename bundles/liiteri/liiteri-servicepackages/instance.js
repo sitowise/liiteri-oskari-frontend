@@ -11,10 +11,9 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             "sandbox": "sandbox",
             "stateful": false,
             "tileClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
-            "flyoutClazz": null, //"Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
-            "viewClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.View",
+            "flyoutClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
             "isFullScreenExtension": false,
-            "autoLoad": null
+			"autoLoad": null
         };
         this.state = {};
         this.service = null;
@@ -65,9 +64,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
             sandbox.request(this, request);
 
-            // draw ui
-            //me._createUI();
-			
 			this._handleSharingGroupingLink();
         },
 		
@@ -205,30 +201,25 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
          */
         eventHandlers: {
             'liiteri-groupings.GroupingUpdatedEvent': function (event) {
-                this._getView().refreshServicePackagesList();
+                var me = this;
+                me.getFlyout().refreshServicePackagesList();
             },
             'userinterface.ExtensionUpdatedEvent': function(event) {
                 var me = this;
-
                 if (event.getExtension().getName() !== me.getName()) {
                     return;
                 }
-
-                var isShown = event.getViewState() !== "close";
-                me._getView().showMode(isShown);
-            },
+                me.getFlyout().createUI();
+            }
         },
-        _getView: function () {
-            return this.plugins['Oskari.userinterface.View'];
-        },		
 		setServicePackage: function (id, restoreState) {
 		    var me = this;
-		    me._getView().setServicePackage(id, restoreState);
+		    me.getFlyout().setServicePackage(id, restoreState);
 		},
         closeView: function() {
             var request = this.sandbox.getRequestBuilder('userinterface.UpdateExtensionRequest')(this, 'close');
             this.sandbox.request(this, request);
-        },
+        }
     }, {
         "extend": ["Oskari.userinterface.extension.DefaultExtension"]
     });

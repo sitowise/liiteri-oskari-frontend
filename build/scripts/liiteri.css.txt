@@ -39,6 +39,7 @@ libraries/chosen/chosen.css
 bundles/framework/search/resources/css/style.css
 bundles/framework/infobox/resources/css/infobox.css
 bundles/liiteri/liiteri-servicepackages/resources/css/style.css
+bundles/liiteri/liiteri-servicepackages/resources/css/selector.css
 bundles/framework/layerselector2/resources/css/style.css
 bundles/framework/layerselection2/resources/css/style.css
 bundles/statistics/statsgrid/resources/css/style.css

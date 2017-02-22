@@ -19,6 +19,7 @@ function (instance) {
 	
 	//Grouping panels
 	me.metadataPanel = null;
+	me.labelPanel = null;
 	me.usersPanel = null;
 	me.themesPanel = null;
 	
@@ -422,7 +423,79 @@ function (instance) {
 		me.metadataPanel.setVisible(true);
 		me.metadataPanel.open();
 		accordion.addPanel(me.metadataPanel);
-		
+
+		// Ryhmittely
+		if (!this.isTheme) {
+            var labelContainer = jQuery('<div class="servicePackageLabel"></div>');
+
+			var existingLabelField = jQuery('<div class="oskarifield"><label for="existingLabel" class="existingLabelField"></label><select name="existingLabel"></select></div>');
+			var existingLabelTitle = existingLabelField.find('label.existingLabelField');
+			existingLabelTitle.html(me.loc.chooseLabel);
+			var existingLabelSelection = existingLabelField.find('select[name=existingLabel]');
+			labelContainer.append(existingLabelField);
+
+			var newLabelField = Oskari.clazz.create('Oskari.userinterface.component.FormInput', 'newLabel');
+			newLabelField.getField().find('input');
+			newLabelField.setLabel(me.loc.createNewLabel);
+			newLabelField.bindChange(function() {
+				if (newLabelField.getValue().length > 0) {
+					existingLabelSelection.prop('disabled', true);
+					existingLabelTitle.addClass('disabled');
+				} else {
+					existingLabelSelection.prop('disabled', false);
+					existingLabelTitle.removeClass('disabled');
+				}
+			}, true);
+			labelContainer.append(newLabelField.getField());
+
+            me.labelPanel = Oskari.clazz.create('Oskari.userinterface.component.AccordionPanel');
+            me.labelPanel.setTitle(me.loc.grouping);
+            me.labelPanel.setContent(labelContainer);
+            me.labelPanel.setVisible(true);
+            accordion.addPanel(me.labelPanel);
+
+			me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetGroupings',
+				// Success callback
+				function (data) {
+					var labels = [];
+					// Add and sort
+					data.groupings.forEach(function(grouping) {
+						if (grouping.mainType !== "package") {
+							return;
+						}
+						var label = grouping.label;
+						if ((label == null)||(label.length === 0)) {
+							return;
+						}
+						var numLabels = labels.length;
+						var index = 0;
+						while (index < numLabels) {
+							var comparison = label.toLocaleLowerCase().localeCompare(labels[index].toLocaleLowerCase());
+							if (comparison === 0) {
+								return;
+							} else if (comparison < 0) {
+								break;
+							}
+							index++;
+						}
+						labels.splice(index, 0, label);
+					});
+					labels.forEach(function(label) {
+						var labelOption = jQuery('<option></option>');
+						labelOption.attr('value', label);
+						labelOption.append(label);
+						existingLabelSelection.append(labelOption);
+					});
+					if ((me.data != null)&&(me.data.label != null)&&(me.data.label.length > 0)) {
+						existingLabelSelection.val(me.data.label);
+					}
+				},
+				// Error callback
+				function (jqXHR, textStatus) {
+				}
+			);
+        }
+
 		//Users
 		var usersContainer = jQuery('<div class="usersContainer"></div>');
 		var sharingFormOptions = {
@@ -1002,10 +1075,9 @@ function (instance) {
 	},
 	_gatherSelections: function () {
 		var me = this,
-			container = me.mainPanel,
-			sandbox = me.instance.getSandbox(),
 			selections = {
 				name: '',
+				label: '',
 				state: '',
 				themes: []
 			};
@@ -1024,6 +1096,14 @@ function (instance) {
 			var shortDescription = me.metadataPanel.html.find('input[name=metadataShortDescriptionField]');
 			
 			selections.name = name.val();
+			var label = me.labelPanel.html.find('input[name=newLabel]').val();
+			if ((label == null)||(label.length === 0)) {
+				label = me.labelPanel.html.find('select[name=existingLabel]').val();
+			}
+			if ((label != null)&&(label.length > 0)) {
+				selections.label = label;
+            }
+
 			if (state == 'alustava') {
 				state = 'kesken';
 			}
@@ -1363,7 +1443,7 @@ function (instance) {
 	        dialog.show(title, message, [okBtn]);
 	        me.dialog = dialog;
 	    }
-	},	
+	}
 }, {
     // the protocol / interface of this object is view
     "protocol": ["Oskari.userinterface.View"],
