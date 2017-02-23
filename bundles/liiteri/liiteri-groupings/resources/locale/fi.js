@@ -325,7 +325,6 @@ Oskari.registerLocalization(
 			"Metadata": "Tiedot",
 			"Name ": "Nimi",
 			"EnterNameOfTheGroupings": "Anna ryhmittelyn nimi",
-			"State": "Tila",
 			"Themes": "Teemat",
 			"AddNewTheme": "Lisää uusi teema",		
 			"EnterTheNameOfTheTheme": "Anna teeman nimi",
@@ -375,7 +374,14 @@ Oskari.registerLocalization(
 			"notPublishedWarning": "Tekemääsi ryhmittelyä ei ole vielä julkaistu",
 			"packageUpdated": "Palvelupaketti on päivitetty",
 			"themeUpdated": "Teema on päivitetty",
-			"datatablelanguagefile": "Finnish.json"
+			"datatablelanguagefile": "Finnish.json",
+			"copyLink": "Kopioi linkki",
+			"edit": "Muokkaa",
+			"remove": "Poista",
+			"directLink": "Suora osoite palvelupakettiin",
+			"linkCopied": "Suora osoite palvelupakettiin on kopioitu leikepöydälle.",
+			"noData": "Suoran osoitteen luominen epäonnistui.",
+            "close": "Sulje"
         },
         "layer": {
             "show": "Näytä",
