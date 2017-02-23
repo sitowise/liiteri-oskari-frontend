@@ -1,0 +1,239 @@
+div.liiteri-servicepackages div.servicepackage-filter {
+    color: #949494;
+}
+
+div.liiteri-servicepackages div.filter {
+    border: 1px solid #a4a4a4;
+    padding: 10px;
+    float: left;
+    cursor: pointer;
+    margin-bottom: 5px;
+    margin-left: -1px;
+}
+
+div.liiteri-servicepackages div.accordion div.accordion_panel div.content {
+    padding: 0;
+}
+
+div.liiteri-servicepackages div.servicepackage {
+    padding: 6px 10px 6px 40px;
+    background-color: #ffffff;
+    clear: both;
+    /* Default line height is too high, make it so the text just fits */
+    min-height: 14px;
+    line-height: 14px;
+}
+
+div.liiteri-servicepackages div.servicepackage:nth-child(even) {
+    background-color: #f3f3f3;
+}
+
+div.liiteri-servicepackages div.servicepackage input {
+    float: left;
+    margin-right: 5px;
+}
+
+div.liiteri-servicepackages div.servicepackage input[type=checkbox] {
+    margin-top: -2px;
+}
+
+div.liiteri-servicepackages div.servicepackage div.servicepackage-title {
+    font-size: 12px;
+    cursor: pointer;
+}
+
+div.liiteri-servicepackages div.servicepackage div.servicepackage-tools {
+    float: right;
+}
+
+div.liiteri-servicepackages div.servicepackage div.servicepackage-download-service {
+    float: left;
+}
+
+div.liiteri-servicepackages div.servicepackage div.servicepackage-icon {
+    float: left;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+}
+
+div.liiteri-servicepackages div.servicepackage div.servicepackage-info {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    float: right;
+}
+
+div.liiteri-servicepackages div.servicepackage div.servicepackage-backendstatus-icon {
+    float: left;
+    width: 20px;
+    height: 16px;
+    margin-right: 4px;
+    background-repeat: no-repeat;
+}
+
+div.liiteri-servicepackages div.servicepackage div.backendstatus-down {
+    height: 20px !important;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+
+div.liiteri-servicepackages div.servicepackage div.backendstatus-maintenance {
+    height: 20px !important;
+    margin-bottom: 2px;
+    cursor: pointer;
+}
+
+div.liiteri-servicepackages div.servicepackage div.backendstatus-ok {
+    height: 20px !important;
+    margin-bottom: 2px;
+    margin-top: -2px;
+    cursor: pointer;
+}
+
+div.liiteri-servicepackages div.servicepackage div.backendstatus-unknown {
+    height: 20px !important;
+    margin-bottom: 2px;
+}
+
+div.liiteri-servicepackages div.servicepackageGroup {
+    background-color: #f3f3f3;
+    border: 1px solid #c0d0d0;
+    margin: 0;
+    padding: 0;
+}
+
+div.liiteri-servicepackages div.servicepackageGroup.open {
+    background-color: #FFFFFF;
+}
+
+div.liiteri-servicepackages div.servicepackageGroup div.groupIcon {
+    display: inline-block;
+    margin-left: 12px;
+    vertical-align: middle;
+}
+
+div.liiteri-servicepackages div.servicepackageGroup div.groupHeader {
+    display: inline-block;
+    padding: 8px 10px 8px 12px;
+}
+
+div.liiteri-servicepackages div.tab-content {
+    padding: 0;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield {
+    padding: 10px;
+    position: relative;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield input[type=text] {
+    width: 90%;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .icon-close {
+    margin-right: -20px;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .field-description {
+    padding: 3px 0;
+    color: #666;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .field-description .icon-info {
+    display: inline-block;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .related-keywords {
+    display: none;
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .related-keywords .keywords-title {
+    box-sizing: border-box;
+    height: 30px;
+    line-height: 30px;
+    color: #000;
+    font-weight: bold;
+    float: left;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .related-keywords .keyword-cont {
+    display: block;
+    box-sizing: border-box;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    color: #0085D1;
+    float: left;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .related-keywords .keyword-cont .keyword {
+    float: left;
+    min-width: 91px;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .related-keywords .keyword-cont .type {
+    background-color: #333438;
+    border: solid 2px #FFDE00;
+    color: #FFDE00;
+    width: 34px;
+    line-height: 16px;
+    padding: 3px;
+    margin: 2px;
+    float: right;
+    display: inline-block;
+    text-align: center;
+}
+
+div.liiteri-servicepackages div.tab-content div.oskarifield .related-keywords .focus {
+    background-color: #333438;
+    color: white;
+}
+
+div.liiteri-servicepackages div.actionsContainer {
+    margin: 10px 5px 10px 15px;
+}
+
+div.liiteri-servicepackages div.actionsContainer span {
+    margin-right: 20px;
+}
+
+div.liiteri-servicepackages div.actionsContainer span i {
+    margin-right: 5px;
+}
+
+div.liiteri-servicepackages .expand-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/expand-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+div.liiteri-servicepackages .collapse-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/collapse-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+div.liiteri-servicepackages div.servicepackage-accordion {
+    position: absolute;
+    overflow-y: auto;
+    top: 0;
+    bottom: 0;
+    margin-top: 200px;
+    width: 515px;
+}
+
+div.liiteri-servicepackages .servicepackage-info {
+    cursor: pointer;
+}

@@ -111,6 +111,9 @@ Oskari.registerLocalization(
 			"themeUpdated": "Teema on päivitetty",
             "title": "Julkaise kartta",
             "titleEdit": "Muokkaa julkaisua",
+            "grouping": "Ryhmittely",
+            "chooseLabel": "Pääotsikon valinta",
+            "createNewLabel": "Luo uusi pääotsikko",
             "sharing": {
                 "delete": "Poista",
                 "email": "Jaa sähköpostilla",

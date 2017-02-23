@@ -418,8 +418,11 @@ packages/liiteri/bundle/liiteri-servicepackages/bundle.js
 bundles/liiteri/liiteri-servicepackages/instance.js
 bundles/liiteri/liiteri-servicepackages/Tile.js
 bundles/liiteri/liiteri-servicepackages/Flyout.js
-bundles/liiteri/liiteri-servicepackages/View.js
 bundles/liiteri/liiteri-servicepackages/service/ServicePackageService.js
+bundles/liiteri/liiteri-servicepackages/model/ServicePackageModel.js
+bundles/liiteri/liiteri-servicepackages/model/ServicePackageGroupModel.js
+bundles/liiteri/liiteri-servicepackages/view/ServicePackageView.js
+bundles/liiteri/liiteri-servicepackages/view/ServicePackageTabView.js
 bundles/liiteri/liiteri-servicepackages/event/ServicePackageSelectedEvent.js
 bundles/liiteri/liiteri-servicepackages/event/GroupingUpdatedEvent.js
 bundles/liiteri/liiteri-servicepackages/request/SetServicePackageRequest.js
