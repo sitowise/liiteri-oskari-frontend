@@ -13,10 +13,11 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             "tileClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
             "flyoutClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
             "isFullScreenExtension": false,
-			"autoLoad": null
         };
         this.state = {};
         this.service = null;
+        this.autoload = null;
+        this.missingLayers = [];
     }, {
         /**
          * @static
@@ -41,7 +42,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             var conf = $.extend(this.conf, this.defaults),
                 sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName);
-			this.defaults.autoLoad = this._getParameterValueFromUrl('service_package');
+			this.autoLoad = this._getParameterValueFromUrl('service_package');
             this.sandbox = sandbox;
 
             this.localization = Oskari.getLocalization(this.getName());
@@ -210,6 +211,12 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                     return;
                 }
                 me.getFlyout().createUI();
+            },
+            'MapLayerEvent' : function (event) {
+                var me = this;
+                if ((event.getOperation() === 'add') && (me.autoLoad != null)) {
+                    me.getFlyout().checkAutoLoadServicePackage();
+                }
             }
         },
 		setServicePackage: function (id, restoreState) {

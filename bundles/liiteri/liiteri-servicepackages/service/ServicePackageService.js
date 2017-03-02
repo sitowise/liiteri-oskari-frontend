@@ -34,13 +34,37 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
          */
         init: function () { },
         raiseServicePackageSelectedEvent: function (servicePackageJson, restoreState) {
+            var me = this;
             var themes = [];
             var servicePackageId = 0;
+            var layersMissing = me.instance.missingLayers.length > 0;
+            var foundMissing = false;
 
             if (servicePackageJson) {
                 if (servicePackageJson.themes && servicePackageJson.themes.length > 0) {
                     themes = servicePackageJson.themes;
                     servicePackageId = servicePackageJson.id;
+                    for (var i=0; i<themes.length; i++) {
+                        if ((themes[i].type === 'map_layers') && (themes[i].elements)) {
+                            for (var j = 0; j < themes[i].elements.length; j++) {
+                                var layerData = themes[i].elements[j];
+                                var layer = this.instance.sandbox.findMapLayerFromAllAvailable(layerData.id);
+                                var missingLayerIndex = me.instance.missingLayers.indexOf(layerData.id);
+                                if ((layer == null) && (missingLayerIndex === -1)) {
+                                    me.instance.missingLayers.push(layerData.id);
+                                } else if ((layer != null) && (missingLayerIndex > 0)) {
+                                    me.instance.missingLayers.splice(missingLayerIndex, 1);
+                                    foundMissing = true;
+                                }
+                            }
+                        }
+                    }
+                    if ((layersMissing)&&(!foundMissing)) {
+                        return;
+                    }
+                    if (me.instance.missingLayers.length === 0) {
+                        me.instance.autoload = null;
+                    }
                 }
 
                 if (restoreState) {

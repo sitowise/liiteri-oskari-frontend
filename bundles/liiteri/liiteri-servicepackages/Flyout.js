@@ -63,6 +63,18 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
             me.packages = [];
             me.packagesById = {};
         },
+        checkAutoLoadServicePackage: function () {
+            var me = this;
+            if (me.instance.defaults != null) {
+                var autoLoadId = me.instance.autoLoad;
+                if (autoLoadId != null) {
+                    var autoLoadPackage = me.packagesById[autoLoadId];
+                    if (autoLoadPackage != null) {
+                        me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
+                    }
+                }
+            }
+        },
         _cachePackages: function() {
             var me = this;
             me.packages = [];
@@ -72,15 +84,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
                 for (var i = 0; i < packages.length; i++) {
                     me.packagesById[packages[i].id] = packages[i];
                 }
-                if (me.instance.defaults != null) {
-                    var autoLoadId = me.instance.defaults.autoLoad;
-                    if (autoLoadId != null) {
-                        var autoLoadPackage = me.packagesById[autoLoadId];
-                        if (autoLoadPackage != null) {
-                            me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
-                        }
-                    }
-                }
+                me.checkAutoLoadServicePackage();
             });
         },
         createUI: function () {
