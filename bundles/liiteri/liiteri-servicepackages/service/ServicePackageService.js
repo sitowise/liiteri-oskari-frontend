@@ -63,7 +63,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
                         return;
                     }
                     if (me.instance.missingLayers.length === 0) {
-                        me.instance.autoload = false;
+                        me.instance.autoload = null;
                     }
                 }
 
