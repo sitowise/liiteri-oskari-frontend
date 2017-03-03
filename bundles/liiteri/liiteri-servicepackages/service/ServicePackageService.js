@@ -34,50 +34,26 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
          */
         init: function () { },
         raiseServicePackageSelectedEvent: function (servicePackageJson, restoreState) {
-            var me = this;
             var themes = [];
             var servicePackageId = 0;
-            var layersMissing = me.instance.missingLayers.length > 0;
-            var foundMissing = false;
+            var state = {};
 
             if (servicePackageJson) {
                 if (servicePackageJson.themes && servicePackageJson.themes.length > 0) {
                     themes = servicePackageJson.themes;
                     servicePackageId = servicePackageJson.id;
-                    for (var i=0; i<themes.length; i++) {
-                        if ((themes[i].type === 'map_layers') && (themes[i].elements)) {
-                            for (var j = 0; j < themes[i].elements.length; j++) {
-                                var layerData = themes[i].elements[j];
-                                var layer = this.instance.sandbox.findMapLayerFromAllAvailable(layerData.id);
-                                var missingLayerIndex = me.instance.missingLayers.indexOf(layerData.id);
-                                if ((layer == null) && (missingLayerIndex === -1)) {
-                                    me.instance.missingLayers.push(layerData.id);
-                                } else if ((layer != null) && (missingLayerIndex > 0)) {
-                                    me.instance.missingLayers.splice(missingLayerIndex, 1);
-                                    foundMissing = true;
-                                }
-                            }
-                        }
-                    }
-                    if ((layersMissing)&&(!foundMissing)) {
-                        return;
-                    }
-                    if (me.instance.missingLayers.length === 0) {
-                        me.instance.autoload = null;
-                    }
                 }
 
                 if (restoreState) {
-                    if(servicePackageJson.mapState) {
-                        this._restoreServicePackageState(JSON.parse(servicePackageJson.mapState));
-                    } else {
-                        this._restoreServicePackageState({});
+                    if (servicePackageJson.mapState != null) {
+                        state = JSON.parse(servicePackageJson.mapState);
                     }
+                    this._restoreServicePackageState(state);
                 }
             }
 
             var eventBuilder = this.sandbox.getEventBuilder('liiteri-servicepackages.ServicePackageSelectedEvent');
-            var event = eventBuilder(themes, servicePackageId);
+            var event = eventBuilder(themes, state, servicePackageId);
 
             this.sandbox.notifyAll(event);
         },
@@ -143,53 +119,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
 
         _restoreServicePackageState: function (state) {
             var sandbox = this.sandbox;
-
-            if (state.selectedLayers) {
-
-                var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-
-                for (var i = 0; i < previousSelectedLayers.length; i++) {
-                    var itemLayer = previousSelectedLayers[i];
-                    this._sendRequest('RemoveMapLayerRequest', [itemLayer.getId()]);
-                }
-
-                for (var i = 0; i < state.selectedLayers.length; i++) {
-                    //add map layer
-                    this._sendRequest('AddMapLayerRequest', [state.selectedLayers[i].id, true, state.selectedLayers[i].baseLayer]);
-                    //set opacity
-                    this._sendRequest('ChangeMapLayerOpacityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].opacity]);
-                    //add custom style
-                    if (state.selectedLayers[i].customStyle && state.selectedLayers[i].style._name === "oskari_custom") {
-                        this._sendRequest('ChangeMapLayerOwnStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].customStyle]);
-                    }
-                    //change style
-                    if (state.selectedLayers[i].style) {
-                        this._sendRequest('ChangeMapLayerStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].style._name]);
-                    }
-                    //set visibility
-                    this._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].visible]);
-                }
-            }
-
-            //What statistics user had chosen and what thematic maps had he made from those
-            if (state.statistics) {
-                sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
-                if (state.statsVisibility == true) {
-                    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
-                } else if (state.statistics.state && state.statistics.state.layerId) {
-                    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
-                    var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
-                    if (eventBuilder && layer) {
-                        var event = eventBuilder(layer, null);
-                        window.setTimeout(function () {
-                            sandbox.notifyAll(event);
-                        }, 500);
-                    }
-                }
-            } else {
-                sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
-                sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
-            }
 
             //Current position on the screen (zoom and coordinates)
             if (state.map) {

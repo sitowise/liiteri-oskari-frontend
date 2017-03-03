@@ -9,8 +9,9 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.event.Service
  * @static
  * @param {String} param some information you wish to communicate with the event
  */
-function(themes, servicePackageId) {
+function(themes, state, servicePackageId) {
     this._themes = themes;
+    this._state = state;
 	this._servicePackageId = servicePackageId;
 }, {
     /** @static @property __name event name */
@@ -31,7 +32,11 @@ function(themes, servicePackageId) {
     getThemes : function() {
         return this._themes;
     },
-	
+
+    getState : function() {
+        return this._state;
+    },
+
 	getServicePackageId : function() {
         return this._servicePackageId;
     }

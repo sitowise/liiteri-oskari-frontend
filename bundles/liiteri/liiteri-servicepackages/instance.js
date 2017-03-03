@@ -17,7 +17,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
         this.state = {};
         this.service = null;
         this.autoload = null;
-        this.missingLayers = [];
     }, {
         /**
          * @static
@@ -211,12 +210,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                     return;
                 }
                 me.getFlyout().createUI();
-            },
-            'MapLayerEvent' : function (event) {
-                var me = this;
-                if ((event.getOperation() === 'add') && (me.autoLoad != null)) {
-                    me.getFlyout().checkAutoLoadServicePackage();
-                }
             }
         },
 		setServicePackage: function (id, restoreState) {
