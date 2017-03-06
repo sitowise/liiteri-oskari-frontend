@@ -66,14 +66,13 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         },
         checkAutoLoadServicePackage: function () {
             var me = this;
-            if (me.instance.defaults != null) {
-                var autoLoadId = me.instance.autoLoad;
-                if (autoLoadId != null) {
-                    var autoLoadPackage = me.packagesById[autoLoadId];
-                    if (autoLoadPackage != null) {
-                        me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
-                    }
+            var autoLoadId = me.instance.autoLoad;
+            if (autoLoadId != null) {
+                var autoLoadPackage = me.packagesById[autoLoadId];
+                if (autoLoadPackage != null) {
+                    me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
                 }
+                me.instance.autoLoad = null;
             }
         },
         _cachePackages: function() {

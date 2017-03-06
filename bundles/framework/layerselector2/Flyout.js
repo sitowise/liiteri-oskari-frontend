@@ -24,6 +24,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
         this._filterNewestCount = 20;
         this._newestLayers = null;
         this.servicePackageTab = null;
+        this.servicePackage = null;
         this.populateGroupingsTimeout = null;
     }, {
 
@@ -476,24 +477,96 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                 //TODO
             }
         },
-		populateLayersFromServicePackage: function(themesDataArray, cb) {		
-		    if (themesDataArray) {
+        _restoreServicePackageState: function(state) {
+            var sandbox = this.instance.getSandbox();
+            if (state.selectedLayers) {
+
+                var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
+
+                for (var i = 0; i < previousSelectedLayers.length; i++) {
+                    var itemLayer = previousSelectedLayers[i];
+                    sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
+                }
+
+                for (var i = 0; i < state.selectedLayers.length; i++) {
+                    //add map layer
+                    sandbox.postRequestByName('AddMapLayerRequest', [state.selectedLayers[i].id, true, state.selectedLayers[i].baseLayer]);
+                    //set opacity
+                    sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].opacity]);
+                    //add custom style
+                    if (state.selectedLayers[i].customStyle && state.selectedLayers[i].style._name === "oskari_custom") {
+                        sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].customStyle]);
+                    }
+                    //change style
+                    if (state.selectedLayers[i].style) {
+                        sandbox.postRequestByName('ChangeMapLayerStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].style._name]);
+                    }
+                    //set visibility
+                    sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].visible]);
+                }
+            }
+
+            //What statistics user had chosen and what thematic maps had he made from those
+            if (state.statistics) {
+                sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
+                if (state.statsVisibility == true) {
+                    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
+                } else if (state.statistics.state && state.statistics.state.layerId) {
+                    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
+                    var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
+                    if (eventBuilder && layer) {
+                        var event = eventBuilder(layer, null);
+                        window.setTimeout(function () {
+                            sandbox.notifyAll(event);
+                        }, 500);
+                    }
+                }
+            } else {
+                sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
+                sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
+            }
+        },
+		populateLayersFromServicePackage: function(themesDataArray, state, cb) {
+		    var themesData = themesDataArray;
+		    if ((themesData == null)&&(this.servicePackage != null)) {
+                themesData = this.servicePackage.themesData;
+		    }
+		    var mapState = state;
+		    if ((mapState == null)&&(this.servicePackage != null)) {
+                mapState = this.servicePackage.mapState;
+		    }
+		    var callback = cb;
+		    if ((callback == null)&&(this.servicePackage != null)) {
+                callback = this.servicePackage.callback;
+		    }
+		    if (themesData) {
 			    var groupList = [];
 			    var layers = [];
-					
-				for (var j=0; j<themesDataArray.length; j++) {
+                var mapLayerService = this.instance.sandbox.getService('Oskari.mapframework.service.MapLayerService');
+                this.servicePackage = {
+                    themesData: themesData,
+                    callback: callback,
+                    mapState: mapState,
+                    dataAvailable: false
+                };
+                if (!mapLayerService.isAllLayersLoaded()) {
+                    return;
+                }
+                this.servicePackage.dataAvailable = true;
+
+				for (var j=0; j<themesData.length; j++) {
 				
-					if (themesDataArray[j].type == 'map_layers' && themesDataArray[j].elements) {
+					if (themesData[j].type == 'map_layers' && themesData[j].elements) {
 						
-						var group = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", themesDataArray[j].name);
+						var group = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", themesData[j].name);
 						
-						for (var k = 0; k < themesDataArray[j].elements.length; k++) {
-						    var layerData = themesDataArray[j].elements[k];
+						for (var k = 0; k < themesData[j].elements.length; k++) {
+						    var layerData = themesData[j].elements[k];
 						    var layer = this.instance.sandbox.findMapLayerFromAllAvailable(layerData.id);
 							if (layer) {							    
 							    group.addLayer(layer);
 							    if (layerData.status == 'drawn')
-							        layers.push({"layer": layer, "groupName": themesDataArray[j].name});
+							        layers.push({"layer": layer, "groupName": themesData[j].name});
 							}
 						}
 						
@@ -502,8 +575,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
 				}			    
 				this.servicePackageTab.showLayerGroups(groupList);
 
-			    if (cb)
-			        cb(layers);
+                this._restoreServicePackageState(this.servicePackage.mapState);
+
+			    if (callback) {
+			        callback(layers);
+			    }
 
 			} else {
 				//TODO
@@ -646,6 +722,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             me.populateLayers();
             // we could just add the layer to correct group and update the layer count for the group
             // but saving time to do other finishing touches
+            if ((me.servicePackage != null)&&(!me.servicePackage.dataAvailable)) {
+                me.populateLayersFromServicePackage()
+            }
         },
 
         /**
