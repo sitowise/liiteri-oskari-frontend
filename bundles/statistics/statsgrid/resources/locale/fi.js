@@ -283,7 +283,8 @@ Oskari.registerLocalization(
             "URBANAREATYPE": "Kaupunkiseutu-tyyppi",
             "CITYCENTRALAREA": "Keskusta-alue",
             "CITYCENTRALTYPE": "Keskustatyyppi",
-            "LOCALDENSITYTYPE": "Taajama harva/tiheä -tyyppi"
+            "LOCALDENSITYTYPE": "Taajama harva/tiheä -tyyppi",
+            "PALISKUNTA": "Paliskunta"
         },
         "regionSelectorCategories": {
             "KUNTA": "Kunnittain",
@@ -294,7 +295,8 @@ Oskari.registerLocalization(
             'ELY_L': "Liikenne-ELYittäin",
             'ELY_Y': "Ympäristö-ELYittäin",
             'FINLAND': "Koko maa",
-            "ADMINISTRATIVELAWAREA": "Hallinto-oikeuksittain"
+            "ADMINISTRATIVELAWAREA": "Hallinto-oikeuksittain",
+            "PALISKUNTA": "Paliskunnittain"
         },
         "baseInfoTitle": "Tunnistetiedot",
         "dataTitle": "Aineisto",
