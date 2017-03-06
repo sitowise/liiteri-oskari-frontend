@@ -96,7 +96,7 @@
 }
 
 .groupingsContainer  .addItemButtons {
-	padding: 5px;
+	padding: 5px 5px 5px 0;
 }
 
 /*.groupingsContainer  .addItemButtons a span {
@@ -128,9 +128,15 @@
 	color: white;
 }
 
-.readyThemes {
-	margin: 10px;
+.groupingsContainer .readyThemes {
+	margin-left: 10px;
+	margin-right: 10px;
 }
+
+.groupingsContainer  .readyThemes.import {
+	margin-right: 36px;
+}
+
 
 .readyThemes li{
 	margin: 5px !important;
@@ -161,4 +167,92 @@
     padding: 5px 10px;
     text-decoration: none;
 	font-family: "Open Sans",Arial,sans-serif;
+}
+
+.groupingsContainer .theme-tools {
+	line-height: 22px;
+	margin-left: 10px;
+	width: 100%;
+}
+
+.groupingsContainer .theme-tool {
+	height: 22px;
+	line-height: 22px;
+	width: 26px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.groupingsContainer .theme-tool.disabled {
+	opacity: 0.25;
+	cursor: auto;
+}
+
+.groupingsContainer .themeMetadataContainer {
+	margin-top: 5px;
+}
+
+.groupingsContainer .dynatree-title:focus {
+    outline: none;
+    background: none;
+    border: 1px solid #FFFFFF;
+}
+
+.groupingsContainer span.dynatree-active a,
+.groupingsContainer span.dynatree-active a:focus,
+.groupingsContainer .dynatree-title:active {
+    outline: none;
+	border: 1px solid #99DEFD;
+	background-color: #D8F0FA;
+}
+
+.groupingsContainer span.dynatree-selected a  {
+	font-style: normal;
+}
+
+.servicepackage-rename-dialog .tool-popup-text {
+	margin-bottom: 2px;
+}
+
+.servicepackage-rename-dialog input[type="text"] {
+	min-width: 400px;
+}
+
+.servicepackage-add-dialog .tool-popup-text {
+	margin-bottom: 2px;
+}
+
+.servicepackage-add-dialog input[type="text"] {
+	min-width: 400px;
+}
+
+div.groupingsContainer div.ready-themes-row {
+	position: relative;
+}
+
+div.groupingsContainer div.data-import {
+  	position: absolute;
+  	top: 50%;
+  	transform: translateY(-50%);
+  	right: 0;
+}
+
+div.groupingsContainer div.data-import > span.import-tool {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+div.groupingsContainer div.data-import > span.import-tool.disabled {
+	opacity: 0.25;
+	cursor: auto;
+}
+
+div.groupingsContainer span.fancytree-active span.fancytree-title, div.groupingsContainer span.fancytree-focused span.fancytree-title {
+    background-color: transparent;
+    border-color: #ffffff;
+}
+
+div.groupingsContainer span.fancytree-partsel span.fancytree-title, div.groupingsContainer span.fancytree-selected span.fancytree-title {
+    background-color: #cbe8f6;
+    border-color: #26a0da;
 }

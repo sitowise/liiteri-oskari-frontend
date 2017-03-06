@@ -10,6 +10,7 @@ function (instance) {
 				'<div class="icon-close"></div>' +
 			'</div>' +
 			'<div class="content"></div>' +
+			'<div class="data-list hidden"></div>' +
 		'</div>');
 
 	me.templateButtonsDiv = jQuery('<div class="buttons"></div>');
@@ -22,10 +23,13 @@ function (instance) {
 	me.labelPanel = null;
 	me.usersPanel = null;
 	me.themesPanel = null;
-	
-	me.themeList = jQuery('<ul class="selectedLayersList sortable levelzero" ' + 'data-sortable=\'{' + 'itemCss: "li.layer.selected", ' + 'handleCss: "div.layer-title" ' + '}\'></ul>');			
+
+	me.themeList = jQuery('<ul class="selectedLayersList sortable levelzero" ' + 'data-sortable=\'{' + 'itemCss: "li.layer.selected", ' + 'handleCss: "div.layer-title" ' + '}\'></ul>');
 	me.themeItem = jQuery('<li class="layer selected">' + '<div class="layer-info">' + '<div class="layer-tool-remove icon-close"></div>' + '<div class="layer-title"><h4></h4></div>' + '</div>' + '<div class="layer-tools volatile">' + '</div>' + '</li>');
-	
+	me.themeTools = jQuery('<div class="theme-tools"><span class="glyphicon glyphicon-plus theme-tool add-tool"></span><span class="glyphicon glyphicon-minus theme-tool remove-tool"></span><span class="glyphicon glyphicon-arrow-up theme-tool move-up-tool"></span><span class="glyphicon glyphicon-arrow-down theme-tool move-down-tool"></span><span class="glyphicon glyphicon-pencil theme-tool rename-tool"></span></div>');
+    me.toolPopup = jQuery('<div class="tool-popup"></div>');
+    me.toolPopupText = jQuery('<div class="tool-popup-text"></div>');
+    me.importButton = jQuery('<div class="data-import hidden"><span class="glyphicon glyphicon-arrow-left import-tool"></span></div>');
 	me.activeTheme = null;
 	me.addThemeButton = null;
 	me.datatableLocaleLocation = "/Oskari/libraries/jquery/plugins/DataTables-1.10.7/locale/";
@@ -39,10 +43,11 @@ function (instance) {
 	me.indicatorsData = null;
 	me.groupingsData = null;
 	
-	me.addLayerBtn = null;
-	me.addStatBtn = null;
-	me.addSubthemeBtn = null;
 	me.statsContainer = null;
+	me.importedList = null;
+	me.dataList = null;
+	me.existingLabelSelection = null;
+	me.validateTool = Oskari.clazz.create('Oskari.userinterface.component.FormInput');
     me.errorCb = function(jqxhr, textStatus) { me.showMessage("Virhe", jqxhr.statusText); };
 }, {
     /**
@@ -162,7 +167,7 @@ function (instance) {
 			var subChildren = this._getSubChildren(this.data);
 			
 			if (!this.isTheme) {
-				children.push({title: "Palvelupaketti", isFolder: true, nodeType: 'root', children: subChildren, activate: true, focus: true/*, icon: false*/}); //TODO localization
+				children.push(me._handleServicePackageTreeData(subChildren));
 			} else {
 				children.push({title: this.data.name, isFolder: true, nodeType: 'roottheme', children: subChildren, themeName: this.data.name, themeType: this.data.type, activate: true, focus: true/*, icon: false*/}); //TODO localization
 			}
@@ -170,7 +175,7 @@ function (instance) {
 			
 		} else {
 			if (!this.isTheme) {
-				children = [{title: "Palvelupaketti", isFolder: true, nodeType: 'root', children: [], activate: true, focus: true/*, icon: false*/}]; //TODO localization
+				children.push(me._handleServicePackageTreeData([]));
 			} else {
 				children = [{title: 'uusi teema', isFolder: true, nodeType: 'roottheme', children: [], themeName: 'uusi teema', themeType: 'map_layers', activate: true, focus: true/*, icon: false*/}]; //TODO localization
 			}
@@ -186,19 +191,27 @@ function (instance) {
 		    onActivate: function(node) {
 		        me._onActivateTreeNode(node);
 		    },
+		    onExpand: function() {
+		    	var node = jQuery("#tree").dynatree("getActiveNode");
+				me._toggleServicePackageThemeButtons(node);
+		    },
 		    children: children,
 		    minExpandLevel: 1,
 		    clickFolderMode: 1,
-		    imagePath: "/skin-vista/"
-		}
+		    imagePath: "/skin-vista/",
+		    checkbox: false,
+		    selectMode: 1,
+			autoFocus: false
+		};
+
         if (!me.isTheme) {
-            treeParams['checkbox'] = true;
-            treeParams['selectMode'] = 3;
+            treeParams['minExpandLevel'] = 2;
         }
-		
-		$("#tree").dynatree(treeParams);
-		
-		var activeNode = $("#tree").dynatree("getActiveNode");
+
+		me.importedTree = $("#tree");
+		me.importedTree.dynatree(treeParams);
+
+		var activeNode = me.importedTree.dynatree("getActiveNode");
 		if (activeNode) {
 			$('#themes').find('input[name=themeNameField]').val(activeNode.data.themeName);
 			$('#themes').find('select[name=themetype]').val(activeNode.data.themeType);
@@ -206,107 +219,234 @@ function (instance) {
 			if (activeNode.getChildren() && activeNode.getChildren().length > 0) {
 				$('#themes').find('select[name=themetype]').prop('disabled', 'disabled');
 			}
-			
+
+			var addLayerBtns = jQuery('.groupingsContainer .add-layers-button');
+			var addStatBtns = jQuery('.groupingsContainer .add-stat-button');
+			var addSubthemeBtns = jQuery('.groupingsContainer .add-subtheme-button');
+
 			if (activeNode.data.themeType == 'map_layers') {
-				me.addLayerBtn.setEnabled(true);
-				me.addStatBtn.setEnabled(false);
-				me.addSubthemeBtn.setEnabled(false);
-				
+				addLayerBtns.show();
+				addStatBtns.hide();
+				addSubthemeBtns.hide();
+
 				me.statsContainer.hide();
 			} else {
-				me.addLayerBtn.setEnabled(false);
-				me.addStatBtn.setEnabled(true);
-				me.addSubthemeBtn.setEnabled(true);
+				addLayerBtns.hide();
+				addStatBtns.show();
+				addSubthemeBtns.show();
 			}
 			
 			me._onActivateTreeNode(activeNode);
 		}
 	},
-	
+
+	_handleServicePackageTreeData: function(subChildren) {
+        var me = this,
+        child = {
+            title: me.loc.themeTools.servicePackage,
+            isFolder: true,
+            nodeType: 'root',
+			key: 'root',
+            activate: true,
+            focus: true,
+            children: []
+        },
+        mapLayersRoot = {
+			title: me.loc.themeTools.mapLayers,
+			isFolder: true,
+			nodeType: 'type',
+			themeType: 'map_layers',
+			key: 'map_layers',
+			activate: false,
+			focus: false,
+			children: []
+		},
+		statisticsRoot = {
+			title: me.loc.themeTools.statistics,
+			isFolder: true,
+			nodeType: 'type',
+			themeType: 'statistics',
+			key: 'statistics',
+			activate: false,
+			focus: false,
+			children: []
+        };
+
+		subChildren.forEach(function(subChild) {
+			switch (subChild.themeType) {
+				case 'map_layers':
+					mapLayersRoot.children.push(subChild);
+					break;
+				case 'statistics':
+					statisticsRoot.children.push(subChild);
+					break;
+			}
+		});
+		child.children.push(mapLayersRoot, statisticsRoot);
+		return child;
+	},
+
 	_onActivateTreeNode: function(node) {
 		var me = this;
-		if (node.data.nodeType == 'theme' || node.data.nodeType == 'roottheme') {
-			$('#themeMetadataContainer').show();
-			$('#themes').find('input[name=themeNameField]').val(node.data.themeName);
-			$('#themes').find('select[name=themetype]').val(node.data.themeType);
-
-			
-			if ((me.isTheme && node.data.nodeType == 'roottheme' && (!node.getChildren() || node.getChildren().length == 0)) ||
-				(!me.isTheme && node.parent.data.nodeType == 'root' && (!node.getChildren() || node.getChildren().length == 0))) {
-				$('#themes').find('select[name=themetype]').prop('disabled', false);
-			} else {
-				$('#themes').find('select[name=themetype]').prop('disabled', 'disabled');
-			}
-			
-			if (me.addThemeButton) {
-				if (node.data.themeType == 'map_layers') {
-					me.addThemeButton.setEnabled(false);
+		if (me.isTheme) {
+			if (node.data.nodeType == 'theme' || node.data.nodeType == 'themetype' || node.data.nodeType == 'roottheme') {
+				$('#themeMetadataContainer').show();
+				$('#themes').find('input[name=themeNameField]').val(node.data.themeName);
+				$('#themes').find('select[name=themetype]').val(node.data.themeType);
+				if ((me.isTheme && node.data.nodeType == 'roottheme' && (!node.getChildren() || node.getChildren().length == 0)) ||
+					(!me.isTheme && node.parent.data.nodeType == 'root' && (!node.getChildren() || node.getChildren().length == 0))) {
+					$('#themes').find('select[name=themetype]').prop('disabled', false);
 				} else {
+					$('#themes').find('select[name=themetype]').prop('disabled', 'disabled');
+				}
+				if (me.addThemeButton) {
+					if (node.data.themeType == 'map_layers') {
+						me.addThemeButton.setEnabled(false);
+					} else {
+						me.addThemeButton.setEnabled(true);
+					}
+				}
+				//Showing on the map only these layers which belong to selected theme
+				if (node.data.themeType == 'map_layers') {
+					var sandbox = me.instance.getSandbox();
+					var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
+					var previouslySelectedLayerIds = $.map(previousSelectedLayers, function(layer, idx) {
+						return layer.getId();
+					});
+
+					//get current layers from the tree
+					var themeLayers = node.getChildren();
+					var themeLayersIds = [];
+					if (themeLayers) {
+						themeLayersIds = $.map(themeLayers, function (layer, idx) {
+							return layer.data.itemId;
+						});
+					}
+					var layersToRemove = previouslySelectedLayerIds.filter(function(a) {
+						return themeLayersIds.indexOf(a) == -1;
+					});
+					var layersToAdd = themeLayersIds.filter(function (a) {
+						return previouslySelectedLayerIds.indexOf(a) == -1;
+					});
+
+					//cleaning old layers
+					for (var i = 0; i < layersToRemove.length; i++) {
+						sandbox.postRequestByName('RemoveMapLayerRequest', [layersToRemove[i]]);
+					}
+					//set theme layers
+					for (var i = 0; i < layersToAdd.length; i++) {
+						 sandbox.postRequestByName('AddMapLayerRequest', [layersToAdd[i]]);
+					}
+
+				} else {
+					//TODO? Optional: revert previous selected layers (before come to administration of groupings)
+				}
+			} else {
+				jQuery('#themeMetadataContainer').hide();
+				if (me.addThemeButton) {
 					me.addThemeButton.setEnabled(true);
 				}
 			}
-			//Showing on the map only these layers which belong to selected theme
-			if (node.data.themeType == 'map_layers') {
-				var sandbox = me.instance.getSandbox();
-				var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-			    var previouslySelectedLayerIds = $.map(previousSelectedLayers, function(layer, idx) {
-			        return layer.getId();
-			    });
-				
-				//get current layers from the tree
-			    var themeLayers = node.getChildren();
-			    var themeLayersIds = [];
-                if (themeLayers) {
-                    themeLayersIds = $.map(themeLayers, function (layer, idx) {
-                        return layer.data.itemId;
-                    });
-                }
-			    var layersToRemove = previouslySelectedLayerIds.filter(function(a) {
-			        return themeLayersIds.indexOf(a) == -1;
-			    });
-			    var layersToAdd = themeLayersIds.filter(function (a) {
-			        return previouslySelectedLayerIds.indexOf(a) == -1;
-			    });
-				
-				//cleaning old layers
-			    for (var i = 0; i < layersToRemove.length; i++) {
-			        sandbox.postRequestByName('RemoveMapLayerRequest', [layersToRemove[i]]);
-				}				
-				//set theme layers
-				for (var i = 0; i < layersToAdd.length; i++) {
-				     sandbox.postRequestByName('AddMapLayerRequest', [layersToAdd[i]]);
-				}
-				
-			} else {
-				//TODO? Optional: revert previous selected layers (before come to administration of groupings)
-			}
-			
 		} else {
-			$('#themeMetadataContainer').hide();
-			if (me.addThemeButton) {
-				me.addThemeButton.setEnabled(true);
-			}
+			me._toggleServicePackageThemeButtons(node);
 		}
-		
+
+		var addLayerBtns = jQuery('.groupingsContainer .add-layers-button');
+		var addStatBtns = jQuery('.groupingsContainer .add-stat-button');
+		var addSubthemeBtns = jQuery('.groupingsContainer .add-subtheme-button');
+
 		if (node.data.themeType == 'map_layers') {
-			me.addLayerBtn.setEnabled(true);
-			me.addStatBtn.setEnabled(false);
-			me.addSubthemeBtn.setEnabled(false);
-			
+			addLayerBtns.show();
+			addStatBtns.hide();
+			addSubthemeBtns.hide();
+
 			me.statsContainer.hide();
 		} else {
-			me.addLayerBtn.setEnabled(false);
-			me.addStatBtn.setEnabled(true);
+			addLayerBtns.hide();
+			addStatBtns.show();
 			
 			/*Prevent to add subtheme if maximum level of statistic subthemes is reached (can be 1 theme + 4 subthemes):
 				- Service package: 0 - root, 1 - service package, 2-6 - themes, 7 - statistics
 				- Standalone Theme: 0 - root, 1-5 - themes, 6 - statistics*/
 			if ((!me.isTheme && node.getLevel() < 6) || (me.isTheme && node.getLevel() < 5)) {
-				me.addSubthemeBtn.setEnabled(true);
+				addSubthemeBtns.show();
 			} else {
-				me.addSubthemeBtn.setEnabled(false);
+				addSubthemeBtns.hide();
 			}
 		}
+	},
+
+	_toggleServicePackageThemeButtons: function(node) {
+		if ((node == null) ||(node.data == null)) {
+			return;
+		}
+		var nodeType = node.data.nodeType;
+		var numParentChildren;
+		var addThemeButtons = jQuery('.groupingsContainer .add-tool'),
+			removeThemeButtons = jQuery('.groupingsContainer .remove-tool'),
+			moveUpThemeButtons = jQuery('.groupingsContainer .move-up-tool'),
+			moveDownThemeButtons = jQuery('.groupingsContainer .move-down-tool'),
+			renameThemeButtons = jQuery('.groupingsContainer .rename-tool'),
+			importButton = jQuery('.groupingsContainer .import-tool');
+			switch (nodeType) {
+				case 'root':
+					addThemeButtons.addClass('disabled');
+					removeThemeButtons.addClass('disabled');
+					moveUpThemeButtons.addClass('disabled');
+					moveDownThemeButtons.addClass('disabled');
+					renameThemeButtons.addClass('disabled');
+					importButton.addClass('disabled');
+					break;
+				case 'type':
+					addThemeButtons.removeClass('disabled');
+					removeThemeButtons.addClass('disabled');
+					moveUpThemeButtons.addClass('disabled');
+					moveDownThemeButtons.addClass('disabled');
+					renameThemeButtons.addClass('disabled');
+					importButton.addClass('disabled');
+					break;
+				case 'theme':
+					addThemeButtons.removeClass('disabled');
+					removeThemeButtons.removeClass('disabled');
+					numParentChildren = node.parent.childList.length;
+					if ((numParentChildren > 1)&&(node.data.key !== node.parent.childList[numParentChildren-1].data.key)) {
+						moveDownThemeButtons.removeClass('disabled');
+					} else {
+						moveDownThemeButtons.addClass('disabled');
+					}
+					if ((numParentChildren > 1)&&(node.data.key !== node.parent.childList[0].data.key)) {
+						moveUpThemeButtons.removeClass('disabled');
+					} else {
+						moveUpThemeButtons.addClass('disabled');
+					}
+					renameThemeButtons.removeClass('disabled');
+					importButton.removeClass('disabled');
+					break;
+				case 'item':
+					addThemeButtons.addClass('disabled');
+					removeThemeButtons.removeClass('disabled');
+					numParentChildren = node.parent.childList == null ? 0 : node.parent.childList.length;
+					if ((numParentChildren > 1)&&(node.data.key !== node.parent.childList[numParentChildren-1].data.key)) {
+						moveDownThemeButtons.removeClass('disabled');
+					} else {
+						moveDownThemeButtons.addClass('disabled');
+					}
+					if ((numParentChildren > 1)&&(node.data.key !== node.parent.childList[0].data.key)) {
+						moveUpThemeButtons.removeClass('disabled');
+					} else {
+						moveUpThemeButtons.addClass('disabled');
+					}
+					renameThemeButtons.addClass('disabled');
+					importButton.addClass('disabled');
+					break;
+				default:
+					addThemeButtons.addClass('disabled');
+					removeThemeButtons.addClass('disabled');
+					moveUpThemeButtons.addClass('disabled');
+					moveDownThemeButtons.addClass('disabled');
+					renameThemeButtons.addClass('disabled');
+					importButton.addClass('disabled');
+			}
 	},
 	
 	_getSubChildren: function(data) {
@@ -341,7 +481,96 @@ function (instance) {
 		}
 		
 		return children;
-	},	
+	},
+
+	_createDataListView: function() {
+		var me = this;
+		var treeData = [
+			{
+				title: me.loc.themeTools.allData,
+				key: 'allData',
+				hideCheckbox: true,
+				children: [
+					{
+						title: me.loc.themeTools.mapLayers,
+						key: 'mapLayers',
+						themeType: 'map_layers',
+						hideCheckbox: true,
+						children: []
+					},
+					{
+						title: me.loc.themeTools.statistics,
+						key: 'statistics',
+						themeType: 'statistics',
+						hideCheckbox: true,
+						children: []
+					}
+				]
+			}
+		];
+		me.mainPanel.find('div.data-list').removeClass('hidden');
+		me.mainPanel.find('div.data-import').removeClass('hidden');
+		me.mainPanel.find('div.readyThemes').addClass('import');
+		if (me.groupingsData != null) {
+			me.groupingsData.groupings.forEach(function (grouping) {
+				me._handleGrouping(grouping, treeData[0].children)
+			});
+		}
+		me.dataList.fancytree('option', 'source', treeData);
+		me.dataList.fancytree('option', 'beforeSelect', function (event, data) {
+			var allDataNode = data.tree.getFirstChild();
+			var themeTypeRoots = allDataNode.children;
+			if (themeTypeRoots == null) {
+				return;
+			}
+			var numThemeTypeRoots = themeTypeRoots.length;
+			for (var i = 0; i < numThemeTypeRoots; i++) {
+				if ((themeTypeRoots[i] != null) && ((themeTypeRoots[i].selected) || (themeTypeRoots[i].partsel)) && (themeTypeRoots[i].data.themeType !== data.node.data.themeType)) {
+					return false;
+				}
+			}
+		});
+	},
+
+	_createServicePackageGroupingView: function() {
+		var me = this;
+		var labels = [];
+		// Add and sort
+		if (me.groupingsData != null) {
+			me.groupingsData.groupings.forEach(function(grouping) {
+				if (grouping.mainType !== "package") {
+					return;
+				}
+				var label = grouping.label;
+				if ((label == null)||(label.length === 0)) {
+					return;
+				}
+				var numLabels = labels.length;
+				var index = 0;
+				while (index < numLabels) {
+					var comparison = label.toLocaleLowerCase().localeCompare(labels[index].toLocaleLowerCase());
+					if (comparison === 0) {
+						return;
+					} else if (comparison < 0) {
+						break;
+					}
+					index++;
+				}
+				labels.splice(index, 0, label);
+			});
+		}
+		me.existingLabelSelection.empty();
+		labels.forEach(function(label) {
+			var labelOption = jQuery('<option></option>');
+			labelOption.attr('value', label);
+			labelOption.append(label);
+			me.existingLabelSelection.append(labelOption);
+		});
+		if ((me.data != null)&&(me.data.label != null)&&(me.data.label.length > 0)) {
+			me.existingLabelSelection.val(me.data.label);
+		}
+	},
+
 	prepareView: function () {
 		var me = this,
 			content = me.template.clone();
@@ -353,7 +582,9 @@ function (instance) {
 		me.mainPanel = content;
 
 		var contentDiv = content.find('div.content'),
-			accordion = Oskari.clazz.create('Oskari.userinterface.component.Accordion');
+			accordion = Oskari.clazz.create('Oskari.userinterface.component.Accordion'),
+			dataListView = content.find('div.data-list'),
+			importButton = me.importButton.clone();
 		me.accordion = accordion;
 		
 		
@@ -425,13 +656,13 @@ function (instance) {
 		accordion.addPanel(me.metadataPanel);
 
 		// Ryhmittely
-		if (!this.isTheme) {
-            var labelContainer = jQuery('<div class="servicePackageLabel"></div>');
+		if (!me.isTheme) {
+			var labelContainer = jQuery('<div class="servicePackageLabel"></div>');
 
 			var existingLabelField = jQuery('<div class="oskarifield"><label for="existingLabel" class="existingLabelField"></label><select name="existingLabel"></select></div>');
 			var existingLabelTitle = existingLabelField.find('label.existingLabelField');
 			existingLabelTitle.html(me.loc.chooseLabel);
-			var existingLabelSelection = existingLabelField.find('select[name=existingLabel]');
+			me.existingLabelSelection = existingLabelField.find('select[name=existingLabel]');
 			labelContainer.append(existingLabelField);
 
 			var newLabelField = Oskari.clazz.create('Oskari.userinterface.component.FormInput', 'newLabel');
@@ -439,61 +670,22 @@ function (instance) {
 			newLabelField.setLabel(me.loc.createNewLabel);
 			newLabelField.bindChange(function() {
 				if (newLabelField.getValue().length > 0) {
-					existingLabelSelection.prop('disabled', true);
+					me.existingLabelSelection.prop('disabled', true);
 					existingLabelTitle.addClass('disabled');
 				} else {
-					existingLabelSelection.prop('disabled', false);
+					me.existingLabelSelection.prop('disabled', false);
 					existingLabelTitle.removeClass('disabled');
 				}
 			}, true);
 			labelContainer.append(newLabelField.getField());
 
-            me.labelPanel = Oskari.clazz.create('Oskari.userinterface.component.AccordionPanel');
-            me.labelPanel.setTitle(me.loc.grouping);
-            me.labelPanel.setContent(labelContainer);
-            me.labelPanel.setVisible(true);
-            accordion.addPanel(me.labelPanel);
+			me.labelPanel = Oskari.clazz.create('Oskari.userinterface.component.AccordionPanel');
+			me.labelPanel.setTitle(me.loc.grouping);
+			me.labelPanel.setContent(labelContainer);
+			me.labelPanel.setVisible(true);
+			accordion.addPanel(me.labelPanel);
 
-			me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetGroupings',
-				// Success callback
-				function (data) {
-					var labels = [];
-					// Add and sort
-					data.groupings.forEach(function(grouping) {
-						if (grouping.mainType !== "package") {
-							return;
-						}
-						var label = grouping.label;
-						if ((label == null)||(label.length === 0)) {
-							return;
-						}
-						var numLabels = labels.length;
-						var index = 0;
-						while (index < numLabels) {
-							var comparison = label.toLocaleLowerCase().localeCompare(labels[index].toLocaleLowerCase());
-							if (comparison === 0) {
-								return;
-							} else if (comparison < 0) {
-								break;
-							}
-							index++;
-						}
-						labels.splice(index, 0, label);
-					});
-					labels.forEach(function(label) {
-						var labelOption = jQuery('<option></option>');
-						labelOption.attr('value', label);
-						labelOption.append(label);
-						existingLabelSelection.append(labelOption);
-					});
-					if ((me.data != null)&&(me.data.label != null)&&(me.data.label.length > 0)) {
-						existingLabelSelection.val(me.data.label);
-					}
-				},
-				// Error callback
-				function (jqXHR, textStatus) {
-				}
-			);
+			me._createServicePackageGroupingView();
         }
 
 		//Users
@@ -571,63 +763,209 @@ function (instance) {
 		var themesTemplate = jQuery("<div class='themes' id='themes'></div>");
 
 		if (!me.isTheme) {
-			//Adding new theme
-			var addBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-			addBtn.setTitle(me.loc.AddNewTheme);
-			addBtn.addClass('block');
-			addBtn.addClass('addNewThemeButton');
-			addBtn.insertTo(themesTemplate);
-						
-			addBtn.setHandler(me._addNewTheme);
-			
-			me.addThemeButton = addBtn;
-		}
-		
-		//Remove selected tree node
-		var removeBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-		removeBtn.setTitle('Poista valittu kohde'); //TODO localization
-		removeBtn.addClass('block');
-		removeBtn.addClass('addNewThemeButton');
-		removeBtn.insertTo(themesTemplate);
-					
-		removeBtn.setHandler(function () {
-			var node = $("#tree").dynatree("getActiveNode");
-			
-			if (!node || node.data.nodeType == 'root' || node.data.nodeType == 'roottheme') {
-				return;
-			}
+			dataListView.fancytree({
+				source: [],
+				icons: false,
+				activeVisible: true, // Make sure, active nodes are visible (expanded)
+				aria: false, // Enable WAI-ARIA support
+				autoActivate: false, // Automatically activate a node when it is focused using keyboard
+				autoCollapse: false, // Automatically collapse all siblings, when a node is expanded
+				autoScroll: false, // Automatically scroll nodes into visible area
+				clickFolderMode: 4, // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expands)
+				checkbox: true, // Show checkboxes
+				debugLevel: 0, // 0:quiet, 1:normal, 2:debug
+				disabled: false, // Disable control
+				focusOnSelect: false, // Set focus when node is checked by a mouse click
+				escapeTitles: false, // Escape `node.title` content for display
+				generateIds: false, // Generate id attributes like <span id='fancytree-id-KEY'>
+				idPrefix: "ft_", // Used to generate node id´s like <span id='fancytree-id-<key>'>
+				icon: false, // Display node icons
+				keyboard: true, // Support keyboard navigation
+				keyPathSeparator: "/", // Used by node.getKeyPath() and tree.loadKeyPath()
+				minExpandLevel: 2, // 1: root node is not collapsible
+				quicksearch: true, // Navigate to next node by typing the first letters
+				rtl: false, // Enable RTL (right-to-left) mode
+				selectMode: 2, // 1:single, 2:multi, 3:multi-hier
+				tabindex: 0, // Whole tree behaves as one single control
+				titlesTabbable: true, // Node titles can receive keyboard focus
+				tooltip: false, // Use title as tooltip (also a callback could be specified)
+                select: function(event, data) {
+                    if (data.node.isSelected()) {
+                        // Expand node and subnodes
+                        var stack = [data.node];
+                        while (stack.length > 0) {
+                            var node = stack.pop();
+                            node.setExpanded(true);
+                            if (node.hasChildren()) {
+                                var children = node.getChildren();
+                                for (var ix = 0; ix < children.length; ix++) {
+                                    stack.push(children[ix]);
+                                }
+                            }
+                        }
+                    }
 
-			node.remove();
-			//node.parent.data.children.splice(node.data);
-			
-			/*for (var i=0; i < node.parent.data.children.length; i++) {
-				if (node.parent.data.children[i].key === node.data.key) {
-					node.parent.data.children.splice(i, 1);
 				}
-			}*/
-			//$("#tree").dynatree("getTree").reload();
-			
-			//clear data fields
-			$('#themes').find('input[name=themeNameField]').val();
-			$('#themes').find('select[name=themetype]').val();
-			
-			var activeNode = $("#tree").dynatree("getActiveNode");
-			if (activeNode) {
-				me._onActivateTreeNode(activeNode);
-			}
-			
-		});
-		
+            });
+			me.dataList = dataListView;
+		}
+
+		var removeBtnHandler = function () {
+            var node = $("#tree").dynatree("getActiveNode");
+
+            if (!node || node.data.nodeType == 'root' || node.data.nodeType == 'roottheme') {
+                return;
+            }
+
+            node.remove();
+
+            //clear data fields
+            $('#themes').find('input[name=themeNameField]').val();
+            $('#themes').find('select[name=themetype]').val();
+
+            var activeNode = $("#tree").dynatree("getActiveNode");
+            if (activeNode) {
+                me._onActivateTreeNode(activeNode);
+            }
+        }
+
+		if (me.isTheme) {
+			//Adding new map layer
+			var addLayerBtnTop = Oskari.clazz.create('Oskari.userinterface.component.Button');
+			addLayerBtnTop.setTitle(me.loc.themeTools.newMapLayer);
+			addLayerBtnTop.addClass('block');
+			addLayerBtnTop.addClass('add-layers-button');
+			addLayerBtnTop.addClass('addNewThemeButton');
+			addLayerBtnTop.setHandler(function () {
+				me._openExtension('LayerSelector');
+			});
+			addLayerBtnTop.insertTo(themesTemplate);
+
+			//Adding new statistic
+			var addStatBtnTop = Oskari.clazz.create('Oskari.userinterface.component.Button');
+			addStatBtnTop.setTitle(me.loc.themeTools.newStatistics);
+			addStatBtnTop.addClass('block');
+			addStatBtnTop.addClass('add-stat-button');
+			addStatBtnTop.addClass('addNewThemeButton');
+			addStatBtnTop.setHandler(function () {
+				statsContainer.show();
+			});
+			addStatBtnTop.insertTo(themesTemplate);
+
+            //Remove selected tree node
+            var removeBtnTop = Oskari.clazz.create('Oskari.userinterface.component.Button');
+            removeBtnTop.setTitle(me.loc.themeTools.removeItem);
+            removeBtnTop.addClass('block');
+            removeBtnTop.addClass('addNewThemeButton');
+            removeBtnTop.insertTo(themesTemplate);
+            removeBtnTop.setHandler(removeBtnHandler);
+
+			//Adding new subtheme
+			var addSubthemeBtnTop = Oskari.clazz.create('Oskari.userinterface.component.Button');
+			addSubthemeBtnTop.setTitle(me.loc.AddNewTheme);
+			addSubthemeBtnTop.addClass('block');
+            addSubthemeBtnTop.addClass('addNewThemeButton');
+			addSubthemeBtnTop.addClass('add-subtheme-button');
+			addSubthemeBtnTop.setHandler(me._addNewTheme);
+			addSubthemeBtnTop.insertTo(themesTemplate);
+        }
+
 		//Ready themes
-		var readyThemesRow = jQuery('<div class="oskarifield"><span id="metadataCreateDateField" class="metadataFieldValue"></span></div>'); //TODO localization
+		var readyThemesRow = jQuery('<div class="oskarifield ready-themes-row"><span id="metadataCreateDateField" class="metadataFieldValue"></span></div>'); //TODO localization
+		if (!me.isTheme) {
+		    me._createThemeTools().appendTo(readyThemesRow);
+        }
+
 		var readyThemesBox = jQuery("<div class='readyThemes' id='themes'></div>");
 		
 		var tree = jQuery('<div id="tree"></div>');
 		
 		readyThemesBox.append(tree);
 		readyThemesRow.append(readyThemesBox);
+		if (!me.isTheme) {
+            readyThemesRow.append(me._createThemeTools());
+            readyThemesRow.append(importButton);
+            importButton.click(function() {
+				var targetNode = $("#tree").dynatree("getActiveNode");
+				if ((targetNode == null) || (targetNode.data == null) || (targetNode.data.themeType == null)) {
+					return;
+				}
+            	var selectedData = me.dataList.fancytree('getTree').getSelectedNodes();
+            	if (selectedData == null) {
+					return;
+                }
+                var importedFolders = [];
+            	var numSelectedData = selectedData.length;
+            	for (var i=0; i<numSelectedData; i++) {
+            		var sourceNode = selectedData[i];
+					if ((sourceNode == null) || (sourceNode.data == null) || (sourceNode.data.themeType == null)) {
+						continue;
+					}
+					var target;
+					var numImportedFolders = importedFolders.length;
+					for (var j=0; j<numImportedFolders; j++) {
+						if (sourceNode.parent.key === importedFolders[j].data.dataKey) {
+							target = importedFolders[j];
+							break;
+						}
+					}
+					if (target == null) {
+						target = targetNode;
+					}
+					if (sourceNode.data.themeType !== target.data.themeType) {
+						continue;
+					}
+					var numChildren = target.childList == null ? 0 : target.childList.length;
+					var sourceExists = false;
+					for (var k=0; k<numChildren; k++) {
+						if (target.childList[k].data.itemId === sourceNode.data.itemId) {
+							sourceExists = true;
+							break;
+						}
+					}
+					if (sourceExists) {
+						continue;
+					}
+					if (sourceNode.data.themeType !== target.data.themeType) {
+						continue;
+					}
+					if (sourceNode.data.itemId == null) {
+						target.addChild({
+							title: sourceNode.title,
+							themeType: sourceNode.data.themeType,
+							themeName: sourceNode.title,
+							isFolder: true,
+							activate: true,
+							focus: true,
+							select: false,
+							nodeType: 'theme',
+							dataKey: sourceNode.key
+						});
+						importedFolders.push(target.getChildren()[target.countChildren()-1]);
+					} else {
+						target.addChild({
+							title: sourceNode.title,
+							itemId: sourceNode.data.itemId,
+							itemType: sourceNode.data.themeType,
+							itemName: sourceNode.title,
+							isFolder: false,
+							activate: true,
+							focus: true,
+							select: false,
+							nodeType: 'item'
+						});
+					}
+					target.expand(true);
+					target.render();
+                }
+				var activeNode = jQuery('#tree').dynatree('getActiveNode');
+				if (activeNode) {
+					me._onActivateTreeNode(activeNode);
+				}
+            });
+        }
 		themesTemplate.append(readyThemesRow);
-		
+
 		//Container for theme's metadata
 		var themeMetadataContainer = jQuery('<div id="themeMetadataContainer"></div>');
 		
@@ -702,33 +1040,41 @@ function (instance) {
 		var addItemButtons = jQuery('<div class="addItemButtons"></div>');
 
 		//Adding new map layer
-		var addLayerBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-		addLayerBtn.setTitle('Uusi karttataso'); //TODO localization
-		addLayerBtn.addClass('block');
-		addLayerBtn.setHandler(function () {
+		var addLayerBtnBottom = Oskari.clazz.create('Oskari.userinterface.component.Button');
+		addLayerBtnBottom.setTitle(me.loc.themeTools.newMapLayer);
+		addLayerBtnBottom.addClass('block');
+		addLayerBtnBottom.addClass('add-layers-button');
+		addLayerBtnBottom.setHandler(function () {
 			me._openExtension('LayerSelector');
 		});
-		addLayerBtn.insertTo(addItemButtons);
-		me.addLayerBtn = addLayerBtn;
+		addLayerBtnBottom.insertTo(addItemButtons);
 
 		//Adding new statistic
-		var addStatBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-		addStatBtn.setTitle('Uusi tilasto'); //TODO localization
-		addStatBtn.addClass('block');
-		addStatBtn.setHandler(function () {                				
+		var addStatBtnBottom = Oskari.clazz.create('Oskari.userinterface.component.Button');
+		addStatBtnBottom.setTitle(me.loc.themeTools.newStatistics);
+		addStatBtnBottom.addClass('block');
+		addStatBtnBottom.addClass('add-stat-button');
+		addStatBtnBottom.setHandler(function () {
 			statsContainer.show();
 		});
-		addStatBtn.insertTo(addItemButtons);
-		me.addStatBtn = addStatBtn;
-		
+		addStatBtnBottom.insertTo(addItemButtons);
+
+		//Remove selected tree node
+		var removeBtnBottom = Oskari.clazz.create('Oskari.userinterface.component.Button');
+		removeBtnBottom.setTitle(me.loc.themeTools.removeItem);
+		removeBtnBottom.addClass('block');
+		removeBtnBottom.addClass('addNewThemeButton');
+		removeBtnBottom.insertTo(addItemButtons);
+		removeBtnBottom.setHandler(removeBtnHandler);
+
 		//Adding new subtheme
-		var addSubthemeBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-		addSubthemeBtn.setTitle(me.loc.AddNewTheme);
-		addSubthemeBtn.addClass('block');
-		addSubthemeBtn.setHandler(me._addNewTheme);
-		addSubthemeBtn.insertTo(addItemButtons);
-		me.addSubthemeBtn = addSubthemeBtn;
-		
+		var addSubthemeBtnBottom = Oskari.clazz.create('Oskari.userinterface.component.Button');
+		addSubthemeBtnBottom.setTitle(me.loc.AddNewTheme);
+		addSubthemeBtnBottom.addClass('block');
+		addSubthemeBtnBottom.addClass('add-subtheme-button');
+		addSubthemeBtnBottom.setHandler(me._addNewTheme);
+		addSubthemeBtnBottom.insertTo(addItemButtons);
+
 		themeMetadataContainer.append(addItemButtons);
 		
 		themesTemplate.append(themeMetadataContainer);
@@ -819,6 +1165,12 @@ function (instance) {
 			function (dataArray) {
 		        me.groupingsData = dataArray;
 		        mergeIndicatorsData();
+				if (!me.isTheme) {
+					if ((me.themesPanel != null)&&(me.themesPanel.isOpen())) {
+						me._createDataListView();
+					}
+					me._createServicePackageGroupingView();
+                }
 			},
 			// error callback
 			function (jqXHR, textStatus) {
@@ -881,30 +1233,34 @@ function (instance) {
 		//Changing the type of theme
 		////////////////////////////
 		var themeTypeSelection = themeTypeField.find('select[name=themetype]');
+		var addLayerBtns = jQuery('.groupingsContainer .add-layers-button');
+		var addStatBtns = jQuery('.groupingsContainer .add-stat-button');
+		var addSubthemeBtns = jQuery('.groupingsContainer .add-subtheme-button');
+
 		if (themeTypeSelection != null) {
 			if (themeTypeSelection.val() == 'map_layers') {
-				addLayerBtn.setEnabled(true);
-				addStatBtn.setEnabled(false);
-				addSubthemeBtn.setEnabled(false);
-				
+				addLayerBtns.show();
+				addStatBtns.hide();
+				addSubthemeBtns.hide();
+
 				statsContainer.hide();
 			} else {
-				addLayerBtn.setEnabled(false);
-				addStatBtn.setEnabled(true);
-				addSubthemeBtn.setEnabled(true);
+				addLayerBtns.hide();
+				addStatBtns.show();
+				addSubthemeBtns.show();
 			}
 			
 			themeTypeSelection.change(function() {
 				if (this.value == 'map_layers') {
-					addLayerBtn.setEnabled(true);
-					addStatBtn.setEnabled(false);
-					addSubthemeBtn.setEnabled(false);
-					
+					addLayerBtns.show();
+					addStatBtns.hide();
+					addSubthemeBtns.hide();
+
 					statsContainer.hide();
 				} else {
-					addLayerBtn.setEnabled(false);
-					addStatBtn.setEnabled(true);
-					addSubthemeBtn.setEnabled(true);
+					addLayerBtns.hide();
+					addStatBtns.show();
+					addSubthemeBtns.show();
 				}
 				
 				//change type of the editing theme
@@ -916,9 +1272,9 @@ function (instance) {
 				
 				if (me.addThemeButton) {
 					if (this.value == 'map_layers') {
-						me.addThemeButton.setEnabled(false);
+						me.addThemeButton.hide();
 					} else {
-						me.addThemeButton.setEnabled(true);
+						me.addThemeButton.show();
 					}
 				}
 					
@@ -955,6 +1311,20 @@ function (instance) {
 		me.themesPanel.setTitle('Teemojen hallinta'); //TODO localization
 		me.themesPanel.setContent(themesTemplate);
 		me.themesPanel.setVisible(true);
+
+		jQuery(me.themesPanel).on("AccordionPanel.opened", function (event, panel) {
+			if (me.isTheme) {
+				return;
+			}
+			me._createDataListView();
+        });
+
+		jQuery(me.themesPanel).on("AccordionPanel.closed", function (event, panel) {
+			dataListView.addClass('hidden');
+			importButton.addClass('hidden');
+			readyThemesBox.removeClass('import');
+        });
+
 		accordion.addPanel(me.themesPanel);
 		
 		if (me.isTheme) {
@@ -984,17 +1354,353 @@ function (instance) {
 		
 		return content;
 	},
-	
-	_addNewTheme: function () {
-		var node = $("#tree").dynatree("getActiveNode");
-		
+
+	_addChild: function() {
+		var me = this;
+		var node = jQuery('#tree').dynatree('getActiveNode');
 		//Don't add child if it is an item (map_layer or statistic).
 		if (!node || node.data.nodeType == 'item') {
 			return;
 		}
-		
+		var themeType = jQuery('#themes').find('select[name=themetype]').val();
+		var newChild = {
+			title: me.loc.themeTools.newThemeTitle,
+			isFolder: true,
+			nodeType: 'theme',
+			themeName: me.loc.themeTools.newThemeName,
+			themeType: themeType,
+			focus: false,
+			select: false,
+			children: []
+		};
+		var addedNode = node.addChild(newChild);
+		if (addedNode) {
+			addedNode.activate();
+		}
+		node.expand(true);
+		var activeNode = jQuery('#tree').dynatree('getActiveNode');
+		if (activeNode) {
+			me._onActivateTreeNode(activeNode);
+		}
+	},
+
+	_compare: function(a, b) {
+		var c = ['', ''];
+		var language = Oskari.getLang();
+		for (var i=0; i < 2; i++) {
+			var comparable = arguments[i].title;
+			if (comparable != null) {
+				if (comparable.name != null) {
+					comparable = comparable.name;
+				} else {
+					c[i] = comparable;
+					continue;
+				}
+			} else {
+				comparable = arguments[i].name;
+			}
+			if (comparable != null) {
+				c[i] = (comparable[language] != null) ? comparable[language] : comparable;
+			}
+		}
+		return c[0].localeCompare(c[1]);
+	},
+
+	_handleTheme: function(theme) {
+		var me = this;
+		var language = Oskari.getLang();
+		if ((theme == null)||(((theme.themes == null)||(theme.themes.length === 0))&&((theme.elements == null)||(theme.elements.length === 0)))) {
+			return null;
+		}
+		var subThemes = [];
+		if (theme.themes != null) {
+			var numSubThemes = theme.themes.length;
+			for (var i=0; i<numSubThemes; i++) {
+				theme.themes[i].id = theme.id.toString()+'.sub';
+				var subTheme = me._handleTheme(theme.themes[i]);
+				if (subTheme != null) {
+					subThemes.push(subTheme);
+				}
+			}
+		}
+		var elements = [];
+		if (theme.elements != null) {
+			var numElements = theme.elements.length;
+			for (var j=0; j<numElements; j++) {
+				if (theme.elements[j] != null) {
+					var name = theme.elements[j].name;
+					if (name == null) {
+						name = theme.elements[j].id.toString();
+                    } else if (name[language] != null) {
+						name = (name[language].name == null) ? name[language] : name[language].name;
+					}
+					elements.push({
+						title: name,
+						key: theme.type+'.'+theme.elements[j].id,
+						themeType: theme.type,
+						itemId: theme.elements[j].id,
+						layer: true
+                    });
+				}
+			}
+        }
+        var themeName = theme.name;
+        if ((themeName !== null)&&(themeName[language] != null)) {
+        	themeName = themeName[language];
+        }
+		return {
+			title: themeName,
+			key: 'theme.'+theme.id.toString(),
+			themeType: theme.type,
+			layer: false,
+			children: subThemes.sort(me._compare).concat(elements.sort(me._compare))
+		};
+	},
+
+	_handleGrouping: function(grouping, treeData) {
+		var me = this;
+		if (grouping == null) {
+			return;
+		}
+		var i;
+		switch (grouping.type) {
+			case 'map_layers':
+				i = 0;
+				break;
+			case 'statistics':
+				i = 1;
+				break;
+			default:
+				return;
+		}
+		var numThemes = treeData[i].children.length;
+		var themeIndex = 0;
+		var theme = me._handleTheme(grouping);
+		if (theme == null) {
+			return;
+		}
+		while (themeIndex < numThemes) {
+			if (me._compare(grouping, treeData[i].children[themeIndex]) < 0) {
+				break;
+			}
+			themeIndex++;
+		}
+		treeData[i].children.splice(themeIndex, 0, theme);
+	},
+
+	_addItem: function() {
+		var me = this;
+		var node = jQuery('#tree').dynatree('getActiveNode');
+		var addDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+		addDialog.addClass('servicepackage-add-dialog');
+		var popupContent = me.toolPopup.clone();
+		var addInstructions = me.toolPopupText.clone();
+		addInstructions.append(me.loc.themeTools.addInfo);
+		popupContent.append(addInstructions);
+		var addInput = Oskari.clazz.create('Oskari.userinterface.component.FormInput', 'add-field');
+		var addField = addInput.getField();
+		popupContent.append(addField);
+		var cancelBtn = addDialog.createCloseButton(me.loc.themeTools.btnCancel);
+		var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+		okBtn.setTitle(me.loc.themeTools.btnOk);
+		okBtn.setHandler(function () {
+			addDialog.close(true);
+			if ((node == null) || (node.data == null) || (['type', 'theme'].indexOf(node.data.nodeType) === -1)) {
+				return;
+			}
+			var title = addInput.getValue();
+        	me.validateTool.setValue(title);
+			if ((title == null) || (title.length === 0) || (!me.validateTool.checkValue())) {
+				return;
+			}
+			// Prevent duplicates
+			if (node.childList != null) {
+				var numChildren = node.childList.length;
+				for (var i=0; i<numChildren; i++) {
+					var child = node.childList[i];
+					if ((child.data != null) && (child.data.nodeType === 'theme') && (child.data.title === title)) {
+						return;
+					}
+				}
+			}
+			node.addChild({
+				title: title,
+				isFolder: true,
+				activate: true,
+				focus: true,
+				nodeType: 'theme',
+				themeType: node.data.themeType
+			});
+			node.expand(true);
+			node.render();
+			var activeNode = jQuery('#tree').dynatree('getActiveNode');
+			if (activeNode) {
+				me._onActivateTreeNode(activeNode);
+			}
+		});
+		addDialog.show('', popupContent, [cancelBtn, okBtn]);
+		addDialog.makeModal();
+		addField.find('input').focus();
+    },
+
+	_removeItem: function() {
+		var me = this;
+		var node = jQuery('#tree').dynatree('getActiveNode');
+		var removeDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+		removeDialog.addClass('servicepackage-remove-dialog');
+		var cancelBtn = removeDialog.createCloseButton(me.loc.themeTools.btnCancel);
+		var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+		okBtn.setTitle(me.loc.themeTools.btnOk);
+		okBtn.setHandler(function () {
+			removeDialog.close(true);
+			if (!node || node.data.nodeType == 'root' || node.data.nodeType == 'type' || node.data.nodeType == 'roottheme') {
+				return;
+			}
+			node.remove();
+			//clear data fields
+			jQuery('#themes').find('input[name=themeNameField]').val();
+			jQuery('#themes').find('select[name=themetype]').val();
+			var activeNode = jQuery('#tree').dynatree('getActiveNode');
+			if (activeNode) {
+				me._onActivateTreeNode(activeNode);
+			}
+		});
+		var popupContent = me.toolPopup.clone();
+		var confirmRemove = me.toolPopupText.clone();
+		var text = me.loc.themeTools.confirmRemove+' '+node.data.title+'?';
+		confirmRemove.append(text);
+		popupContent.append(confirmRemove);
+		removeDialog.show('', popupContent, [cancelBtn, okBtn]);
+		removeDialog.makeModal();
+	},
+
+	_moveUpItem: function() {
+		var me = this;
+		var node = jQuery('#tree').dynatree('getActiveNode');
+		if (!node || node.data.nodeType == 'root' || node.data.nodeType == 'type' || node.data.nodeType == 'roottheme' || node.isFirstSibling()) {
+			return;
+		}
+		var prevSibling = node.getPrevSibling();
+		if (prevSibling != null) {
+			node.move(prevSibling, 'before');
+		}
+		var activeNode = jQuery('#tree').dynatree('getActiveNode');
+		if (activeNode) {
+			me._onActivateTreeNode(activeNode);
+		}
+	},
+
+	_moveDownItem: function() {
+		var me = this;
+		var node = jQuery('#tree').dynatree('getActiveNode');
+		if (!node || node.data.nodeType == 'root' || node.data.nodeType == 'type' || node.data.nodeType == 'roottheme' || node.isLastSibling()) {
+			return;
+		}
+		var nextSibling = node.getNextSibling();
+		if (nextSibling != null) {
+			node.move(nextSibling, 'after');
+		}
+		var activeNode = jQuery('#tree').dynatree('getActiveNode');
+		if (activeNode) {
+			me._onActivateTreeNode(activeNode);
+		}
+	},
+
+	_renameItem: function() {
+		var me = this;
+		var node = jQuery('#tree').dynatree('getActiveNode');
+		var renameDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+		renameDialog.addClass('servicepackage-rename-dialog');
+		var popupContent = me.toolPopup.clone();
+		var renameInstructions = me.toolPopupText.clone();
+		renameInstructions.append(me.loc.themeTools.renameInfo);
+		popupContent.append(renameInstructions);
+		var renameInput = Oskari.clazz.create('Oskari.userinterface.component.FormInput', 'rename-field');
+		renameInput.setValue(node.data.title);
+		var renameField = renameInput.getField();
+		popupContent.append(renameField);
+		var cancelBtn = renameDialog.createCloseButton(me.loc.themeTools.btnCancel);
+		var okBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.OkButton');
+		okBtn.setTitle(me.loc.themeTools.btnOk);
+		okBtn.setHandler(function () {
+			renameDialog.close(true);
+			if (!node || node.data.nodeType == 'root' || node.data.nodeType == 'type' || node.data.nodeType == 'roottheme') {
+				return;
+			}
+			var newTitle = renameInput.getValue();
+        	me.validateTool.setValue(newTitle);
+			if ((newTitle != null) && (newTitle.length > 0) && (me.validateTool.checkValue())) {
+				node.data.title = newTitle;
+			}
+			node.render();
+			var activeNode = jQuery('#tree').dynatree('getActiveNode');
+			if (activeNode) {
+				me._onActivateTreeNode(activeNode);
+			}
+		});
+		renameDialog.show('', popupContent, [cancelBtn, okBtn]);
+		renameDialog.makeModal();
+		renameField.find('input').focus();
+	},
+
+	_createThemeTools: function() {
+		var me = this,
+		    themeTools = me.themeTools.clone(),
+		    addTool = themeTools.find('.add-tool'),
+		    removeTool = themeTools.find('.remove-tool'),
+		    moveUpTool = themeTools.find('.move-up-tool'),
+		    moveDownTool = themeTools.find('.move-down-tool'),
+			renameTool = themeTools.find('.rename-tool');
+		addTool.click(function() {
+			if (!jQuery(this).hasClass('disabled')) {
+	            me._addItem.call(me);
+			}
+        });
+		removeTool.click(function() {
+			if (!jQuery(this).hasClass('disabled')) {
+	            me._removeItem.call(me);
+			}
+        });
+		moveUpTool.click(function() {
+			if (!jQuery(this).hasClass('disabled')) {
+	            me._moveUpItem.call(me);
+			}
+        });
+		moveDownTool.click(function() {
+			if (!jQuery(this).hasClass('disabled')) {
+	            me._moveDownItem.call(me);
+			}
+        });
+		renameTool.click(function() {
+			if (!jQuery(this).hasClass('disabled')) {
+	            me._renameItem.call(me);
+			}
+        });
+		addTool.attr('title', me.loc.themeTools.add);
+		removeTool.attr('title', me.loc.themeTools.remove);
+		moveUpTool.attr('title', me.loc.themeTools.moveUp);
+		moveDownTool.attr('title', me.loc.themeTools.moveDown);
+		renameTool.attr('title', me.loc.themeTools.rename);
+		me.themeToolButtons = {
+			addTheme: addTool,
+			removeTheme: removeTool,
+			moveUpTheme: moveUpTool,
+			moveDownTheme: moveDownTool,
+			renameTheme: renameTool
+		};
+		return themeTools;
+	},
+
+	_addNewTheme: function () {
+		var node = $("#tree").dynatree("getActiveNode");
+
+		//Don't add child if it is an item (map_layer or statistic).
+		if (!node || node.data.nodeType == 'item') {
+			return;
+		}
+
 		var themeType = $('#themes').find('select[name=themetype]').val();
-		
+
 		var newChild = {
 			title: 'uusi teema', //TODO localization
 			isFolder: true,
@@ -1004,17 +1710,17 @@ function (instance) {
 			children: []
 			/*icon: false*/
 		};
-		
+
 		var addedNode = node.addChild(newChild);
-		
+
 		if (addedNode) {
 			addedNode.activate();
 		}
-		
+
 		node.expand(true);
-		
+
 	},
-	
+
 	_getButtons: function () {
 		var me = this,
 			buttonCont = me.templateButtonsDiv.clone(),
@@ -1073,6 +1779,79 @@ function (instance) {
 	    me._closeExtension('LayerSelector');
 	    me.instance.showCustomView(false);
 	},
+
+	_gatherTheme: function(currentTheme) {
+		var me = this;
+		if ((currentTheme.children == null)||(currentTheme.children.length === 0)) {
+			return null;
+		}
+
+		var fName = currentTheme.title;
+		var fType = currentTheme.themeType;
+		var vThemes = [];
+
+		//Layers
+		var vLayers = [];
+
+		if (currentTheme.themeType == "map_layers" && currentTheme.children) {
+			for (var j = 0; j < currentTheme.children.length; j++) {
+				if (currentTheme.children[j].nodeType == 'item') {
+					var status = 'initial';
+					if (currentTheme.children[j].select)
+						status = 'drawn';
+					vLayers.push({
+						"id": currentTheme.children[j].itemId,
+						"type": "map_layer",
+						"status" : status
+					});
+				} else {
+					var vTheme = me._gatherTheme(currentTheme.children[j]);
+					if (vTheme != null) {
+						vThemes.push(vTheme);
+					}
+				}
+			}
+		}
+
+		//Stats
+		var vStats = [];
+
+		if (currentTheme.themeType == "statistics" && currentTheme.children) {
+			for (var j = 0; j < currentTheme.children.length; j++) {
+				if (currentTheme.children[j].nodeType == 'item') {
+					var status = 'initial';
+					if (currentTheme.children[j].select)
+						status = 'drawn';
+					vStats.push({
+						"id": currentTheme.children[j].itemId,
+						"type": "statistic",
+						"status": status
+					});
+				} else {
+					var vTheme = me._gatherTheme(currentTheme.children[j]);
+					if (vTheme != null) {
+						vThemes.push(vTheme);
+					}
+				}
+			}
+		}
+
+		var elements = [];
+
+		if (fType == 'map_layers') {
+			elements = vLayers;
+		} else {
+			elements = vStats;
+		}
+
+		return {
+			name: fName,
+			type: fType,
+			themes: vThemes,
+			elements: elements
+		};
+	},
+
 	_gatherSelections: function () {
 		var me = this,
 			selections = {
@@ -1116,65 +1895,15 @@ function (instance) {
 			//Parsing Tree
 			if (root.children) {
 				for (var i = 0; i < root.children.length; i++) {
-					
-					var currentTheme = root.children[i];
-				
-					var fName = currentTheme.themeName;
-					var fType = currentTheme.themeType;
-					
-					//Layers
-					var vLayers = [];
-
-					if (currentTheme.themeType == "map_layers" && currentTheme.children) {
-						for (var j = 0; j < currentTheme.children.length; j++) {
-						    if (currentTheme.children[j].nodeType == 'item') {
-						        var status = 'initial';
-						        if (currentTheme.children[j].select)
-						            status = 'drawn';
-						        vLayers.push({
-						            "id": currentTheme.children[j].itemId,
-						            "type": "map_layer",
-                                    "status" : status,
-						        });
+					var themeTypeRoot = root.children[i];
+					if (themeTypeRoot.children) {
+						for (var k = 0; k < themeTypeRoot.children.length; k++) {
+							var theme = me._gatherTheme(themeTypeRoot.children[k]);
+							if (theme != null) {
+								selections.themes.push(theme);
 							}
 						}
 					}
-					
-					//Stats
-					var vStats = [];
-					var vThemes = [];
-					
-					if (currentTheme.themeType == "statistics" && currentTheme.children) {
-						for (var j = 0; j < currentTheme.children.length; j++) {
-						    if (currentTheme.children[j].nodeType == 'item') {
-						        var status = 'initial';
-						        if (currentTheme.children[j].select)
-						            status = 'drawn';
-						        vStats.push({
-						            "id": currentTheme.children[j].itemId,
-						            "type": "statistic",
-						            "status": status,
-						        });
-							} else {
-								vThemes.push(me._getEmbeddedValues(currentTheme.children[j]));
-							}
-						}
-					}
-
-					var elements = [];
-
-					if (fType == 'map_layers') {
-						elements = vLayers;
-					} else {
-						elements = vStats;
-					}
-					
-					selections.themes[i] = {
-						name : fName,
-						type : fType,
-						themes : vThemes,
-						elements : elements
-					};
 				}
 			}
 		} else {
@@ -1239,11 +1968,11 @@ function (instance) {
                 'id': sharingData[i].credentialId,
                 'permissionId': sharingData[i].permissionId,
                 'type': sharingData[i].type,
-                'email': sharingData[i].email,
+                'email': sharingData[i].email
             };
             permissions.push(item);
         }
-	    selections.permissions = permissions;		
+	    selections.permissions = permissions;
 		return selections;
 	},
 	
@@ -1398,7 +2127,7 @@ function (instance) {
 
 	    this.instance.getSandbox().postRequestByName(rn, [extension, 'close', rn, top, left]); //665
 	},
-	
+
 	//-----------------------
 	//CONNECTION WITH BACKEND
 	//-----------------------
