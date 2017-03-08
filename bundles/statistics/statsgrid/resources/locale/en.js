@@ -275,7 +275,8 @@ Oskari.registerLocalization(
             "URBANAREATYPE" : "Urban area type",
             "CITYCENTRALAREA" : "City central area",
             "CITYCENTRALTYPE" : "City central type",
-            "LOCALDENSITYTYPE": "Local density type"
+            "LOCALDENSITYTYPE": "Local density type",
+            "PALISKUNTA": "Reindeer herding cooperative"
         },
         "regionSelectorCategories": {
             "KUNTA": "Municipality",
@@ -287,6 +288,7 @@ Oskari.registerLocalization(
             'ELY_Y': "ELY Y area",
             'FINLAND': "Finland",
             "ADMINISTRATIVELAWAREA": "Administrative law area",
+            "PALISKUNTA": "Reindeer herding cooperative"
         },
         "addDataButton": "Add indicator",
         "addDataTitle": "Add a new indicator.",
