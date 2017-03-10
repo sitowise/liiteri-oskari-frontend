@@ -48,13 +48,13 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
 		},
         restoreServicePackageState: function(state) {
             var sandbox = this.instance.sandbox;
+            var selectors = {
+                statistics: '.statsgrid-100',
+                mapLegend: '#oskari-flyout-maplegend',
+                layerSelector: '#oskari-flyout-layerselector'
+            };
             var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
             var dataAvailable = mapLayerService.isAllLayersLoaded();
-
-            // Todo: YM-669
-            state.windows = null;
-            //state.windows = ['statistics'];
-            //state.windows = ['oskari-flyout-maplegend', 'oskari-flyout-layerselector'];
 
             if (state.selectedLayers) {
 
@@ -85,7 +85,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             //What statistics user had chosen and what thematic maps had he made from those
             if (state.statistics) {
                 sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
-                if ((state.windows != null) && (state.windows.indexOf('statistics') >= 0)) {
+                if ((state.windows == null) || ((state.windows != null) && (state.windows.indexOf(selectors.statistics) >= 0))) {
                     sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
                 } else if (state.statistics.state && state.statistics.state.layerId) {
                     var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
@@ -106,14 +106,11 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 sandbox.postRequestByName('MapMoveRequest', [state.map.x, state.map.y, state.map.zoomLevel]);
             }
 
-
-
-/*          Todo: YM-669
-            var zIndexOffsets = {
-                'oskari-flyout-maplegend': 1,
-                'oskari-flyout-layerselector': 2
-            };
-            var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function(maxZIndex, flyout) {
+            var zIndexOffsets = {};
+            zIndexOffsets[selectors.statistics] = 1;
+            zIndexOffsets[selectors.mapLegend] = 2;
+            zIndexOffsets[selectors.layerSelector] = 3;
+            var flyoutBaseZIndex = jQuery('.oskari-flyout, '+selectors.statistics).get().reduce(function(maxZIndex, flyout) {
                 var flyoutZIndex = Number(jQuery(flyout).css('z-index'));
                 return (jQuery.isNumeric(flyoutZIndex)) ? Math.max(maxZIndex, flyoutZIndex) : maxZIndex;
             }, 0)+1;
@@ -122,24 +119,23 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                     var zIndexOffset = zIndexOffsets[id];
                     return (jQuery.isNumeric(zIndexOffset)) ? Math.max(maxZIndexOffset, zIndexOffset) : maxZIndexOffset;
                 }, 0);
-                state.windows.forEach(function(id, index) {
-                    var flyout = jQuery('#'+id);
+                state.windows.forEach(function(selector, index) {
+                    var flyout = jQuery(selector);
                     if (flyout.length === 0) {
                         return;
                     }
                     flyout.removeClass('oskari-attached');
                     flyout.removeClass('oskari-closed');
                     flyout.addClass('oskari-detached');
-                    var zIndexOffset = (jQuery.isNumeric(zIndexOffsets[id])) ? zIndexOffsets[id] : 0;
+                    var zIndexOffset = (jQuery.isNumeric(zIndexOffsets[selector])) ? zIndexOffsets[selector] : 0;
                     var baseWidth = parseInt(flyout.css('min-width'));
                     if (jQuery.isNumeric(baseWidth)) {
                         baseWidth = flyout.width();
                     }
                     flyout.css('z-index', flyoutBaseZIndex+zIndexOffset);
-                    flyout.width(baseWidth+(maxZIndexOffset-zIndexOffset)*50);
+                    flyout.width(baseWidth+(maxZIndexOffset-zIndexOffset)*80);
                 });
             }
-*/
             this.stateRestored = dataAvailable;
         }
     }, {

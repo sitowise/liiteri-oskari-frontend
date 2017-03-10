@@ -20,7 +20,7 @@ function() {
             '<th>' + this.locale.userstable.name + '</th>' +
             '<th>' + this.locale.userstable.operations + '</th>' +
             '</tr></thead><tbody></tbody></table>'	
-	},
+	};
 	this.table = null;
 	this.sharedWorkspacesTable = null;
 	this.SharingType = { LINK : 0, FACEBOOK : 1, TWITTER : 2 };
@@ -737,9 +737,11 @@ function() {
 		workspaceNameField.getField().find('input').before('<br />');
 		workspaceNameField.setLabel(me.locale.saveDialog.nameField);
 		content.append(workspaceNameField.getField());
-			
-		if (data) {
+
+		var workspaceData = {};
+		if (data != null) {
 			workspaceNameField.setValue(data.name);
+			workspaceData = JSON.parse(data.workspace);
 		}
 
 		var openFlyouts= Oskari.clazz.create('Oskari.userinterface.component.Fieldset');
@@ -748,48 +750,39 @@ function() {
 		openFlyouts.addClass('oskari-formcomponent');
 		openFlyouts.addClass('workspace-open-views');
 
-		var layerSelectorInput = Oskari.clazz.create(
-			'Oskari.userinterface.component.CheckboxInput'
-		);
-		layerSelectorInput.setName('layerSelectorInput');
-		layerSelectorInput.setTitle(me.locale.saveDialog.layerSelector);
-		layerSelectorInput.setValue('#oskari-flyout-layerselector');
-		layerSelectorInput.setEnabled(true);
-		layerSelectorInput.setChecked(false);
-		layerSelectorInput.setHandler(function() {
-			if ((layerSelectorInput.isChecked()&&(mapLegendsInput.isChecked())&&(statisticsInput.isChecked()))) {
-				layerSelectorInput.setChecked(false);
+		var openFlyoutInputData = [
+			{
+				name: 'layerSelector',
+				value: '#oskari-flyout-layerselector'
+			},
+			{
+				name: 'mapLegends',
+				value: '#oskari-flyout-maplegend'
+			},
+			{
+				name: 'statistics',
+				value: '.statsgrid_100'
 			}
+		];
+		openFlyoutInputData.forEach(function(data) {
+			var input = Oskari.clazz.create(
+				'Oskari.userinterface.component.CheckboxInput'
+			);
+			input.setName(data.name+'Input');
+			input.setTitle(me.locale.saveDialog[data.name]);
+			input.setValue(data.value);
+			input.setEnabled(true);
+			input.setChecked((workspaceData.windows != null) ? workspaceData.windows.indexOf(data.value) >= 0 : false);
+			input.setHandler(function() {
+				var numChecked = openFlyouts.getComponents().reduce(function(numChecked, component) {
+					return numChecked + Number(component.isChecked());
+				}, 0);
+				if (numChecked > 2) {
+					input.setChecked(false);
+				}
+			});
+			openFlyouts.addComponent(input);
 		});
-		openFlyouts.addComponent(layerSelectorInput);
-		var mapLegendsInput = Oskari.clazz.create(
-			'Oskari.userinterface.component.CheckboxInput'
-		);
-		mapLegendsInput.setName('mapLegendsInput');
-		mapLegendsInput.setTitle(me.locale.saveDialog.mapLegends);
-		mapLegendsInput.setValue('oskari-flyout-maplegend');
-		mapLegendsInput.setEnabled(true);
-		mapLegendsInput.setChecked(false);
-		mapLegendsInput.setHandler(function() {
-			if ((layerSelectorInput.isChecked()&&(mapLegendsInput.isChecked())&&(statisticsInput.isChecked()))) {
-				mapLegendsInput.setChecked(false);
-			}
-		});
-		openFlyouts.addComponent(mapLegendsInput);
-		var statisticsInput = Oskari.clazz.create(
-			'Oskari.userinterface.component.CheckboxInput'
-		);
-		statisticsInput.setName('statisticsInput');
-		statisticsInput.setTitle(me.locale.saveDialog.statistics);
-		statisticsInput.setValue('statistics');
-		statisticsInput.setEnabled(true);
-		statisticsInput.setChecked(false);
-		statisticsInput.setHandler(function() {
-			if ((layerSelectorInput.isChecked()&&(mapLegendsInput.isChecked())&&(statisticsInput.isChecked()))) {
-				statisticsInput.setChecked(false);
-			}
-		});
-		openFlyouts.addComponent(statisticsInput);
 		openFlyouts.insertTo(content);
 
 		saveBtn.addClass('primary');
@@ -804,7 +797,7 @@ function() {
 				users = data.users;
 			}
 			var windows = [];
-			[layerSelectorInput, statisticsInput, mapLegendsInput].forEach(function(input) {
+			openFlyouts.getComponents().forEach(function(input) {
 				if (input.isChecked()) {
 					windows.push(input.getValue());
 				}
