@@ -67,7 +67,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.domain.StatsLayerModelB
             'ELY_Y': { 'name': 'ELY_Y', 'child': "MAAKUNTA", 'wmsNames': '9', 'filterProperties': 'ELYyNro', 'groupKey': 'ely_y', 'type': 'administrative', 'hasVisualization': true },
             'ELY_L': { 'name': 'ELY_L', 'child': "MAAKUNTA", 'wmsNames': '6', 'filterProperties': 'ELYlNro', 'groupKey': 'ely_l', 'type': 'administrative', 'hasVisualization': true },
             'ADMINISTRATIVELAWAREA': { 'name': 'ADMINISTRATIVELAWAREA', 'child': "MAAKUNTA", 'wmsNames': '-1', 'filterProperties': '', 'groupKey': 'administrative_law_area', 'type': 'administrative' },
-            'PALISKUNTA': { 'name': 'PALISKUNTA', 'child': null, 'wmsNames': '-1', 'filterProperties': '', 'groupKey': 'reindeer_herding_cooperative', 'type': 'administrative' },
+            'PALISKUNTA': { 'name': 'PALISKUNTA', 'child': null, 'wmsNames': '24', 'filterProperties': 'Plk_nro', 'groupKey': 'reindeer_herding_cooperative', 'type': 'administrative', 'hasVisualization': true },
             'FINLAND': { 'name': 'FINLAND', 'child': null, 'wmsNames': '-1', 'filterProperties': '', 'groupKey': 'finland', 'type': 'administrative' },
             'NEIGHBORHOODTYPE': { 'name': 'NEIGHBORHOODTYPE', 'child': null, 'wmsNames': null, 'filterProperties': '', 'groupKey': 'neighborhood_type', 'type': 'functional' },
             'NEIGHBORHOODCLASS': { 'name': 'NEIGHBORHOODCLASS', 'child': 'NEIGHBORHOODTYPE', 'wmsNames': null, 'filterProperties': '', 'groupKey': 'neighborhood_class', 'type': 'functional' },
