@@ -12,10 +12,13 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             "stateful": false,
             "tileClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Tile", 
             "flyoutClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.Flyout",
-            "isFullScreenExtension": false,
+			"viewClazz": "Oskari.liiteri.bundle.liiteri-servicepackages.view.ServicePackageView",
+			"isFullScreenExtension": false
         };
         this.state = {};
         this.service = null;
+		this.packages = [];
+		this.packagesById = {};
         this.autoload = null;
     }, {
         /**
@@ -56,6 +59,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             }
             
             this.service = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-servicepackages.service.ServicePackageService', this);
+
+            this.view = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServicePackageView', this);
 
 			var setServicePackageRequestHandler = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-servicepackages.request.SetServicePackageRequestHandler', this);
             sandbox.addRequestHandler('liiteri-servicepackages.SetServicePackageRequest', setServicePackageRequestHandler);
@@ -210,11 +215,38 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                     return;
                 }
                 me.getFlyout().createUI();
+            },
+            'LayersLoadingEvent' : function (event) {
+            	var me = this;
+                if ((event.getOperation() == 'stop')&&(!me.view.stateRestored)) {
+					me.view.restoreServicePackageState();
+                }
+            } ,
+            /**
+             * @method MapLayerEvent
+             * @param {Oskari.mapframework.event.common.MapLayerEvent} event
+             */
+            MapLayerEvent: function (event) {
+            	var me = this;
+            	if ((event.getOperation() === 'add')&&(!me.view.stateRestored)) {
+					me.view.restoreServicePackageState();
+                }
             }
         },
+        _cachePackages: function() {
+            var me = this;
+            me.packages = [];
+            me.packagesById = {};
+            me.service.getServicePackages(function (packages) {
+                me.packages = packages;
+                for (var i = 0; i < packages.length; i++) {
+                    me.packagesById[packages[i].id] = packages[i];
+                }
+                me.view.checkAutoLoadServicePackage();
+            });
+        },
 		setServicePackage: function (id, restoreState) {
-		    var me = this;
-		    me.getFlyout().setServicePackage(id, restoreState);
+		    this.view.setServicePackage(id, restoreState);
 		},
         closeView: function() {
             var request = this.sandbox.getRequestBuilder('userinterface.UpdateExtensionRequest')(this, 'close');

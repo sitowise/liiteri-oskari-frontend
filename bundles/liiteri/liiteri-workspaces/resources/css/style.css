@@ -72,3 +72,26 @@
 	float: left;
     margin-top: 25px;
 }
+
+div.edit-workspace fieldset {
+    margin: 10px 0 10px 0;
+}
+
+div.edit-workspace fieldset.workspace-open-views legend{
+    display: block;
+    width: 100%;
+    padding: 0;
+    line-height: inherit;
+    border: none;
+    margin: 0;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+div.edit-workspace fieldset.oskari-formcomponent label, div.edit-workspace  label.oskari-formcomponent {
+	width: 100%;
+}
+
+div.edit-workspace input[type=text] {
+	width: 250px;
+}

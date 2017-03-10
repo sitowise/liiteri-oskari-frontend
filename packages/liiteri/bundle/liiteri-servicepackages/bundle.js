@@ -53,6 +53,9 @@ function() {
 		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/view/ServicePackageTabView.js"
 		}, {
 		    "type": "text/javascript",
+		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/view/ServicePackageItemView.js"
+		}, {
+		    "type": "text/javascript",
 		    "src": "../../../../bundles/liiteri/liiteri-servicepackages/view/ServicePackageView.js"
 		}, {
 		    "type": "text/javascript",

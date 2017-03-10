@@ -17,8 +17,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         this.container = null;
         this.tabContainer = null;
 		this.isShown = false;
-		this.packages = [];
-        this.packagesById = {};
 		this.groupings = [];
         this._templates = {
             base: jQuery('<div id="oskari-service-packages-list-container"></div>'),
@@ -56,35 +54,10 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         },
         startPlugin: function () {
             var me = this;
-            me._cachePackages();
+            me.instance._cachePackages();
             this.createUI();
         },
         stopPlugin: function () {
-            me.packages = [];
-            me.packagesById = {};
-        },
-        checkAutoLoadServicePackage: function () {
-            var me = this;
-            var autoLoadId = me.instance.autoLoad;
-            if (autoLoadId != null) {
-                var autoLoadPackage = me.packagesById[autoLoadId];
-                if (autoLoadPackage != null) {
-                    me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
-                }
-                me.instance.autoLoad = null;
-            }
-        },
-        _cachePackages: function() {
-            var me = this;
-            me.packages = [];
-            me.packagesById = {};
-            me.service.getServicePackages(function (packages) {
-                me.packages = packages;
-                for (var i = 0; i < packages.length; i++) {
-                    me.packagesById[packages[i].id] = packages[i];
-                }
-                me.checkAutoLoadServicePackage();
-            });
         },
         createUI: function () {
             var me = this;
@@ -117,7 +90,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
             var me = this;
             var servicePackageGrouping = [];
             var labelGrouping= [];
-            me.packages.forEach(function(servicePackage, packageIndex) {
+            me.instance.packages.forEach(function(servicePackage, packageIndex) {
                 if (servicePackage.mainType !== "package") {
                     return;
                 }
@@ -145,11 +118,10 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
             labelGrouping.forEach(function(labelGroup) {
                 var servicePackageGroup = Oskari.clazz.create('Oskari.mapframework.bundle.liiteri-servicepackages.model.ServicePackageGroupModel', labelGroup.label);
                 labelGroup.packageIndexes.forEach(function(packageIndex) {
-                    var servicePackageData = me.packages[packageIndex];
+                    var servicePackageData = me.instance.packages[packageIndex];
                     var servicePackage = Oskari.clazz.create('Oskari.mapframework.bundle.liiteri-servicepackages.model.ServicePackageModel', servicePackageData.name);
                     servicePackage.setId(servicePackageData.id);
                     servicePackage.setUrl(servicePackageData.url);
-                    servicePackage.setJson(servicePackageData);
                     servicePackageGroup.addServicePackage(servicePackage);
                 });
                 servicePackageGrouping.push(servicePackageGroup);
@@ -159,7 +131,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
 
         refreshServicePackagesList: function () {
             var me = this;
-		    me._cachePackages();
+		    me.instance._cachePackages();
 		    me.createUI();
 		}
 

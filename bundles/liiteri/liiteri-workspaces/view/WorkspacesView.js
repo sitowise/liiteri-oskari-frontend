@@ -187,7 +187,6 @@ function() {
 		
 		tableElement.find('tbody').on('click', 'a.loadLink', function () {
             var data = dataTable.row($(this).parents('tr')).data();
-            
 			if (data.workspace) {
 				me._restoreWorkspace(data.workspace);
 			}
@@ -497,7 +496,7 @@ function() {
 		this.sharedWorkspacesTable.ajax.reload();
 	},
 	
-	_saveWorkspace: function(id, name, users, hiddenWorkspace, sharingType) {
+	_saveWorkspace: function(id, name, users, windows, hiddenWorkspace, sharingType) {
 		var me = this;
 		var sandbox = me.instance.getSandbox();
 		
@@ -540,8 +539,8 @@ function() {
 		workspace.map.y = sandbox.getMap().getY();
 		workspace.map.zoomLevel = sandbox.getMap().getZoom();
 		
-		workspace.statsVisibility = ($(".statsgrid_100").length > 0 ? true : false);
-		
+		workspace.windows = (windows != null) ? windows : [];
+
 		me._sendWorkspace(id, workspace, name, users, hiddenWorkspace, sharingType);
 	},
 	
@@ -566,7 +565,7 @@ function() {
 				"workspace": JSON.stringify(selections),
 				"name": name,
 				"users": JSON.stringify(users),
-				"hidden": hiddenWorkspace,
+				"hidden": hiddenWorkspace
 			},
 			success: function () {
 				if (hiddenWorkspace)
@@ -732,6 +731,8 @@ function() {
 		if(data) {
 			content.append(jQuery('<div class="info">' + me.locale.saveDialog.saveWorkspaceInfo + '</div>'));
 		}
+		content.addClass('edit-workspace');
+
 		var workspaceNameField = Oskari.clazz.create('Oskari.userinterface.component.FormInput', 'workspaceNameField');
 		workspaceNameField.getField().find('input').before('<br />');
 		workspaceNameField.setLabel(me.locale.saveDialog.nameField);
@@ -740,6 +741,56 @@ function() {
 		if (data) {
 			workspaceNameField.setValue(data.name);
 		}
+
+		var openFlyouts= Oskari.clazz.create('Oskari.userinterface.component.Fieldset');
+		openFlyouts.setTitle(me.locale.saveDialog.openFlyouts);
+		openFlyouts.addClass('oskari-checkboxgroup');
+		openFlyouts.addClass('oskari-formcomponent');
+		openFlyouts.addClass('workspace-open-views');
+
+		var layerSelectorInput = Oskari.clazz.create(
+			'Oskari.userinterface.component.CheckboxInput'
+		);
+		layerSelectorInput.setName('layerSelectorInput');
+		layerSelectorInput.setTitle(me.locale.saveDialog.layerSelector);
+		layerSelectorInput.setValue('#oskari-flyout-layerselector');
+		layerSelectorInput.setEnabled(true);
+		layerSelectorInput.setChecked(false);
+		layerSelectorInput.setHandler(function() {
+			if ((layerSelectorInput.isChecked()&&(mapLegendsInput.isChecked())&&(statisticsInput.isChecked()))) {
+				layerSelectorInput.setChecked(false);
+			}
+		});
+		openFlyouts.addComponent(layerSelectorInput);
+		var mapLegendsInput = Oskari.clazz.create(
+			'Oskari.userinterface.component.CheckboxInput'
+		);
+		mapLegendsInput.setName('mapLegendsInput');
+		mapLegendsInput.setTitle(me.locale.saveDialog.mapLegends);
+		mapLegendsInput.setValue('oskari-flyout-maplegend');
+		mapLegendsInput.setEnabled(true);
+		mapLegendsInput.setChecked(false);
+		mapLegendsInput.setHandler(function() {
+			if ((layerSelectorInput.isChecked()&&(mapLegendsInput.isChecked())&&(statisticsInput.isChecked()))) {
+				mapLegendsInput.setChecked(false);
+			}
+		});
+		openFlyouts.addComponent(mapLegendsInput);
+		var statisticsInput = Oskari.clazz.create(
+			'Oskari.userinterface.component.CheckboxInput'
+		);
+		statisticsInput.setName('statisticsInput');
+		statisticsInput.setTitle(me.locale.saveDialog.statistics);
+		statisticsInput.setValue('statistics');
+		statisticsInput.setEnabled(true);
+		statisticsInput.setChecked(false);
+		statisticsInput.setHandler(function() {
+			if ((layerSelectorInput.isChecked()&&(mapLegendsInput.isChecked())&&(statisticsInput.isChecked()))) {
+				statisticsInput.setChecked(false);
+			}
+		});
+		openFlyouts.addComponent(statisticsInput);
+		openFlyouts.insertTo(content);
 
 		saveBtn.addClass('primary');
 
@@ -752,8 +803,14 @@ function() {
 				id = data.id;
 				users = data.users;
 			}
+			var windows = [];
+			[layerSelectorInput, statisticsInput, mapLegendsInput].forEach(function(input) {
+				if (input.isChecked()) {
+					windows.push(input.getValue());
+				}
+			});
 			var name = workspaceNameField.getValue();
-			me._saveWorkspace(id, name, users);
+			me._saveWorkspace(id, name, users, windows);
 		});
 
 		dialog.show(me.locale.saveDialog.saveWorkspace, content, [saveBtn, cancelBtn]);
@@ -892,7 +949,7 @@ function() {
 	_SaveHiddenWorkspace: function(sharingType)
 	{
 		var me = this;
-		me._saveWorkspace(0, "hidden", [], true, sharingType);
+		me._saveWorkspace(0, "hidden", [], [], true, sharingType);
 	},	
 	_GetLastUserWorkspaceIdAndExecuteCallback: function(callbackFunction, sharingType)
 	{

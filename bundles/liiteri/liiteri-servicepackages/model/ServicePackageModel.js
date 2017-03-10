@@ -9,7 +9,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.liiteri-servicepackages.model.Se
         this.name = name;
         this.id = 1;
         this.url = '';
-        this.json = {};
     }, {
         /**
          * @method setName
@@ -52,19 +51,5 @@ Oskari.clazz.define('Oskari.mapframework.bundle.liiteri-servicepackages.model.Se
          */
         getUrl: function () {
             return this.url;
-        },
-        /**
-         * @method setJson
-         * @param {String} json
-         */
-        setJson: function (json) {
-            this.json = json;
-        },
-        /**
-         * @method getJson
-         * @return {String}
-         */
-        getJson: function () {
-            return this.json;
         }
     });

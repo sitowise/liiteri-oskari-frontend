@@ -25,7 +25,7 @@ Oskari.clazz.define(
                 '</div>',
             relatedKeywords: '<div class="related-keywords"></div>',
             keywordsTitle: '<div class="keywords-title"></div>',
-            keywordContainer: '<a href="#"class="keyword-cont">' +
+            keywordContainer: '<a href="#" class="keyword-cont">' +
                 '  <span class="keyword"></span>' +
                 '</a>',
             keywordType: '<div class="type"></div>',
@@ -36,7 +36,7 @@ Oskari.clazz.define(
     }, {
 
         getName: function () {
-            return 'Oskari.liiteri.bundle.liiteri-servicepackages.view.ServicePackageView';
+            return 'Oskari.liiteri.bundle.liiteri-servicepackages.view.ServicePackageItemView';
         },
 
         getTitle: function () {
@@ -307,7 +307,7 @@ Oskari.clazz.define(
                     servicePackage = sortedServicePackages[n];
                     servicePackageWrapper =
                         Oskari.clazz.create(
-                            'Oskari.liiteri.bundle.liiteri-servicepackages.view.ServicePackageView',
+                            'Oskari.liiteri.bundle.liiteri-servicepackages.view.ServicePackageItemView',
                             servicePackage, me.instance, me.instance.getLocalization(), group.getTitle()
                     );
                     servicePackageContainer = servicePackageWrapper.getContainer();
@@ -685,23 +685,6 @@ Oskari.clazz.define(
             }
 
             this.accordion.removeMessage();
-        },
-
-        selectAllServicePackages : function(isSelected, sendEvent) {
-            for (var servicePackageId in this.servicePackageContainers) {
-                var servicePackageCont = this.servicePackageContainers[servicePackageId];
-                if (servicePackageCont) {
-                    servicePackageCont.setSelected(isSelected, sendEvent);
-                }
-            }
-        },
-
-        setServicePackageSelected: function (servicePackageId, isSelected) {
-            //"use strict";
-            var servicePackageCont = this.servicePackageContainers[servicePackageId];
-            if (servicePackageCont) {
-                servicePackageCont.setSelected(isSelected);
-            }
         },
 
         updateServicePackageContent: function (servicePackageId, servicePackage) {
