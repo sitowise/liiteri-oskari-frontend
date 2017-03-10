@@ -60,6 +60,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
             this.createUI();
         },
         stopPlugin: function () {
+            var me = this;
             me.packages = [];
             me.packagesById = {};
         },

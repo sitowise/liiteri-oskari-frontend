@@ -298,6 +298,27 @@ Oskari.registerLocalization(
                 "saveFailed": "Kartan julkaisu epäonnistui. Yritä myöhemmin uudelleen.",
                 "nameIllegalCharacters": "Nimessä on luvattomia merkkejä. Sallittuja merkkejä ovat kaikki suomen kielen aakkoset, numerot sekä välilyönti ja yhdysmerkki.",
                 "domainIllegalCharacters": "Sivuston nimessä on luvattomia merkkejä. Sallittuja merkkejä ovat kaikki suomen kielen aakkoset, numerot sekä välilyönti ja yhdysmerkki."
+            },
+            "themeTools" : {
+                "add": "Lisää tähän ryhmään",
+                "remove": "Poista",
+                "moveUp": "Siirrä ylöspäin",
+                "moveDown": "Siirrä alaspäin",
+                "rename": "Muokkaa nimeä",
+                "newThemeTitle": "Uusi teema",
+                "newThemeName": "Uusi teema",
+                "mapLayers": "Karttatasot",
+                "statistics": "Tilastot",
+                "servicePackage": "Palvelupaketti",
+                "allData": "Kaikki aineistot",
+                "confirmRemove": "Haluatko poistaa palvelupaketin ryhmästä kohteen",
+                "renameInfo": "Muokkaa valittua nimeä",
+                "addInfo": "Lisää uusi palvelupaketin teema tähän ryhmään",
+                "btnCancel": "Peruuta",
+                "btnOk": "Hyväksy",
+                "newMapLayer": "Uusi karttataso",
+                "newStatistics": "Uusi tilasto",
+                "removeItem": "Poista valittu kohde"
             }
         },
         "NotLoggedView": {
