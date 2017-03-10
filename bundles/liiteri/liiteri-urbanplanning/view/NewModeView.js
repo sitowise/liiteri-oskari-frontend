@@ -477,7 +477,7 @@ function (instance) {
 
             regionsAccordion.addPanel(regionTypeAccordionPanel);
 
-            $(regionTypeAccordionPanel).on("AccorionPanel.opened", function (event, panel) {
+            $(regionTypeAccordionPanel).on("AccordionPanel.opened", function (event, panel) {
                 $.each(me.regionPanels, function (key, value) {
                     if (value != panel) {
                         value.close();

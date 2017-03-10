@@ -529,6 +529,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
 			} else {
 				//TODO
 			}
+			this.tabContainer.select(this.servicePackageTab.getTabPanel());
 		},
 
         /**

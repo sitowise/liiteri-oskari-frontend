@@ -87,7 +87,7 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
             this.html.children('div.content').show();
 
             var me = this;
-            $(this).trigger("AccorionPanel.opened", [me]);
+            $(this).trigger("AccordionPanel.opened", [me]);
         },
         /**
          * @method close
@@ -99,6 +99,9 @@ Oskari.clazz.define('Oskari.userinterface.component.AccordionPanel',
             header.removeClass('icon-arrow-down');
             header.addClass('icon-arrow-right');
             this.html.children('div.content').hide();
+
+            var me = this;
+            $(this).trigger("AccordionPanel.closed", [me]);
         },
         /**
          * @method setTitle
