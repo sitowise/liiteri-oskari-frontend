@@ -496,6 +496,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                     callback: callback,
                     dataAvailable: false
                 };
+    			this.tabContainer.select(this.servicePackageTab.getTabPanel());
                 if (!mapLayerService.isAllLayersLoaded()) {
                     return;
                 }
@@ -529,7 +530,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
 			} else {
 				//TODO
 			}
-			this.tabContainer.select(this.servicePackageTab.getTabPanel());
 		},
 
         /**

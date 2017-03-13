@@ -216,21 +216,15 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                 }
                 me.getFlyout().createUI();
             },
-            'LayersLoadingEvent' : function (event) {
-            	var me = this;
-                if ((event.getOperation() == 'stop')&&(!me.view.stateRestored)) {
-					me.view.restoreServicePackageState();
-                }
-            } ,
             /**
              * @method MapLayerEvent
              * @param {Oskari.mapframework.event.common.MapLayerEvent} event
              */
             MapLayerEvent: function (event) {
             	var me = this;
-            	if ((event.getOperation() === 'add')&&(!me.view.stateRestored)) {
+				if ((event.getOperation() == 'stop')&&(!me.view.stateRestored)) {
 					me.view.restoreServicePackageState();
-                }
+				}
             }
         },
         _cachePackages: function() {

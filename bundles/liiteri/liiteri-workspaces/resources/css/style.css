@@ -26,6 +26,7 @@
 
 #workspaces-table .operationsLinks {
 	text-align: center;
+	min-width: 88px;
 }
 
 #workspaces-table .operationsLinks a {

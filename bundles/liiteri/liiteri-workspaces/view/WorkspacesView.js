@@ -25,6 +25,21 @@ function() {
 	this.sharedWorkspacesTable = null;
 	this.SharingType = { LINK : 0, FACEBOOK : 1, TWITTER : 2 };
 	this.mediaSharingWindow = { 'width' : 600, 'height' : 400 };
+	this.flyoutBaseWidth = null;
+	this.flyouts = {
+		statistics: {
+			selector: null,
+			zIndexOffset: 0
+		},
+		mapLegends: {
+			selector: '#oskari-flyout-maplegend',
+			zIndexOffset: 1
+		},
+		layerSelector: {
+			selector: '#oskari-flyout-layerselector',
+			zIndexOffset: 2
+		}
+	};
 }, {
     /**
      * called by host to start view operations
@@ -586,7 +601,7 @@ function() {
 				{
                     var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
 
-                    dialog.show(me.locale.saveSuccess, me.locale.saveSuccess);
+                    dialog.show(me.locale.saveSuccessTitle, me.locale.saveSuccess);
                     dialog.fadeout(3000);
 					me.refreshList();
 				}
@@ -630,90 +645,104 @@ function() {
 		} else {
 			sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', null);
 		}
-
-	    //console.log(workspace);
 		//Selected layers
+        var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
 		if (workspace.selectedLayers) {
-		
 			var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-
 			for (var i = 0; i < previousSelectedLayers.length; i++) {
-			    var itemLayer = previousSelectedLayers[i];
-			    sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);			    
+				var itemLayer = previousSelectedLayers[i];
+				sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
 			}
-			
-			for (var i=0; i<workspace.selectedLayers.length; i++) {
+			for (var i = 0; i < workspace.selectedLayers.length; i++) {
 				//add map layer
-				sandbox.postRequestByName('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
+				sandbox.postRequestByName('AddMapLayerRequest', [workspace.selectedLayers[i].id, true, workspace.selectedLayers[i].baseLayer]);
 				//set opacity
 				sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
 				//add custom style
 				if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
-					//postpone the adding custom style, because handling of 'AddMapLayerRequest' request (which must be done first) is also postponed by Oskari framework
-					//FIXME: add proper request to framework instead postpone the action
-					/*window.setTimeout(function() {
-						for (var x=0; x<workspace.selectedLayers.length; x++) {
-							var currentLayer = sandbox.findMapLayerFromSelectedMapLayers(workspace.selectedLayers[x].id);
-							
-							if (workspace.selectedLayers[x].customStyle && currentLayer && currentLayer.setCustomStyle) {
-								
-								currentLayer.setCustomStyle(workspace.selectedLayers[x].customStyle);
-								
-								//change style
-								if (workspace.selectedLayers[x].style) {
-									currentLayer.selectStyle(workspace.selectedLayers[x].style._name);
-								}
-								
-								//change style
-								//if (workspace.selectedLayers[x].style) {
-								//	sandbox.postRequestByName('ChangeMapLayerStyleRequest', [workspace.selectedLayers[x].id, workspace.selectedLayers[x].style._name]);
-								//}
-								
-								//send event for updating the UI
-								var event = sandbox.getEventBuilder('MapLayerEvent')(workspace.selectedLayers[x].id, 'update');
-								sandbox.notifyAll(event);
-							}
-						}
-					}, 0);*/
-					
 					sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
 				}
 				//change style
 				if (workspace.selectedLayers[i].style) {
 					sandbox.postRequestByName('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
 				}
-				//set visibility					
+				//set visibility
 				sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
 			}
 		}
-
 		//What statistics user had chosen and what thematic maps had he made from those
 		if (workspace.statistics) {
 			sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
-			if (workspace.statsVisibility == true) {
-			    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
+			if ((workspace.windows == null) || ((workspace.windows != null) && (workspace.windows.indexOf('statistics') >= 0))) {
+				sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
 			} else if (workspace.statistics.state && workspace.statistics.state.layerId) {
-			    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
-			    var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
-                if (eventBuilder && layer) {
-                    var event = eventBuilder(layer, null);
-                    window.setTimeout(function() {
-                        sandbox.notifyAll(event);
-                    }, 500);			        
-			    }
+				var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
+				var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
+				if (eventBuilder && layer) {
+					var event = eventBuilder(layer, null);
+					window.setTimeout(function () {
+						sandbox.notifyAll(event);
+					}, 500);
+				}
 			}
+		} else {
+			sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
+			sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
 		}
-		
-		//Current position on the screen (zoom and coordinates)
 		if (workspace.map) {
 			sandbox.postRequestByName('MapMoveRequest', [workspace.map.x, workspace.map.y, workspace.map.zoomLevel]);
 		}
-		
+		var personalDataFlyout = null;
+		var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function(maxZIndex, element) {
+			var flyout = jQuery(element);
+			if (jQuery(flyout).attr('id') === 'oskari-flyout-personaldata') {
+				personalDataFlyout = flyout;
+				return maxZIndex;
+			}
+			var flyoutZIndex = Number(flyout.css('z-index'));
+			flyout.removeClass('oskari-attached');
+			flyout.removeClass('oskari-detached');
+			flyout.addClass('oskari-closed');
+			return (jQuery.isNumeric(flyoutZIndex)) ? Math.max(maxZIndex, flyoutZIndex) : maxZIndex;
+		}, 0)+1;
+		if (personalDataFlyout != null) {
+			personalDataFlyout.css('z-index', flyoutBaseZIndex+10);
+		}
+		if (workspace.windows != null) {
+			workspace.windows.sort(function(a,b) {
+				if ((me.flyouts[a] == null)||(me.flyouts[b] == null)) {
+					return 0;
+				}
+				return me.flyouts[a].zIndexOffset-me.flyouts[b].zIndexOffset;
+			});
+			var flyoutCount = 0;
+			workspace.windows.forEach(function(flyoutType, index) {
+				var selector = me.flyouts[flyoutType].selector;
+				if (selector == null) {
+					return;
+				}
+				var flyout = jQuery('div.oskari-flyout'+selector);
+				if (flyout.length === 0) {
+					return;
+				}
+				var zIndexOffset = me.flyouts[flyoutType].zIndexOffset;
+				flyout.removeClass('oskari-attached');
+				flyout.removeClass('oskari-closed');
+				flyout.addClass('oskari-detached');
+				if (me.flyoutBaseWidth == null) {
+					me.flyoutBaseWidth = flyout.width();
+				}
+				if ((flyoutCount === 0)&&(index === 0)&&(workspace.windows.length > 1)) {
+					flyout.width(me.flyoutBaseWidth+50);
+				}
+				flyout.css('z-index', flyoutBaseZIndex+zIndexOffset);
+				flyoutCount++;
+			});
+		}
 		//show information that the workspace is restored
-        var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-
-        dialog.show(me.locale.workspaceRestored, me.locale.workspaceRestored);
-        dialog.fadeout(3000);
+		var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+		dialog.show(me.locale.workspaceRestored, me.locale.workspaceRestored);
+		dialog.fadeout(3000);
 	},
 	
 	_showEditPopUp: function(data) {
@@ -751,37 +780,26 @@ function() {
 		openFlyouts.addClass('workspace-open-views');
 
 		var openFlyoutInputData = [
-			{
-				name: 'layerSelector',
-				value: '#oskari-flyout-layerselector'
-			},
-			{
-				name: 'mapLegends',
-				value: '#oskari-flyout-maplegend'
-			},
-			{
-				name: 'statistics',
-				value: '.statsgrid_100'
-			}
+			'layerSelector', 'mapLegends', 'statistics'
 		];
-		openFlyoutInputData.forEach(function(data) {
-			var input = Oskari.clazz.create(
+		openFlyoutInputData.forEach(function(input) {
+			var checkbox = Oskari.clazz.create(
 				'Oskari.userinterface.component.CheckboxInput'
 			);
-			input.setName(data.name+'Input');
-			input.setTitle(me.locale.saveDialog[data.name]);
-			input.setValue(data.value);
-			input.setEnabled(true);
-			input.setChecked((workspaceData.windows != null) ? workspaceData.windows.indexOf(data.value) >= 0 : false);
-			input.setHandler(function() {
+			checkbox.setName(input+'Input');
+			checkbox.setTitle(me.locale.saveDialog[input]);
+			checkbox.setValue(input);
+			checkbox.setEnabled(true);
+			checkbox.setChecked((workspaceData.windows != null) ? workspaceData.windows.indexOf(input) >= 0 : false);
+			checkbox.setHandler(function() {
 				var numChecked = openFlyouts.getComponents().reduce(function(numChecked, component) {
 					return numChecked + Number(component.isChecked());
 				}, 0);
 				if (numChecked > 2) {
-					input.setChecked(false);
+					checkbox.setChecked(false);
 				}
 			});
-			openFlyouts.addComponent(input);
+			openFlyouts.addComponent(checkbox);
 		});
 		openFlyouts.insertTo(content);
 
