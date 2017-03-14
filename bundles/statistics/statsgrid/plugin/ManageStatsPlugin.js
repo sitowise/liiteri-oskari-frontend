@@ -1807,6 +1807,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 function(flatIndicatorsdata) {
 
                     if (flatIndicatorsdata) {
+                        if (me.mode === 'twoway') {
+                            return;
+                        }
                         me.setFlatIndicatorsdata(flatIndicatorsdata);
                         //if fetch returned something we create drop down selector
                         me.createStatsTree(container, me.getTreeIndicatorsdata(), flatIndicatorsdata);
