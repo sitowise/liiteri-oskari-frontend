@@ -1314,6 +1314,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             }
             return maxSize;
         },
+        animate: function(height, duration) {
+            if (this.element == null) {
+                return;
+            }
+            var defaultDuration = 0;
+            this.element.find('div.content').animate({
+                height: height
+            }, (duration != null) ? duration : defaultDuration);
+        },
         /**
          * @method  _createUI
          * Creates classification UI (method select, class count, colors)
@@ -1569,10 +1578,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
 
             // Toggle content HTML
             header.click(function () {
-                content.animate({
-                    height: 'toggle'
-                }, 500);
-
+                me.animate('toggle', 500)
             });
 
             // get div where the map is rendered from openlayers

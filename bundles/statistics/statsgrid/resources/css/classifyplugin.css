@@ -31,6 +31,7 @@
     padding: 0px;
     margin: 2px; }
   .manageClassificationPlugin div.classheader {
+    cursor: pointer;
     color: white;
     background-color: #0186d1 !important;
     padding: 4px; }
