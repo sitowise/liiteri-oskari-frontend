@@ -29,7 +29,11 @@ Oskari.registerLocalization({
 		    "nameField": "Nimi",
 		    "save": "Tallenna",
 		    "saveWorkspace": "Tallenna työtila",
-		    "saveWorkspaceInfo": "<p>Oletko varma, että haluat tallentaa nykyisen näkymän aiemmin tallentamasi työtilan päälle?</p><p>Jos et, avaa ensin haluamasi työtila klikkaamalla työtilan nimeä. Kun olet avannut työtilan, voit muokata työtilaa ja tallentaa sitten muutokset klikkaamalla tallenna -painiketta. Voit pidentää työtilan voimassaoloaikaa klikkaamalla kalenterin kuvaa.<p>"
+		    "saveWorkspaceInfo": "<p>Oletko varma, että haluat tallentaa nykyisen näkymän aiemmin tallentamasi työtilan päälle?</p><p>Jos et, avaa ensin haluamasi työtila klikkaamalla työtilan nimeä. Kun olet avannut työtilan, voit muokata työtilaa ja tallentaa sitten muutokset klikkaamalla tallenna -painiketta. Voit pidentää työtilan voimassaoloaikaa klikkaamalla kalenterin kuvaa.<p>",
+		    "openFlyouts": "Avoimeksi tallennettavat valikot (korkeintaan kaksi)",
+		    "layerSelector": "Karttatasovalikko",
+		    "mapLegends": "Karttaselitteet",
+		    "statistics": "Tilastot"
 		},
 		"postponeDialog": {
 		    "success": "Voimassaolojan päivittäminen onnistui. Uusi päättymispäivä on {0}.",
@@ -55,6 +59,7 @@ Oskari.registerLocalization({
 		"removeAllSuccess": "Poistit kaikki työtilat onnistuneesti.",
 		"removeError": "Poistamisessa tapahtui virhe!",
 		"saveNew": "Tallenna uusi",
+		"saveSuccessTitle": "Onnistui",
 		"saveSuccess": "Tallensit työtilan onnistuneesti",
 		"saveFailure": "Tallentamisessa tapahtui virhe!",
 		"workspaceRestored": "Valittu työtila avattiin",

@@ -422,6 +422,7 @@ bundles/liiteri/liiteri-servicepackages/service/ServicePackageService.js
 bundles/liiteri/liiteri-servicepackages/model/ServicePackageModel.js
 bundles/liiteri/liiteri-servicepackages/model/ServicePackageGroupModel.js
 bundles/liiteri/liiteri-servicepackages/view/ServicePackageView.js
+bundles/liiteri/liiteri-servicepackages/view/ServicePackageItemView.js
 bundles/liiteri/liiteri-servicepackages/view/ServicePackageTabView.js
 bundles/liiteri/liiteri-servicepackages/event/ServicePackageSelectedEvent.js
 bundles/liiteri/liiteri-servicepackages/event/GroupingUpdatedEvent.js

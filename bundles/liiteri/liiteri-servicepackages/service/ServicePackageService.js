@@ -33,27 +33,19 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
          * Initializes the service
          */
         init: function () { },
-        raiseServicePackageSelectedEvent: function (servicePackageJson, restoreState) {
+        raiseServicePackageSelectedEvent: function (servicePackageJson) {
             var themes = [];
             var servicePackageId = 0;
-            var state = {};
 
             if (servicePackageJson) {
                 if (servicePackageJson.themes && servicePackageJson.themes.length > 0) {
                     themes = servicePackageJson.themes;
                     servicePackageId = servicePackageJson.id;
                 }
-
-                if (restoreState) {
-                    if (servicePackageJson.mapState != null) {
-                        state = JSON.parse(servicePackageJson.mapState);
-                    }
-                    this._restoreServicePackageState(state);
-                }
             }
 
             var eventBuilder = this.sandbox.getEventBuilder('liiteri-servicepackages.ServicePackageSelectedEvent');
-            var event = eventBuilder(themes, state, servicePackageId);
+            var event = eventBuilder(themes, servicePackageId);
 
             this.sandbox.notifyAll(event);
         },
@@ -114,15 +106,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.service.Servi
             if (reqBuilder) {
                 var request = reqBuilder.apply(this.sandbox, params);
                 this.sandbox.request(this.instance, request);
-            }
-        },
-
-        _restoreServicePackageState: function (state) {
-            var sandbox = this.sandbox;
-
-            //Current position on the screen (zoom and coordinates)
-            if (state.map) {
-                sandbox.postRequestByName('MapMoveRequest', [state.map.x, state.map.y, state.map.zoomLevel]);
             }
         },
 

@@ -278,7 +278,7 @@ Oskari.clazz.define(
             'liiteri-servicepackages.ServicePackageSelectedEvent': function (event) {
                 var me = this;
                 var cb = function (layers) { me._selectLayers(layers); };
-				this.plugins['Oskari.userinterface.Flyout'].populateLayersFromServicePackage(event.getThemes(), event.getState(), cb);
+				this.plugins['Oskari.userinterface.Flyout'].populateLayersFromServicePackage(event.getThemes(), cb);
 			},
 			'liiteri-groupings.GroupingUpdatedEvent' : function(event) {
 			    this.plugins['Oskari.userinterface.Flyout'].populateGroupings();
