@@ -1,5 +1,6 @@
 .manageClassificationPlugin {
   z-index: 1000000 !important;
+  width: 220px;
   max-width: 240px;
   background-color: white !important;
   color: black !important;
@@ -36,7 +37,7 @@
     background-color: #0186d1 !important;
     padding: 4px; }
   .manageClassificationPlugin div.classifications {
-    margin: 4px;
+    margin: 0 4px;
     min-width: 168px; }
     .manageClassificationPlugin div.classifications div.classificationOptions {
       margin: 4px; }

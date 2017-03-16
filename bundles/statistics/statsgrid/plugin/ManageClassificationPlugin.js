@@ -1319,7 +1319,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 return;
             }
             var defaultDuration = 0;
-            this.element.find('div.content').animate({
+            this.element.find('div.classificationOptions').animate({
                 height: height
             }, (duration != null) ? duration : defaultDuration);
         },
@@ -1594,8 +1594,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 existingPlugins.first().before(this.element);
             }
 
-            // Hide content
-            content.hide();
+            // Hide classify options as default
+            classifyOptions.hide();
+            content.show();
             // Hide Classify dialog
             this._visibilityOff();
 
