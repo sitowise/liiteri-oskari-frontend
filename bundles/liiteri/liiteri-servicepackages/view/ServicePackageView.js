@@ -12,6 +12,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
     function (instance) {
         this.instance = instance;
         this.service = instance.service;
+        this.servicePackage = null;
         this.mapState = null;
         this.stateRestored = true;
         this.flyoutBaseWidth = null;
@@ -37,6 +38,39 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
         },
         stopPlugin: function () {
         },
+        containsLayer: function(item, id) {
+            if (id == null) {
+                return false;
+            }
+            var numSubThemes = (item.themes != null) ? item.themes.length : 0;
+            for (var i=0; i<numSubThemes; i++) {
+                if (this.containsLayer(item.themes[i], id)) {
+                    return true;
+                }
+            }
+            var numElements = (item.elements != null) ? item.elements.length : 0;
+            for (var j=0; j<numElements; j++) {
+                if (item.elements[j].id === id) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        containsStatistics: function(item) {
+            var numSubThemes = (item.themes != null) ? item.themes.length : 0;
+            for (var i=0; i<numSubThemes; i++) {
+                if (this.containsStatistics(item.themes[i])) {
+                    return true;
+                }
+            }
+            var numElements = (item.elements != null) ? item.elements.length : 0;
+            for (var j=0; j<numElements; j++) {
+                if (item.elements[j].type === 'statistic') {
+                    return true;
+                }
+            }
+            return false;
+        },
         checkAutoLoadServicePackage: function () {
             var me = this;
             var autoLoadId = me.instance.autoLoad;
@@ -53,6 +87,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
 		        return;
 		    }
 		    var servicePackage = this.instance.packagesById[id];
+            this.servicePackage = servicePackage;
 		    this.service.raiseServicePackageSelectedEvent(servicePackage);
             if (restoreState) {
                 this.stateRestored = false;
@@ -71,47 +106,57 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             var sandbox = this.instance.sandbox;
             var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
             var dataAvailable = mapLayerService.isAllLayersLoaded();
+            var statsLoaded = false;
+            var statsStateId;
+            if ((state.statistics != null)&&(state.statistics.state != null)) {
+                statsStateId = state.statistics.state.layerId;
+            }
             if (state.selectedLayers) {
                 var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-                for (var i = 0; i < previousSelectedLayers.length; i++) {
-                    var itemLayer = previousSelectedLayers[i];
-                    sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
+                for (var j = 0; j < previousSelectedLayers.length; j++) {
+                    var previousSelectedLayer = previousSelectedLayers[j];
+                    var layerId = previousSelectedLayer.getId();
+                    if ((statsStateId != null)&&(statsStateId === layerId)) {
+                        statsLoaded = true;
+                        continue;
+                    }
+                    if ((layerId != null)&&(!me.containsLayer(me.servicePackage, layerId))) {
+                        sandbox.postRequestByName('RemoveMapLayerRequest', [layerId]);
+                    }
                 }
                 for (var i = 0; i < state.selectedLayers.length; i++) {
+                    var id = state.selectedLayers[i].id;
+                    if ((id == null)||((state.selectedLayers[i].type !== 'stats')&&(!me.containsLayer(me.servicePackage, id)))) {
+                        continue;
+                    }
                     //add map layer
-                    sandbox.postRequestByName('AddMapLayerRequest', [state.selectedLayers[i].id, true, state.selectedLayers[i].baseLayer]);
+                    sandbox.postRequestByName('AddMapLayerRequest', [id, true, state.selectedLayers[i].baseLayer]);
                     //set opacity
-                    sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].opacity]);
+                    sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [id, state.selectedLayers[i].opacity]);
                     //add custom style
                     if (state.selectedLayers[i].customStyle && state.selectedLayers[i].style._name === "oskari_custom") {
-                        sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].customStyle]);
+                        sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [id, state.selectedLayers[i].customStyle]);
                     }
                     //change style
                     if (state.selectedLayers[i].style) {
-                        sandbox.postRequestByName('ChangeMapLayerStyleRequest', [state.selectedLayers[i].id, state.selectedLayers[i].style._name]);
+                        sandbox.postRequestByName('ChangeMapLayerStyleRequest', [id, state.selectedLayers[i].style._name]);
                     }
                     //set visibility
-                    sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [state.selectedLayers[i].id, state.selectedLayers[i].visible]);
+                    sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [id, state.selectedLayers[i].visible]);
                 }
             }
-            //What statistics user had chosen and what thematic maps had he made from those
-            if (state.statistics) {
-                sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
-                if ((state.windows == null) || ((state.windows != null) && (state.windows.indexOf('statistics') >= 0))) {
-                    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
-                } else if (state.statistics.state && state.statistics.state.layerId) {
-                    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
-                    var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
-                    if (eventBuilder && layer) {
-                        var event = eventBuilder(layer, null);
-                        window.setTimeout(function () {
-                            sandbox.notifyAll(event);
-                        }, 500);
-                    }
-                }
-            } else {
+            if (!statsLoaded) {
                 sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
                 sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
+            }
+            if ((state.statistics != null)&&(me.containsStatistics(me.servicePackage))) {
+                if ((state.windows == null) || (state.windows.indexOf('statistics') >= 0)) {
+                    var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
+                    if (!statsLoaded) {
+                        sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
+                        sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
+                    }
+                }
             }
             if (state.map) {
                 sandbox.postRequestByName('MapMoveRequest', [state.map.x, state.map.y, state.map.zoomLevel]);
@@ -155,7 +200,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                     flyoutCount++;
                 });
             }
-            this.stateRestored = dataAvailable;
+            me.stateRestored = dataAvailable;
         }
     }, {
         "protocol": ["Oskari.userinterface.View"],

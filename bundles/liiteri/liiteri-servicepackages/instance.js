@@ -222,7 +222,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
              */
             MapLayerEvent: function (event) {
             	var me = this;
-				if ((event.getOperation() == 'stop')&&(!me.view.stateRestored)) {
+				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(!me.view.stateRestored)) {
 					me.view.restoreServicePackageState();
 				}
             }
