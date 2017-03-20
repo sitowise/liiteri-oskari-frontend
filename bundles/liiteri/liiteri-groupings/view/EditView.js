@@ -2048,7 +2048,7 @@ function (instance) {
 		var node = $("#tree").dynatree("getActiveNode");
 			
 		//Don't add child if it is item (map_layer or statistic)
-		if (!node || node.data.nodeType == 'item') {
+		if ((node == null) || (node.data == null) || (node.data.nodeType == 'item')) {
 			return;
 		}
 
