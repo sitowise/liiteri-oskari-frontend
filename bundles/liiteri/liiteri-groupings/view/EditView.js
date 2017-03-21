@@ -306,41 +306,6 @@ function (instance) {
 						me.addThemeButton.setEnabled(true);
 					}
 				}
-				//Showing on the map only these layers which belong to selected theme
-				if (node.data.themeType == 'map_layers') {
-					var sandbox = me.instance.getSandbox();
-					var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-					var previouslySelectedLayerIds = $.map(previousSelectedLayers, function(layer, idx) {
-						return layer.getId();
-					});
-
-					//get current layers from the tree
-					var themeLayers = node.getChildren();
-					var themeLayersIds = [];
-					if (themeLayers) {
-						themeLayersIds = $.map(themeLayers, function (layer, idx) {
-							return layer.data.itemId;
-						});
-					}
-					var layersToRemove = previouslySelectedLayerIds.filter(function(a) {
-						return themeLayersIds.indexOf(a) == -1;
-					});
-					var layersToAdd = themeLayersIds.filter(function (a) {
-						return previouslySelectedLayerIds.indexOf(a) == -1;
-					});
-
-					//cleaning old layers
-					for (var i = 0; i < layersToRemove.length; i++) {
-						sandbox.postRequestByName('RemoveMapLayerRequest', [layersToRemove[i]]);
-					}
-					//set theme layers
-					for (var i = 0; i < layersToAdd.length; i++) {
-						 sandbox.postRequestByName('AddMapLayerRequest', [layersToAdd[i]]);
-					}
-
-				} else {
-					//TODO? Optional: revert previous selected layers (before come to administration of groupings)
-				}
 			} else {
 				jQuery('#themeMetadataContainer').hide();
 				if (me.addThemeButton) {
