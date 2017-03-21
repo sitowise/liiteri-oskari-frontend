@@ -805,6 +805,11 @@ function (instance) {
                         }
                     }
 
+				},
+				click: function(event, data){
+			        if ((data != null)&&(data.targetType === 'title')) {
+						data.node.toggleSelected();
+			        }
 				}
             });
 			me.dataList = dataListView;
@@ -1353,35 +1358,6 @@ function (instance) {
 		});*/
 		
 		return content;
-	},
-
-	_addChild: function() {
-		var me = this;
-		var node = jQuery('#tree').dynatree('getActiveNode');
-		//Don't add child if it is an item (map_layer or statistic).
-		if (!node || node.data.nodeType == 'item') {
-			return;
-		}
-		var themeType = jQuery('#themes').find('select[name=themetype]').val();
-		var newChild = {
-			title: me.loc.themeTools.newThemeTitle,
-			isFolder: true,
-			nodeType: 'theme',
-			themeName: me.loc.themeTools.newThemeName,
-			themeType: themeType,
-			focus: false,
-			select: false,
-			children: []
-		};
-		var addedNode = node.addChild(newChild);
-		if (addedNode) {
-			addedNode.activate();
-		}
-		node.expand(true);
-		var activeNode = jQuery('#tree').dynatree('getActiveNode');
-		if (activeNode) {
-			me._onActivateTreeNode(activeNode);
-		}
 	},
 
 	_compare: function(a, b) {
