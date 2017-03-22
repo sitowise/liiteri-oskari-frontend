@@ -77,6 +77,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             if (autoLoadId != null) {
                 var autoLoadPackage = me.instance.packagesById[autoLoadId];
                 if (autoLoadPackage != null) {
+                    me.setServicePackage(autoLoadId, true);
                     me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
                 }
                 me.instance.autoLoad = null;

@@ -646,48 +646,57 @@ function() {
 			sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', null);
 		}
 		//Selected layers
-        var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
+		var statsLoaded = false;
+		var statsStateId;
+		if ((workspace.statistics != null)&&(workspace.statistics.state != null)) {
+			statsStateId = workspace.statistics.state.layerId;
+		}
 		if (workspace.selectedLayers) {
 			var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-			for (var i = 0; i < previousSelectedLayers.length; i++) {
-				var itemLayer = previousSelectedLayers[i];
-				sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
+			for (var j = 0; j < previousSelectedLayers.length; j++) {
+				var previousSelectedLayer = previousSelectedLayers[j];
+				var layerId = previousSelectedLayer.getId();
+				if ((statsStateId != null)&&(statsStateId === layerId)) {
+					statsLoaded = true;
+					continue;
+				}
+				if (layerId != null) {
+					sandbox.postRequestByName('RemoveMapLayerRequest', [layerId]);
+				}
 			}
 			for (var i = 0; i < workspace.selectedLayers.length; i++) {
+				var id = workspace.selectedLayers[i].id;
+				if (id == null) {
+					continue;
+				}
 				//add map layer
-				sandbox.postRequestByName('AddMapLayerRequest', [workspace.selectedLayers[i].id, true, workspace.selectedLayers[i].baseLayer]);
+				sandbox.postRequestByName('AddMapLayerRequest', [id, true, workspace.selectedLayers[i].baseLayer]);
 				//set opacity
-				sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
+				sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [id, workspace.selectedLayers[i].opacity]);
 				//add custom style
 				if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
-					sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
+					sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [id, workspace.selectedLayers[i].customStyle]);
 				}
 				//change style
 				if (workspace.selectedLayers[i].style) {
-					sandbox.postRequestByName('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
+					sandbox.postRequestByName('ChangeMapLayerStyleRequest', [id, workspace.selectedLayers[i].style._name]);
 				}
 				//set visibility
-				sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
+				sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [id, workspace.selectedLayers[i].visible]);
 			}
 		}
-		//What statistics user had chosen and what thematic maps had he made from those
-		if (workspace.statistics) {
-			sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
-			if ((workspace.windows == null) || ((workspace.windows != null) && (workspace.windows.indexOf('statistics') >= 0))) {
-				sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
-			} else if (workspace.statistics.state && workspace.statistics.state.layerId) {
-				var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
-				var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
-				if (eventBuilder && layer) {
-					var event = eventBuilder(layer, null);
-					window.setTimeout(function () {
-						sandbox.notifyAll(event);
-					}, 500);
-				}
-			}
-		} else {
+		if (!statsLoaded) {
 			sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
 			sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
+		}
+		if (workspace.statistics != null) {
+			if ((workspace.windows == null) || (workspace.windows.indexOf('statistics') >= 0)) {
+				var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
+				if (!statsLoaded) {
+					sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
+					sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
+				}
+			}
 		}
 		if (workspace.map) {
 			sandbox.postRequestByName('MapMoveRequest', [workspace.map.x, workspace.map.y, workspace.map.zoomLevel]);
@@ -741,7 +750,7 @@ function() {
 		}
 		//show information that the workspace is restored
 		var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-		dialog.show(me.locale.workspaceRestored, me.locale.workspaceRestored);
+		dialog.show(me.locale.workspaceRestoredTitle, me.locale.workspaceRestored);
 		dialog.fadeout(3000);
 	},
 	
