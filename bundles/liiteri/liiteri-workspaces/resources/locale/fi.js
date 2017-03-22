@@ -62,6 +62,7 @@ Oskari.registerLocalization({
 		"saveSuccessTitle": "Onnistui",
 		"saveSuccess": "Tallensit työtilan onnistuneesti",
 		"saveFailure": "Tallentamisessa tapahtui virhe!",
+		"workspaceRestoredTitle": "Onnistui",
 		"workspaceRestored": "Valittu työtila avattiin",
 		"ok": "OK",
 		"cancel": "Peruuta",
