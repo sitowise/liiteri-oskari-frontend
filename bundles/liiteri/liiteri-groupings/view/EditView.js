@@ -371,7 +371,11 @@ function (instance) {
 					importButton.addClass('disabled');
 					break;
 				case 'theme':
-					addThemeButtons.removeClass('disabled');
+					if (node.data.themeType === 'map_layers') {
+						addThemeButtons.addClass('disabled');
+					} else {
+						addThemeButtons.removeClass('disabled');
+					}
 					removeThemeButtons.removeClass('disabled');
 					numParentChildren = node.parent.childList.length;
 					if ((numParentChildren > 1)&&(node.data.key !== node.parent.childList[numParentChildren-1].data.key)) {
@@ -455,12 +459,14 @@ function (instance) {
 				title: me.loc.themeTools.allData,
 				key: 'allData',
 				hideCheckbox: true,
+				folder: true,
 				children: [
 					{
 						title: me.loc.themeTools.mapLayers,
 						key: 'mapLayers',
 						themeType: 'map_layers',
 						hideCheckbox: true,
+						folder: true,
 						children: []
 					},
 					{
@@ -468,6 +474,7 @@ function (instance) {
 						key: 'statistics',
 						themeType: 'statistics',
 						hideCheckbox: true,
+						folder: true,
 						children: []
 					}
 				]
@@ -731,12 +738,12 @@ function (instance) {
 			dataListView.fancytree({
 				source: [],
 				icons: false,
-				activeVisible: true, // Make sure, active nodes are visible (expanded)
+				activeVisible: false, // Make sure, active nodes are visible (expanded)
 				aria: false, // Enable WAI-ARIA support
 				autoActivate: false, // Automatically activate a node when it is focused using keyboard
 				autoCollapse: false, // Automatically collapse all siblings, when a node is expanded
 				autoScroll: false, // Automatically scroll nodes into visible area
-				clickFolderMode: 4, // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expands)
+				clickFolderMode: 3, // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expands)
 				checkbox: true, // Show checkboxes
 				debugLevel: 0, // 0:quiet, 1:normal, 2:debug
 				disabled: false, // Disable control
@@ -754,23 +761,6 @@ function (instance) {
 				tabindex: 0, // Whole tree behaves as one single control
 				titlesTabbable: true, // Node titles can receive keyboard focus
 				tooltip: false, // Use title as tooltip (also a callback could be specified)
-                select: function(event, data) {
-                    if (data.node.isSelected()) {
-                        // Expand node and subnodes
-                        var stack = [data.node];
-                        while (stack.length > 0) {
-                            var node = stack.pop();
-                            node.setExpanded(true);
-                            if (node.hasChildren()) {
-                                var children = node.getChildren();
-                                for (var ix = 0; ix < children.length; ix++) {
-                                    stack.push(children[ix]);
-                                }
-                            }
-                        }
-                    }
-
-				},
 				click: function(event, data){
 			        if ((data != null)&&(data.targetType === 'title')) {
 						data.node.toggleSelected();
@@ -885,18 +875,34 @@ function (instance) {
 					if (sourceNode.data.themeType !== target.data.themeType) {
 						continue;
 					}
+					if ((sourceNode.data.themeType === 'map_layers')&&(sourceNode.folder)) {
+						continue;
+					}
 					var numChildren = target.childList == null ? 0 : target.childList.length;
 					var sourceExists = false;
+					var hasItemChildren = false;
+					var hasThemeChildren = false;
 					for (var k=0; k<numChildren; k++) {
-						if (target.childList[k].data.itemId === sourceNode.data.itemId) {
+						if (target.childList[k].data.dataKey === sourceNode.key) {
 							sourceExists = true;
 							break;
+						}
+						if (target.childList[k].data.nodeType === "item") {
+							hasItemChildren = true;
+						} else if (target.childList[k].data.nodeType === "theme") {
+							hasThemeChildren = true;
 						}
 					}
 					if (sourceExists) {
 						continue;
 					}
 					if (sourceNode.data.themeType !== target.data.themeType) {
+						continue;
+					}
+					if ((sourceNode.folder)&&(hasItemChildren)) {
+						continue;
+					}
+					if ((!sourceNode.folder)&&(hasThemeChildren)) {
 						continue;
 					}
 					if (sourceNode.data.itemId == null) {
@@ -911,7 +917,8 @@ function (instance) {
 							nodeType: 'theme',
 							dataKey: sourceNode.key
 						});
-						importedFolders.push(target.getChildren()[target.countChildren()-1]);
+						var children = target.getChildren();
+						importedFolders.push(children[children.length-1]);
 					} else {
 						target.addChild({
 							title: sourceNode.title,
@@ -922,7 +929,8 @@ function (instance) {
 							activate: true,
 							focus: true,
 							select: false,
-							nodeType: 'item'
+							nodeType: 'item',
+							dataKey: sourceNode.key
 						});
 					}
 					target.expand(true);
@@ -1394,6 +1402,7 @@ function (instance) {
 			key: 'theme.'+theme.id.toString(),
 			themeType: theme.type,
 			layer: false,
+			folder: true,
 			children: subThemes.sort(me._compare).concat(elements.sort(me._compare))
 		};
 	},
