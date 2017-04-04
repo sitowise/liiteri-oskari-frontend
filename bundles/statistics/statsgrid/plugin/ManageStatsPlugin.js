@@ -3336,7 +3336,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         var filterYears = [];
                         if(typeof indi.timePeriods !== 'undefined') {
                              for (var ix = 0; ix < indi.timePeriods.length; ++ix) {
-                                var yearId = indi.timePeriods[ix].Id;
+                                var yearId = indi.timePeriods[ix].Id+'';
                                 for (j = 0; j < indi.timePeriods[ix].AreaTypes.length; ++j) {
                                     if (indi.timePeriods[ix].AreaTypes[j].Id == 'grid250m') {
                                         filterYears.push(yearId);
@@ -3346,12 +3346,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             indicatorYears = filterYears;
                         }
                     }
-                    var newestYear = indicatorYears.sort(function(a, b){return b-a; })[0];
+                    var newestYear = indicatorYears.sort(function(a, b){return b-a;})[0]+'';
                     selectedYears.splice(newestPos, 1, newestYear);
                     selectedYears = _.uniq(selectedYears);
                     selectedYears.sort(function(a, b){return b-a; });
                 }
-                
                 for(var j = 0; j < selectedYears.length; ++j) {
                     if($.inArray(selectedYears[j], indicatorYears) > -1) {
                         arrayYears.push(selectedYears[j]);
