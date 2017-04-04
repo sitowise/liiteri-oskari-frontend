@@ -239,8 +239,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                 me.view.checkAutoLoadServicePackage();
             });
         },
-		setServicePackage: function (id, restoreState) {
-		    this.view.setServicePackage(id, restoreState);
+		setServicePackage: function (id) {
+		    this.view.setServicePackage(id);
 		},
         closeView: function() {
             var request = this.sandbox.getRequestBuilder('userinterface.UpdateExtensionRequest')(this, 'close');
