@@ -77,36 +77,36 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             if (autoLoadId != null) {
                 var autoLoadPackage = me.instance.packagesById[autoLoadId];
                 if (autoLoadPackage != null) {
-                    me.setServicePackage(autoLoadId, true);
-                    me.service.raiseServicePackageSelectedEvent(autoLoadPackage, true);
+                    me.setServicePackage(autoLoadId);
                 }
                 me.instance.autoLoad = null;
             }
         },
-		setServicePackage: function (id, restoreState) {
+		setServicePackage: function (id) {
 		    if ((id == null) || (this.instance.packagesById[id] == null)) {
 		        return;
 		    }
 		    var servicePackage = this.instance.packagesById[id];
+            var reset = ((this.servicePackage == null) || (this.servicePackage.id != id));
             this.servicePackage = servicePackage;
-		    this.service.raiseServicePackageSelectedEvent(servicePackage);
-            if (restoreState) {
-                this.stateRestored = false;
-                if (servicePackage.mapState != null) {
-                    this.mapState = JSON.parse(servicePackage.mapState);
-                    this.restoreServicePackageState();
-                }
+            this.stateRestored = false;
+            if (servicePackage.mapState != null) {
+                this.mapState = JSON.parse(servicePackage.mapState);
+                this.restoreServicePackageState(reset);
             }
 		},
-        restoreServicePackageState: function() {
+        restoreServicePackageState: function(reset) {
             var me = this;
+            var sandbox = this.instance.sandbox;
+            var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
+            var dataAvailable = mapLayerService.isAllLayersLoaded();
+            if (dataAvailable) {
+                this.service.raiseServicePackageSelectedEvent(this.servicePackage);
+            }
             var state = this.mapState;
             if (state == null) {
                 return;
             }
-            var sandbox = this.instance.sandbox;
-            var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
-            var dataAvailable = mapLayerService.isAllLayersLoaded();
             var statsLoaded = false;
             var statsStateId;
             if ((state.statistics != null)&&(state.statistics.state != null)) {
@@ -117,7 +117,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 for (var j = 0; j < previousSelectedLayers.length; j++) {
                     var previousSelectedLayer = previousSelectedLayers[j];
                     var layerId = previousSelectedLayer.getId();
-                    if ((statsStateId != null)&&(statsStateId === layerId)) {
+                    if (previousSelectedLayers[j].getLayerType() === 'stats') {
                         statsLoaded = true;
                         continue;
                     }
@@ -146,14 +146,14 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                     sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [id, state.selectedLayers[i].visible]);
                 }
             }
-            if (!statsLoaded) {
+            if ((!statsLoaded)||(reset)) {
                 sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
                 sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
             }
             if ((state.statistics != null)&&(me.containsStatistics(me.servicePackage))) {
                 if ((state.windows == null) || (state.windows.indexOf('statistics') >= 0)) {
                     var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
-                    if (!statsLoaded) {
+                    if ((!statsLoaded)||(reset)) {
                         sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
                         sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
                     }
