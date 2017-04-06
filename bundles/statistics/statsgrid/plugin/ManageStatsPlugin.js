@@ -4413,10 +4413,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             hasNoData = false;
                             // update row
                             numValue = Number(value);
-                            if (isNaN(numValue)) {
-                                item[columnId] = value;
-                            } else {
+                            if (isFinite(numValue)) {
                                 item[columnId] = numValue;
+                            } else {
+                                item[columnId] = '-';
                             }
 
                             if (item.id === "finland:-1") {
