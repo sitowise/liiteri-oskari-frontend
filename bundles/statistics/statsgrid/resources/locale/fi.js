@@ -434,7 +434,6 @@ Oskari.registerLocalization(
         },
         "columnComparison": {
             "notValid": "Saraketta ei voi verrata itseensä. Klikkaa vertailupainiketta sarakkeessa, jota haluat verrata valittuun sarakkeeseen.",
-            "differentIndicators": "Eri indikaattoreita ei voi verrata keskenään.",
             "compared": "Aikaisemman vertailun tuloksia ei voi käyttää uudessa vertailussa.",
             "unknown": "Tuntematon virhetilanne.",
             "instructions": "Valitse muutostyyppi edellisen sarakevalinnan (a) ja tämän sarakkeen (b) väliselle vertailulle",

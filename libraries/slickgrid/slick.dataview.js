@@ -986,7 +986,7 @@
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
             this.count_++;
-            if (val != null && val !== "" && val !== NaN) {
+            if (val != null && val !== "" && isFinite(val)) {
                 this.nonNullCount_++;
                 this.sum_ += parseFloat(val);
             }
@@ -1015,7 +1015,7 @@
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
             if (!item._parent) {
-                if (val != null && val !== "" && val !== NaN) {
+                if (val != null && val !== "" && isFinite(val)) {
                     if (this.min_ == null || val < this.min_) {
                         this.min_ = val;
                     }
@@ -1043,7 +1043,7 @@
     this.accumulate = function (item) {
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
-            if (val != null && val !== "" && val !== NaN) {
+            if (val != null && val !== "" && isFinite(val)) {
                 if (this.max_ == null || val > this.max_) {
                     this.max_ = val;
                 }
@@ -1070,7 +1070,7 @@
     this.accumulate = function (item) {
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
-            if (val != null && val !== "" && val !== NaN) {
+            if (val != null && val !== "" && isFinite(val)) {
                 this.sum_ += parseFloat(val);
             }
         }
@@ -1096,7 +1096,7 @@
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
             var found = false;
-            if (val != null && val !== "" && val !== NaN) {
+            if (val != null && val !== "" && isFinite(val)) {
                 for (var i = 0; i < this.pairs_.length; i++) {
                     if (this.pairs_[i].value == val) {
                         this.pairs_[i].count++;
@@ -1137,7 +1137,7 @@
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
             var spliced = false;
-            if (val != null && val !== "" && val !== NaN) {
+            if (val != null && val !== "" && isFinite(val)) {
                 for (var i = 0; i < this.sorted_.length; i++) {
                     if (val < this.sorted_[i]) {
                         this.sorted_.splice(i, 0, val);
@@ -1177,7 +1177,7 @@
     this.accumulate = function (item) {
         if (!item._parent || this.countChildren_) {
             var val = item[this.field_];
-            if (val != null && val !== "" && val !== NaN) {
+            if (val != null && val !== "" && isFinite(val)) {
                 this.nonNullCount_++;
                 if (this.Mk_ != null) {
                     this.Qk_ = this.Qk_ + (this.nonNullCount_ - 1) * Math.pow((val - this.Mk_), 2) / this.nonNullCount_;

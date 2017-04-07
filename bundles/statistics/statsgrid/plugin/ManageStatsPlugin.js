@@ -2690,7 +2690,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 columnComparison: true,
                 comparisonType: comparisonOption.type
             };
-            meta.title[Oskari.getLang()] = loc.columnComparison[comparisonOption.type+'Title']+': '+indicator.name;
+            var lang = Oskari.getLang();
+            meta.title[lang] = indicator.name;
+            if ([null, indicator.name].indexOf(columns[0].indicatorData.name) === -1) {
+                meta.title[lang] = columns[0].indicatorData.name+', '+meta.title[lang];
+            }
+            meta.title[lang] = loc.columnComparison[comparisonOption.type+'Title']+': '+meta.title[lang];
+            if (meta.unit == null) {
+                meta.unit = indicator.unit;
+                if ([null, indicator.unit].indexOf(columns[0].indicatorData.unit) === -1) {
+                    meta.unit = columns[0].indicatorData.unit+', '+meta.unit;
+                }
+            }
             var year = columns[0].indicatorData.year.trim() + ' &#9658; ' + indicator.year.trim();
             var indicatorId = indicator.id;
             var gender = indicator.gender;
@@ -2804,10 +2815,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 return;
             }
             var currentColumn = columns[currentColumnIndex];
-            if (currentColumn.indicatorData.id !== column.indicatorData.id) {
-                showErrorMessage('differentIndicators');
-                return;
-            }
             if (currentColumn.indicatorData.columnComparison) {
                 showErrorMessage('compared');
                 return;
@@ -4413,10 +4420,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             hasNoData = false;
                             // update row
                             numValue = Number(value);
-                            if (isNaN(numValue)) {
-                                item[columnId] = value;
-                            } else {
+                            if (isFinite(numValue)) {
                                 item[columnId] = numValue;
+                            } else {
+                                item[columnId] = '-';
                             }
 
                             if (item.id === "finland:-1") {
