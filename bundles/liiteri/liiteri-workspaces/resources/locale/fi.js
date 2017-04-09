@@ -53,7 +53,7 @@ Oskari.registerLocalization({
 		"buttonCopy": "Kopioi",
 		"remove": "Poista",
 		"removeQuestion": "Haluatko varmasti poistaa työtilan?",
-		"removeAllWorkspaces": "Poista kaikki tyotilat",
+		"removeAllWorkspaces": "Poista kaikki työtilat",
 		"removeAllQuestion": "Haluatko varmasti poistaa kaikki työtilat?",
 		"removeSuccess": "Poistit työtilan onnistuneesti.",
 		"removeAllSuccess": "Poistit kaikki työtilat onnistuneesti.",
