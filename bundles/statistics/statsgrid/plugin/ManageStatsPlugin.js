@@ -129,7 +129,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             type: 'difference',
             selected: true,
             getValue: function(a, b) {
-                return b-a;
+                return Math.round((b-a)*1e3)/1e3;
             }
         }, {
             type: 'division',
@@ -148,7 +148,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         }, {
             type: 'sum',
             getValue: function(a, b) {
-                return a+b;
+                return Math.round((a+b)*1e3)/1e3;
             }
         }];
     }, {
