@@ -79,8 +79,10 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             servicePackageDiv.find('input').attr('id', 'oskari_servicePackageselector2_servicePackagelist_checkbox_servicePackageid_' + servicePackage.getId());
             servicePackageDiv.find('.servicepackage-title').append(servicePackage.getName());
             servicePackageDiv.find('.servicepackage-title').click(function(){
-                me.instance.view.setServicePackage(me.servicePackage.getId());
-                me.instance.closeView();
+                var id = me.servicePackage.getId();
+                if (id != null) {
+                    window.location.replace(location.protocol+'//'+location.host+'/?service_package='+id);
+                }
             });
 
             /*

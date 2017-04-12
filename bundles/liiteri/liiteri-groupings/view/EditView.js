@@ -489,19 +489,6 @@ function (instance) {
 			});
 		}
 		me.dataList.fancytree('option', 'source', treeData);
-		me.dataList.fancytree('option', 'beforeSelect', function (event, data) {
-			var allDataNode = data.tree.getFirstChild();
-			var themeTypeRoots = allDataNode.children;
-			if (themeTypeRoots == null) {
-				return;
-			}
-			var numThemeTypeRoots = themeTypeRoots.length;
-			for (var i = 0; i < numThemeTypeRoots; i++) {
-				if ((themeTypeRoots[i] != null) && ((themeTypeRoots[i].selected) || (themeTypeRoots[i].partsel)) && (themeTypeRoots[i].data.themeType !== data.node.data.themeType)) {
-					return false;
-				}
-			}
-		});
 	},
 
 	_createServicePackageGroupingView: function() {
@@ -858,7 +845,7 @@ function (instance) {
             	var numSelectedData = selectedData.length;
             	for (var i=0; i<numSelectedData; i++) {
             		var sourceNode = selectedData[i];
-					if ((sourceNode == null) || (sourceNode.data == null) || (sourceNode.data.themeType == null)) {
+					if ((sourceNode == null) || (sourceNode.data == null) || (sourceNode.data.themeType == null) || (["statistics", "mapLayers"].indexOf(sourceNode.key) >= 0)) {
 						continue;
 					}
 					var target;
