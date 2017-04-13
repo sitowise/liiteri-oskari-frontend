@@ -129,7 +129,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             type: 'difference',
             selected: true,
             getValue: function(a, b) {
-                return Math.round((b-a)*1e8)/1e8;
+                return b-a;
             }
         }, {
             type: 'division',
@@ -148,7 +148,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         }, {
             type: 'sum',
             getValue: function(a, b) {
-                return Math.round((a+b)*1e8)/1e8;
+                return a+b;
             }
         }];
     }, {
@@ -2748,7 +2748,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (privacyLimitTriggered) {
                         dataItem.PrivacyLimitTriggered = true;
                     } else if ((!isNaN(values[0]))&&(!isNaN(values[1]))) {
-                        dataItem['primary value'] = comparisonOption.getValue(values[0], values[1]).toString();
+                        dataItem['primary value'] = (Math.round(comparisonOption.getValue(values[0], values[1])*Math.pow(10, meta.decimalCount))/Math.pow(10, meta.decimalCount)).toString();
                     }
                     data.push(dataItem);
                 });
@@ -5359,7 +5359,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var totalsItem = null;
             if (column.id.indexOf('indicator') >= 0) {
                 var indicatorId = column.indicatorData.id;
-                var organization = this.indicatorsMeta[indicatorId].organization;
+                var organization;
+                if (this.indicatorsMeta[indicatorId] != null) {
+                    organization = this.indicatorsMeta[indicatorId].organization;
+                }
                 var indicator = $.grep(this.indicators, function(item, index) {
                     return item.id == indicatorId;
                 });
