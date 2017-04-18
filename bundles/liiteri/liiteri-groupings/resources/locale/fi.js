@@ -114,6 +114,12 @@ Oskari.registerLocalization(
             "grouping": "Ryhmittely",
             "chooseLabel": "Pääotsikon valinta",
             "createNewLabel": "Luo uusi pääotsikko",
+            "close": "Sulje",
+            "multipleThemeTypes": "Karttatasojen ja tilastojen teematyyppiä ei voi vaihtaa.",
+            "mapLayerNestingLimit": "Karttatasoille ei ole mahdollista luoda aliteemoja.",
+            "existingLayer": "Taso on jo määritelty palvelupaketin teemassa.",
+            "hasItemChildren": "Tilaston sisältävään teemaan ei voi lisätä aliteemaa.",
+            "hasThemeChildren": "Aliteeman sisältävään teemaan ei voi lisätä tilastoa.",
             "sharing": {
                 "delete": "Poista",
                 "email": "Jaa sähköpostilla",
@@ -134,7 +140,7 @@ Oskari.registerLocalization(
                 "themeVisibility": "Teema näkyvyys",
                 "showToAllUsers": "Julkinen kaikille käyttäjille",
                 "showToIndividualUsers": "Näkyvissä vain yksittäisille käyttäjille",
-                "shareByEmail": "Jaa sähköpostilla",
+                "shareByEmail": "Jaa sähköpostilla"
             },
             "domain": {
                 "title": "Julkaisupaikka",
