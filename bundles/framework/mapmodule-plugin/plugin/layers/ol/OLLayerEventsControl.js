@@ -124,6 +124,11 @@
 	    console.log('ERROR ' + evt);
 	},
 	onLoadStart: function (evt) {
+		//ignore start for myplaces WFS because the WMS layer for myplaces sends events more reliably
+		if(evt.object.name.match(/wfs_layer_myplaces_\d+_normal/)) {
+			return;
+		}
+		
 	    if ($.isEmptyObject(this.counterObj))
 	    	this.fireLoadStartEvent();
 
