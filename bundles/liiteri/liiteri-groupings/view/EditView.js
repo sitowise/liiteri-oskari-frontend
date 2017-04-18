@@ -833,6 +833,14 @@ function (instance) {
             readyThemesRow.append(me._createThemeTools());
             readyThemesRow.append(importButton);
             importButton.click(function() {
+				var createImportInfoDialog = function(source, target, message) {
+                    var infoDialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+                    var closeBtn = infoDialog.createCloseButton(me.loc.close);
+                    infoDialog.addClass('import-info-dialog');
+					infoDialog.show(source+' => '+target, message, [closeBtn]);
+					infoDialog.makeModal();
+                };
+
 				var targetNode = $("#tree").dynatree("getActiveNode");
 				if ((targetNode == null) || (targetNode.data == null) || (targetNode.data.themeType == null)) {
 					return;
@@ -860,9 +868,11 @@ function (instance) {
 						target = targetNode;
 					}
 					if (sourceNode.data.themeType !== target.data.themeType) {
+                		createImportInfoDialog(sourceNode.title, targetNode.data.title, me.loc.multipleThemeTypes);
 						continue;
 					}
 					if ((sourceNode.data.themeType === 'map_layers')&&(sourceNode.folder)) {
+                		createImportInfoDialog(sourceNode.title, targetNode.data.title, me.loc.mapLayerNestingLimit);
 						continue;
 					}
 					var numChildren = target.childList == null ? 0 : target.childList.length;
@@ -881,15 +891,19 @@ function (instance) {
 						}
 					}
 					if (sourceExists) {
+						createImportInfoDialog(sourceNode.title, targetNode.data.title, me.loc.existingLayer);
 						continue;
 					}
 					if (sourceNode.data.themeType !== target.data.themeType) {
+						createImportInfoDialog(sourceNode.title, targetNode.data.title, me.loc.multipleThemeTypes);
 						continue;
 					}
 					if ((sourceNode.folder)&&(hasItemChildren)) {
+						createImportInfoDialog(sourceNode.title, targetNode.data.title, me.loc.hasItemChildren);
 						continue;
 					}
 					if ((!sourceNode.folder)&&(hasThemeChildren)) {
+						createImportInfoDialog(sourceNode.title, targetNode.data.title, me.loc.hasThemeChildren);
 						continue;
 					}
 					if (sourceNode.data.itemId == null) {
