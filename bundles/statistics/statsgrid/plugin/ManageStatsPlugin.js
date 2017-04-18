@@ -2683,7 +2683,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var meta = {
                 title: {
                 },
-                decimalCount: comparisonOption.decimalCount == null ? indicator.decimalCount : comparisonOption.decimalCount,
+                decimalCount: comparisonOption.decimalCount == null ? Math.max(indicator.decimalCount, columns[0].indicatorData.decimalCount) : comparisonOption.decimalCount,
                 privacyLimit: indicator.privacyLimit,
                 orderNumber: indicator.orderNumber,
                 unit: comparisonOption.unit,
