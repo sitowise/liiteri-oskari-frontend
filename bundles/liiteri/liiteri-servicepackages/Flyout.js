@@ -55,7 +55,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         startPlugin: function () {
             var me = this;
             me.instance._cachePackages();
-            this.createUI();
         },
         stopPlugin: function () {
         },
@@ -132,7 +131,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.Flyout',
         refreshServicePackagesList: function () {
             var me = this;
 		    me.instance._cachePackages();
-		    me.createUI();
 		}
 
     }, {

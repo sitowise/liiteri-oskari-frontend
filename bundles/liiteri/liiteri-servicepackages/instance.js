@@ -236,6 +236,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                 for (var i = 0; i < packages.length; i++) {
                     me.packagesById[packages[i].id] = packages[i];
                 }
+				me.getFlyout().createUI();
                 me.view.checkAutoLoadServicePackage();
             });
         },
