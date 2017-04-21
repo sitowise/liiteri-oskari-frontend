@@ -83,6 +83,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             }
         },
 		setServicePackage: function (id) {
+console.log("setServicePackage");
 		    if ((id == null) || (this.instance.packagesById[id] == null)) {
 		        return;
 		    }
