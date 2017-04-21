@@ -100,7 +100,9 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             var sandbox = this.instance.sandbox;
             var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
             var dataAvailable = mapLayerService.isAllLayersLoaded();
+console.log("restoreServicePackageState");
             if (dataAvailable) {
+console.log("dataAvailable");
                 this.service.raiseServicePackageSelectedEvent(this.servicePackage);
             }
             var state = this.mapState;
@@ -108,10 +110,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 return;
             }
             var statsLoaded = false;
-            var statsStateId;
-            if ((state.statistics != null)&&(state.statistics.state != null)) {
-                statsStateId = state.statistics.state.layerId;
-            }
             if (state.selectedLayers) {
                 var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
                 for (var j = 0; j < previousSelectedLayers.length; j++) {

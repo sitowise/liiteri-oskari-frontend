@@ -223,6 +223,9 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             MapLayerEvent: function (event) {
             	var me = this;
 				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(!me.view.stateRestored)) {
+console.log("MapLayerEvent");
+console.log(event.getOperation());
+console.log(event);
 					me.view.restoreServicePackageState();
 				}
             }

@@ -479,6 +479,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
         },
 
 		populateLayersFromServicePackage: function(themesDataArray, cb) {
+console.log("populateLayersFromServicePackage");
 		    var themesData = themesDataArray;
 		    if ((themesData == null)&&(this.servicePackage != null)) {
                 themesData = this.servicePackage.themesData;
