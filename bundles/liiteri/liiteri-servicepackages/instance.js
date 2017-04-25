@@ -44,7 +44,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             var conf = $.extend(this.conf, this.defaults),
                 sandboxName = (conf ? conf.sandbox : null) || 'sandbox',
                 sandbox = Oskari.getSandbox(sandboxName);
-console.log("start: autoload");
 			this.autoLoad = this._getParameterValueFromUrl('service_package');
             this.sandbox = sandbox;
 
@@ -224,9 +223,6 @@ console.log("start: autoload");
             MapLayerEvent: function (event) {
             	var me = this;
 				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(!me.view.stateRestored)) {
-console.log("MapLayerEvent");
-console.log(event.getOperation());
-console.log(event);
 					me.view.restoreServicePackageState();
 				}
             }

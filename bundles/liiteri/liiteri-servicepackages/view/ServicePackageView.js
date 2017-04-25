@@ -83,7 +83,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             }
         },
 		setServicePackage: function (id) {
-console.log("setServicePackage");
 		    if ((id == null) || (this.instance.packagesById[id] == null)) {
 		        return;
 		    }
@@ -101,9 +100,7 @@ console.log("setServicePackage");
             var sandbox = this.instance.sandbox;
             var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
             var dataAvailable = mapLayerService.isAllLayersLoaded();
-console.log("restoreServicePackageState");
             if (dataAvailable) {
-console.log("dataAvailable");
                 this.service.raiseServicePackageSelectedEvent(this.servicePackage);
             }
             var state = this.mapState;
