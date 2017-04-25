@@ -67,7 +67,7 @@ Oskari.registerLocalization({
 		"ok": "OK",
 		"cancel": "Peruuta",
 		"transform": {
-		    "button": "Muunna",
+		    "button": "Tallenna",
 		    "tranformQuestion": "Muunnetaanko työtila palvelupaketiksi?",
 		    "transformSuccessTitle": "Onnistui",
 		    "transformSuccessContent": "Työtila muunnettiin palvelupaketiksi",
