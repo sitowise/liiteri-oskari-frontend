@@ -92,8 +92,8 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             this.stateRestored = false;
             if (servicePackage.mapState != null) {
                 this.mapState = JSON.parse(servicePackage.mapState);
-                this.restoreServicePackageState(reset);
             }
+            this.restoreServicePackageState(reset);
 		},
         restoreServicePackageState: function(reset) {
             var me = this;
@@ -108,10 +108,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 return;
             }
             var statsLoaded = false;
-            var statsStateId;
-            if ((state.statistics != null)&&(state.statistics.state != null)) {
-                statsStateId = state.statistics.state.layerId;
-            }
             if (state.selectedLayers) {
                 var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
                 for (var j = 0; j < previousSelectedLayers.length; j++) {
