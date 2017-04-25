@@ -262,12 +262,20 @@ function() {
 
 		    if (data.id) {
 		        var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
-                    okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                    transformBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                    replaceBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                     cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-		        okBtn.setTitle(me.locale.transform.button);
-		        okBtn.addClass('primary');
 
-		        okBtn.setHandler(function () {
+		        transformBtn.setTitle(me.locale.transform.buttonTransform);
+		        transformBtn.addClass('primary');
+		        transformBtn.setHandler(function () {
+		            me._transformWorkspace(data.id);
+		            dialog.close();
+		        });
+
+		        replaceBtn.setTitle(me.locale.transform.buttonReplace);
+		        replaceBtn.addClass('primary');
+		        replaceBtn.setHandler(function () {
 		            me._transformWorkspace(data.id);
 		            dialog.close();
 		        });
@@ -276,7 +284,7 @@ function() {
 		        cancelBtn.setHandler(function () {
 		            dialog.close();
 		        });
-		        dialog.show(me.locale.table.transform, me.locale.transform.tranformQuestion, [okBtn, cancelBtn]);
+		        dialog.show(me.locale.table.transform, me.locale.transform.tranformQuestion, [transformBtn, replaceBtn, cancelBtn]);
 		        dialog.makeModal();
 		    }
 		});
