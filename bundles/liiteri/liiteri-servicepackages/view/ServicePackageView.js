@@ -93,8 +93,8 @@ console.log("setServicePackage");
             this.stateRestored = false;
             if (servicePackage.mapState != null) {
                 this.mapState = JSON.parse(servicePackage.mapState);
-                this.restoreServicePackageState(reset);
             }
+            this.restoreServicePackageState(reset);
 		},
         restoreServicePackageState: function(reset) {
             var me = this;
