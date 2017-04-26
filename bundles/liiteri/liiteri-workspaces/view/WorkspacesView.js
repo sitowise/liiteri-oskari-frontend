@@ -262,21 +262,38 @@ function() {
 
 		    if (data.id) {
 		        var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
-                    okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                    transformBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
+                    updateBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                     cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-		        okBtn.setTitle(me.locale.transform.button);
-		        okBtn.addClass('primary');
+				var buttons = [];
 
-		        okBtn.setHandler(function () {
+		        transformBtn.setTitle(me.locale.transform.buttonTransform);
+		        transformBtn.addClass('primary');
+		        transformBtn.setHandler(function () {
 		            me._transformWorkspace(data.id);
 		            dialog.close();
 		        });
+		        buttons.push(transformBtn);
+
+				var workspace = JSON.parse(data.workspace);
+				var servicePackageId = workspace.servicePackage;
+				if (servicePackageId != null) {
+					updateBtn.setTitle(me.locale.transform.buttonUpdate);
+					updateBtn.addClass('primary');
+					updateBtn.setHandler(function () {
+						me._updateServicePackage(data.id, servicePackageId);
+						dialog.close();
+					});
+					buttons.push(updateBtn);
+				}
 
 		        cancelBtn.setTitle(me.locale.cancel);
 		        cancelBtn.setHandler(function () {
 		            dialog.close();
 		        });
-		        dialog.show(me.locale.table.transform, me.locale.transform.tranformQuestion, [okBtn, cancelBtn]);
+		        buttons.push(cancelBtn);
+
+		        dialog.show(me.locale.table.transform, me.locale.transform.tranformQuestion, buttons);
 		        dialog.makeModal();
 		    }
 		});
@@ -505,7 +522,42 @@ function() {
 	        }
 	    });
 	},
-	
+
+	_updateServicePackage: function (id, servicePackageId) {
+	    var me = this;
+	    var url = me.instance.getSandbox().getAjaxUrl() + 'action_route=TransformWorkspace';
+
+	    jQuery.ajax({
+	        type: 'POST',
+	        dataType: 'text',
+	        url: url,
+	        beforeSend: function (x) {
+	            if (x && x.overrideMimeType) {
+	                x.overrideMimeType("application/j-son;charset=UTF-8");
+	            }
+	        },
+	        data: {
+	            "id": id,
+	            "updateServicePackage": true
+	        },
+	        success: function () {
+	            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+	            dialog.show(me.locale.transform.updateSuccessTitle, me.locale.transform.updateSuccessContent);
+	            dialog.fadeout(3000);
+
+	            //refresh service packages list
+	            var eventBuilder = me.instance.getSandbox().getEventBuilder('liiteri-groupings.GroupingUpdatedEvent');
+	            var event = eventBuilder("package");
+	            me.instance.getSandbox().notifyAll(event);
+	        },
+	        error: function (jqXHR, textStatus, errorThrown) {
+	            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+	            dialog.show(me.locale.transform.updateFailureTitle, me.locale.transform.updateFailureContent);
+	            dialog.fadeout(3000);
+	        }
+	    });
+	},
+
 	refreshList: function() {
 		this.table.ajax.reload();
 		this.sharedWorkspacesTable.ajax.reload();

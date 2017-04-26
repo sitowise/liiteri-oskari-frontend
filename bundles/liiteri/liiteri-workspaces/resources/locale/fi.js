@@ -67,12 +67,17 @@ Oskari.registerLocalization({
 		"ok": "OK",
 		"cancel": "Peruuta",
 		"transform": {
-		    "button": "Muunna",
+		    "buttonTransform": "Muunna",
+		    "buttonUpdate": "Päivitä nykyinen",
 		    "tranformQuestion": "Muunnetaanko työtila palvelupaketiksi?",
 		    "transformSuccessTitle": "Onnistui",
 		    "transformSuccessContent": "Työtila muunnettiin palvelupaketiksi",
 		    "transformFailureTitle": "Virhe",
-		    "transformFailureContent": "Työtilan muuntaminen epäonnistui"
+		    "transformFailureContent": "Työtilan muuntaminen epäonnistui",
+		    "updateSuccessTitle": "Onnistui",
+		    "updateSuccessContent": "Palvelupaketti päivitettiin työtilan tiedoilla",
+		    "updateFailureTitle": "Virhe",
+		    "updateFailureContent": "Palvelupaketin päivittäminen epäonnistui"
 		}
 	},
 	"newWorkspace": "Uusi työtila",
