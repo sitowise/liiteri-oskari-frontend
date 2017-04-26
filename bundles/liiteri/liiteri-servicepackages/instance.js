@@ -223,7 +223,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
             MapLayerEvent: function (event) {
             	var me = this;
 				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(!me.view.stateRestored)) {
-					me.view.restoreServicePackageState();
+					me.view.restoreServicePackage();
 				}
             }
         },
@@ -240,8 +240,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-servicepackages.LiiteriServic
                 me.view.checkAutoLoadServicePackage();
             });
         },
-		setServicePackage: function (id) {
-		    this.view.setServicePackage(id);
+		setServicePackage: function (id, restoreState) {
+		    this.view.setServicePackage(id, restoreState);
 		},
         closeView: function() {
             var request = this.sandbox.getRequestBuilder('userinterface.UpdateExtensionRequest')(this, 'close');

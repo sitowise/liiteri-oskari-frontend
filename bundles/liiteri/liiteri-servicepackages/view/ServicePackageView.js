@@ -82,7 +82,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 me.instance.autoLoad = null;
             }
         },
-		setServicePackage: function (id) {
+		setServicePackage: function (id, restoreState) {
 		    if ((id == null) || (this.instance.packagesById[id] == null)) {
 		        return;
 		    }
@@ -93,15 +93,18 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             if (servicePackage.mapState != null) {
                 this.mapState = JSON.parse(servicePackage.mapState);
             }
-            this.restoreServicePackageState(reset);
+            this.restoreServicePackage(reset, restoreState == null ? true : restoreState);
 		},
-        restoreServicePackageState: function(reset) {
+        restoreServicePackage: function(reset, restoreState) {
             var me = this;
             var sandbox = this.instance.sandbox;
             var mapLayerService = sandbox.getService('Oskari.mapframework.service.MapLayerService');
             var dataAvailable = mapLayerService.isAllLayersLoaded();
             if (dataAvailable) {
                 this.service.raiseServicePackageSelectedEvent(this.servicePackage);
+            }
+            if ((restoreState != null)&&(!restoreState)) {
+                return;
             }
             var state = this.mapState;
             if (state == null) {
