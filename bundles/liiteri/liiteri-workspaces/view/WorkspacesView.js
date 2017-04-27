@@ -687,118 +687,109 @@ function() {
 		});
 	},
 	_restoreWorkspace: function (workspaceJson) {
-	    var me = this;
+    	var me = this;
 		var sandbox = this.instance.getSandbox();
 		var workspace = JSON.parse(workspaceJson);
-		
+
 		//Selected service package
 		if (workspace.servicePackage) {
-			window.location.replace(location.protocol+'//'+location.host+'/?service_package='+Number(workspace.servicePackage));
+			sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', [workspace.servicePackage, false]);
 		} else {
-            sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', null);
-            //Selected layers
-            var statsLoaded = false;
-            var statsStateId;
-            if ((workspace.statistics != null) && (workspace.statistics.state != null)) {
-                statsStateId = workspace.statistics.state.layerId;
-            }
-            if (workspace.selectedLayers) {
-                var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-                for (var j = 0; j < previousSelectedLayers.length; j++) {
-                    var previousSelectedLayer = previousSelectedLayers[j];
-                    var layerId = previousSelectedLayer.getId();
-                    if ((statsStateId != null) && (statsStateId === layerId)) {
-                        statsLoaded = true;
-                        continue;
-                    }
-                    if (layerId != null) {
-                        sandbox.postRequestByName('RemoveMapLayerRequest', [layerId]);
-                    }
-                }
-                for (var i = 0; i < workspace.selectedLayers.length; i++) {
-                    var id = workspace.selectedLayers[i].id;
-                    if (id == null) {
-                        continue;
-                    }
-                    //add map layer
-                    sandbox.postRequestByName('AddMapLayerRequest', [id, true, workspace.selectedLayers[i].baseLayer]);
-                    //set opacity
-                    sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [id, workspace.selectedLayers[i].opacity]);
-                    //add custom style
-                    if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
-                        sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [id, workspace.selectedLayers[i].customStyle]);
-                    }
-                    //change style
-                    if (workspace.selectedLayers[i].style) {
-                        sandbox.postRequestByName('ChangeMapLayerStyleRequest', [id, workspace.selectedLayers[i].style._name]);
-                    }
-                    //set visibility
-                    sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [id, workspace.selectedLayers[i].visible]);
-                }
-            }
-            if (!statsLoaded) {
-                sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
-                sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
-            }
-            if (workspace.statistics != null) {
-                if ((workspace.windows == null) || (workspace.windows.indexOf('statistics') >= 0)) {
-                    var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
-                    if (!statsLoaded) {
-                        sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
-                        sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
-                    }
-                }
-            }
-            if (workspace.map) {
-                sandbox.postRequestByName('MapMoveRequest', [workspace.map.x, workspace.map.y, workspace.map.zoomLevel]);
-            }
-            var personalDataFlyout = null;
-            var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function (maxZIndex, element) {
-                    var flyout = jQuery(element);
-                    if (jQuery(flyout).attr('id') === 'oskari-flyout-personaldata') {
-                        personalDataFlyout = flyout;
-                        return maxZIndex;
-                    }
-                    var flyoutZIndex = Number(flyout.css('z-index'));
-                    flyout.removeClass('oskari-attached');
-                    flyout.removeClass('oskari-detached');
-                    flyout.addClass('oskari-closed');
-                    return (jQuery.isNumeric(flyoutZIndex)) ? Math.max(maxZIndex, flyoutZIndex) : maxZIndex;
-                }, 0) + 1;
-            if (personalDataFlyout != null) {
-                personalDataFlyout.css('z-index', flyoutBaseZIndex + 10);
-            }
-            if (workspace.windows != null) {
-                workspace.windows.sort(function (a, b) {
-                    if ((me.flyouts[a] == null) || (me.flyouts[b] == null)) {
-                        return 0;
-                    }
-                    return me.flyouts[a].zIndexOffset - me.flyouts[b].zIndexOffset;
-                });
-                var flyoutCount = 0;
-                workspace.windows.forEach(function (flyoutType, index) {
-                    var selector = me.flyouts[flyoutType].selector;
-                    if (selector == null) {
-                        return;
-                    }
-                    var flyout = jQuery('div.oskari-flyout' + selector);
-                    if (flyout.length === 0) {
-                        return;
-                    }
-                    var zIndexOffset = me.flyouts[flyoutType].zIndexOffset;
-                    flyout.removeClass('oskari-attached');
-                    flyout.removeClass('oskari-closed');
-                    flyout.addClass('oskari-detached');
-                    if (me.flyoutBaseWidth == null) {
-                        me.flyoutBaseWidth = flyout.width();
-                    }
-                    if ((flyoutCount === 0) && (index === 0) && (workspace.windows.length > 1)) {
-                        flyout.width(me.flyoutBaseWidth + 50);
-                    }
-                    flyout.css('z-index', flyoutBaseZIndex + zIndexOffset);
-                    flyoutCount++;
-                });
-            }
+			sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', null);
+		}
+
+		if (workspace.selectedLayers) {
+			var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
+			for (var i = 0; i < previousSelectedLayers.length; i++) {
+			    var itemLayer = previousSelectedLayers[i];
+			    sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
+			}
+			for (var i=0; i<workspace.selectedLayers.length; i++) {
+				//add map layer
+				sandbox.postRequestByName('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
+				//set opacity
+				sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
+				//add custom style
+				if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
+					sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
+				}
+				//change style
+				if (workspace.selectedLayers[i].style) {
+					sandbox.postRequestByName('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
+				}
+				//set visibility
+				sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
+			}
+		}
+
+		//What statistics user had chosen and what thematic maps had he made from those
+		if (workspace.statistics) {
+			sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
+			if (workspace.statsVisibility == true) {
+			    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
+			} else if (workspace.statistics.state && workspace.statistics.state.layerId) {
+			    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
+			    var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
+                if (eventBuilder && layer) {
+                    var event = eventBuilder(layer, null);
+                    window.setTimeout(function() {
+                        sandbox.notifyAll(event);
+                    }, 500);
+			    }
+			}
+		}
+
+		//Current position on the screen (zoom and coordinates)
+		if (workspace.map) {
+			sandbox.postRequestByName('MapMoveRequest', [workspace.map.x, workspace.map.y, workspace.map.zoomLevel]);
+		}
+
+		var personalDataFlyout = null;
+		var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function (maxZIndex, element) {
+			var flyout = jQuery(element);
+			if (jQuery(flyout).attr('id') === 'oskari-flyout-personaldata') {
+				personalDataFlyout = flyout;
+				return maxZIndex;
+			}
+			var flyoutZIndex = Number(flyout.css('z-index'));
+			flyout.removeClass('oskari-attached');
+			flyout.removeClass('oskari-detached');
+			flyout.addClass('oskari-closed');
+			return (jQuery.isNumeric(flyoutZIndex)) ? Math.max(maxZIndex, flyoutZIndex) : maxZIndex;
+		}, 0) + 1;
+		if (personalDataFlyout != null) {
+			personalDataFlyout.css('z-index', flyoutBaseZIndex + 10);
+		}
+		if (workspace.windows != null) {
+			workspace.windows.sort(function (a, b) {
+				if ((me.flyouts[a] == null) || (me.flyouts[b] == null)) {
+					return 0;
+				}
+				return me.flyouts[a].zIndexOffset - me.flyouts[b].zIndexOffset;
+			});
+			var flyoutCount = 0;
+			workspace.windows.forEach(function (flyoutType, index) {
+				var selector = me.flyouts[flyoutType].selector;
+				if (selector == null) {
+					return;
+				}
+				var flyout = jQuery('div.oskari-flyout' + selector);
+				if (flyout.length === 0) {
+					return;
+				}
+				var zIndexOffset = me.flyouts[flyoutType].zIndexOffset;
+				flyout.removeClass('oskari-attached');
+				flyout.removeClass('oskari-closed');
+				flyout.addClass('oskari-detached');
+				if (me.flyoutBaseWidth == null) {
+					me.flyoutBaseWidth = flyout.width();
+				}
+				if ((flyoutCount === 0) && (index === 0) && (workspace.windows.length > 1)) {
+					flyout.width(me.flyoutBaseWidth + 50);
+				}
+				flyout.css('z-index', flyoutBaseZIndex + zIndexOffset);
+				flyoutCount++;
+			});
         }
 		//show information that the workspace is restored
 		var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
