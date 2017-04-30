@@ -203,7 +203,10 @@ function() {
 		tableElement.find('tbody').on('click', 'a.loadLink', function () {
             var data = dataTable.row($(this).parents('tr')).data();
 			if (data.workspace) {
-				me._restoreWorkspace(data.workspace);
+                var id = data.id;
+                if (id != null) {
+                    window.location.replace(location.protocol+'//'+location.host+'/?action=restoreWorkspace&type=own&workspaceId='+id);
+                }
 			}
         });
 		
@@ -384,7 +387,10 @@ function() {
             var data = sharedWorkspacesTable.row($(this).parents('tr')).data();
             
 			if (data.workspace) {
-				me._restoreWorkspace(data.workspace);
+                var id = data.id;
+                if (id != null) {
+                    window.location.replace(location.protocol+'//'+location.host+'/?action=restoreWorkspace&type=own&workspaceId='+id);
+                }
 			}
         });
 		
@@ -690,21 +696,45 @@ function() {
     	var me = this;
 		var sandbox = this.instance.getSandbox();
 		var workspace = JSON.parse(workspaceJson);
+		var i;
 
 		//Selected service package
 		if (workspace.servicePackage) {
-			sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', [workspace.servicePackage, false]);
-		} else {
-			sandbox.postRequestByName('liiteri-servicepackages.SetServicePackageRequest', null);
+			jQuery.ajax({
+                url: sandbox.getAjaxUrl() + 'action_route=GetPermittedGroupings',
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (x) {
+                    if (x && x.overrideMimeType) {
+                        x.overrideMimeType("application/json;charset=UTF-8");
+                    }
+                },
+                success: function (response) {
+					var packages = response.groupings;
+					if ((packages != null) && (packages.length > 0)) {
+						for (var i = 0; i < packages.length; i++) {
+							if ((packages[i].mainType === 'package')&&(packages[i].id === workspace.servicePackage)) {
+					            var servicePackageEventBuilder = sandbox.getEventBuilder('liiteri-servicepackages.ServicePackageSelectedEvent');
+            					var servicePackageEvent = servicePackageEventBuilder
+								(packages[i].themes, workspace.servicePackage);
+								sandbox.notifyAll(servicePackageEvent);
+								break;
+							}
+						}
+					}
+                },
+                error: function (jqXHR, textStatus) {
+                }
+            });
 		}
 
 		if (workspace.selectedLayers) {
 			var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-			for (var i = 0; i < previousSelectedLayers.length; i++) {
+			for (i = 0; i < previousSelectedLayers.length; i++) {
 			    var itemLayer = previousSelectedLayers[i];
 			    sandbox.postRequestByName('RemoveMapLayerRequest', [itemLayer.getId()]);
 			}
-			for (var i=0; i<workspace.selectedLayers.length; i++) {
+			for (i = 0; i<workspace.selectedLayers.length; i++) {
 				//add map layer
 				sandbox.postRequestByName('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
 				//set opacity
@@ -724,17 +754,15 @@ function() {
 
 		//What statistics user had chosen and what thematic maps had he made from those
 		if (workspace.statistics) {
-			sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
-			if (workspace.statsVisibility == true) {
-			    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
-			} else if (workspace.statistics.state && workspace.statistics.state.layerId) {
-			    var eventBuilder = sandbox.getEventBuilder('StatsGrid.StatsDataChangedEvent');
+			sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
+			sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
+			if ((workspace.windows == null) || (workspace.windows.indexOf('statistics') >= 0)) {
 			    var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
-                if (eventBuilder && layer) {
-                    var event = eventBuilder(layer, null);
-                    window.setTimeout(function() {
-                        sandbox.notifyAll(event);
-                    }, 500);
+			    if (layer != null) {
+					sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
+				    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
+			    } else if (workspace.statistics.state != null) {
+					me.instance.pendingStatState = workspace.statistics.state;
 			    }
 			}
 		}
@@ -791,6 +819,7 @@ function() {
 				flyoutCount++;
 			});
         }
+
 		//show information that the workspace is restored
 		var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
 		dialog.show(me.locale.workspaceRestoredTitle, me.locale.workspaceRestored);

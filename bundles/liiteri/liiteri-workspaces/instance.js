@@ -12,6 +12,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
         this._localization = null;
 		this._selectedStats = null;
 		this._selectedServicePackage = null;
+		this.pendingStatState = null;
 		this.conf = {
             "name": "liiteri-workspaces",
             "sandbox": "sandbox",
@@ -289,12 +290,16 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 			var me = this;
 			var action = me._getParameterValueFromUrl("action");
 			var workspaceId = me._getParameterValueFromUrl("workspaceId");
+			var type = me._getParameterValueFromUrl("type");
+			if (type !== 'own') {
+			    type = 'hidden;'
+			}
 			if (action == "restoreWorkspace" && workspaceId != null)
 			{
 				var user = this.sandbox.getUser();
 				if (user.isLoggedIn()) {
 					$.ajax({
-						url: me.getSandbox().getAjaxUrl() + 'action_route=GetWorkspaces&type=hidden&workspaceId='+workspaceId,
+						url: me.getSandbox().getAjaxUrl() + 'action_route=GetWorkspaces&type='+type+'&workspaceId='+workspaceId,
 						success: function(data)
 						{
 							$.each(data.workspaces, function(key, value){
@@ -421,6 +426,20 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 
                 var isShown = event.getViewState() !== "close";
                 view.showMode(isShown, true);
+            },
+            /**
+             * @method MapLayerEvent
+             * @param {Oskari.mapframework.event.common.MapLayerEvent} event
+             */
+            MapLayerEvent: function (event) {
+            	var me = this;
+				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(me.pendingStatState != null)) {
+                    var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
+                    if (layer != null) {
+			            me.sandbox.postRequestByName('StatsGrid.SetStateRequest', [me.pendingStatState]);
+    				    me.sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
+                    }
+				}
             }
         },
 
