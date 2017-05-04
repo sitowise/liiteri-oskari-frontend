@@ -253,8 +253,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
          * @method activateControls
          */
         activateControls: function () {
-            this._getFeatureControlHover.activate();
-            this._loadingControl.activate();
+            if(this._getFeatureControlHover) {
+                this._getFeatureControlHover.activate();
+            }
+            if(this._loadingControl) {
+                this._loadingControl.activate();
+            }
         },
 
         /**
