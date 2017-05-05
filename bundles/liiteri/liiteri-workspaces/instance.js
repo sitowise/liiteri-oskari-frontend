@@ -436,14 +436,14 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(me.pendingStatState != null)) {
                     var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
                     if (layer != null) {
-                    	me._sendRequest('StatsGrid.SetStateRequest', [me.pendingStatState]);
-    				    me._sendRequest('StatsGrid.StatsGridRequest', [true, layer]);
+                    	me._sendOskariRequest('StatsGrid.SetStateRequest', [me.pendingStatState]);
+    				    me._sendOskariRequest('StatsGrid.StatsGridRequest', [true, layer]);
     				    me.pendingStatState = null;
                     }
 				}
             }
         },
-        _sendRequest(name, params) {
+        _sendOskariRequest: function(name, params) {
             var reqBuilder = this.sandbox.getRequestBuilder(name);
             if (reqBuilder) {
                 var request = reqBuilder.apply(this.sandbox, params);

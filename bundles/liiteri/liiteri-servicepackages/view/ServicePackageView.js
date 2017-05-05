@@ -95,7 +95,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             }
             this.restoreServicePackage(reset, restoreState == null ? true : restoreState);
 		},
-        _sendRequest(name, params) {
+        _sendRequest: function(name, params) {
             var reqBuilder = this.instance.sandbox.getRequestBuilder(name);
             if (reqBuilder) {
                 var request = reqBuilder.apply(this.instance.sandbox, params);

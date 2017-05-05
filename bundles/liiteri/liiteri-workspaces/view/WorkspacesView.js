@@ -692,7 +692,7 @@ function() {
 			}
 		});
 	},
-	_sendRequest(name, params) {
+	_sendRequest: function(name, params) {
         var reqBuilder = this.instance.getSandbox().getRequestBuilder(name);
         if (reqBuilder) {
             var request = reqBuilder.apply(this.instance.getSandbox(), params);
