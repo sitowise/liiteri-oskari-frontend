@@ -760,7 +760,7 @@ function() {
 			    var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
 			    if (layer != null) {
 					sandbox.postRequestByName('StatsGrid.SetStateRequest', [workspace.statistics.state]);
-				    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
+				    sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
 			    } else if (workspace.statistics.state != null) {
 					me.instance.pendingStatState = workspace.statistics.state;
 			    }

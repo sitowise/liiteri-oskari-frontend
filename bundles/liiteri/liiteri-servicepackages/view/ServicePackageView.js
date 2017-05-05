@@ -154,7 +154,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                     var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
                     if ((!statsLoaded)||(reset)) {
                         sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
-                        sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
+                        sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
                     }
                 }
             }

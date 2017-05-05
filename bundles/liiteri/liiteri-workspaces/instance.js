@@ -437,7 +437,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
                     var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
                     if (layer != null) {
 			            me.sandbox.postRequestByName('StatsGrid.SetStateRequest', [me.pendingStatState]);
-    				    me.sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, null]);
+    				    me.sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
     				    me.pendingStatState = null;
                     }
 				}
