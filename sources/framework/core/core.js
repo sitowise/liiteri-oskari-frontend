@@ -174,11 +174,6 @@ Oskari.clazz.define('Oskari.mapframework.core.Core',
             var requestName = request.getName(),
                 handlerFunc = this.__getRequestHandlerFunction(requestName);
 
-            console.log(request.getName());
-            if(request.getName().startsWith('Stats')) {
-            	console.log(JSON.stringify(request));
-            }
-            
             if (handlerFunc) {
                 return handlerFunc(this, request);
             } else {
