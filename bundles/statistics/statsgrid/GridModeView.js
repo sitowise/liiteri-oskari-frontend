@@ -83,6 +83,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.GridModeView',
                     me.instance.state.layerId = me._layer.getId();
                     //me.toolbar.changeName(me.instance.getLocalization('tile').title + ' - ' + me._layer.getName());
                     //me._layer.setOpacity(100);
+                    // add layer to selection if it's available
+                    if(me.isVisible) {
+                    	me.instance.sandbox.postRequestByName('AddMapLayerRequest', [me._layer.getId(), false, me._layer.isBaseLayer()]);
+                    }
                 }
                 // use default layer if we're showing the UI and don't have a layer
                 var layerAdded = me.isVisible && !me._layer;
