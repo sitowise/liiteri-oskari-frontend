@@ -436,14 +436,20 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(me.pendingStatState != null)) {
                     var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
                     if (layer != null) {
-			            me.sandbox.postRequestByName('StatsGrid.SetStateRequest', [me.pendingStatState]);
-    				    me.sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
+                    	me._sendRequest('StatsGrid.SetStateRequest', [me.pendingStatState]);
+    				    me._sendRequest('StatsGrid.StatsGridRequest', [true, layer]);
     				    me.pendingStatState = null;
                     }
 				}
             }
         },
-
+        _sendRequest(name, params) {
+            var reqBuilder = this.sandbox.getRequestBuilder(name);
+            if (reqBuilder) {
+                var request = reqBuilder.apply(this.sandbox, params);
+                this.sandbox.request(this, request);
+            }
+        },
         /**
          * @method stop
          * BundleInstance protocol method
