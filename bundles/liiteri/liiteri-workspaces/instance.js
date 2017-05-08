@@ -13,6 +13,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 		this._selectedStats = null;
 		this._selectedServicePackage = null;
 		this.pendingStatState = null;
+		this.pendingLayerState = [];
 		this.conf = {
             "name": "liiteri-workspaces",
             "sandbox": "sandbox",
@@ -432,15 +433,42 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
              * @param {Oskari.mapframework.event.common.MapLayerEvent} event
              */
             MapLayerEvent: function (event) {
-            	var me = this;
-				if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&(me.pendingStatState != null)) {
-                    var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
-                    if (layer != null) {
-                    	me._sendOskariRequest('StatsGrid.SetStateRequest', [me.pendingStatState]);
-    				    me._sendOskariRequest('StatsGrid.StatsGridRequest', [true, layer]);
-    				    me.pendingStatState = null;
+                var me = this;
+                if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&((me.pendingStatState != null) || me.pendingLayerState.length > 0)) {
+                    if(me.pendingStatState != null) {
+                        var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
+                        if (layer != null) {
+                            me._sendOskariRequest('StatsGrid.SetStateRequest', [me.pendingStatState]);
+                            me._sendOskariRequest('StatsGrid.StatsGridRequest', [true, layer]);
+                            me.pendingStatState = null;
+                        }
                     }
-				}
+                    if(me.pendingLayerState.length > 0) {
+                        var stillPendingState = [];
+                        for (i = 0; i<me.pendingLayerState.length; i++) {
+                            var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingLayerState[i].id);
+                            if (layer != null) {
+                                //add map layer
+                                me._sendOskariRequest('AddMapLayerRequest', [me.pendingLayerState[i].id, false, me.pendingLayerState[i].baseLayer]);
+                                //set opacity
+                                me._sendOskariRequest('ChangeMapLayerOpacityRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].opacity]);
+                                //add custom style
+                                if (me.pendingLayerState[i].customStyle && me.pendingLayerState[i].style._name === "oskari_custom") {
+                                    me._sendOskariRequest('ChangeMapLayerOwnStyleRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].customStyle]);
+                                }
+                                //change style
+                                if (me.pendingLayerState[i].style) {
+                                    me._sendOskariRequest('ChangeMapLayerStyleRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].style._name]);
+                                }
+                                //set visibility
+                                me._sendOskariRequest('MapModulePlugin.MapLayerVisibilityRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].visible]);
+                            } else {
+                                stillPendingState.push(me.pendingLayerState[i]);
+                            }
+                        }
+                        me.pendingLayerState = stillPendingState;
+                    }
+                }
             }
         },
         _sendOskariRequest: function(name, params) {

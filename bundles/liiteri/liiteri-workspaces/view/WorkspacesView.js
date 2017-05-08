@@ -734,20 +734,25 @@ function() {
 									    me._sendRequest('RemoveMapLayerRequest', [itemLayer.getId()]);
 									}
 									for (i = 0; i<workspace.selectedLayers.length; i++) {
-										//add map layer
-										me._sendRequest('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
-										//set opacity
-										me._sendRequest('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
-										//add custom style
-										if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
-											me._sendRequest('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
+										var layer = sandbox.findMapLayerFromAllAvailable(workspace.selectedLayers[i].id);
+										if (layer != null) {
+											//add map layer
+											me._sendRequest('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
+											//set opacity
+											me._sendRequest('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
+											//add custom style
+											if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
+												me._sendRequest('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
+											}
+											//change style
+											if (workspace.selectedLayers[i].style) {
+												me._sendRequest('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
+											}
+											//set visibility
+											me._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
+										} else {
+											me.instance.pendingLayerState.push(workspace.selectedLayers[i]);
 										}
-										//change style
-										if (workspace.selectedLayers[i].style) {
-											me._sendRequest('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
-										}
-										//set visibility
-										me._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
 									}
 								}
 
