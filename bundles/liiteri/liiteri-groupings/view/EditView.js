@@ -934,6 +934,7 @@ function (instance) {
 							dataKey: sourceNode.key
 						});
 					}
+					sourceNode.setSelected(false);
 					target.expand(true);
 					target.render();
                 }
