@@ -95,6 +95,13 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
             }
             this.restoreServicePackage(reset, restoreState == null ? true : restoreState);
 		},
+        _sendRequest: function(name, params) {
+            var reqBuilder = this.instance.sandbox.getRequestBuilder(name);
+            if (reqBuilder) {
+                var request = reqBuilder.apply(this.instance.sandbox, params);
+                this.instance.sandbox.request(this.instance, request);
+            }
+        },
         restoreServicePackage: function(reset, restoreState) {
             var me = this;
             var sandbox = this.instance.sandbox;
@@ -121,7 +128,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                         continue;
                     }
                     if ((layerId != null)&&(!me.containsLayer(me.servicePackage, layerId))) {
-                        sandbox.postRequestByName('RemoveMapLayerRequest', [layerId]);
+                        me._sendRequest('RemoveMapLayerRequest', [layerId]);
                     }
                 }
                 for (var i = 0; i < state.selectedLayers.length; i++) {
@@ -130,36 +137,36 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                         continue;
                     }
                     //add map layer
-                    sandbox.postRequestByName('AddMapLayerRequest', [id, true, state.selectedLayers[i].baseLayer]);
+                    me._sendRequest('AddMapLayerRequest', [id, true, state.selectedLayers[i].baseLayer]);
                     //set opacity
-                    sandbox.postRequestByName('ChangeMapLayerOpacityRequest', [id, state.selectedLayers[i].opacity]);
+                    me._sendRequest('ChangeMapLayerOpacityRequest', [id, state.selectedLayers[i].opacity]);
                     //add custom style
                     if (state.selectedLayers[i].customStyle && state.selectedLayers[i].style._name === "oskari_custom") {
-                        sandbox.postRequestByName('ChangeMapLayerOwnStyleRequest', [id, state.selectedLayers[i].customStyle]);
+                        me._sendRequest('ChangeMapLayerOwnStyleRequest', [id, state.selectedLayers[i].customStyle]);
                     }
                     //change style
                     if (state.selectedLayers[i].style) {
-                        sandbox.postRequestByName('ChangeMapLayerStyleRequest', [id, state.selectedLayers[i].style._name]);
+                        me._sendRequest('ChangeMapLayerStyleRequest', [id, state.selectedLayers[i].style._name]);
                     }
                     //set visibility
-                    sandbox.postRequestByName('MapModulePlugin.MapLayerVisibilityRequest', [id, state.selectedLayers[i].visible]);
+                    me._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [id, state.selectedLayers[i].visible]);
                 }
             }
             if ((!statsLoaded)||(reset)) {
-                sandbox.postRequestByName('StatsGrid.SetStateRequest', []);
-                sandbox.postRequestByName('StatsGrid.StatsGridRequest', [false, null]);
+                me._sendRequest('StatsGrid.SetStateRequest', []);
+                me._sendRequest('StatsGrid.StatsGridRequest', [false, null]);
             }
             if ((state.statistics != null)&&(me.containsStatistics(me.servicePackage))) {
                 if ((state.windows == null) || (state.windows.indexOf('statistics') >= 0)) {
                     var layer = sandbox.findMapLayerFromAllAvailable(state.statistics.state.layerId);
                     if ((!statsLoaded)||(reset)) {
-                        sandbox.postRequestByName('StatsGrid.SetStateRequest', [state.statistics.state]);
-                        sandbox.postRequestByName('StatsGrid.StatsGridRequest', [true, layer]);
+                        me._sendRequest('StatsGrid.SetStateRequest', [state.statistics.state]);
+                        me._sendRequest('StatsGrid.StatsGridRequest', [true, layer]);
                     }
                 }
             }
             if (state.map) {
-                sandbox.postRequestByName('MapMoveRequest', [state.map.x, state.map.y, state.map.zoomLevel]);
+                me._sendRequest('MapMoveRequest', [state.map.x, state.map.y, state.map.zoomLevel]);
             }
             var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function(maxZIndex, element) {
                 var flyout = jQuery(element);

@@ -325,6 +325,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             this.classifyPlugin.setState(this.state);
             // Reset the classify plugin
             this.classifyPlugin.resetUI(this.state);
+
+            if (this.getView().isVisible) {
+                var view = this.getView(),
+                    layerId = this.state.layerId,
+                    layer = null;
+
+                if (layerId !== null && layerId !== undefined) {
+                    layer = this.sandbox.getService('Oskari.mapframework.service.MapLayerService').findMapLayer(layerId);
+                }
+                // view._layer isn't set if we call this without a layer...
+                view.prepareMode(true, layer, false);
+            }
         },
         getState: function () {
             return this.state;

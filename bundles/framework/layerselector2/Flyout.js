@@ -501,17 +501,15 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                     return;
                 }
                 this.servicePackage.dataAvailable = true;
-
 				for (var j=0; j<themesData.length; j++) {
-				
 					if (themesData[j].type == 'map_layers' && themesData[j].elements) {
-						
+
 						var group = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", themesData[j].name);
 						
 						for (var k = 0; k < themesData[j].elements.length; k++) {
 						    var layerData = themesData[j].elements[k];
 						    var layer = this.instance.sandbox.findMapLayerFromAllAvailable(layerData.id);
-							if (layer) {							    
+							if (layer) {
 							    group.addLayer(layer);
 							    if (layerData.status == 'drawn')
 							        layers.push({"layer": layer, "groupName": themesData[j].name});

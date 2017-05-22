@@ -12,6 +12,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
         this._localization = null;
 		this._selectedStats = null;
 		this._selectedServicePackage = null;
+		this.pendingStatState = null;
+		this.pendingLayerState = [];
 		this.conf = {
             "name": "liiteri-workspaces",
             "sandbox": "sandbox",
@@ -289,12 +291,16 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 			var me = this;
 			var action = me._getParameterValueFromUrl("action");
 			var workspaceId = me._getParameterValueFromUrl("workspaceId");
+			var type = me._getParameterValueFromUrl("type");
+			if (type !== 'own') {
+			    type = 'hidden;'
+			}
 			if (action == "restoreWorkspace" && workspaceId != null)
 			{
 				var user = this.sandbox.getUser();
 				if (user.isLoggedIn()) {
 					$.ajax({
-						url: me.getSandbox().getAjaxUrl() + 'action_route=GetWorkspaces&type=hidden&workspaceId='+workspaceId,
+						url: me.getSandbox().getAjaxUrl() + 'action_route=GetWorkspaces&type='+type+'&workspaceId='+workspaceId,
 						success: function(data)
 						{
 							$.each(data.workspaces, function(key, value){
@@ -421,9 +427,57 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 
                 var isShown = event.getViewState() !== "close";
                 view.showMode(isShown, true);
+            },
+            /**
+             * @method MapLayerEvent
+             * @param {Oskari.mapframework.event.common.MapLayerEvent} event
+             */
+            MapLayerEvent: function (event) {
+                var me = this;
+                if ((['stop', 'add'].indexOf(event.getOperation()) >= 0)&&((me.pendingStatState != null) || me.pendingLayerState.length > 0)) {
+                    if(me.pendingStatState != null) {
+                        var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingStatState.layerId);
+                        if (layer != null) {
+                            me._sendOskariRequest('StatsGrid.SetStateRequest', [me.pendingStatState]);
+                            me._sendOskariRequest('StatsGrid.StatsGridRequest', [true, layer]);
+                            me.pendingStatState = null;
+                        }
+                    }
+                    if(me.pendingLayerState.length > 0) {
+                        var stillPendingState = [];
+                        for (i = 0; i<me.pendingLayerState.length; i++) {
+                            var layer = me.sandbox.findMapLayerFromAllAvailable(me.pendingLayerState[i].id);
+                            if (layer != null) {
+                                //add map layer
+                                me._sendOskariRequest('AddMapLayerRequest', [me.pendingLayerState[i].id, false, me.pendingLayerState[i].baseLayer]);
+                                //set opacity
+                                me._sendOskariRequest('ChangeMapLayerOpacityRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].opacity]);
+                                //add custom style
+                                if (me.pendingLayerState[i].customStyle && me.pendingLayerState[i].style._name === "oskari_custom") {
+                                    me._sendOskariRequest('ChangeMapLayerOwnStyleRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].customStyle]);
+                                }
+                                //change style
+                                if (me.pendingLayerState[i].style) {
+                                    me._sendOskariRequest('ChangeMapLayerStyleRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].style._name]);
+                                }
+                                //set visibility
+                                me._sendOskariRequest('MapModulePlugin.MapLayerVisibilityRequest', [me.pendingLayerState[i].id, me.pendingLayerState[i].visible]);
+                            } else {
+                                stillPendingState.push(me.pendingLayerState[i]);
+                            }
+                        }
+                        me.pendingLayerState = stillPendingState;
+                    }
+                }
             }
         },
-
+        _sendOskariRequest: function(name, params) {
+            var reqBuilder = this.sandbox.getRequestBuilder(name);
+            if (reqBuilder) {
+                var request = reqBuilder.apply(this.sandbox, params);
+                this.sandbox.request(this, request);
+            }
+        },
         /**
          * @method stop
          * BundleInstance protocol method
