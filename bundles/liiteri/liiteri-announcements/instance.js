@@ -83,6 +83,9 @@ Oskari.clazz.define(
 			// register to sandbox as a module
 			sandbox.register(me);
 			
+			var showAnnouncementsRequestHandler = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-announcements.request.ShowAnnouncementsRequestHandler', this);
+			sandbox.addRequestHandler('liiteri-announcements.ShowAnnouncementsRequest', showAnnouncementsRequestHandler);
+			
 			var user = this.sandbox.getUser();
 			if (user.isLoggedIn()) {
 				var correctRole = false;
