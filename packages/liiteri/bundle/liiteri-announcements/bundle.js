@@ -38,6 +38,12 @@ Oskari.clazz.define(
             },{
                 "type": "text/javascript",
                 "src": "../../../../bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsFlyoutRequestHandler.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsRequest.js"
+            },{
+                "type": "text/javascript",
+                "src": "../../../../bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsRequestHandler.js"
             },{
                 "type": "text/javascript",
                 "src": "../../../../bundles/liiteri/liiteri-announcements/Flyout.js"

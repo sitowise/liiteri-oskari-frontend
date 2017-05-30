@@ -616,6 +616,8 @@ bundles/liiteri/liiteri-announcements/instance.js
 bundles/liiteri/liiteri-announcements/Tile.js
 bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsFlyoutRequest.js
 bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsFlyoutRequestHandler.js
+bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsRequest.js
+bundles/liiteri/liiteri-announcements/request/ShowAnnouncementsRequestHandler.js
 bundles/liiteri/liiteri-announcements/Flyout.js
 bundles/liiteri/liiteri-announcements/resources/locale/fi.js
 packages/liiteri/bundle/liiteri-usergisdata/bundle.js

@@ -320,7 +320,8 @@ Oskari.clazz
                           function() {
                               if (!me.sandbox.getUser().isLoggedIn()) {
                                   dialog.close(true);
-                                  overlay.close();                                  
+                                  overlay.close();
+                                  me.sandbox.postRequestByName('liiteri-announcements.ShowAnnouncementsRequest');
                               } else {
                                   jQuery.ajax({
                                       type: "GET",
