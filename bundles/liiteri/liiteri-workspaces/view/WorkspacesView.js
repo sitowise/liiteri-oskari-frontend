@@ -725,6 +725,7 @@ function() {
             					var servicePackageEvent = servicePackageEventBuilder
 								(packages[i].themes, workspace.servicePackage);
 								sandbox.notifyAll(servicePackageEvent);
+                    		    me._restoreMapView(workspace);
 								break;
 							}
 						}
@@ -734,111 +735,118 @@ function() {
                 }
             });
 		} else {
-			if (workspace.selectedLayers) {
-				var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
-				for (i = 0; i < previousSelectedLayers.length; i++) {
-					var itemLayer = previousSelectedLayers[i];
-					me._sendRequest('RemoveMapLayerRequest', [itemLayer.getId()]);
-				}
-				for (i = 0; i<workspace.selectedLayers.length; i++) {
-					var layer = sandbox.findMapLayerFromAllAvailable(workspace.selectedLayers[i].id);
-					if (layer != null) {
-						//add map layer
-						me._sendRequest('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
-						//set opacity
-						me._sendRequest('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
-						//add custom style
-						if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
-							me._sendRequest('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
-						}
-						//change style
-						if (workspace.selectedLayers[i].style) {
-							me._sendRequest('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
-						}
-						//set visibility
-						me._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
-					} else {
-						me.instance.pendingLayerState.push(workspace.selectedLayers[i]);
-					}
-				}
-			}
-
-			//What statistics user had chosen and what thematic maps had he made from those
-			if (workspace.statistics) {
-				me._sendRequest('StatsGrid.SetStateRequest', []);
-				me._sendRequest('StatsGrid.StatsGridRequest', [false, null]);
-				if ((workspace.windows == null) || (workspace.windows.indexOf('statistics') >= 0)) {
-					var layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
-					if (layer != null) {
-						me._sendRequest('StatsGrid.SetStateRequest', [workspace.statistics.state]);
-						me._sendRequest('StatsGrid.StatsGridRequest', [true, layer]);
-					} else if (workspace.statistics.state != null) {
-						me.instance.pendingStatState = workspace.statistics.state;
-					}
-				}
-			}
-
-			//Current position on the screen (zoom and coordinates)
-			if (workspace.map) {
-				me._sendRequest('MapMoveRequest', [workspace.map.x, workspace.map.y, workspace.map.zoomLevel]);
-			}
-
-			var personalDataFlyout = null;
-			var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function (maxZIndex, element) {
-				var flyout = jQuery(element);
-				if (jQuery(flyout).attr('id') === 'oskari-flyout-personaldata') {
-					personalDataFlyout = flyout;
-					return maxZIndex;
-				}
-				var flyoutZIndex = Number(flyout.css('z-index'));
-				flyout.removeClass('oskari-attached');
-				flyout.removeClass('oskari-detached');
-				flyout.addClass('oskari-closed');
-				return (jQuery.isNumeric(flyoutZIndex)) ? Math.max(maxZIndex, flyoutZIndex) : maxZIndex;
-			}, 0) + 1;
-			if (personalDataFlyout != null) {
-				personalDataFlyout.css('z-index', flyoutBaseZIndex + 10);
-			}
-			if (workspace.windows != null) {
-				workspace.windows.sort(function (a, b) {
-					if ((me.flyouts[a] == null) || (me.flyouts[b] == null)) {
-						return 0;
-					}
-					return me.flyouts[a].zIndexOffset - me.flyouts[b].zIndexOffset;
-				});
-				var flyoutCount = 0;
-				workspace.windows.forEach(function (flyoutType, index) {
-					var selector = me.flyouts[flyoutType].selector;
-					if (selector == null) {
-						return;
-					}
-					var flyout = jQuery('div.oskari-flyout' + selector);
-					if (flyout.length === 0) {
-						return;
-					}
-					var zIndexOffset = me.flyouts[flyoutType].zIndexOffset;
-					flyout.removeClass('oskari-attached');
-					flyout.removeClass('oskari-closed');
-					flyout.addClass('oskari-detached');
-					if (me.flyoutBaseWidth == null) {
-						me.flyoutBaseWidth = flyout.width();
-					}
-					if ((flyoutCount === 0) && (index === 0) && (workspace.windows.length > 1)) {
-						flyout.width(me.flyoutBaseWidth + 50);
-					}
-					flyout.css('z-index', flyoutBaseZIndex + zIndexOffset);
-					flyoutCount++;
-				});
-			}
-
-			//show information that the workspace is restored
-			var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-			dialog.show(me.locale.workspaceRestoredTitle, me.locale.workspaceRestored);
-			dialog.fadeout(3000);
+		    me._restoreMapView(workspace);
 		}
-
 	},
-	
+
+	_restoreMapView: function(workspace) {
+    	var me = this;
+		var sandbox = this.instance.getSandbox();
+	    var i;
+	    var layer;
+        if (workspace.selectedLayers) {
+            var previousSelectedLayers = sandbox.findAllSelectedMapLayers();
+            for (i = 0; i < previousSelectedLayers.length; i++) {
+                var itemLayer = previousSelectedLayers[i];
+                me._sendRequest('RemoveMapLayerRequest', [itemLayer.getId()]);
+            }
+            for (i = 0; i<workspace.selectedLayers.length; i++) {
+                layer = sandbox.findMapLayerFromAllAvailable(workspace.selectedLayers[i].id);
+                if (layer != null) {
+                    //add map layer
+                    me._sendRequest('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
+                    //set opacity
+                    me._sendRequest('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
+                    //add custom style
+                    if (workspace.selectedLayers[i].customStyle && workspace.selectedLayers[i].style._name === "oskari_custom") {
+                        me._sendRequest('ChangeMapLayerOwnStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].customStyle]);
+                    }
+                    //change style
+                    if (workspace.selectedLayers[i].style) {
+                        me._sendRequest('ChangeMapLayerStyleRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].style._name]);
+                    }
+                    //set visibility
+                    me._sendRequest('MapModulePlugin.MapLayerVisibilityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].visible]);
+                } else {
+                    me.instance.pendingLayerState.push(workspace.selectedLayers[i]);
+                }
+            }
+        }
+
+        //What statistics user had chosen and what thematic maps had he made from those
+        if (workspace.statistics) {
+            me._sendRequest('StatsGrid.SetStateRequest', []);
+            me._sendRequest('StatsGrid.StatsGridRequest', [false, null]);
+            if ((workspace.windows == null) || (workspace.windows.indexOf('statistics') >= 0)) {
+                layer = sandbox.findMapLayerFromAllAvailable(workspace.statistics.state.layerId);
+                if (layer != null) {
+                    me._sendRequest('StatsGrid.SetStateRequest', [workspace.statistics.state]);
+                    me._sendRequest('StatsGrid.StatsGridRequest', [true, layer]);
+                } else if (workspace.statistics.state != null) {
+                    me.instance.pendingStatState = workspace.statistics.state;
+                }
+            }
+        }
+
+        //Current position on the screen (zoom and coordinates)
+        if (workspace.map) {
+            me._sendRequest('MapMoveRequest', [workspace.map.x, workspace.map.y, workspace.map.zoomLevel]);
+        }
+
+        var personalDataFlyout = null;
+        var flyoutBaseZIndex = jQuery('.oskari-flyout').get().reduce(function (maxZIndex, element) {
+            var flyout = jQuery(element);
+            if (jQuery(flyout).attr('id') === 'oskari-flyout-personaldata') {
+                personalDataFlyout = flyout;
+                return maxZIndex;
+            }
+            var flyoutZIndex = Number(flyout.css('z-index'));
+            flyout.removeClass('oskari-attached');
+            flyout.removeClass('oskari-detached');
+            flyout.addClass('oskari-closed');
+            return (jQuery.isNumeric(flyoutZIndex)) ? Math.max(maxZIndex, flyoutZIndex) : maxZIndex;
+        }, 0) + 1;
+        if (personalDataFlyout != null) {
+            personalDataFlyout.css('z-index', flyoutBaseZIndex + 10);
+        }
+        if (workspace.windows != null) {
+            workspace.windows.sort(function (a, b) {
+                if ((me.flyouts[a] == null) || (me.flyouts[b] == null)) {
+                    return 0;
+                }
+                return me.flyouts[a].zIndexOffset - me.flyouts[b].zIndexOffset;
+            });
+            var flyoutCount = 0;
+            workspace.windows.forEach(function (flyoutType, index) {
+                var selector = me.flyouts[flyoutType].selector;
+                if (selector == null) {
+                    return;
+                }
+                var flyout = jQuery('div.oskari-flyout' + selector);
+                if (flyout.length === 0) {
+                    return;
+                }
+                var zIndexOffset = me.flyouts[flyoutType].zIndexOffset;
+                flyout.removeClass('oskari-attached');
+                flyout.removeClass('oskari-closed');
+                flyout.addClass('oskari-detached');
+                if (me.flyoutBaseWidth == null) {
+                    me.flyoutBaseWidth = flyout.width();
+                }
+                if ((flyoutCount === 0) && (index === 0) && (workspace.windows.length > 1)) {
+                    flyout.width(me.flyoutBaseWidth + 50);
+                }
+                flyout.css('z-index', flyoutBaseZIndex + zIndexOffset);
+                flyoutCount++;
+            });
+        }
+
+        //show information that the workspace is restored
+        var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+        dialog.show(me.locale.workspaceRestoredTitle, me.locale.workspaceRestored);
+        dialog.fadeout(3000);
+	},
+
 	_showEditPopUp: function(data) {
 		var me = this,
 			sandbox = this.instance.getSandbox(),
@@ -1194,7 +1202,7 @@ function() {
 	    }
 
 	    return false;
-	},
+	}
 	
 }, {
     // the protocol / interface of this object is view
