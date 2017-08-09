@@ -186,16 +186,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.maplegend.Flyout',
                 /* metadata link */
                 var uuid = layer.getMetadataIdentifier(),
                     tools = layerDiv.find('.maplegend-tools');
-                if (!uuid) {
+                if (!uuid || uuid.indexOf('http') !== 0) {
                     // no functionality -> hide
                     tools.find('div.layer-description').hide();
                 } else {
                     tools.find('div.icon-info').bind('click', function () {
-                        var rn = 'catalogue.ShowMetadataRequest';
-
-                        sandbox.postRequestByName(rn, [{
-                            uuid: uuid
-                        }]);
+                        window.open(layer.getMetadataIdentifier());
                     });
                 }
 
