@@ -4835,7 +4835,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     // Exclude null values
                     if (row.sel === "checked" && ((me._categoriesHierarchy[row.category] && me._categoriesHierarchy[row.category].type === areaCategory.key) || row.id.match(new RegExp("_" + areaCategory.key + "_" + areaCategory.id)))) {
                         municipalities.push(row.id);
-                        if (row[curCol.field] !== null && row[curCol.field] !== undefined) {
+                        if (row[curCol.field] !== null && row[curCol.field] !== undefined  && row[curCol.field] !== '-') {
                             statArray.push(row[curCol.field]);
                             // Municipality codes (kuntakoodit)
                             munArray.push(row.code);
