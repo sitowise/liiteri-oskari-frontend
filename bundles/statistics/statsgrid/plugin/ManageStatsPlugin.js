@@ -2690,6 +2690,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 columnComparison: true,
                 comparisonType: comparisonOption.type
             };
+            if(isNaN(meta.decimalCount)) {
+                meta.decimalCount = 0;
+            }
             var lang = Oskari.getLang();
             meta.title[lang] = indicator.name;
             if ([null, indicator.name].indexOf(columns[0].indicatorData.name) === -1) {
