@@ -69,6 +69,9 @@
 			<directory>libraries${file.separator}jscolor</directory>
 		</fileSet>
 		<fileSet>
+			<directory>libraries${file.separator}bootstrap-filestyle</directory>
+		</fileSet>
+		<fileSet>
 			<directory>packages</directory>
 		</fileSet>
 		<fileSet>
