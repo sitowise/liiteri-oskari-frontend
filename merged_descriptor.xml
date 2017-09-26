@@ -48,6 +48,9 @@
 			<directory>libraries${file.separator}cometd</directory>
 		</fileSet>
 		<fileSet>
+			<directory>libraries${file.separator}slickgrid</directory>
+		</fileSet>
+		<fileSet>
 			<directory>packages</directory>
 		</fileSet>
 		<fileSet>
