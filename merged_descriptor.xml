@@ -16,9 +16,6 @@
 		</fileSet>			
 		<fileSet>
 			<directory>resources</directory>
-		</fileSet>	
-		<fileSet>
-			<directory>libraries${file.separator}jquery${file.separator}plugins${file.separator}DataTables-1.10.2${file.separator}locale</directory>
 		</fileSet>
 		<fileSet>
 			<directory>bundles</directory>
@@ -49,6 +46,27 @@
 		</fileSet>
 		<fileSet>
 			<directory>libraries${file.separator}slickgrid</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}backbone</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}dynatree</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}geostats</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}jqplot</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}jquery-te</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}JSChannel</directory>
+		</fileSet>
+		<fileSet>
+			<directory>libraries${file.separator}jscolor</directory>
 		</fileSet>
 		<fileSet>
 			<directory>packages</directory>
