@@ -538,7 +538,7 @@
 
             var items = this.filterCloud.getItems();
             for (var item in items) {
-                this.clearFilterFromUrl(item);
+                this.clearFilterFromUrl(items[item]);
             }
 
             this.filterCloud.clear();
