@@ -404,36 +404,6 @@
             element.trigger("liszt:updated");
         },
 
-        /*_areaFilterToText: function(filter) {
-            var result = "";
-
-            _.each(filter, function(i) {
-                if (!i.key)
-                    return;
-
-                result += i.key + " = " + JSON.stringify(i.values) + '\n';
-            });
-
-            return result;
-        },
-        _updateAreaFilter: function (array) {
-            var params = [];
-
-            for (var i = 0; i < array.data.length; i++) {
-                var item = array.data[i];
-                var paramsItem = {};
-                paramsItem.name = item.name;
-                paramsItem.values = [];
-
-                for (var j = 0; j < item.data.data.length; j++) {
-                    paramsItem.values.push(item.data.data[j]);
-                }
-
-                params.push(paramsItem);
-            }
-
-            this.areaFilterParams = params;
-        },*/
         _addOptions: function (id, array) {
             var select = this.container.find("#" + id);
             var i = 0;
@@ -496,33 +466,7 @@
 
             this.container.find("select").chosen({ allow_single_deselect: true, no_results_text: me.locale.search.noResultText });
         },
-/*
-        _changeRegionType: function (name, greaterAreaChkArray, administrativeCourtChkArray, elyChkArray, countyChkArray, subRegionChkArray) {
-            var me = this;
-            me.instance.service.getRegionData(
-                name,
-                greaterAreaChkArray,
-                administrativeCourtChkArray,
-                elyChkArray,
-                countyChkArray,
-                subRegionChkArray,
-                function (resp) { me.updateRegionPanels(resp, name); },
-                me.instance.plugins['Oskari.userinterface.View'].errorCb);
-        },
 
-        updateRegionPanels: function (resp, name) {
-            var id = "__" + name;
-            var el = $('#' + id);
-            el.empty();
-            el.append(jQuery('<option value></option>'));
-            this._addMultiOptions_Single(el, resp);
-            el.trigger("liszt:updated");
-
-            var countId = id + "_count";
-            var countEl = $('#' + countId);
-            countEl.text(resp.data.length);
-        },
-*/
         clearFilter: function() {
             this.container.find("#enterNameIdInput").val("");
             this.container.find('option:selected').removeAttr("selected");
@@ -538,7 +482,7 @@
 
             var items = this.filterCloud.getItems();
             for (var item in items) {
-                this.clearFilterFromUrl(item);
+                this.clearFilterFromUrl(items[item]);
             }
 
             this.filterCloud.clear();
