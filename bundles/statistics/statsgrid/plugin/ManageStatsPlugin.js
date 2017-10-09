@@ -755,6 +755,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
             this.stateIndicatorsLoaded = stateIndicatorsLoaded;
             this._state = state;
+            if (this._state) {
+                this.indicators = this._state.indicators;
+            }
         },
         getState: function() {
             return this._state;
@@ -3132,7 +3135,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             me.resetSelections();
             //clear map and reset state to initial
             me.instance.classifyPlugin.administrative_sendEmptyValues();
-            me.instance.setState({indicators: [], layerId: null}, false, true);
+            me.instance.setState({indicators: me.indicators, layerId: null}, false, true);
         },
         resetSelections: function () {
             var me = this;
