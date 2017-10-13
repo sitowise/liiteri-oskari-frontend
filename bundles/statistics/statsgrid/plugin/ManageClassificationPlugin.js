@@ -47,6 +47,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         this.conf = {};
         $.extend(this.conf, this.defaultConf, config);
         this._state = null;
+        this._indicatorStates = {};
         this._locale = locale || Oskari.getLocalization("StatsGrid");
         this.initialSetup = true;
         this.colorsets_div = null;
@@ -407,6 +408,22 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 // Create a new Manaclassification for thematic data, if selected
                 // thematic data column is changed in (ManageStatsOut)-grid
                 // stats Oskari layer, which send the event
+
+                if(this._state && this._state._params && this._state._params.CUR_COL &&
+                        event.getParams() && event.getParams().CUR_COL &&
+                        (this._state._params.CUR_COL.id !== event.getParams().CUR_COL.id)) {
+                    var oldId = this._state._params.CUR_COL.id,
+                        newId = event.getParams().CUR_COL.id;
+
+                    this._indicatorStates[oldId] = jQuery.extend(true, {}, this._state);
+                    if(typeof this._indicatorStates[newId] !== 'undefined') {
+                        this._state = this._indicatorStates[newId];
+                    } else {
+                        this.setState(this.conf.state || {});
+                    }
+
+                    this.resetUI();
+                }
 
                 if (event.getLayer())
                     this._layer = event.getLayer();
@@ -1323,6 +1340,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         _createUI: function () {
             var me = this;
             var params = me._state._params;
+            var wasVisible = $('div.classificationOptions').is(':visible');
 
             // destroy the old plugin from the map
             jQuery('div.manageClassificationPlugin').remove();
@@ -1457,6 +1475,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     if (me._state.methodId === '4') {
                         jQuery('.countSlider').hide();
                         jQuery('.manualBreaks').show();
+                        if(me._state.manualBreaksInput &&
+                                me._state.manualBreaksInput.length > 0) {
+                            me.element.find('.manualBreaks').find('input[name=breaksInput]').val(me._state.manualBreaksInput);
+                            me.classifyDataEntry();
+                        }
                     } else {
                         jQuery('.manualBreaks').hide();
                         jQuery('.countSlider').show();
@@ -1585,8 +1608,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 existingPlugins.first().before(this.element);
             }
 
-            // Hide classify options as default
-            classifyOptions.hide();
+            // Hide classify options if it was not visible previously
+            if(!wasVisible) {
+                classifyOptions.hide();
+            }
             content.show();
             // Hide Classify dialog
             this._visibilityOff();
