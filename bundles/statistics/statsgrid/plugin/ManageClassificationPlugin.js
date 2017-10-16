@@ -419,7 +419,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     if(typeof this._indicatorStates[newId] !== 'undefined') {
                         this.setState(this._indicatorStates[newId]);
                     } else {
-                        this.setState(this.conf.state || {});
+                        this.setState({});
                     }
 
                     this.resetUI();
