@@ -417,7 +417,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
 
                     this._indicatorStates[oldId] = jQuery.extend(true, {}, this._state);
                     if(typeof this._indicatorStates[newId] !== 'undefined') {
-                        this._state = this._indicatorStates[newId];
+                        this.setState(this._indicatorStates[newId]);
                     } else {
                         this.setState(this.conf.state || {});
                     }
@@ -2257,14 +2257,21 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 // jenks, quantiles, eq interval, manual breaks
                 if (state.methodId !== null && state.methodId !== undefined && state.methodId > 0) {
                     var select = me.element.find('.classificationMethod').find('.method');
-                    select.val(state.methodId);
                     // The manual breaks method:
-                    if (state.methodId == 4 && state.manualBreaksInput) {
-                        var manualInput = me.element.find('.manualBreaks').find('input[name=breaksInput]');
-                        manualInput.val(state.manualBreaksInput);
-                        me.element.find('.countSlider').hide();
-                        me.element.find('.manualBreaks').show();
+                    if (state.methodId == 4) {
+                        if(state.manualBreaksInput &&
+                           state.manualBreaksInput.split(',').length - 1 >= me.minClassNum && 
+                           state.manualBreaksInput.split(',').length - 1 <= me.maxClassNum) {
+                            var manualInput = me.element.find('.manualBreaks').find('input[name=breaksInput]');
+                            manualInput.val(state.manualBreaksInput);
+                            me.element.find('.countSlider').hide();
+                            me.element.find('.manualBreaks').show();
+                        } else {
+                            state.methodId = '1';
+                            state.manualBreaksInput = null;
+                        }
                     }
+                    select.val(state.methodId);
                 }
                 // how many different groups there will be
                 if (state.numberOfClasses !== null && state.numberOfClasses !== undefined &&
