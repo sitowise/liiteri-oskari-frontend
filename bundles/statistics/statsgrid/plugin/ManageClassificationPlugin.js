@@ -241,6 +241,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             if ((this._state.municipalities === null) || (typeof this._state.municipalities === "undefined")) {
                 this._state.municipalities = [];
             }
+            if ((this._state.visualizationAreaCategory  === null) || (typeof this._state.visualizationAreaCategory  === "undefined")) {
+                this._state.visualizationAreaCategory  = {key: "administrative", id: 1};
+            }
         },
         /**
          * @method stopPlugin
