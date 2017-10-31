@@ -680,7 +680,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 return false;
 
             if (computationMethod == 4) {
-                numberOfClasses = breaksInput.split(',').length;
+                numberOfClasses = breaksInput.split(',').length - 1;
             }
 
             var successCb = function (classifyParam) {
@@ -802,7 +802,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 return false;
 
             if (computationMethod == 4) {
-                numberOfClasses = breaksInput.split(',').length;
+                numberOfClasses = breaksInput.split(',').length - 1;
             }
             var colors = me._getColors(this.currentColorSet, me.colorsetIndex, numberOfClasses-2);
             if (me.colorsFlipped) {
