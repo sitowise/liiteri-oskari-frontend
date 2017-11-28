@@ -424,8 +424,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                         newState = this._indicatorStates[newId];
                     } else {
                         newState = jQuery.extend(true, {}, this._state);
-                        newState.manualBreaksInput = "";
-                        newState.classificationMode = 1;
+                        if(newState.methodId === "4") {
+                            newState.manualBreaksInput = "";
+                            newState.methodId = "1";
+                        }
                     }
 
                     this.setState(newState);
