@@ -292,9 +292,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-workspaces.LiiteriWorkspacesI
 			var action = me._getParameterValueFromUrl("action");
 			var workspaceId = me._getParameterValueFromUrl("workspaceId");
 			var type = me._getParameterValueFromUrl("type");
-			if (type !== 'own') {
-			    type = 'hidden;'
-			}
 			if (action == "restoreWorkspace" && workspaceId != null)
 			{
 				var user = this.sandbox.getUser();

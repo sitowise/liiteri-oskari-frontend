@@ -389,7 +389,7 @@ function() {
 			if (data.workspace) {
                 var id = data.id;
                 if (id != null) {
-                    window.location.replace(location.protocol+'//'+location.host+'/?action=restoreWorkspace&type=own&workspaceId='+id);
+                    window.location.replace(location.protocol+'//'+location.host+'/?action=restoreWorkspace&type=shared&workspaceId='+id);
                 }
 			}
         });
