@@ -416,14 +416,19 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                         event.getParams() && event.getParams().CUR_COL &&
                         (this._state._params.CUR_COL.id !== event.getParams().CUR_COL.id)) {
                     var oldId = this._state._params.CUR_COL.id,
-                        newId = event.getParams().CUR_COL.id;
+                        newId = event.getParams().CUR_COL.id,
+                        newState;
 
                     this._indicatorStates[oldId] = jQuery.extend(true, {}, this._state);
                     if(typeof this._indicatorStates[newId] !== 'undefined') {
-                        this.setState(this._indicatorStates[newId]);
+                        newState = this._indicatorStates[newId];
                     } else {
-                        this.setState({});
+                        newState = jQuery.extend(true, {}, this._state);
+                        newState.manualBreaksInput = "";
+                        newState.classificationMode = 1;
                     }
+
+                    this.setState(newState);
 
                     this.resetUI();
                 }
