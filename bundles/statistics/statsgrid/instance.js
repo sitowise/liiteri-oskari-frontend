@@ -339,6 +339,29 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.StatsGridBundleInstance'
             }
         },
         getState: function () {
+            var me = this,
+                classificationParams = ["methodId",
+                    "zoneTypeId",
+                    "visualizationmethodId",
+                    "pointSizeId",
+                    "showAreaNames",
+                    "showValues",
+                    "classificationMode;",
+                    "numberOfClasses",
+                    "numberOfClasses",
+                    "filterMethod",
+                    "filterInput",
+                    "filterRegion",
+                    "municipalities",
+                    "visualizationAreaCategory"],
+                classificationState = this.classifyPlugin ? this.classifyPlugin.getState() : undefined;
+
+            if(classificationState) {
+                $.each(classificationParams, function(index, obj) {
+                    me.state[obj] = classificationState[obj];
+                });
+            }
+
             return this.state;
         },
 

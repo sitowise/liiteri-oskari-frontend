@@ -460,6 +460,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
             this._state = state;
             this._initState();
         },
+        
+        /**
+         * @method getState
+         * Get the state object of statsgrid of this plugin.
+         */
+        getState: function () {
+            return this._state;
+        },
 
         /**
          * @method onEvent
