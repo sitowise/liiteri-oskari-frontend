@@ -433,6 +433,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                     this.setState(newState);
 
                     this.resetUI();
+
+                    this._visibilityOn();
                 }
 
                 if (event.getLayer())
