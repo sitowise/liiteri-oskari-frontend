@@ -211,7 +211,7 @@ Oskari.clazz.define('Oskari.mapframework.wmts.mapmodule.plugin.WmtsLayerPlugin',
                 oLayer = this.getOLMapLayers(layer),
                 newStyle = layer.getCurrentStyle().getName();
 
-            if (oLayer && oLayer[0]) {
+            if (oLayer && oLayer[0] && typeof oLayer[0].mergeNewParams === 'function') {
                 // only works for layers with requestEncoding = 'KVP'
                 oLayer[0].mergeNewParams({
                     style: newStyle
