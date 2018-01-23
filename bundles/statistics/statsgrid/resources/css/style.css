@@ -22,12 +22,12 @@
   height: 100%; }
 
 #statsTree, #functionalAreasTree {
-  height: 220px;
+  height: 240px;
   /* overflow: hidden;*/
 }
 
 #statsTree ul.ui-fancytree , #functionalAreasTree ul.ui-fancytree {
-    height: 220px;
+    height: 240px;
 }
 .statsgrid div.info {
   margin-left: 10px;
