@@ -86,7 +86,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.domain.StatsLayerModelB
             'LOCALITYRURALTYPE': { 'name': 'LOCALITYRURALTYPE', 'child': null, 'wmsNames': null, 'filterProperties': '', 'groupKey': 'locality_rural_type', 'type': 'functional' },
             'LOCALITYRURALCLASS': { 'name': 'LOCALITYRURALCLASS', 'child': 'LOCALITYRURALTYPE', 'wmsNames': null, 'filterProperties': '', 'groupKey': 'locality_rural_class', 'type': 'functional' },
             'URBANZONETYPE': { 'name': 'URBANZONETYPE', 'child': null, 'wmsNames': null, 'filterProperties': '', 'groupKey': 'urban_zone_type', 'type': 'functional' },
-            'URBANZONECLASS': { 'name': 'URBANZONECLASS', 'child': 'URBANZONETYPE', 'wmsNames': null, 'filterProperties': '', 'groupKey': 'urban_zone_class', 'type': 'functional' }
+            'URBANZONECLASS': { 'name': 'URBANZONECLASS', 'child': 'URBANZONETYPE', 'wmsNames': null, 'filterProperties': '', 'groupKey': 'urban_zone_class', 'type': 'functional' },
+            'LOCALSIZETYPE': { 'name': 'LOCALSIZETYPE', 'child': null, 'wmsNames': null, 'filterProperties': '', 'groupKey': 'locality_size_type', 'type': 'functional' },
+            'LOCALSIZECLASS': { 'name': 'LOCALSIZECLASS', 'child': 'LOCALSIZETYPE', 'wmsNames': null, 'filterProperties': '', 'groupKey': 'locality_size_class', 'type': 'functional' }
         };
 
 
