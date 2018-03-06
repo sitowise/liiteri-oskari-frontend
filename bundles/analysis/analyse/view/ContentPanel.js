@@ -13,6 +13,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
         this.layerType    = undefined;
         this.linkAction   = undefined;
         this.isStarted    = undefined;
+        this.selectControl= undefined;
 
         this.init(view);
         this.start();
@@ -135,6 +136,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
             this.layerType    = 'ANALYSE_TEMP';
             this.linkAction   = this.loc.content.search.resultLink;
             this.isStarted    = false;
+            this.selectControl= new OpenLayers.Control.SelectFeature(this.featureLayer)
 
             for (var p in this.eventHandlers) {
                 if (this.eventHandlers.hasOwnProperty(p)) {
@@ -295,6 +297,25 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.ContentPanel',
             }
 
             this.view.refreshAnalyseData();
+        },
+        /**
+         * Hilight the feature by given id from the feature layer
+         * 
+         * @method selectGeometry
+         * @param  {String} id
+         */
+        selectGeometry: function(id) {
+            var feature;
+
+            if (this.featureLayer) {
+                this.selectControl.unselectAll();
+                if(id) {
+                    feature = this.featureLayer.getFeatureById(id);
+                    if(feature) {
+                        this.selectControl.select(feature);
+                    }
+                }
+            }
         },
 
         /*

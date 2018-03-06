@@ -666,7 +666,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             layers = layers.concat(features);
             // Add property types for WFS layer, if not there
             this._addPropertyTypes(layers);
-            
+
+            contentPanel.selectGeometry();
+
             contentOptions = _.chain(layers)
                 .filter(function(layer) {
                     return me._eligibleForAnalyse(layer);
@@ -721,6 +723,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                         me._modifyAnalyseName();
                         me.showInfos();
                         me._checkParamsSelection();
+                        if(isTemp) {
+                            contentPanel.selectGeometry(datum.id);
+                        }
                     });
 
                 opt.find('label')
@@ -773,6 +778,10 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             me._refreshFields();
             me.refreshExtraParameters();
             me._checkParamsSelection();
+
+            if(me._getSelectedMapLayer() && me._getSelectedMapLayer().isLayerOfType(contentPanel.getLayerType())) {
+                contentPanel.selectGeometry(me._getSelectedMapLayer().getId());
+            }
         },
         _eligibleForAnalyse: function (layer) {
             return ((layer.hasFeatureData && layer.hasFeatureData()) ||
