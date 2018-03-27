@@ -38,7 +38,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
 
         /**
          * @method setSandbox
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         * @param {Oskari.Sandbox} sandbox
          * Sets the sandbox reference to this component
          */
         setSandbox: function (sandbox) {
@@ -47,7 +47,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
 
         /**
          * @method getSandbox
-         * @return {Oskari.mapframework.sandbox.Sandbox}
+         * @return {Oskari.Sandbox}
          */
         getSandbox: function () {
             return this.sandbox;
@@ -395,12 +395,50 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
 
                 var features = me.selectionPlugin.getFeaturesAsGeoJSON();
 
-                me.selectionPlugin.removeFeatures();
+                me.selectionPlugin.clearDrawing();
 
                 var evt = me.sandbox.getEventBuilder("WFSSetFilter")(features);
                 me.sandbox.notifyAll(evt);
 
+            },
+            'DrawingEvent': function(evt) {
+                var me = this;
+                if (!evt.getIsFinished()) {
+                    // only interested in finished drawings
+                    return;
             }
+
+                if (!me.selectionPlugin) {
+                    me.selectionPlugin = me.sandbox.findRegisteredModuleInstance('MainMapModuleMapSelectionPlugin');
+                }
+                if (me.selectionPlugin.DRAW_REQUEST_ID !== evt.getId()) {
+                    // event is from some other functionality
+                    return;
+                }
+                var geojson = evt.getGeoJson();
+                var pixelTolerance = 15;
+                if( geojson.features.length > 0 ) {
+                    geojson.features[0].properties.buffer_radius = me.selectionPlugin.getMapModule().getResolution() * pixelTolerance;
+                } else {
+                    //no features
+                    return;
+                }
+
+                me.selectionPlugin.setFeatures(geojson.features);
+                me.selectionPlugin.stopDrawing();
+
+                var event = me.sandbox.getEventBuilder("WFSSetFilter")(geojson);
+                me.sandbox.notifyAll(event);
+
+                me.popupHandler.removeButtonSelection();
+        },
+            'AfterMapMoveEvent': function() {
+                var me = this;
+                me.plugin.mapStatusChanged();
+                this.plugins['Oskari.userinterface.Flyout'].locateOnMapFID = null;
+            },
+
+            WFSFeatureGeometriesEvent: null
         },
 
         /**
@@ -475,7 +513,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
          */
         createUi: function () {
             this.plugins['Oskari.userinterface.Flyout'].createUi();
-
             var mapModule = this.sandbox.findRegisteredModuleInstance('MainMapModule'),
                 plugin = Oskari.clazz.create('Oskari.mapframework.bundle.featuredata2.plugin.FeaturedataPlugin', {
                     instance: this
@@ -483,6 +520,13 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
             mapModule.registerPlugin(plugin);
             mapModule.startPlugin(plugin);
             this.plugin = plugin;
+
+            //get the plugin order straight in mobile toolbar even for the tools coming in late
+            if (Oskari.util.isMobile()) {
+                mapModule.redrawPluginUIs(true);
+        }
+
+            this.mapModule = mapModule;
         }
     }, {
         /**

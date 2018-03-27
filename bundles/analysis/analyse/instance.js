@@ -44,7 +44,7 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
         },
         /**
          * @method getSandbox
-         * @return {Oskari.mapframework.sandbox.Sandbox}
+         * @return {Oskari.Sandbox}
          */
         getSandbox: function () {
             return this.sandbox;
@@ -181,6 +181,38 @@ Oskari.clazz.define("Oskari.analysis.bundle.analyse.AnalyseBundleInstance",
         /**
          * @property {Object} eventHandlers
          * @static
+         */
+        __addTab : function() {
+            if(this.personalDataTab) {
+                // already added
+                return;
+            }
+            var reqBuilder = this.sandbox.getRequestBuilder(
+                'PersonalData.AddTabRequest'
+            );
+
+            if (!reqBuilder) {
+                // request not ready
+                return;
+            }
+            // Request tab to be added to personal data
+            var tab = Oskari.clazz.create(
+                'Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
+                this
+            );
+            this.personalDataTab = tab;
+            this.sandbox.request(
+                this,
+                reqBuilder(
+                    this.localization.personalDataTab.title,
+                    tab.getContent(),
+                    false,
+                    'analyse'
+                )
+            );
+        },
+        /**
+         * @static @property {Object} eventHandlers
          */
         eventHandlers: {
             'MapLayerVisibilityChangedEvent': function (event) {

@@ -18,13 +18,13 @@ Oskari.registerLocalization(
             "rightToView": "rätt att visa",
             "rightToDownload": "rätt att ladda ner",
             "rightToPublishView": "rätt att visa en publicerat vy",
-            "success" : {
-                "title" : "Rätter har uppdaterats",
-                "message" : "Sparning av rätter lyckas."
+            "success": {
+                "title": "Rätter har uppdaterats",
+                "message": "Sparning av rätter lyckas."
             },
-            "error" : {
-                "title" : "Rätter har inte uppdaterats",
-                "message" : "Sparning av rätter lyckas inte."
+            "error": {
+                "title": "Rätter har inte uppdaterats",
+                "message": "Sparning av rätter lyckas inte."
             },
             "selectValue": "Markera värdet"
         },
@@ -40,5 +40,4 @@ Oskari.registerLocalization(
             "success": "Permissions have been updated"
         }
     }
-}
-);
+});

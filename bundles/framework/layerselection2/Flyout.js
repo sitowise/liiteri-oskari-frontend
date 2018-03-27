@@ -77,7 +77,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
             this.templateLayer = jQuery('<li class="layerselection2 layer selected">' + '<div class="layer-info">' + '<div class="layer-icon"></div>' + '<div class="layer-tool-remove"></div>'+ '<div class="layer-tool-refresh"></div>'  + '<div class="layer-title"><h4></h4>' + '</div>' + '</div>' + '<div class="stylesel">' + '<label for="style">' + loc.style + '</label>' + '<select name="style"></select></div>' + '<div class="layer-tools volatile">' + '</div>' + '</li>');
 
             // footers are changed based on layer state
-            this.templateLayerFooterTools = jQuery('<div class="right-tools">' + '<div class="layer-rights"></div>' + '<div class="object-data"></div>' + '<div class="layer-description">' + '<div class="icon-info"></div></div>' + '<div class="layer-filter"></div>' + '</div>' + '<div class="left-tools">' + '<div class="layer-visibility">' + '<a href="JavaScript:void(0);">' + loc.hide + '</a>' + '&nbsp;' + '<span class="temphidden" ' + 'style="display: none;">' + loc.hidden + '</span>' + '</div>' + '<div class="oskariui layer-opacity">' + '<div class="layout-slider" id="layout-slider">' + '</div> ' + '<div class="opacity-slider" style="display:inline-block">' + '<input type="text" name="opacity-slider" class="opacity-slider opacity" id="opacity-slider" />%</div>' + '</div>' + '</div>');
+            this.templateLayerFooterTools = jQuery('<div class="right-tools">' + '<div class="layer-rights"></div>' + '<div class="object-data"></div>' + '<div class="layer-description">' + '<div class="icon-info"></div></div>' + '<div class="layer-filter"></div>' + '</div>' + '<div class="left-tools">' + '<div class="layer-visibility">' + '<a href="JavaScript:void(0);">' + loc.hide + '</a>' + '&nbsp;' + '<span class="temphidden" ' + 'style="display: none;">' + loc.hidden + '</span>' + '</div>' + '<div class="oskariui layer-opacity">' + '<div class="layout-slider">' + '</div> ' + '<div class="opacity-slider" style="display:inline-block">' + '<input type="text" />%</div>' + '</div>' + '</div>');
 
             this.templateLayerFooterHidden = jQuery('<div class="layer-msg">' + '<a href="JavaScript:void(0);">' + loc.show + '</a> ' + loc.hidden + '<div class="right-tools">' + '<div class="layer-description">' + '<div class="icon-info"></div>' + '</div></div></div>');
 
@@ -171,13 +171,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 // footer tools
                 me._appendLayerFooter(layerContainer, layer, layer.isInScale(scale), true);
             }
-
             listContainer.sortable({
-                /*change: function (event,ui) {
-                 var item = ui.item ;
-                 me._layerOrderChanged(item)
-                 },*/
+                start: function (event, ui) {
+                    var height = ui.item.height();
+                    me.calculateContainerHeightDuringSort( height );
+                },
                 stop: function (event, ui) {
+                    me.calculateContainerHeightDuringSort();
                     me._layerOrderChanged(ui.item);
                 }
             });
@@ -195,7 +195,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
 
             }
         },
-
+        calculateContainerHeightDuringSort: function ( height ) {
+            var container = jQuery(this.container);
+            if ( typeof height === "undefined" ) {
+                     container.css({ height: "" });  
+            }
+            var totalHeight = container.height() + height;
+            container.css({ height: totalHeight });
+        },
         /**
          * @private @method _appendLayerFooter
          *
@@ -231,8 +238,27 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
 
             toolsDiv.append(footer);
 
-            var opa = layerDiv.find('div.layer-opacity input.opacity'),
+            var opa = layerDiv.find('div.layer-opacity div.opacity-slider input'),
                 slider = this._addSlider(layer, layerDiv, opa);
+        },
+        /**
+         * @private @method _switchRefreshIcon
+         * - not show refresh button, if layer is invisible or not in scale
+         *
+         * @param {jQuery} layerDiv
+         * @param {Object} layer
+         * @param {Boolean} isInScale
+         *
+         */
+        _switchRefreshIcon: function (layerDiv, layer, isInScale) {
+            var refreshDiv = layerDiv.find('div.layer-tool-refresh');
+
+            if (!isInScale || !layer.isVisible()) {
+                refreshDiv.css('display', 'none');
+            } else {
+                refreshDiv.css('display', '');
+            }
+
         },
 
         /**
@@ -546,6 +572,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
             this._sliders[layer.getId()] = null;
 
             this._appendLayerFooter(layerDiv, layer, isInScale, isGeometryMatch);
+
+            this._switchRefreshIcon(layerDiv, layer, isInScale);
         },
 
         /**
@@ -579,7 +607,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
         _changeOpacityInput: function (layer) {
             var lyrSel = 'li.layerselection2.layer.selected[layer_id=' + layer.getId() + ']',
                 layerDiv = jQuery(this.container).find(lyrSel),
-                opa = layerDiv.find('div.layer-opacity input.opacity'),
+                opa = layerDiv.find('div.layer-opacity div.opacity-slider input'),
                 slider = layerDiv.find('.layout-slider');
 
             opa.attr('value', layer.getOpacity());
@@ -915,7 +943,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                                 loc: loc
                             };
 
-                        me.filterDialog = Oskari.clazz.create('Oskari.userinterface.component.FilterDialog', loc, fixedOptions);
+                        me.filterDialog = Oskari.clazz.create('Oskari.userinterface.component.FilterDialog', fixedOptions);
                         me.filterDialog.setUpdateButtonHandler(function (filters) {
                             // throw event to new wfs
                             var evt = me.instance.sandbox.getEventBuilder('WFSSetPropertyFilter')(filters, layer.getId());
@@ -923,10 +951,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                             me.instance.sandbox.notifyAll(evt);
                         });
 
-                        me.aggregateAnalyseFilter = Oskari.clazz.create('Oskari.mapframework.bundle.featuredata2.aggregateAnalyseFilter', me.instance, me.instance.getLocalization('layer'), me.filterDialog);
-
                         if (me.service) {
-                            me.filterDialog.createFilterDialog(layer, prevJson, function() {
+                            me.aggregateAnalyseFilter = Oskari.clazz.create('Oskari.analysis.bundle.analyse.aggregateAnalyseFilter', me.instance, me.filterDialog);
+
+                            me.filterDialog.createFilterDialog(layer, prevJson, function () {
                                 me.service._returnAnalysisOfTypeAggregate(_.bind(me.aggregateAnalyseFilter.addAggregateFilterFunctionality, me));
                             });
                         } else {
@@ -1011,7 +1039,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 loc = this.instance.getLocalization('layer'),
                 publishPermission = layer.getPermission('publish');
 
-            if (publishPermission === 'publication_permission_ok' && sandbox.getUser().isLoggedIn()) {
+            if (publishPermission === 'publication_permission_ok' && Oskari.user().isLoggedIn()) {
                 footer.find('div.layer-rights').html(
                     loc.rights.can_be_published_map_user.label
                 );
@@ -1021,7 +1049,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
                 );
             }
         },
-
         /**
          * @method handleLayerSelectionChanged
          * If isSelected is false, removes the matching layer container from the UI.

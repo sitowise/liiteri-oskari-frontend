@@ -48,7 +48,7 @@ Oskari.registerLocalization(
 					"notification": {
 						"delete": {
 							"title": "Kohteen poistaminen",
-							"confirm": "Haluatko poistaa kohteen?",
+                    "confirm": "Haluatko poistaa kohteen \"{name}\"?",
 							"btnDelete": "Poista",
 							"btnCancel": "Peruuta",
 							"success": "Kohde on poistettu.",
@@ -315,7 +315,7 @@ Oskari.registerLocalization(
 					},
 					"categoryDelete": {
 						"title": "Karttatason poistaminen",
-						"deleteConfirmMove": "Olet poistamassa karttatasoa {0}. Karttatasolla on {1} kohdetta. Haluatko: <br/> 1. poistaa karttatason kohteineen <br/> 2. siirtää kohteet oletuskarttatasolle ennen karttatason poistoa?",
+                "deleteConfirmMove": "Olet poistamassa karttatasoa \"{0}\". Karttatasolla on {1, plural, one {# kohde} other {# kohdetta}}. Haluatko: <br/> 1. poistaa karttatason kohteineen <br/> 2. siirtää {1, plural, one {kohteen} other {kohteet}} oletuskarttatasolle ennen karttatason poistoa?",
 						"deleteWithObjectsConfirm": "Karttataso: {0} sisältää kohteita {1} kpl. Haluatko poista tason?",
 						"deleteConfirm": "Haluatko poistaa karttatason {0}?",
 						"deleted": "Karttataso on poistettu."
@@ -343,9 +343,9 @@ Oskari.registerLocalization(
 					"title": "Annetuissa tiedoissa on virheitä:",
 					"placeName": "Kohteen nimi puuttuu.",
 					"categoryName": "Karttatason nimi puuttuu.",
-					"placeNameIllegal": "Kohteen nimessä on kiellettyjä merkkejä. Sallittuja merkkejä ovat aakkoset (a-ö, A-Ö), numerot (0-9), välilyönti ja yhdysmerkki (-).",
-					"descIllegal": "Kohteen kuvauksessa on kiellettyjä merkkejä. Sallittuja merkkejä ovat aakkoset (a-ö, A-Ö), numerot (0-9), välilyönti ja yhdysmerkki (-).",
-					"categoryNameIllegal": "Karttatason nimessä on kiellettyjä merkkejä. Sallittuja merkkejä ovat aakkoset (a-ö, A-Ö), numerot (0-9), välilyönti ja yhdysmerkki (-).",
+            "placeNameIllegal": "Kohteen nimessä on kiellettyjä merkkejä.",
+            "descIllegal": "Kohteen kuvauksessa on kiellettyjä merkkejä.",
+            "categoryNameIllegal": "Karttatason nimessä on kiellettyjä merkkejä.",
 					"dotSize": "Pisteen koko on virheellinen. Pisteen koon oltava välillä 1-5.",
 					"dotColor": "Pisteen väri on virheellinen. Väriarvojen on oltava välillä 0-255.",
 					"dotShape": "Pisteen kuvake on virheellinen.",
@@ -356,5 +356,4 @@ Oskari.registerLocalization(
 					"areaFillColor": "Täyttöväri on virheellinen. Väriarvojen on oltava välillä 0-255."
 				}
 			}
-		}
-);
+});

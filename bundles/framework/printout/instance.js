@@ -31,7 +31,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
         // Additional data for each printable layer
         this.tileData = undefined;
         this.printService = undefined;
-        this.legendPlugin = undefined;
         //  Format producers
         this.backendConfiguration = {
             formatProducers: {
@@ -55,7 +54,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
         },
         /**
          * @method getSandbox
-         * @return {Oskari.mapframework.sandbox.Sandbox}
+         * @return {Oskari.Sandbox}
          */
         getSandbox: function () {
             return this.sandbox;
@@ -152,20 +151,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
             );
             sandbox.registerService(printService);
             this.printService = printService;
-
-            var locale = me.getLocalization(),
-                mapModule = sandbox.findRegisteredModuleInstance('MainMapModule'),
-                pluginConfig = this.conf.legend,
-                legendPlugin = Oskari.clazz.create(
-                    'Oskari.mapframework.bundle.printout.plugin.LegendPlugin',
-                    pluginConfig,
-                    me,
-                    locale
-                );
-
-            mapModule.registerPlugin(legendPlugin);
-            mapModule.startPlugin(legendPlugin);
-            this.legendPlugin = legendPlugin;
 
             //Let's extend UI
             var request = sandbox.getRequestBuilder('userinterface.AddExtensionRequest')(this);
@@ -311,29 +296,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                     me.printout.hide();
                 }
                 me.printout.printMap(printParams);
-            },
-            /**
-             * Bundles could plot with prespcefied parcel conf
-             * @method Printout.PrintWithParcelUIEvent
-             * @param {Object} event
-             */
-            'Printout.PrintWithParcelUIEvent': function (event) {
-                var me = this,
-                    contentId = event.getContentId(),
-                    printParams = event.getPrintParams(),
-                    geoJson = event.getGeoJsonData(),
-                    tableJson = event.getTableData();
-
-                if (geoJson) {
-                    me.geoJson = geoJson;
-                }
-                if (tableJson) {
-                    me.tableJson = tableJson;
-                }
-                me.setPublishMode(true);
-                // configure UI
-                me.printout.modifyUIConfig4Parcel(printParams);
-                me.printout.setLayoutParams(printParams);
             }
         },
 
@@ -435,19 +397,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                 tools = jQuery('#mapiconsplugin'),
                 i;
 
-            // check if statsgrid mode is on
-            // -> disable statsgrid mode
-            var selectedLayers = me.sandbox.findAllSelectedMapLayers(),
-                layer,
-                request;
-            for (i = 0; i < selectedLayers.length; i += 1) {
-                layer = selectedLayers[i];
-                if (layer.getLayerType() === "stats") {
-                    request = me.sandbox.getRequestBuilder('StatsGrid.StatsGridRequest')(false, layer);
-                    me.sandbox.request(me.getName(), request);
-                    break;
-                }
-            }
+            // trigger an event letting other bundles know we require the whole UI
+            var eventBuilder = this.sandbox.getEventBuilder('UIChangeEvent');
+            this.sandbox.notifyAll(eventBuilder(this.mediator.bundleId));
+
             if (blnEnabled) {
 
                 map.addClass('mapPrintoutMode');
@@ -482,11 +435,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                     me.sandbox.request(me.getName(), request);
                     this.printout.setEnabled(false);
                     this.printout.hide();
-                    // clean legend
-                    if (this.printout) {
-                        this.legendPlugin.clearLegendLayers();
-                    }
-
                 }
             }
         },

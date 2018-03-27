@@ -51,8 +51,7 @@ Oskari.clazz.define(
          *
          */
         _initImpl: function () {
-            var me = this;
-            me.getSandbox().printDebug('[GetInfoPlugin] init');
+            Oskari.log('GetInfoPlugin').debug('init');
         },
 
         _destroyControlElement: function () {
@@ -74,6 +73,10 @@ Oskari.clazz.define(
                         // disabled, do nothing
                         return;
                     }
+
+                    // remove old popup
+                    this._closeGfiInfo();
+
                     this.clickLocation = {
                         lonlat: evt.getLonLat()
                     };
@@ -99,17 +102,17 @@ Oskari.clazz.define(
                 'Realtime.RefreshLayerEvent': function (evt) {
                     this._refreshGfiInfo('update', evt.getMapLayer().getId());
                 },
-                'Publisher2.ColourSchemeChangedEvent': function(evt){
+                'Publisher2.ColourSchemeChangedEvent': function (evt) {
                     this._handleColourSchemeChangedEvent(evt);
                 },
-                'Publisher.ColourSchemeChangedEvent': function(evt){
+                'Publisher.ColourSchemeChangedEvent': function (evt) {
                     this._handleColourSchemeChangedEvent(evt);
                 }
             };
         },
 
-        _handleColourSchemeChangedEvent: function(evt){
-            if(this._config) {
+        _handleColourSchemeChangedEvent: function (evt) {
+            if (this._config) {
                 this._config.colourScheme = evt.getColourScheme();
             } else {
                 this._config = {
@@ -126,7 +129,11 @@ Oskari.clazz.define(
                 );
             return {
                 'MapModulePlugin.GetFeatureInfoRequest': handler,
-                'MapModulePlugin.GetFeatureInfoActivationRequest': handler
+                'MapModulePlugin.GetFeatureInfoActivationRequest': handler,
+                'GetInfoPlugin.ResultHandlerRequest': Oskari.clazz.create(
+                    'Oskari.mapframework.mapmodule.getinfoplugin.request.ResultHandlerRequestHandler',
+                    this
+                )
             };
         },
 
@@ -151,9 +158,7 @@ Oskari.clazz.define(
             if (!jqhr) {
                 return;
             }
-            this.getSandbox().printDebug(
-                '[GetInfoPlugin] Abort jqhr ajax request'
-            );
+            Oskari.log('GetInfoPlugin').debug('Abort jqhr ajax request');
             jqhr.abort();
             jqhr = null;
             me._pendingAjaxQuery.busy = false;
@@ -169,9 +174,9 @@ Oskari.clazz.define(
          * {Oskari.mapframework.domain.WmsLayer[]/Oskari.mapframework.domain.WfsLayer[]/Oskari.mapframework.domain.VectorLayer[]/Mixed}
          */
         _buildLayerIdList: function (layers) {
-            var me = this,
-                selected = layers || me.getSandbox().findAllSelectedMapLayers(),
-                layerIds = _.chain(selected)
+            var me = this;
+            var selected = layers || me.getSandbox().findAllSelectedMapLayers();
+            var layerIds = _.chain(selected)
                 .filter(function (layer) {
                     return me._isQualified(layer);
                 })
@@ -215,7 +220,6 @@ Oskari.clazz.define(
         _startAjaxRequest: function (dteMs) {
             this._pendingAjaxQuery.busy = true;
             this._pendingAjaxQuery.timestamp = dteMs;
-
         },
 
         /**
@@ -227,9 +231,7 @@ Oskari.clazz.define(
         _finishAjaxRequest: function () {
             this._pendingAjaxQuery.busy = false;
             this._pendingAjaxQuery.jqhr = null;
-            this.getSandbox().printDebug(
-                '[GetInfoPlugin] finished jqhr ajax request'
-            );
+            Oskari.log('GetInfoPlugin').debug('Finished jqhr ajax request');
         },
 
         /**
@@ -238,9 +240,7 @@ Oskari.clazz.define(
          * Prints debug about ajax call failure.
          */
         _notifyAjaxFailure: function () {
-            this.getSandbox().printDebug(
-                '[GetInfoPlugin] GetFeatureInfo AJAX failed'
-            );
+            Oskari.log('GetInfoPlugin').debug('GetFeatureInfo AJAX failed');
         },
 
         /**
@@ -279,9 +279,8 @@ Oskari.clazz.define(
             if (me._pendingAjaxQuery.busy &&
                 me._pendingAjaxQuery.timestamp &&
                 dteMs - me._pendingAjaxQuery.timestamp < 500) {
-                me.getSandbox().printDebug(
-                    '[GetInfoPlugin] GetFeatureInfo NOT SENT ' +
-                    '(time difference < 500ms)'
+                Oskari.log('GetInfoPlugin').debug(
+                    'GetFeatureInfo NOT SENT (time difference < 500ms)'
                 );
                 return;
             }
@@ -338,6 +337,11 @@ Oskari.clazz.define(
             });
         },
 
+        addInfoResultHandler: function (callback) {
+            var me = this;
+            me._showGfiInfo = callback;
+        },
+
         /**
          * Formats the given data and sends a request to show infobox.
          *
@@ -346,7 +350,8 @@ Oskari.clazz.define(
          * @param  {Object} data
          */
         _handleInfoResult: function (data) {
-            var content = [],
+            var me = this,
+                content = [],
                 contentData = {},
                 fragments = [],
                 colourScheme,
@@ -359,13 +364,23 @@ Oskari.clazz.define(
             }
 
             if (fragments.length) {
-                contentData.actions = {};
                 contentData.html = this._renderFragments(fragments);
                 contentData.layerId = fragments[0].layerId;
                 content.push(contentData);
             }
 
-            this._showGfiInfo(content, data.lonlat);
+            if (_.isObject(this._config)) {
+                colourScheme = this._config.colourScheme;
+                font = this._config.font;
+            }
+
+            this._showGfiInfo(content, data, this.formatters, {
+                colourScheme: colourScheme,
+                font: font,
+                title: this._loc.title,
+                infoboxId: this.infoboxId,
+                hidePrevious: false
+            });
         },
 
         /**
@@ -375,14 +390,9 @@ Oskari.clazz.define(
          * @private
          */
         _closeGfiInfo: function () {
-            var reqBuilder = this.getSandbox().getRequestBuilder(
-                    'InfoBox.HideInfoBoxRequest'
-                ),
-                request;
-
-            if (reqBuilder) {
-                request = reqBuilder(this.infoboxId);
-                this.getSandbox().request(this, request);
+            if (this.getSandbox().hasHandler('InfoBox.HideInfoBoxRequest')) {
+                var reqBuilder = Oskari.requestBuilder('InfoBox.HideInfoBoxRequest');
+                this.getSandbox().request(this, reqBuilder(this.infoboxId));
             }
         },
 
@@ -392,30 +402,25 @@ Oskari.clazz.define(
          * @method _showGfiInfo
          * @private
          * @param {Object[]} content infobox content array
-         * @param {OpenLayers.LonLat} lonlat location for the GFI data
+         * @param {data} data.lonlat location for the GFI data
+         * @param {formatters} formatter functions
+         * @param {params} params for request
          */
-        _showGfiInfo: function (content, lonlat) {
-            var reqBuilder = this.getSandbox().getRequestBuilder(
-                    'InfoBox.ShowInfoBoxRequest'
-                ),
-                request,
-                colourScheme,
-                font;
-
-            if (_.isObject(this._config)) {
-                colourScheme = this._config.colourScheme;
-                font = this._config.font;
-            }
+        _showGfiInfo: function (content, data, formatters, params) {
+            var reqBuilder = Oskari.requestBuilder('InfoBox.ShowInfoBoxRequest');
+            var options = {
+                hidePrevious: params.hidePrevious === undefined ? true : params.hidePrevious,
+                colourScheme: params.colourScheme,
+                font: params.font
+            };
 
             if (reqBuilder) {
-                request = reqBuilder(
-                    this.infoboxId,
-                    this._loc.title,
+                var request = reqBuilder(
+                    params.infoboxId,
+                    params.title,
                     content,
-                    lonlat,
-                    true,
-                    colourScheme,
-                    font
+                    data.lonlat,
+                    options
                 );
                 this.getSandbox().request(this, request);
             }
@@ -477,7 +482,7 @@ Oskari.clazz.define(
                     // Otherwise, we need to actually send `MapClickedEvent`
                     // and not just call `handleGetInfo` since then
                     // we'd only get the WMS feature info.
-                    clickEventB = sandbox.getEventBuilder('MapClickedEvent');
+                    clickEventB = Oskari.eventBuilder('MapClickedEvent');
                     clickEvent = clickEventB(clickLoc.lonlat);
                     // Timeout needed since the layer plugins haven't
                     // necessarily done their job of adding the layer yet.

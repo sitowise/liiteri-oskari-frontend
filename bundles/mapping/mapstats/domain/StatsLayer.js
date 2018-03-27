@@ -12,7 +12,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.domain.StatsLayer',
 function() {
     /* Layer Type */
     this._layerType = "STATS";
-    
 }, {
    /* Layer type specific functions */
     /**

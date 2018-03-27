@@ -13,7 +13,16 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
     this.prefix = "DrawPlugin.";
     this.creatorId = undefined;
 
-    if (config && config.id) {
+        me.drawControls = null;
+        me.currentDrawing = null;
+        me.drawLayer = null;
+        me.editMode = false;
+        me.currentDrawMode = null;
+        me.prefix = 'DrawPlugin.';
+        me.creatorId = undefined;
+        var config = me.getConfig();
+        if (config) {
+            if (config.id) {
         // Note that the events and requests need to match the configured
         // prefix based on the id!
         this.prefix = config.id + ".";
@@ -52,9 +61,12 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
      * @method
      */
     startDrawing: function (params) {
+            // no harm in activating straight away
+            this.modifyControls.modify.activate();
         if (params.isModify) {
             // preselect it for modification
             this.modifyControls.select.select(this.drawLayer.features[0]);
+
         } else {
             // remove possible old drawing
             this.drawLayer.destroyFeatures();
@@ -84,10 +96,46 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
         // disable all draw controls
         this.toggleControl();
         // clear drawing
-        if (this.drawLayer) this.drawLayer.destroyFeatures();
+            this.currentDrawing = null;
+            if (this.drawLayer) {
+                this.drawLayer.destroyFeatures();
+                // no harm in activating straight away
+                this.modifyControls.modify.deactivate();
+            }
     },
 
     forceFinishDraw: function () {
+            var activeControls = this._getActiveDrawControls(),
+                drawControls = this.drawControls,
+                drawLayer = this.drawLayer;
+
+            for (i = 0; i < activeControls.length; i += 1) {
+                activeControl = activeControls[i];
+                switch (activeControl) {
+                    case 'point':
+                        if(drawLayer.features.length === 0){
+                            return;
+                        }
+                        break;
+                    case 'line':
+                        if (!drawControls.line.handler.line){
+                            return;
+                        }
+                        if (drawControls.line.handler.line.geometry.components.length < 3 && drawLayer.features.length === 0) {
+                            return;
+                        }
+                        break;
+                    case 'area':
+                        if (!drawControls.area.handler.polygon){
+                            return;
+                        }
+                        components = drawControls.area.handler.polygon.geometry.components;
+                        if (components[components.length - 1].components.length < 5 && drawLayer.features.length === 0) {
+                            return;
+                        }
+                        break;
+                }
+            };
         try {
             //needed when preparing unfinished objects but causes unwanted features into the layer:
             //this.drawControls[this.currentDrawMode].finishSketch();
@@ -117,15 +165,15 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
                 // only lines and polygons have the finishGeometry function
                 if (typeof this.drawControls[activeControls[i]].handler.finishGeometry === typeof Function) {
                     // No need to finish geometry if already finished
-                    switch (activeControls[i]) {
-                    case "line":
-                        if (this.drawControls.line.handler.line.geometry.components.length < 2) {
+                        switch (activeControl) {
+                            case 'line':
+                                if (drawControls.line.handler.line.geometry.components.length < 3) {
                             continue;
                         }
                         break;
                     case "area":
                         components = this.drawControls.area.handler.polygon.geometry.components;
-                        if (components[components.length - 1].components.length < 3) {
+                                if (components[components.length - 1].components.length < 5) {
                             continue;
                         }
                         break;
@@ -205,7 +253,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
                     me.finishedDrawing();
                 },
                 'vertexmodified': function (event) {
-                    me._sendActiveGeometry(me.getDrawing());
+                            me._sendActiveGeometry(event.feature.geometry);
                 }
             }
         });
@@ -273,18 +321,22 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
                 standalone: true
             })
         };
-        this.modifyControls.select = new OpenLayers.Control.SelectFeature(me.drawLayer, {
-            onBeforeSelect: this.modifyControls.modify.beforeSelectFeature,
-            onSelect: this.modifyControls.modify.selectFeature,
-            onUnselect: this.modifyControls.modify.unselectFeature,
-            scope: this.modifyControls.modify
-        });
 
-        this._map.addLayers([me.drawLayer]);
-        var key;
-        for (key in this.drawControls) {
-            if (this.drawControls.hasOwnProperty(key)) {
-                this._map.addControl(this.drawControls[key]);
+            me.modifyControls.select = new OpenLayers.Control.SelectFeature(
+                me.drawLayer,
+                {
+                    onBeforeSelect: me.modifyControls.modify.beforeSelectFeature,
+                    onSelect: me.modifyControls.modify.selectFeature,
+                    onUnselect: me.modifyControls.modify.unselectFeature,
+                    scope: me.modifyControls.modify
+                }
+            );
+
+
+            me.getMap().addLayers([me.drawLayer]);
+            for (key in me.drawControls) {
+                if (me.drawControls.hasOwnProperty(key)) {
+                    me.getMap().addControl(me.drawControls[key]);
             }
         }
         for (key in this.modifyControls) {
@@ -292,8 +344,6 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
                 this._map.addControl(this.modifyControls[key]);
             }
         }
-        // no harm in activating straight away
-        this.modifyControls.modify.activate();
     },
     /**
      * Returns the drawn geometry from the draw layer
@@ -333,6 +383,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
             drawing = new OpenLayers.Geometry.MultiPolygon(components);
             break;
         }
+            this.currentDrawing = drawing;
         return drawing;
     },
 
@@ -345,7 +396,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
      * @return {OpenLayers.Geometry}
      */
     getActiveDrawing: function (geometry) {
-        var prevGeom = this.getDrawing(),
+            var prevGeom = this.currentDrawing,
             composedGeom;
 
         if (prevGeom !== null && prevGeom !== undefined) {

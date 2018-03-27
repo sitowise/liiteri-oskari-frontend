@@ -6,7 +6,11 @@ Oskari.registerLocalization({
         "flyouttitle": "Luo puskurivyöhyke",
         "desc": "",
         "btnTooltip": "Luo puskurivyöhyke",
-        "notLoggedIn": "Vain kirjautunut käyttäjä voi tehdä WFS tasoille analyysejä.",
+        "NotLoggedView": {
+            "text": "Analyysi-toiminnon avulla voit tehdä yksinkertaisia paikkatietoanalyyseja kohdetietoja sisältäville karttatasoille. Toiminto edellyttää kirjautumista.",
+            "signup": "Kirjaudu sisään",
+            "register": "Rekisteröidy"
+        },
         "AnalyseView": {
             "title": "Luo puskurivyöhyke",
             "content": {
@@ -17,6 +21,11 @@ Oskari.registerLocalization({
                     "buttons": {
                         "cancel": "Peruuta",
                         "finish": "Valmis"
+                    },
+                    "tooltips": {
+                        "point": "Lisää väliaikainen piste käytettäväksi analyysin pohjana.",
+                        "line": "Lisää väliaikainen viiva käytettäväksi analyysin pohjana.",
+                        "area": "Lisää väliaikainen alue käytettäväksi analyysin pohjana."
                     },
                     "modes": {
                         "area": "Alue",
@@ -88,6 +97,14 @@ Oskari.registerLocalization({
                 "label": "Valitse vyöhykkeen koko (m)",
                 "tooltip": "Anna vyöhykkeen koko"
             },
+                    {
+                        "id": "oskari_analyse_NoDataCnt",
+                        "label": "Tietosuojattujen kohteiden lukumäärä"
+                    }
+                ],
+                "attribute": "Valitse ominaisuustieto",
+                "footer": "Tietosuojatut kohteet eivät ole mukana laskennassa.",
+                "aggregateAdditionalInfo": "Huom! Olet valinnut tekstiä sisältäviä ominaisuustietoja. Niille voi laskea ainoastaan kohteiden lukumäärän. Jos kohteiden lukumäärä ei ole valittuna, tekstiä sisältäviä ominaisuustietoja ei oteta mukaan analyysin lopputulokseen."
             "includeOriginal": {
                 "label": "Sisällytä alkuperäinen kohde"
             },
@@ -124,10 +141,52 @@ Oskari.registerLocalization({
                     "label": "Sisältää"
                 }]
             },
+            "spatial_join": {
+                "firstLayer": "Kohdetaso",
+                "firstLayerTooltip": "Valitse kohdetaso eli taso, jonka ominaisuustietoihin lähdetasolta haetut ominaisuustiedot yhdistetään.",
+                "firstLayerFieldTooltip": "Kohdetasolta mukaan otettavat ominaisuustiedot",
+                "secondLayer": "Lähdetaso",
+                "secondLayerTooltip": "Valitse lähdetaso eli taso, jonka ominaisuustiedoista yhdistettävät tiedot haetaan kohdetasolle.",
+                "secondLayerFieldTooltip": "Lähdetasolta mukaan otettavat ominaisuustiedot",
+                "mode": "Analyysimenetelmän tyyppi",
+                "modeTooltip": "Valitse haluatko käyttää yhdistämisessä tunnuslukuja.",
+                "normalMode": "Yhdistäminen sijainnin perusteella",
+                "aggregateMode": "Tunnuslukujen laskenta",
+                "backend_locale": [
+                    {
+                        "id": "count",
+                        "label": "Kohteiden lukumäärä"
+                    },
+                    {
+                        "id": "sum",
+                        "label": "Summa"
+                    },
+                    {
+                        "id": "min",
+                        "label": "Pienin arvo"
+                    },
+                    {
+                        "id": "max",
+                        "label": "Suurin arvo"
+                    },
+                    {
+                        "id": "avg",
+                        "label": "Keskiarvo"
+                    },
+                    {
+                        "id": "stddev",
+                        "label": "Keskihajonta"
+                    }
+                ]
+            },
             "params": {
-                "label": "Valitse säilytettävät ominaisuustiedot",
+                "label": "Mukaan otettavat ominaisuustiedot",
+                "aggreLabel": "Ominaisuustiedot joille tunnusluvut lasketaan",
+                "aggreLabelTooltip": "Valitse enintään 10 ominaisuustietoa, joille lasketaan tunnusluvut.",
+                "labelTooltip": "Valitse enintään 10 ominaisuustietoa, jotka otetaan mukaan lopputulokseen.",
                 "tooltip": "",
-                "options": [{
+                "options": [
+                    {
                     "id": "oskari_analyse_all",
                     "selected": true,
                     "label": "Kaikki"
@@ -240,7 +299,7 @@ Oskari.registerLocalization({
                 "placeholder": "Anna tasolle nimi"
             },
             "drawing": {
-                "label": "  ",
+                "label": "",
                 "point": {
                     "label": "Piste",
                     "color": "Väri",
@@ -270,7 +329,7 @@ Oskari.registerLocalization({
                 "delete": " "
             },
             "title": "Analyysit",
-            "confirmDeleteMsg": "Haluatko poistaa analyysin: ",
+            "confirmDeleteMsg": "Haluatko poistaa analyysin \"{name}\"?",
             "buttons": {
                 "ok": "Sulje",
                 "cancel": "Peruuta",

@@ -4,7 +4,7 @@ Oskari.registerLocalization(
     "key": "admin-layerrights",
     "value": {
         "title": "Layer Rights",
-        "desc": "NOT TRANSLATED",
+        "desc": "",
         "tile": {
             "title": "Map Layer Rights"
         },
@@ -41,5 +41,4 @@ Oskari.registerLocalization(
             "success" : "Permissions have been updated"
         }
     }
-}
-);
+});

@@ -6,22 +6,22 @@ Oskari.registerLocalization(
         "title": "Տպել դիտվող քարտեզը",
         "flyouttitle": "Տպել դիտվող քարտեզը",
         "desc": "",
-        "btnTooltip": "NOT TRANSLATED",
+        "btnTooltip": "",
         "BasicView": {
             "title": "Տպել դիտվող քարտեզը",
             "name": {
-                "label": "NOT TRANSLATED",
-                "placeholder": "NOT TRANSLATED",
-                "tooltip": "NOT TRANSLATED"
+                "label": "",
+                "placeholder": "",
+                "tooltip": ""
             },
             "language": {
-                "label": "NOT TRANSLATED",
+                "label": "",
                 "options": {
-                    "fi": "NOT TRANSLATED",
-                    "sv": "NOT TRANSLATED",
-                    "en": "NOT TRANSLATED"
+                    "fi": "",
+                    "sv": "",
+                    "en": ""
                 },
-                "tooltip": "NOT TRANSLATED"
+                "tooltip": ""
             },
             "size": {
                 "label": "Չափ",
@@ -62,7 +62,7 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Տպել",
                 "ok": "OK",
-                "back" : "NOT TRANSLATED",
+                "back": "",
                 "cancel": "Դադարեցնել"
             },
             "location": {
@@ -117,51 +117,14 @@ Oskari.registerLocalization(
                     }
                 ]
             },
-            "legend": {
-                "label": "NOT TRANSLATED",
-                "tooltip": "NOT TRANSLATED",
-                "options": [
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED",
-                        "selected": true
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    }
-                ]
-            },
             "help": "Օգնություն",
             "error": {
                 "title": "Սխալ",
-                "size": "NOT TRANSLATED",
-                "name": "NOT TRANSLATED",
+                "size": "",
+                "name": "",
                 "nohelp": "Օգնությունը հասանելի չէ",
                 "saveFailed": "Քարտեզի տպումը ձախողված է/կրկին փորձեք",
-                "nameIllegalCharacters": "NOT TRANSLATED"
+                "nameIllegalCharacters": ""
             }
         },
         "StartView": {
@@ -176,5 +139,4 @@ Oskari.registerLocalization(
             }
         }
     }
-}
-);
+});

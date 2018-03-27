@@ -12,12 +12,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
      * instance
      *      reference to component that created the tile
      */
-
-    function (instance, localization) {
+    function (instance) {
         var me = this,
             p;
         me.instance = instance;
-        me.loc = localization;
+        me.loc = Oskari.getMsg.bind(null, 'Analyse');
         me.grid = undefined;
         me.container = undefined;
 
@@ -59,9 +58,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
                 link.append(name);
                 link.bind('click', function () {
                     // add analysis layer to map on name click
-                    var request = addMLrequestBuilder(layer.getId(), false, layer.isBaseLayer());
+                    if (!me.popupOpen) {
+                        var request = addMLrequestBuilder(
+                            layer.getId()
+                        );
                     sandbox.request(me.instance, request);
                     return false;
+                    }
                 });
                 return link;
             };
@@ -72,9 +75,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
                     layer = data.layer;
                 link.append(name);
                 link.bind('click', function () {
+                    if (!me.popupOpen) {
                     // delete analysis layer
                     me._confirmDeleteAnalysis(data);
                     return false;
+                    }
                 });
                 return link;
             };
@@ -82,10 +87,9 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
             var i,
                 key;
             // setup localization
-            for (i = 0; i < visibleFields.length; ++i) {
-                key = visibleFields[i];
-                grid.setColumnUIName(key, this.loc.grid[key]);
-            }
+            visibleFields.forEach(function (key) {
+                grid.setColumnUIName(key, me.loc('personalDataTab.grid.' + key));
+            });
 
             this.container = this.template.main.clone();
             // populate initial grid content
@@ -108,10 +112,10 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
 
             for (i = 0; i < layers.length; ++i) {
                 gridModel.addData({
-                    'id': layers[i].getId(),
-                    'name': layers[i].getName(),
-                    'layer': layers[i],
-                    'delete': this.loc.buttons['delete']
+                    'id': layer.getId(),
+                    'name': layer.getName(),
+                    'layer': layer,
+                    'delete': me.loc('personalDataTab.buttons.delete')
                 });
             }
             this.grid.setDataModel(gridModel);
@@ -137,9 +141,20 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
                 me._deleteAnalysis(data.layer);
                 dialog.close();
             });
-            var cancelBtn = dialog.createCloseButton(this.loc.buttons.cancel);
-            var confirmMsg = this.loc.confirmDeleteMsg + '"' + data.name + '"' + '?';
-            dialog.show(this.loc.title, confirmMsg, [okBtn, cancelBtn]);
+            dialog.onClose(function () {
+                me.popupOpen = false;
+            });
+
+            dialog.show(
+                me.loc('personalDataTab.title'),
+                me.loc('personalDataTab.confirmDeleteMsg', {name: data.name}),
+                [
+                    dialog.createCloseButton(me.loc('personalDataTab.buttons.cancel')),
+                    okBtn
+                ]
+            );
+            me.popupOpen = true;
+
             dialog.makeModal();
         },
         /**
@@ -194,8 +209,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
             sandbox.request(this.instance, request);
             service.removeLayer(layer.getId());
             // show msg to user about successful removal
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-            dialog.show(this.loc.notification.deletedTitle, this.loc.notification.deletedMsg);
+            if (showDialog) {
+                var dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                );
+                dialog.show(
+                    this.loc('personalDataTab.notification.deletedTitle'),
+                    this.loc('personalDataTab.notification.deletedMsg')
+                );
             dialog.fadeout(3000);
         },
         /**
@@ -204,8 +225,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.analyse.view.PersonalDataTab',
          * @private
          */
         _deleteFailure: function () {
-            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-            var okBtn = dialog.createCloseButton(this.loc.buttons.ok);
-            dialog.show(this.loc.error.title, this.loc.error.generic, [okBtn]);
+            var dialog = Oskari.clazz.create(
+                    'Oskari.userinterface.component.Popup'
+                ),
+                okBtn = dialog.createCloseButton(this.loc('personalDataTab.buttons.ok'));
+
+            dialog.show(this.loc('personalDataTab.error.title'), this.loc('personalDataTab.error.generic'), [okBtn]);
         }
     });

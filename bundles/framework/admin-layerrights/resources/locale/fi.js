@@ -4,7 +4,7 @@ Oskari.registerLocalization(
     "key": "admin-layerrights",
     "value": {
         "title": "Tasojen oikeudet",
-        "desc": "NOT TRANSLATED",
+        "desc": "",
         "tile": {
             "title": "Tasojen oikeudet"
         },
@@ -41,5 +41,4 @@ Oskari.registerLocalization(
             "success": "Oikeudet on päivitetty"
         }
     }
-}
-);
+});

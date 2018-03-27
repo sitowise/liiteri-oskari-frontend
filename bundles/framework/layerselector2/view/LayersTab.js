@@ -331,16 +331,20 @@ Oskari.clazz.define(
                 groupPanel = Oskari.clazz.create(
                     'Oskari.userinterface.component.AccordionPanel'
                 );
-                groupPanel.setTitle(group.getTitle() + ' (' + layersLength +
-                    ')');
+                groupPanel.setTitle(group.getTitle());
                 groupPanel.setId(
                     'oskari_layerselector2_accordionPanel_' +
                     group.getTitle().replace(/[^a-z0-9\-_:\.]/gi, '-')
                 );
                 group.layerListPanel = groupPanel;
 
-                groupContainer = groupPanel.getContainer();
+                var badge = Oskari.clazz.create('Oskari.userinterface.component.Badge');
+                badge.insertTo( groupPanel.getHeader() );
+                badge.setContent( layersLength, "inverse" );
+                group.badge = badge;
 
+                groupContainer = groupPanel.getContainer();
+                groupContainer.addClass('oskari-hidden');
                 sortedLayers = layers.sort(comparer);
                 for (n = 0; n < sortedLayers.length; n += 1) {
                     layer = sortedLayers[n];
@@ -351,9 +355,9 @@ Oskari.clazz.define(
                     );
                     layerContainer = layerWrapper.getContainer();
                     groupContainer.append(layerContainer);
-
                     me.layerContainers[layer.getId()] = layerWrapper;
                 }
+                groupContainer.removeClass('oskari-hidden');
                 me.accordion.addPanel(groupPanel);
             }
 
@@ -423,9 +427,11 @@ Oskari.clazz.define(
                     if (group.layerListPanel.isVisible()) {
                         visibleGroupCount += 1;
                     }
-                    group.layerListPanel.setTitle(group.getTitle() + ' (' +
-                        visibleLayerCount + '/' + layers.length + ')');
+                if( group.badge ) {
+                    group.badge.updateContent( visibleLayerCount + '/' + layers.length );
                 }
+            }
+
             }
 
             // check if there are no groups visible -> show 'no matches' notification
@@ -728,7 +734,10 @@ Oskari.clazz.define(
                     group.layerListPanel.setVisible(true);
                     group.layerListPanel.close();
                     group.layerListPanel.setTitle(group.getTitle() + ' (' + layers.length + ')');
-                }                
+                }
+                if (group.badge) {
+                    group.badge.updateContent(layers.length);
+                }
             }
 
             this.accordion.removeMessage();

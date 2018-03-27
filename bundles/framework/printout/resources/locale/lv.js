@@ -6,22 +6,22 @@ Oskari.registerLocalization(
         "title": "Drukāt kartes skatu",
         "flyouttitle": "Drukāt kartes skatu",
         "desc": "",
-        "btnTooltip": "NOT TRANSLATED",
+        "btnTooltip": "",
         "BasicView": {
             "title": "Drukāt kartes skatu",
             "name": {
-                "label": "NOT TRANSLATED",
-                "placeholder": "NOT TRANSLATED",
-                "tooltip": "NOT TRANSLATED"
+                "label": "",
+                "placeholder": "",
+                "tooltip": ""
             },
             "language": {
-                "label": "NOT TRANSLATED",
+                "label": "",
                 "options": {
-                    "fi": "NOT TRANSLATED",
-                    "sv": "NOT TRANSLATED",
-                    "en": "NOT TRANSLATED"
+                    "fi": "",
+                    "sv": "",
+                    "en": ""
                 },
-                "tooltip": "NOT TRANSLATED"
+                "tooltip": ""
             },
             "size": {
                 "label": "Izmērs",
@@ -62,7 +62,7 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Saņemt izdruku",
                 "ok": "Labi",
-                "back" : "NOT TRANSLATED",
+                "back": "",
                 "cancel": "Atcelt"
             },
             "location": {
@@ -117,51 +117,14 @@ Oskari.registerLocalization(
                     }
                 ]
             },
-            "legend": {
-                "label": "NOT TRANSLATED",
-                "tooltip": "NOT TRANSLATED",
-                "options": [
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED",
-                        "selected": true
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "NOT TRANSLATED",
-                        "loca": "NOT TRANSLATED",
-                        "label": "NOT TRANSLATED",
-                        "tooltip": "NOT TRANSLATED"
-                    }
-                ]
-            },
             "help": "Palīdzība",
             "error": {
                 "title": "Kļūda",
-                "size": "NOT TRANSLATED",
-                "name": "NOT TRANSLATED",
+                "size": "",
+                "name": "",
                 "nohelp": "Palīdzība nav pieejama",
                 "saveFailed": "Karti izdrukāt neizdevās| Mēģiniet vēlreiz vēlāk",
-                "nameIllegalCharacters": "NOT TRANSLATED"
+                "nameIllegalCharacters": ""
             }
         },
         "StartView": {
@@ -176,5 +139,4 @@ Oskari.registerLocalization(
             }
         }
     }
-}
-);
+});
