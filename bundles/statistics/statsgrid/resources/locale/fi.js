@@ -448,6 +448,9 @@ Oskari.registerLocalization(
             "tasksElementTitle": "Vertaa valittuun sarakkeeseen",
             "cancel": "Peruuta",
             "ok": "Laske"
+        },
+        "areaDisclaimer": {
+            "link": "<a target='_blank' href='http://www.ymparisto.fi/download/noname/%7BB8E38FA6-6F91-4457-B48E-0CE2481E2F27%7D/135925'>Liiteri aluemuutokset (pdf)</a>"
         }
     }
 }

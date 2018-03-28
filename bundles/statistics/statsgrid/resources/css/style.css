@@ -585,3 +585,7 @@ div.divmanazerpopup.stats-compare-dialog {
 div.stats-compare-instructions {
   margin-bottom: 10px;
 }
+
+.statsgrid .additionalButtons {
+  margin-bottom: 5px;
+}
