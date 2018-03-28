@@ -99,6 +99,9 @@ Oskari.clazz.define(
                 '/wfs/reset': function () {
                     self.resetWFS.apply(self, arguments);
                 },
+                '/wfs/defaultStyle': function () {
+                    self.defaultStyle.apply(self, arguments);
+                },
                 '/error': function () {
                     self.handleError.apply(self, arguments);
                 },
@@ -602,6 +605,89 @@ Oskari.clazz.category('Oskari.mapframework.bundle.mapwfs2.service.Mediator', 'ge
         this.__resetTimeout = setTimeout(function() {
             me.resetWFS(data);
         }, timeUntilNextTry + 10);
+    },
+    status: function (data) {
+        var layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(data.data.layerId);
+        var event = this.plugin.getSandbox().getEventBuilder("WFSLoadingFinishedEvent")(layer);
+        this.plugin.getSandbox().notifyAll(event);
+    },
+    defaultStyle: function (data) {
+        var layer = this.plugin.getSandbox().findMapLayerFromSelectedMapLayers(data.data.layerId);
+
+        if (data.data.style && !layer.getCustomStyle()) {
+            var style = data.data.style;
+            var customStyle = this._mapFromStyle(data.data.layerId, style);
+            layer.setCustomStyle(customStyle);
+        }
+    },
+    _mapFromStyle: function (id, style) {
+        var result = {};
+        if (style.type == 'simple') {
+            result.layerId = id;
+            result.type = style.type;
+            result.values = this._mapSymbol(style);
+        } else if (style.type == 'uniqueValue') {
+            result.layerId = id;
+            result.type = style.type;
+            result.field = style.field;
+            result.values = [];
+            for (var group in style.uniqueValuesInfo) {
+                if (!style.uniqueValuesInfo.hasOwnProperty(group))
+                    continue;
+                var valueItem = {};
+                valueItem.group = group;
+                valueItem.symbol = this._mapFromSymbol(style.uniqueValuesInfo[group]);
+                valueItem.label = style.uniqueValuesInfo[group].name;
+                result.values.push(valueItem);
+            }
+        } else if (style.type == 'group') {
+            result.layerId = id;
+            result.type = style.type;
+            result.values = [];
+            for (var subStyle in style.subStyles) {
+                if (!style.subStyles.hasOwnProperty(subStyle))
+                    continue;
+                var valueItem = {};
+                valueItem.group = subStyle;
+                valueItem.symbol = this._mapFromSymbol(style.subStyles[subStyle]);
+                valueItem.label = style.subStyles[subStyle].name;
+                result.values.push(valueItem);
+            }
+        }
+
+        return result;
+    },
+    _mapFromSymbol: function (symbolStyle) {
+        return {
+            area : {
+                fillColor: this._mapFromColor(symbolStyle.fillColor),
+                fillStyle: symbolStyle.fillPattern,
+                lineColor: this._mapFromColor(symbolStyle.borderColor),
+                lineCorner: symbolStyle.borderLinejoin,
+                lineStyle: symbolStyle.borderDasharray,
+                lineWidth: symbolStyle.borderWidth,
+            },
+            line : {
+                cap: symbolStyle.strokeLinecap,
+                color: this._mapFromColor(symbolStyle.strokeColor),
+                corner: symbolStyle.strokeLinejoin,
+                style: symbolStyle.strokeDasharray,
+                width: symbolStyle.strokeWidth,
+            },
+            dot : {
+                color: this._mapFromColor(symbolStyle.dotColor),
+                shape: symbolStyle.dotShape,
+                size: symbolStyle.dotSize,
+            }
+        };
+    },
+    _mapFromColor: function(color) {
+        if (color.charAt(0) == '#')
+            color = color.substr(1);
+        if (color.length > 6)
+            color = color.substr(0, 6);
+
+        return color;
     }
 });
 
@@ -730,23 +816,69 @@ Oskari.clazz.category(
          * sends message to /service/wfs/setMapLayerCustomStyle
          */
         setMapLayerCustomStyle: function (id, style) {
-            this.sendMessage('/service/wfs/setMapLayerCustomStyle', {
-                'layerId': id,
-                'fill_color': style.area.fillColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                'fill_pattern': style.area.fillStyle,
-                'border_color': style.area.lineColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                'border_linejoin': style.area.lineCorner,
-                'border_dasharray': style.area.lineStyle,
-                'border_width': style.area.lineWidth,
-                'stroke_linecap': style.line.cap,
-                'stroke_color': style.line.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                'stroke_linejoin': style.line.corner,
-                'stroke_dasharray': style.line.style,
-                'stroke_width': style.line.width,
-                'dot_color': style.dot.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
-                'dot_shape': style.dot.shape,
-                'dot_size': style.dot.size
-            });
+            if (this.connection.isConnected()) {
+                var mappedStyle = this._mapToStyle(id, style);
+                this.cometd.publish('/service/wfs/setMapLayerCustomStyle', mappedStyle);
+            }
+        },
+        _mapToStyle: function (id, style) {
+            var result = {};
+            var i, uvItem, valueItem;
+            if (style.type == 'simple') {
+                result.layerId = id;
+                result.type = style.type;
+                result.symbol = this._mapToSymbol(style.values[0].symbol);
+            } else if ((style.type == 'uniqueValue' || style.type == 'group') && style.isDefaultValue) {
+                result.layerId = id;
+                result.type = 'simple';
+                result.symbol = this._mapToSymbol(style.defaultValue.symbol);
+            } else if (style.type == 'uniqueValue') {
+                result.layerId = id;
+                result.type = style.type;
+                result.field = style.field;
+                result.uniqueValueInfos = [];
+                for (i = 0; i < style.values.length; i++) {
+                    valueItem = style.values[i];
+                    uvItem = {
+                        'symbol': this._mapToSymbol(valueItem.symbol),
+                        'value': valueItem.group,
+                        };
+                    result.uniqueValueInfos.push(uvItem);
+                }
+            } else if (style.type == 'group') {
+                result.layerId = id;
+                result.type = style.type;
+                result.subStyles = [];
+                for (i = 0; i < style.values.length; i++) {
+                    valueItem = style.values[i];
+                    uvItem = {
+                        'symbol': this._mapToSymbol(valueItem.symbol),
+                        'value': valueItem.group,
+                    };
+                    result.subStyles.push(uvItem);
+                }
+            }
+            return result;
+        },
+        _mapToSymbol: function(symbolStyle) {
+            return {
+                "fill_color": symbolStyle.area.fillColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+                "fill_pattern": symbolStyle.area.fillStyle,
+                "border_color": symbolStyle.area.lineColor, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+                "border_linejoin": symbolStyle.area.lineCorner,
+                "border_dasharray": symbolStyle.area.lineStyle,
+                "border_width": symbolStyle.area.lineWidth,
+    
+                "stroke_linecap": symbolStyle.line.cap,
+                "stroke_color": symbolStyle.line.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+                "stroke_linejoin": symbolStyle.line.corner,
+                "stroke_dasharray": symbolStyle.line.style,
+                "stroke_width": symbolStyle.line.width,
+    
+                "dot_color": symbolStyle.dot.color, // check somewhere that first char is # - _prefixColorForServer @ MyPlacesWFSTStore.js
+                "dot_shape": symbolStyle.dot.shape,
+                "dot_size": symbolStyle.dot.size,
+            };
         },
 
         /**

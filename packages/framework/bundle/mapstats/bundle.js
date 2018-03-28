@@ -33,6 +33,9 @@ Oskari.clazz.define(
                 "src": "../../../../bundles/mapping/mapstats/plugin/StatsLayerPlugin.js"
             }, {
                 "type": "text/javascript",
+                "src": "../../../../bundles/mapping/mapstats/domain/StatsLayerModelBuilder.js"
+            }, {
+                "type": "text/javascript",
                 "src": "../../../../bundles/mapping/mapstats/domain/StatsLayer.js"
             }, {
                 "type": "text/javascript",
@@ -46,6 +49,15 @@ Oskari.clazz.define(
             }, {
                 "type": "text/css",
                 "src": "../../../../bundles/mapping/mapstats/resources/css/mapstats.css"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/mapping/mapstats/resources/locale/fi.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/mapping/mapstats/resources/locale/en.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/mapping/mapstats/resources/locale/sv.js"
             }]
         },
         "bundle": {

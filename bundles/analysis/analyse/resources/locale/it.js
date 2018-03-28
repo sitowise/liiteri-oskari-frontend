@@ -1,5 +1,4 @@
-Oskari.registerLocalization(
-{
+Oskari.registerLocalization({
     "lang": "it",
     "key": "Analyse",
     "value": {
@@ -7,28 +6,17 @@ Oskari.registerLocalization(
         "flyouttitle": "Analisi",
         "desc": "",
         "btnTooltip": "Analisi",
-        "NotLoggedView": {
-            "text": "Solo gli utenti registrati possono fare analisi.",
-            "signup": "Accedi",
-            "register": "Registrati"
-        },
+        "notLoggedIn": "Solo gli utenti registrati possono fare analisi. <a href='/web/en/login'>Log in</a>.",
         "AnalyseView": {
             "title": "Analisi",
             "content": {
                 "label": "Dati",
-                "drawToolsLabel": "",
                 "tooltip": "Aggiungi dati da analizzare",
-                "drawToolsTooltip": "",
                 "features": {
                     "title": "Draw a feature",
                     "buttons": {
                         "cancel": "Cancel",
                         "finish": "Done"
-                    },
-                    "tooltips": {
-                        "point": "",
-                        "line": "",
-                        "area": ""
                     },
                     "modes": {
                         "area": "Area",
@@ -36,163 +24,70 @@ Oskari.registerLocalization(
                         "point": "Point"
                     }
                 },
-                "drawDialog": {
-                    "point": {
-                        "title": "",
-                        "add": ""
-                    },
-                    "line": {
-                        "title": "",
-                        "add": ""
-                    },
-                    "area": {
-                        "title": "",
-                        "add": ""
-                    }
-                },
-                "drawFilter": {
-                    "title": "",
-                    "buttons": {
-                        "cancel": "",
-                        "finish": ""
-                    },
-                    "tooltip": {
-                        "point": "",
-                        "line": "",
-                        "edit": "",
-                        "remove": ""
-                    },
-                    "dialog": {
-                        "modes": {
-                            "point": {
-                                "title": "",
-                                "message": ""
-                            },
-                            "line": {
-                                "title": "",
-                                "message": ""
-                            },
-                            "edit": {
-                                "title": "",
-                                "message": ""
-                            }
-                        }
-                    }
-                },
-                "selectionTools": {
-                    "title": "",
-                    "description": "",
-                    "button": {
-                        "empty": "Rimuovi selezione"
-                    }
-                },
                 "search": {
                     "title": "Search places",
                     "resultLink": "Add to analyse"
                 }
             },
+
             "method": {
                 "label": "Metodo",
                 "tooltip": "Seleziona prima i dati, poi il metodo",
-                "options": [
-                    {
-                        "id": "oskari_analyse_buffer",
-                        "label": "Buffer",
-                        "classForMethod": "buffer",
-                        "selected": true,
-                        "tooltip": ""
-                    },
-                    {
-                        "id": "oskari_analyse_aggregate",
-                        "label": "Aggregate",
-                        "classForPreview": "aggregate",
-                        "tooltip": ""
-                    },
-                    {
-                        "id": "oskari_analyse_union",
-                        "label": "Union",
-                        "classForPreview": "union",
-                        "tooltip": ""
-                    },
-                    {
-                        "id": "oskari_analyse_intersect",
-                        "label": "Intersect",
-                        "classForPreview": "intersect",
-                        "tooltip": ""
-                    },
-                    {
-                        "id": "oskari_analyse_layer_union",
-                        "label": "Union of analyse layers",
-                        "classForPreview": "layer_union",
-                        "tooltip": "Unifica i layer con gli stessi attributi"
-                    },
-                    {
-                        "id": "oskari_analyse_areas_and_sectors",
-                        "label": "Areas and sectors",
-                        "classForPreview": "areas_and_sectors",
-                        "tooltip": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "oskari_analyse_difference",
-                        "label": "Difference computation",
-                        "classForPreview": "difference",
-                        "tooltip": ""
-                    },
-                    {
-                        "id": "oskari_analyse_spatial_join",
-                        "label": "Spatial join",
-                        "classForPreview": "spatial_join",
-                        "tooltip": ""
-                    }
-                ]
+                "options": [{
+                    "id": "oskari_analyse_buffer",
+                    "label": "Buffer",
+                    "classForMethod": "buffer",
+                    "selected": true,
+                    "tooltip": ""
+                }, {
+                    "id": "oskari_analyse_aggregate",
+                    "label": "Aggregate",
+                    "classForPreview": "aggregate",
+                    "tooltip": ""
+                }, {
+                    "id": "oskari_analyse_union",
+                    "label": "Union",
+                    "classForPreview": "union",
+                    "tooltip": ""
+                }, {
+                    "id": "oskari_analyse_intersect",
+                    "label": "Intersect",
+                    "classForPreview": "intersect",
+                    "tooltip": ""
+                }, {
+                    "id": "oskari_analyse_layer_union",
+                    "label": "Union of analyse layers",
+                    "classForPreview": "layer_union",
+                    "tooltip": "Unifica i layer con gli stessi attributi"
+                }]
             },
             "aggregate": {
                 "label": "Aggregate function",
-                "options": [
-                    {
-                        "id": "oskari_analyse_Count",
-                        "label": "Conta",
-                        "selected": true
-                    },
-                    {
-                        "id": "oskari_analyse_Sum",
-                        "label": "Somma"
-                    },
-                    {
-                        "id": "oskari_analyse_Min",
-                        "label": "Minimo"
-                    },
-                    {
-                        "id": "oskari_analyse_Max",
-                        "label": "Massimo"
-                    },
-                    {
-                        "id": "oskari_analyse_Average",
-                        "label": "Media"
-                    },
-                    {
-                        "id": "oskari_analyse_StdDev",
-                        "label": "Deviazione standard"
-                    },
-                    {
-                        "id": "oskari_analyse_Median",
-                        "label": "NOT TRANSLATED"
-                    },
-                    {
-                        "id": "oskari_analyse_NoDataCnt",
-                        "label": "Unauthorized features"
-                    }
-                ],
-                "attribute": "Scegli un attributo",
-                "footer": "Authorised features are not counted"
+                "options": [{
+                    "id": "oskari_analyse_Count",
+                    "label": "Conta",
+                    "selected": true
+                }, {
+                    "id": "oskari_analyse_Sum",
+                    "label": "Somma"
+                }, {
+                    "id": "oskari_analyse_Min",
+                    "label": "Minimo"
+                }, {
+                    "id": "oskari_analyse_Max",
+                    "label": "Massimo"
+                }, {
+                    "id": "oskari_analyse_Average",
+                    "label": "Media"
+                }, {
+                    "id": "oskari_analyse_StdDev",
+                    "label": "Deviazione standard"
+                }],
+                "attribute": "Scegli un attributo"
             },
             "buffer_size": {
-                "label": "Dimensione Buffer",
+                "label": "Dimensione Buffer (metri)",
                 "tooltip": "Enter buffer size"
-            },
-            "buffer_units": {
-                "m": "Metri",
-                "km": "Chilometri"
             },
             "analyse_name": {
                 "label": "Nome dell'analisi",
@@ -203,7 +98,6 @@ Oskari.registerLocalization(
                 "tooltip": "Inserisci i parametri dell'analisi"
             },
             "intersect": {
-                "target": "Layer di base",
                 "label": "Layer da incrociare"
             },
             "union": {
@@ -214,47 +108,31 @@ Oskari.registerLocalization(
                 "notAnalyseLayer": "Scegli un layer da analizzare",
                 "noLayersAvailable": "Nessun layer trovato con gli stessi attributi"
             },
-            "areas_and_sectors": {
-                "area_count": "",
-                "area_count_tooltip": "",
-                "area_size": "",
-                "area_size_tooltip": "",
-                "sector_count": "",
-                "sector_count_tooltip": ""
-            },
             "spatial": {
                 "label": "Operatore spaziale",
-                "options": [
-                    {
-                        "id": "oskari_analyse_intersect",
-                        "label": "Intersect",
-                        "selected": true
-                    },
-                    {
-                        "id": "oskari_analyse_contains",
-                        "label": "Contains"
-                    }
-                ]
+                "options": [{
+                    "id": "oskari_analyse_intersect",
+                    "label": "Intersect",
+                    "selected": true
+                }, {
+                    "id": "oskari_analyse_contains",
+                    "label": "Contains"
+                }]
             },
             "params": {
                 "label": "Selected columns",
-                "aggreLabel": "Aggregate attributes",
                 "tooltip": "",
-                "options": [
-                    {
-                        "id": "oskari_analyse_all",
-                        "selected": true,
-                        "label": "All"
-                    },
-                    {
-                        "id": "oskari_analyse_none",
-                        "label": "None"
-                    },
-                    {
-                        "id": "oskari_analyse_select",
-                        "label": "Scegli.."
-                    }
-                ]
+                "options": [{
+                    "id": "oskari_analyse_all",
+                    "selected": true,
+                    "label": "All"
+                }, {
+                    "id": "oskari_analyse_none",
+                    "label": "None"
+                }, {
+                    "id": "oskari_analyse_select",
+                    "label": "Scegli.."
+                }]
             },
             "output": {
                 "label": "Layout",
@@ -266,7 +144,43 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Salva",
                 "analyse": "Analizza",
-                "data": "Aggiungi dati"
+                "data": "Aggiungi dati",
+                "cancel": "Annulla",
+                "ok": "OK"
+            },
+            "filter": {
+                "title": "Filtri",
+                "description": "Filtro per il layer ",
+                "clearButton": "Cancella filtri",
+                "refreshButton": "Aggiorna filtri",
+                "addFilter": "Aggiungi un nuovo filtro",
+                "removeFilter": "Rimuovi filtri",
+                "bbox": {
+                    "title": "Mappa dei filtri",
+                    "on": "In uso",
+                    "off": "Non in uso"
+                },
+                "clickedFeatures": {
+                    "title": "Filtri sulle feature",
+                    "label": "Includi solo le feature selezionate"
+                },
+                "values": {
+                    "title": "Filter",
+                    "placeholders": {
+                        "case-sensitive": "",
+                        "attribute": "Attributo",
+                        "boolean": "Operatore logico",
+                        "operator": "Operatore",
+                        "attribute-value": "Valore"
+                    }
+                },
+                "validation": {
+                    "title": "I seguenti errori impediscono l'aggiornamento del filtro:",
+                    "attribute_missing": "Manca l'attributo",
+                    "operator_missing": "Manca l'operatore",
+                    "value_missing": "Manca il valore",
+                    "boolean_operator_missing": "Manca l'operatore logico"
+                }
             },
             "help": "Help",
             "success": {
@@ -296,10 +210,7 @@ Oskari.registerLocalization(
                 "Unable_to_process_aggregate_union": "Impossibile processare l'unione",
                 "Unable_to_get_features_for_union": "Impossibile ottenere feature dall'unione",
                 "Unable_to_store_analysis_data": "Impossibile memorizzare i parametri dell'analisi",
-                "Unable_to_get_analysisLayer_data": "Impossibile ottenere i dati del layer da analizzare",
-                "timeout": "Analysis request timed out",
-                "error": "Analysis failed for an unknown reason",
-                "parsererror": "Server returned invalid analysis data"
+                "Unable_to_get_analysisLayer_data": "Impossibile ottenere i dati del layer da analizzare"
             },
             "infos": {
                 "title": "Info",
@@ -350,10 +261,10 @@ Oskari.registerLocalization(
         "personalDataTab": {
             "grid": {
                 "name": "Nome",
-                "delete": "Cancella"
+                "delete": " "
             },
             "title": "Analisi",
-            "confirmDeleteMsg": "Vuoi cancellare \"{name}\"?",
+            "confirmDeleteMsg": "Vuoi cancellare:",
             "buttons": {
                 "ok": "OK",
                 "cancel": "Annulla",

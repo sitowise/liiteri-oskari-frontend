@@ -11,7 +11,7 @@ div.toolrow {
     display: inline-block;
     cursor: pointer; }
     div.toolrow div.tool.selected, div.toolrow div.tool:active:not(.disabled) {
-      background-color: #212121; }
+      background-color: #0068a1; }
 
 div.linkcontent {
   word-wrap: break-word;
@@ -32,7 +32,7 @@ div.tool.disabled {
   width: 100%;
   height: 36px;
   position: relative;
-  background-color: #3C3C3C;
+  background-color: #0186d1;
   height: 40px; }
   .oskariui-menutoolbar .oskariui-menutoolbar-modetitle {
     display: inline-block;

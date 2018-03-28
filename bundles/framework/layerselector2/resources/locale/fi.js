@@ -95,5 +95,4 @@ Oskari.registerLocalization(
         },
         "downloadLayer": "Lataa koneelle"
     }
-}
 });

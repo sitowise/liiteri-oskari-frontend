@@ -9,6 +9,9 @@ Oskari.registerLocalization(
                 "ok": "OK",
                 "title": "Linkki karttanäkymään"
             },
+            "print": {
+                "tooltip": "Tulosta karttanäkymä."
+            },
             "history": {
                 "reset": "Siirry oletusnäkymään.",
                 "back": "Siirry edelliseen näkymään.",

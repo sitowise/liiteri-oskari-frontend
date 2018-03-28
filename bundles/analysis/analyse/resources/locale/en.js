@@ -6,11 +6,7 @@ Oskari.registerLocalization({
         "flyouttitle": "Analysis",
         "desc": "",
         "btnTooltip": "Analysis",
-        "NotLoggedView": {
-            "text": "With Analysis function you can make simple spatial analysis for map layers including feature data. The function is available only for logged-in users.",
-            "signup": "Log in",
-            "register": "Register"
-        },
+        "notLoggedIn": "Only logged user can create analysis. <a href='/web/en/login'>Log in</a>.",
         "AnalyseView": {
             "title": "Analysis",
             "content": {
@@ -93,14 +89,6 @@ Oskari.registerLocalization({
                 "label": "Buffer size (meters)",
                 "tooltip": "Enter buffer size"
             },
-                    {
-                        "id": "oskari_analyse_NoDataCnt",
-                        "label": "Count of authorised features"
-                    }
-                ],
-                "attribute": "Select attribute",
-                "footer": "Authorised features are not included in the analysis.",
-                "aggregateAdditionalInfo": "Note! You have selected one or more attributes containing textual data. Only the feature count can be calculated for them. If the feature count is not selected, textual attribute data are not included in the analysis result."
             "includeOriginal": {
                 "label": "Include original"
             },
@@ -136,44 +124,6 @@ Oskari.registerLocalization({
                     "id": "oskari_analyse_contains",
                     "label": "Contains"
                 }]
-            },
-            "spatial_join": {
-                "firstLayer": "Feature Layer",
-                "firstLayerTooltip": "Select a feature map layer. Its attribute data will be combined with attribute data from the source layer.",
-                "firstLayerFieldTooltip": "Result attributes from feature layer",
-                "secondLayer": "Source Layer",
-                "secondLayerTooltip": "Select a source map layer. Its attribute data will be retrieved into the feature level.",
-                "secondLayerFieldTooltip": "Result attributes from source layer",
-                "mode": "Spatial join mode",
-                "modeTooltip": "Select if you want to use descriptive statististic in the spatial join.",
-                "normalMode": "Normal spatial join",
-                "aggregateMode": "Aggregate descritpive statistic",
-                "backend_locale": [
-                    {
-                        "id": "count",
-                        "label": "Feature count"
-                    },
-                    {
-                        "id": "sum",
-                        "label": "Sum"
-                    },
-                    {
-                        "id": "min",
-                        "label": "Minimum"
-                    },
-                    {
-                        "id": "max",
-                        "label": "Maximum"
-                    },
-                    {
-                        "id": "avg",
-                        "label": "Average"
-                    },
-                    {
-                        "id": "stddev",
-                        "label": "Standard deviation"
-                    }
-                ]
             },
             "params": {
                 "label": "Selected columns",
@@ -291,7 +241,7 @@ Oskari.registerLocalization({
                 "placeholder": "Give the map layer a name"
             },
             "drawing": {
-                "label": "",
+                "label": "  ",
                 "point": {
                     "label": "Point",
                     "color": "Colour",
@@ -321,7 +271,7 @@ Oskari.registerLocalization({
                 "delete": " "
             },
             "title": "Analysis",
-            "confirmDeleteMsg": "Do you want to remove the analysis layer \"{name}\"?",
+            "confirmDeleteMsg": "Do you want to delete:",
             "buttons": {
                 "ok": "OK",
                 "cancel": "Cancel",

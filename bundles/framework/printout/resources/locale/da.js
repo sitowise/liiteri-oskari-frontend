@@ -6,22 +6,22 @@ Oskari.registerLocalization(
         "title": "Udskriv kortvisning",
         "flyouttitle": "Udskriv kortvisning",
         "desc": "",
-        "btnTooltip": "",
+        "btnTooltip": "NOT TRANSLATED",
         "BasicView": {
             "title": "Udskriv kortvisning",
             "name": {
-                "label": "",
-                "placeholder": "",
-                "tooltip": ""
+                "label": "NOT TRANSLATED",
+                "placeholder": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED"
             },
             "language": {
-                "label": "",
+                "label": "NOT TRANSLATED",
                 "options": {
-                    "fi": "",
-                    "sv": "",
-                    "en": ""
+                    "fi": "NOT TRANSLATED",
+                    "sv": "NOT TRANSLATED",
+                    "en": "NOT TRANSLATED"
                 },
-                "tooltip": ""
+                "tooltip": "NOT TRANSLATED"
             },
             "size": {
                 "label": "Størrelse",
@@ -62,7 +62,7 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Foretag udskrift",
                 "ok": "OK",
-                "back": "",
+                "back" : "NOT TRANSLATED",
                 "cancel": "Annullér"
             },
             "location": {
@@ -117,14 +117,51 @@ Oskari.registerLocalization(
                     }
                 ]
             },
+            "legend": {
+                "label": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED",
+                "options": [
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED",
+                        "selected": true
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    }
+                ]
+            },
             "help": "Hjælp",
             "error": {
                 "title": "Fejl",
-                "size": "",
-                "name": "",
+                "size": "NOT TRANSLATED",
+                "name": "NOT TRANSLATED",
                 "nohelp": "Ingen hjælp tilgængelig",
                 "saveFailed": "Kortudskrift mislykket│Prøv igen senere",
-                "nameIllegalCharacters": ""
+                "nameIllegalCharacters": "NOT TRANSLATED"
             }
         },
         "StartView": {
@@ -139,4 +176,5 @@ Oskari.registerLocalization(
             }
         }
     }
-});
+}
+);

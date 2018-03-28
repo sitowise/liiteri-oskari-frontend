@@ -156,4 +156,4 @@ Oskari.registerLocalization(
           "area": "Mittaa pinta-ala"
         }
     }
-});
+}});

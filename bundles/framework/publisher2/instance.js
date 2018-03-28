@@ -20,6 +20,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher2.PublisherBundleInstan
         var conf = this.getConfiguration();
         conf.name = 'Publisher2';
         conf.flyoutClazz = 'Oskari.mapframework.bundle.publisher2.Flyout';
+        conf.tileClazz = '';
         this.defaultConf = conf;
         this.publisher = null;
         this.customTileRef = null;

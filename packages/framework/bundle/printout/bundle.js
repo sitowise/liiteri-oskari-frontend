@@ -21,7 +21,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundle", functi
     "protocol": ["Oskari.bundle.Bundle", "Oskari.mapframework.bundle.extension.ExtensionBundle"],
     "source": {
 
-        "scripts": [{
+        "scripts":  [{
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/jquery.imagesLoaded.js"
         }, {
@@ -33,6 +33,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundle", functi
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/Tile.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/printout/plugin/LegendPlugin.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/service/PrintService.js"
@@ -54,6 +57,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundle", functi
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/event/PrintWithoutUIEvent.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/printout/event/PrintWithParcelUIEvent.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/event/PrintCanceledEvent.js"

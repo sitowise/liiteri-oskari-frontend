@@ -6,22 +6,22 @@ Oskari.registerLocalization(
         "title": "Nyomtatási térképnézet",
         "flyouttitle": "Nyomtatási térképnézet",
         "desc": "",
-        "btnTooltip": "",
+        "btnTooltip": "NOT TRANSLATED",
         "BasicView": {
             "title": "Nyomtatási térképnézet",
             "name": {
-                "label": "",
-                "placeholder": "",
-                "tooltip": ""
+                "label": "NOT TRANSLATED",
+                "placeholder": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED"
             },
             "language": {
-                "label": "",
+                "label": "NOT TRANSLATED",
                 "options": {
-                    "fi": "",
-                    "sv": "",
-                    "en": ""
+                    "fi": "NOT TRANSLATED",
+                    "sv": "NOT TRANSLATED",
+                    "en": "NOT TRANSLATED"
                 },
-                "tooltip": ""
+                "tooltip": "NOT TRANSLATED"
             },
             "size": {
                 "label": "Méret",
@@ -62,7 +62,7 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Nyomtatási kép mentése",
                 "ok": "OK",
-                "back": "",
+                "back" : "NOT TRANSLATED",
                 "cancel": "Mégse"
             },
             "location": {
@@ -117,14 +117,51 @@ Oskari.registerLocalization(
                     }
                 ]
             },
+            "legend": {
+                "label": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED",
+                "options": [
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED",
+                        "selected": true
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    }
+                ]
+            },
             "help": "Segítség",
             "error": {
                 "title": "Hiba",
-                "size": "",
-                "name": "",
+                "size": "NOT TRANSLATED",
+                "name": "NOT TRANSLATED",
                 "nohelp": "Segítség nem áll rendelkezésre.",
                 "saveFailed": "Térképnyomtatási hiba. Probálja meg később.",
-                "nameIllegalCharacters": ""
+                "nameIllegalCharacters": "NOT TRANSLATED"
             }
         },
         "StartView": {
@@ -139,4 +176,5 @@ Oskari.registerLocalization(
             }
         }
     }
-});
+}
+);

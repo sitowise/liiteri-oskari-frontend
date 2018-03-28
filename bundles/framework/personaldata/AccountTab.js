@@ -58,7 +58,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.personaldata.AccountTab',
                     label: me.loc('tabs.account.email'),
                     value: user.getEmail()
                 }, {
-                    label: localization.roles,
+                    label: me.loc('tabs.account.roles'),
                     value: stringRoles.join(", ")
                 }],
                 infoContainer = container.find('.info'),

@@ -18,13 +18,16 @@ Oskari.registerLocalization(
         },
         "error": {
             "title": "Virhe",
-            "connection_not_available": "Vektoritasoa ei voida näyttää. Yhteyttä WFS-taustapalveluun ei voitu muodostaa.",
-            "connection_broken": "Vektoritasoa ei voida näyttää. Yhteys WFS-taustapalveluun katkesi.",
-            "wfs_no_permissions": "Sinulla ei ole riittäviä oikeuksia vektoritasoon {layer}.",
-            "wfs_configuring_layer_failed": "Vektoritason {layer} asetusten muuttaminen epäonnistui.",
-            "wfs_request_failed": "Vektoritasolle {layer} tehty kysely epäonnistui.",
-            "features_parsing_failed": "Vektoritason {layer} kohdetietojen kysely epäonnistui.",
-            "layer_load_fail": "Vektoritason haku epäonnistui"
+            "connection_not_available": "Yhteyttä ei voitu muodostaa taustapalveluun.",
+            "connection_broken": "Yhteys taustapalveluun katkesi.",
+            "wfs_no_permissions": "Tasoon ({layer}) ei ole riittäviä oikeuksia.",
+            "wfs_configuring_layer_failed": "Tason ({layer}) konfigurointi epäonnistui.",
+            "arcgis_configuring_layer_failed": "REST-tason ({layer}) konfigurointi epäonnistui.",
+            "wfs_request_failed": "WFS-tason ({layer}) WFS-kysely epäonnistui.",
+            "arcgis_request_failed": "REST-tason ({layer}) REST-kysely epäonnistui.",
+            "features_parsing_failed": "Tason ({layer}) featureiden käsittely epäonnistui.",
+            "wfs_image_parsing_failed": "Image parsing of WFS layer {layer} failed",
+            "arcgis_image_parsing_failed": "Image parsing of REST layer {layer} failed"
         },
         "information": {
             "title": "Kohdetietojen esittäminen",

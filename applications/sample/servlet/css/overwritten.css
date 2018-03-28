@@ -4,3 +4,41 @@ table td {
 
 table {
   border-top-width: 0px; }
+
+#maptools-container
+{
+	position: relative;
+	height: 100%;
+}
+
+#footer-nav
+{
+	position: absolute;
+	bottom: 0px;
+}
+
+.myplacesimport
+{
+	padding: 0 15px !important;
+}
+
+#myplacesimport-form > .import-file
+{
+	width: 350px;
+}
+
+#myplacesimport-form > .import-file span.group-span-filestyle
+{
+	float: none;
+}
+
+.menuLineDivider
+{
+	border-bottom: 1px solid #00bce9;
+	margin-top: 10px;
+}
+
+#maptools {
+  width: 175px !important;
+  overflow: hidden;
+}

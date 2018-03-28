@@ -146,9 +146,9 @@ Oskari.clazz.define(
             );
 
             me._visualizationForm = Oskari.clazz.create(
-                'Oskari.userinterface.component.VisualizationForm'
+                'Oskari.userinterface.component.GroupVisualizationForm',
+                { groupMode: true }
             );
-
 
 
         },
@@ -343,6 +343,7 @@ Oskari.clazz.define(
          */
         register: function () {
             this.getMapModule().setLayerPlugin('wfslayer', this);
+            this.getMapModule().setLayerPlugin('arcgislayer', this);
         },
 
         /**
@@ -352,6 +353,7 @@ Oskari.clazz.define(
          */
         unregister: function () {
             this.getMapModule().setLayerPlugin('wfslayer', null);
+            this.getMapModule().setLayerPlugin('arcgislayer', null);
         },
 
         _createEventHandlers: function () {
@@ -494,6 +496,10 @@ Oskari.clazz.define(
                 'WfsLayerPlugin.ActivateHighlightRequest': Oskari.clazz.create(
                     'Oskari.mapframework.bundle.mapwfs2.request.ActivateHighlightRequestHandler',
                     me
+                ),
+                'ChangeMapLayerOwnStyleRequest': Oskari.clazz.create(
+                    'Oskari.mapframework.bundle.mapwfs2.request.ChangeMapLayerOwnStyleRequestHandler',
+                    me
                 )
             };
         },
@@ -522,6 +528,23 @@ Oskari.clazz.define(
             return this._visualizationForm;
         },
 
+        _getCachedGridTiles: function (layers, grid) {
+            var result = {};
+            if (grid == null)
+                return result;
+
+            for (var i = 0; i < layers.length; ++i) {
+                var layer = layers[i];
+                var layerId = layer.getId();
+                var cachedPrintTiles = this._getCachedPrintTiles(layerId, grid);
+
+                if (cachedPrintTiles.length > 0)
+                    result[layerId] = cachedPrintTiles;
+            }
+
+            return result;
+        },
+
         /**
          * @method mapMoveHandler
          */
@@ -545,11 +568,15 @@ Oskari.clazz.define(
             // clean tiles for printing
             me._printTiles = {};
 
+            // update cache
+            this.refreshCaches();
+
+            var layers = this.getSandbox().findAllSelectedMapLayers();
+
             // update location
             grid = this.getGrid();
 
-            // update cache
-            this.refreshCaches();
+            this._printTiles = this._getCachedGridTiles(layers, grid);
             if(reqLayerId) {
                 var layer = sandbox.findMapLayerFromSelectedMapLayers(reqLayerId);
                 if(layer) {
@@ -786,7 +813,7 @@ Oskari.clazz.define(
                 return;
             }
             var lonlat = event.getLonLat(),
-                keepPrevious = this.getSandbox().isCtrlKeyDown();
+                keepPrevious = event.getParams().ctrlKeyDown;
 
             var geojson_format = new OpenLayers.Format.GeoJSON();
             var point = new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat);
@@ -818,6 +845,12 @@ Oskari.clazz.define(
          */
         changeMapLayerStyleHandler: function (event) {
             var layer = event.getMapLayer();
+
+            //update printTiles
+            var layerId = layer.getId();
+            var grid = this.getGrid();
+            this._printTiles[layerId] = this._getCachedGridTiles([event.getMapLayer()], grid)[layerId];
+
             if (!layer.hasFeatureData()) {
                 return;
             }
@@ -1626,6 +1659,12 @@ Oskari.clazz.define(
         getPrintTiles: function () {
             return this._printTiles;
         },
+        
+        getPrintTilesForLayer: function (layerId) {
+            var result = {};
+            result[layerId] = this._printTiles[layerId];
+            return result;
+        },
 
         /*
          * @method setPrintTile
@@ -1653,6 +1692,22 @@ Oskari.clazz.define(
             this._tileDataTemp.purgeOffset(4 * 60 * 1000);
         },
 
+        _getCachedPrintTiles: function (layerId, grid) {
+            var layer = this.getSandbox().findMapLayerFromSelectedMapLayers(layerId);
+            var style = layer.getCurrentStyle().getName();
+            var result = [];
+            for (var i = 0; i < grid.bounds.length; i++) {
+                var bboxKey = this.bboxkeyStrip(grid.bounds[i]);
+                var dataForTile = this._tileData.mget(layerId, style, bboxKey);
+                if (dataForTile) {
+                    result.push({
+                        'bbox': grid.bounds[i],
+                        'url' : dataForTile,
+                    });
+                }
+            }
+            return result;
+        },
 
         /*
          * @method getNonCachedGrid

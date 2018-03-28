@@ -25,7 +25,11 @@ Oskari.registerLocalization(
             "wfs_configuring_layer_failed": "Settings for the data product {layer} could not be configured.",
             "wfs_request_failed": "The data product {layer} request could not be completed.",
             "features_parsing_failed": "Feature data on the data product {layer} could not be retrieved.",
-            "layer_load_fail": "Could not load layer"
+            "layer_load_fail": "Could not load layer",
+            "arcgis_configuring_layer_failed": "Cannot get configuration of REST layer {layer}.",
+            "arcgis_request_failed": "Request to REST layer {layer} failed.",
+            "wfs_image_parsing_failed": "Image parsing of WFS layer {layer} failed",
+            "arcgis_image_parsing_failed": "Image parsing of REST layer {layer} failed"
         },
         "information": {
             "title": "Feature Data Rendering",

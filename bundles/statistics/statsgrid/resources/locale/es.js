@@ -12,21 +12,6 @@ Oskari.registerLocalization(
             "title": "Patio",
             "message": "patiopoc"
         },
-        "dataProviderInfoTitle": "Indicadores",
-        "layertools": {
-            "table_icon": {
-                "tooltip": "Ir a mapas temáticos",
-                "title": "Mapas temáticos"
-            },
-            "diagram_icon": {
-                "tooltip": "Mostrar diagrama",
-                "title": "Diagrama"
-            },
-            "statistics": {
-                "tooltip": "yendo a mapas temáticos",
-                "title": "Estadísticas"
-            }
-        },
         "tab": {
             "title": "Indicadores",
             "description": "Indicadores propios",
@@ -40,7 +25,7 @@ Oskari.registerLocalization(
             "deleteTitle": "Borrar indicador",
             "destroyIndicator": "Borrar",
             "cancelDelete": "Cancelar",
-            "confirmDelete": "Está seguro de que desea borrar el indicador \"{name}\"?",
+            "confirmDelete": "Está seguro de que desea borrar el indicador",
             "newIndicator": "Indicador nuevo",
             "error": {
                 "title": "Error",
@@ -206,4 +191,5 @@ Oskari.registerLocalization(
         "parsedDataUnrecognized": "Regiones desconocidas",
         "loginToSaveIndicator": "Para poder guardar su propio indicador, tiene que entrar"
     }
-});
+}
+);

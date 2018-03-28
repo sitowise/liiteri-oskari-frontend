@@ -13,24 +13,25 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
     this.prefix = "DrawPlugin.";
     this.creatorId = undefined;
 
-        me.drawControls = null;
-        me.currentDrawing = null;
-        me.drawLayer = null;
-        me.editMode = false;
-        me.currentDrawMode = null;
-        me.prefix = 'DrawPlugin.';
-        me.creatorId = undefined;
-        var config = me.getConfig();
-        if (config) {
-            if (config.id) {
-        // Note that the events and requests need to match the configured
-        // prefix based on the id!
-        this.prefix = config.id + ".";
-        this.creatorId = config.id;
-    }
-    // graphicFill, instance
-    if (config && config.graphicFill) {
-        this.graphicFill = config.graphicFill;
+    me.drawControls = null;
+    me.currentDrawing = null;
+    me.drawLayer = null;
+    me.editMode = false;
+    me.currentDrawMode = null;
+    me.prefix = 'DrawPlugin.';
+    me.creatorId = undefined;
+    var config = me.getConfig();
+    if (config) {
+        if (config.id) {
+            // Note that the events and requests need to match the configured
+            // prefix based on the id!
+            this.prefix = config.id + ".";
+            this.creatorId = config.id;
+        }
+        // graphicFill, instance
+        if (config && config.graphicFill) {
+            this.graphicFill = config.graphicFill;
+        }
     }
     this.multipart = (config && config.multipart === true);
 }, {

@@ -50,6 +50,7 @@
                 this._email = userData.email || userData.loginName;
                 this._uuid = userData.userUUID;
                 this._roles = userData.roles || [];
+                this._tosAccepted = userData.tosAccepted;
                 if (userData.userUUID) {
                     this._loggedIn = true;
                 }
@@ -154,6 +155,10 @@
              */
             getRoles: function () {
                 return this._roles;
+            },
+
+            getTosAccepted: function () {
+                return this._tosAccepted;
             },
 
             /**

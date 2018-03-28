@@ -6,22 +6,22 @@ Oskari.registerLocalization(
         "title": "Prikaz mape za štampu",
         "flyouttitle": "Prikaz mape za štampu",
         "desc": "",
-        "btnTooltip": "",
+        "btnTooltip": "NOT TRANSLATED",
         "BasicView": {
             "title": "Prikaz mape za štampu",
             "name": {
-                "label": "",
-                "placeholder": "",
-                "tooltip": ""
+                "label": "NOT TRANSLATED",
+                "placeholder": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED"
             },
             "language": {
-                "label": "",
+                "label": "NOT TRANSLATED",
                 "options": {
-                    "fi": "",
-                    "sv": "",
-                    "en": ""
+                    "fi": "NOT TRANSLATED",
+                    "sv": "NOT TRANSLATED",
+                    "en": "NOT TRANSLATED"
                 },
-                "tooltip": ""
+                "tooltip": "NOT TRANSLATED"
             },
             "size": {
                 "label": "Veličina",
@@ -62,7 +62,7 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Prihvati podešavanja štampe",
                 "ok": "Potvrdi",
-                "back": "",
+                "back" : "NOT TRANSLATED",
                 "cancel": "Odustani"
             },
             "location": {
@@ -117,14 +117,51 @@ Oskari.registerLocalization(
                     }
                 ]
             },
+            "legend": {
+                "label": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED",
+                "options": [
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED",
+                        "selected": true
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    }
+                ]
+            },
             "help": "Pomoć",
             "error": {
                 "title": "Greška",
-                "size": "",
-                "name": "",
+                "size": "NOT TRANSLATED",
+                "name": "NOT TRANSLATED",
                 "nohelp": "Pomoć nije dostupna",
                 "saveFailed": "Greška. Probajte kasnije",
-                "nameIllegalCharacters": ""
+                "nameIllegalCharacters": "NOT TRANSLATED"
             }
         },
         "StartView": {
@@ -139,4 +176,5 @@ Oskari.registerLocalization(
             }
         }
     }
-});
+}
+);

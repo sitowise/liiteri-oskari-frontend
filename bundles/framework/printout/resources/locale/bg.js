@@ -6,22 +6,22 @@ Oskari.registerLocalization(
         "title": "Принтиране изгледа на картата",
         "flyouttitle": "Принтиране изгледа на картата",
         "desc": "",
-        "btnTooltip": "",
+        "btnTooltip": "NOT TRANSLATED",
         "BasicView": {
             "title": "Принтиране изгледа на картата",
             "name": {
-                "label": "",
-                "placeholder": "",
-                "tooltip": ""
+                "label": "NOT TRANSLATED",
+                "placeholder": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED"
             },
             "language": {
-                "label": "",
+                "label": "NOT TRANSLATED",
                 "options": {
-                    "fi": "",
-                    "sv": "",
-                    "en": ""
+                    "fi": "NOT TRANSLATED",
+                    "sv": "NOT TRANSLATED",
+                    "en": "NOT TRANSLATED"
                 },
-                "tooltip": ""
+                "tooltip": "NOT TRANSLATED"
             },
             "size": {
                 "label": "Размер",
@@ -62,7 +62,7 @@ Oskari.registerLocalization(
             "buttons": {
                 "save": "Принтиране",
                 "ok": "ОК",
-                "back": "",
+                "back" : "NOT TRANSLATED",
                 "cancel": "Отказ / Отмяна"
             },
             "location": {
@@ -117,14 +117,51 @@ Oskari.registerLocalization(
                     }
                 ]
             },
+            "legend": {
+                "label": "NOT TRANSLATED",
+                "tooltip": "NOT TRANSLATED",
+                "options": [
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED",
+                        "selected": true
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    },
+                    {
+                        "id": "NOT TRANSLATED",
+                        "loca": "NOT TRANSLATED",
+                        "label": "NOT TRANSLATED",
+                        "tooltip": "NOT TRANSLATED"
+                    }
+                ]
+            },
             "help": "Помощ",
             "error": {
                 "title": "Грешка",
-                "size": "",
-                "name": "",
+                "size": "NOT TRANSLATED",
+                "name": "NOT TRANSLATED",
                 "nohelp": "Помощта не е на разположение",
                 "saveFailed": "Принтирането на картата е неуспешно| Опитайте по - късно",
-                "nameIllegalCharacters": ""
+                "nameIllegalCharacters": "NOT TRANSLATED"
             }
         },
         "StartView": {
@@ -139,4 +176,5 @@ Oskari.registerLocalization(
             }
         }
     }
-});
+}
+);

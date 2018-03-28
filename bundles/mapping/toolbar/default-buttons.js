@@ -40,46 +40,6 @@ Oskari.clazz.category(
                 group;
 
             var buttonGroups = [{
-                    'name': 'history',
-                    'buttons': {
-                        'reset': {
-                            iconCls: 'tool-reset',
-                            tooltip: loc.history.reset,
-                            sticky: false,
-                            callback: function () {
-                                // statehandler reset state
-                                var rb = Oskari.requestBuilder(
-                                    'StateHandler.SetStateRequest'
-                                );
-                                if (rb) {
-                                    me.getSandbox().request(me, rb());
-                                }
-                            }
-                        },
-                        'history_back': {
-                            iconCls: 'tool-history-back',
-                            tooltip: loc.history.back,
-                            sticky: false,
-                            callback: function () {
-                                me.getSandbox().request(
-                                    me,
-                                    reqBuilder('map_control_tool_prev')
-                                );
-                            }
-                        },
-                        'history_forward': {
-                            iconCls: 'tool-history-forward',
-                            tooltip: loc.history.next,
-                            sticky: false,
-                            callback: function () {
-                                me.getSandbox().request(
-                                    me,
-                                    reqBuilder('map_control_tool_next')
-                                );
-                            }
-                        }
-                    }
-                }, {
                     'name': 'basictools',
                     'buttons': {
                         'zoombox': {
@@ -111,6 +71,22 @@ Oskari.clazz.category(
                                     );
                                 }
                                 me.getSandbox().request(me, reqBuilder(toolname));
+                            }
+                        },
+                        'featureinfo' : {
+                            iconCls: 'tool-feature-info',
+                            tooltip: loc.featureinfo,
+                            sticky: true,
+                            callback: function () {
+                                me.getSandbox().request(me, gfiReqBuilder(true));
+                            }
+                        },
+                        'clear': {
+                            iconCls: 'tool-clear',
+                            tooltip: loc.clear,
+                            sticky: false,
+                            callback: function () {
+                                me.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService').emptyAllWFSFeatureSelections();
                             }
                         },
                         'measureline': {
@@ -181,6 +157,18 @@ Oskari.clazz.category(
                                     mapUrlPrefix + linkParams + '</div>';
                                 me.getSandbox().postRequestByName('DisableMapKeyboardMovementRequest');
                                 me.dialog.show(loc.link.title, linkContent, [okBtn]);
+                            }
+                        },
+                        'print' : {
+                            iconCls: 'tool-print',
+                            tooltip: loc.print.tooltip,
+                            sticky: false,
+                            callback: function () {
+                                wopParm = "location=1," + "status=1," + "scrollbars=1," + "width=850," + "height=1200";
+                                link = window.location.pathname + '?' + me.getSandbox().generateMapLinkParameters() +
+                                    '&p_p_id=Portti2Map_WAR_portti2mapportlet&p_p_lifecycle=0&p_p_state=exclusive' +
+                                    '&showMarker=false&forceCache=true&mapmode=print&viewId=2';
+                                window.open(link, "Print", wopParm);
                             }
                         }
                     }

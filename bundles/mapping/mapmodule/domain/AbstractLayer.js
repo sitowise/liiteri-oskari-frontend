@@ -123,6 +123,9 @@ Oskari.clazz.define(
         me._realtime = false;
         me._refreshRate = null;
 
+        me._downloadServiceUrl = null;
+        me._copyrightInfo = null;
+
         // WMS, WMTS or WFS version
         me._version = null;
         // Spatial reference system
@@ -1315,7 +1318,23 @@ Oskari.clazz.define(
          */
         getCreated: function(){
             return this._created;
-        }
+        },
+        
+        setDownloadServiceUrl: function (downloadServiceUrl) {
+            this._downloadServiceUrl = downloadServiceUrl;
+        },
+        
+        getDownloadServiceUrl: function () {
+            return this._downloadServiceUrl;
+        },
+
+        setCopyrightInfo: function (copyrightInfo) {
+            this._copyrightInfo = copyrightInfo;
+        },
+
+        getCopyrightInfo: function () {
+            return this._copyrightInfo;
+        } 
 
     }
 );

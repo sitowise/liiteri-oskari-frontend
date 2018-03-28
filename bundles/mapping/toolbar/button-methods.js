@@ -23,7 +23,7 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
         }
         var toolbar = me.getToolbarContainer(pConfig ? pConfig.toolbarid : null, pConfig),
             group = null,
-            prefixedGroup = (pConfig.toolbarid || 'default') + '-' + pGroup;
+            prefixedGroup = (pConfig.toolbarid || 'default') + '-' + (pGroup == "printout" ? "myplaces" : pGroup);
 
         if (!me.buttons[prefixedGroup]) {
             // create group if not existing
@@ -51,7 +51,17 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
         button.attr('data-icon', pConfig.iconCls);
         button.attr('data-toggle-change-icon', pConfig.toggleChangeIcon);
 
-        if (Oskari.util.keyExists(me.conf, 'style.toolStyle')) {
+        if (pConfig.text) {
+            /* special case - text button */
+            if (pConfig.iconCls) {
+                var iconEl = jQuery('<span></span>');
+                iconEl.addClass(pConfig.iconCls);
+                iconEl.appendTo(button);
+            }
+            var textEl = jQuery('<span></span>');
+            textEl.text(pConfig.text);
+            textEl.appendTo(button);
+        } else if (Oskari.util.keyExists(me.conf, 'style.toolStyle')) {
             //if style explicitly provided, add that as well
             var style = me.conf.style.toolStyle.indexOf('light') > -1 ? '-light': '-dark';
 
@@ -89,6 +99,9 @@ Oskari.clazz.category('Oskari.mapframework.bundle.toolbar.ToolbarBundleInstance'
                 id: pId,
                 group: prefixedGroup
             };
+        }
+        if (pConfig.initiallySelected) {
+            button.addClass('selected');
         }
         button.bind('click', function (event) {
             me._clickButton(pId, prefixedGroup);

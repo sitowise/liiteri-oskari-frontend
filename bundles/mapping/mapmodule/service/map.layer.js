@@ -299,6 +299,12 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
             if (newLayerConf.srs_name) {
                 layer.setSrs_name(newLayerConf.srs_name);
             }
+            if (newLayerConf.downloadServiceUrl) {
+                layer.setDownloadServiceUrl(newLayerConf.downloadServiceUrl);
+            }
+            if (newLayerConf.copyrightInfo) {
+                layer.setCopyrightInfo(newLayerConf.copyrightInfo);
+            }
 
             if (newLayerConf.admin) {
                 layer.setAdmin(newLayerConf.admin);
@@ -831,6 +837,8 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                 this._populateWmsMapLayerAdditionalData(layer, mapLayerJson);
             } else if (mapLayerJson.type === 'vectorlayer') {
                 layer.setStyledLayerDescriptor(mapLayerJson.styledLayerDescriptor);
+            } else if (mapLayerJson.type === 'arcgislayer') {
+                layer.addLayerUrl(mapLayerJson.wmsUrl);
             }
 
             if (mapLayerJson.metaType && layer.setMetaType) {
@@ -934,6 +942,9 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                     layer.setCreated(created);
                 }
             }
+
+            layer.setDownloadServiceUrl(mapLayerJson.downloadServiceUrl);
+            layer.setCopyrightInfo(mapLayerJson.copyrightInfo);
 
             return layer;
         },

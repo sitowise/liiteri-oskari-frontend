@@ -208,9 +208,8 @@ Oskari.clazz.define(
                 if(oLayers[i] && oLayers[i].params.LAYERS !== layer._wmsName) {
                     oLayers[i].mergeNewParams({layers: layer._wmsName});
                 }
-            }
-        },
-        updateLayerParams: function(layer, forced, params) {
+            },
+        updateLayerParams: function (layer, forced, params) {
             var sandbox = this.getSandbox(),
                 i,
                 olLayerList,
@@ -227,8 +226,8 @@ Oskari.clazz.define(
                     count = olLayerList.length;
                     for (i = 0; i < olLayerList.length; ++i) {
                         olLayerList[i].mergeNewParams(params);
-            }
-        }
+                    }
+                }
                 sandbox.printDebug("[MapLayerUpdateRequestHandler] WMS layer / merge new params: " + layer.getId() + ", found " + count);
             }
         }

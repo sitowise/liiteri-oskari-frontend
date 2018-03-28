@@ -108,7 +108,7 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.Flyout',
             flyout.empty();
             var sandbox = this.instance.getSandbox();
 
-            if (!Oskari.user().isLoggedIn()) {
+            if (!sandbox.getUser().isLoggedIn()) {
                 this.tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer',
                 this.instance.getLocalization('notLoggedIn'));
                 this.tabsContainer.insertTo(flyout);

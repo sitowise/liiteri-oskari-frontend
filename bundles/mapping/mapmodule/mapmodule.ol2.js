@@ -140,7 +140,8 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.MapModule',
             var sandbox = this.getSandbox();
             /* may be this should dispatch to mapmodule */
             var lonlat = this.getMap().getLonLatFromViewPortPx(evt.xy),
-                event = this._mapClickedBuilder(lonlat, evt.xy.x, evt.xy.y, evt.ctrlKey);
+                mapClickedBuilder = sandbox.getEventBuilder('MapClickedEvent'),
+                event = mapClickedBuilder(lonlat, evt.xy.x, evt.xy.y, evt.ctrlKey);
             sandbox.notifyAll(event);
         },
         /**

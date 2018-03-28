@@ -99,9 +99,9 @@ Oskari.clazz.define(
          * Creates the UI for a fresh start
          */
         refresh: function () {
-                var status = cel.children('.oskari-tile-status');
+                var status = this.container.children('.oskari-tile-status');
                 
-                var title = cel.children('.oskari-tile-title');
+                var title = this.container.children('.oskari-tile-title');
                 title.addClass('indent');
             }
         }, {
