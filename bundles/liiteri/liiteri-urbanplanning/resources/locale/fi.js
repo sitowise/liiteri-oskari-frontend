@@ -119,14 +119,20 @@ Oskari.registerLocalization({
                 "empty": "Ei mitään",
                 "disclaimer" : [
                     "Elinympäristön tietopalvelu Liiteri / Asemakaavojen seurantalomakkeet, {DATE}",
-                    "Asemakaavojen seurantalomakkeet sisältävät kuntien sähköisesti valtion ympäristöhallinnolle toimittamaa tietoa vuonna 2000 voimaan tulleen maankäyttö-ja rakennuslain mukaisesta asemakaavoituksesta."
-                ] 
+                    "Asemakaavojen seurantalomakkeet sisältävät kuntien sähköisesti valtion ympäristöhallinnolle toimittamaa tietoa vuonna 2000 voimaan tulleen maankäyttö-ja rakennuslain mukaisesta asemakaavoituksesta.",
+                    "Liiteri aluemuutokset (pdf) http://www.ymparisto.fi/download/noname/%7BB8E38FA6-6F91-4457-B48E-0CE2481E2F27%7D/135925"
+                ]
             },
+            "disclaimer" : [
+                "Elinympäristön tietopalvelu Liiteri / Asemakaavojen seurantalomakkeet, {DATE}",
+                "Asemakaavojen seurantalomakkeet sisältävät kuntien sähköisesti valtion ympäristöhallinnolle toimittamaa tietoa vuonna 2000 voimaan tulleen maankäyttö-ja rakennuslain mukaisesta asemakaavoituksesta.",
+                "<a target='_blank' href='http://www.ymparisto.fi/download/noname/%7BB8E38FA6-6F91-4457-B48E-0CE2481E2F27%7D/135925'>Liiteri aluemuutokset (pdf)</a>"
+            ],
             "planDetail": {
                 "summaryTitle": "Asemakaavojen yhteenveto",
                 "detailTitle": "Asemakaavan perustiedot ja yhteenveto",
                 "summaryHeader": "Asemakaavat, joista yhteenveto on tehty:",
-                "disclaimer": "Asemakaavojen seurantalomakkeet sisältävät kuntien sähköisesti valtion ympäristöhallinnolle toimittamaa tietoa vuonna 2000 voimaan tulleen maankäyttö- ja rakennuslain mukaisesta asemakaavoituksesta. Asemakaavojen tiedot ovat selailtavissa syyskuussa 2003 käyttöönotetulla TYVI-järjestelmällä saaduista lomakkeista ja vuosina 2000-03 hyväksyttyjen kaavojen excel-muotoisista seurantalomakkeista. Uudet tiedot kopioituvat TYVI-operaattorilta joka yö, sekä keskeneräisistä että valmiiksi täytetyistä lomakkeista. Kunta tai sen valtuuttama konsultti toimittaa jokaisesta asemakaavasta, myös ranta-asemakaavasta <a target='_blank' href='http://www.ymparisto.fi/fi-FI/Elinymparisto_ja_kaavoitus/Maankayton_suunnittelujarjestelma/Tietoa_kaavoituksesta/Asemakaavan_seurantalomake'>seurantalomakkeen</a> viimeistään kun kaava on hyväksytty.",
+                "disclaimer": "Asemakaavojen seurantalomakkeet sisältävät kuntien sähköisesti valtion ympäristöhallinnolle toimittamaa tietoa vuonna 2000 voimaan tulleen maankäyttö- ja rakennuslain mukaisesta asemakaavoituksesta. Asemakaavojen tiedot ovat selailtavissa syyskuussa 2003 käyttöönotetulla TYVI-järjestelmällä saaduista lomakkeista ja vuosina 2000-03 hyväksyttyjen kaavojen excel-muotoisista seurantalomakkeista. Uudet tiedot kopioituvat TYVI-operaattorilta joka yö, sekä keskeneräisistä että valmiiksi täytetyistä lomakkeista. Kunta tai sen valtuuttama konsultti toimittaa jokaisesta asemakaavasta, myös ranta-asemakaavasta <a target='_blank' href='http://www.ymparisto.fi/fi-FI/Elinymparisto_ja_kaavoitus/Maankayton_suunnittelujarjestelma/Tietoa_kaavoituksesta/Asemakaavan_seurantalomake'>seurantalomakkeen</a> viimeistään kun kaava on hyväksytty.<br/><a target='_blank' href='http://www.ymparisto.fi/download/noname/%7BB8E38FA6-6F91-4457-B48E-0CE2481E2F27%7D/135925'>Liiteri aluemuutokset (pdf)</a>",
                 "detailInfoHeader" : "Alamerkinnät",
                 "main": {
                     "decisionMaker": "Hyväksyjä",
