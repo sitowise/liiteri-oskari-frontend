@@ -26,23 +26,28 @@
 }
 
 .footerLinkContainer {
-    min-height: 37px;
+    padding-bottom: 15px;
     padding-left: 2px;
-      font-size: 11px;
+    font-size: 11px;
 }
 
-    .footerLinkContainer span, .footerLinkContainer a {
-        display: inline-block;
-        margin: 0;
-        padding-top: 2px;
-        margin-left: 5px;
-        padding: 0;
-        font-weight: normal;
-        text-align: left;
-        line-height: 17px;
-        color: white;
-    }
+.footerLinkContainer span{
+    display: inline-block;
+    margin: 0;
+    padding-top: 2px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0;
+    font-weight: normal;
+    text-align: left;
+    line-height: 20px;
+    color: white;
+}
 
-        .footerLinkContainer span:hover, .footerLinkContainer a:hover {
-            cursor: pointer;
-        }
+.footerLinkContainer a {
+    color: white;
+}
+
+.footerLinkContainer span:hover, .footerLinkContainer a:hover {
+    cursor: pointer;
+}
