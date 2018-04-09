@@ -3029,7 +3029,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 fetchButtonRow.append(clearButton);
                 parameters.append(fetchButtonRow);
 
-                var additionalButtonsRow = jQuery('<div class="additionalButtons"></div>');
+                var additionalButtonsRow = jQuery('<div></div>');
                 createChartButton = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' link"><span class="glyphicon glyphicon-stats"></span> ' + this._locale.createChart + ' &gt;</span>');
                 createChartButton.click(function(e) {
                     var element = jQuery(e.currentTarget);
@@ -3051,7 +3051,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 });
                 additionalButtonsRow.append(csvLink);
 
-                var additionalButtonsRow2 = jQuery('<div class="additionalButtons"></div>');
+                var additionalButtonsRow2 = jQuery('<div></div>');
                 var printLink = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' link"><span class="glyphicon glyphicon-print"></span> ' + this._locale.print + ' &gt;</span>');
                 printLink.click(function() {
                     var request = me._sandbox.getRequestBuilder('printout.PrintMapRequest')();
@@ -3059,13 +3059,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 });
                 additionalButtonsRow2.append(printLink);
 
-                var additionalButtonsRow3 = jQuery('<div class="additionalButtons"></div>');
-                var areaDisclaimerLink = jQuery('<span class="info link">' + this._locale.areaDisclaimer.link + '</span>');
-                additionalButtonsRow3.append(areaDisclaimerLink);
-
                 parameters.append(additionalButtonsRow);
                 parameters.append(additionalButtonsRow2);
-                parameters.append(additionalButtonsRow3);
 
                 fetchFromAreaButton.unbind('click');
                 fetchFromAreaButton.click(function(e) {

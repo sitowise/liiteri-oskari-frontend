@@ -8,7 +8,7 @@
             "header": "<div class='urbanPlanDetailHeader'></div>",
             "content": "<div class='urbanPlanDetailContent'></div>",
             "footer": "<div class='urbanPlanFooter'><div>",
-            "disclaimer": "<div class='urbanPlanDisclaimer'>" + this.locale.disclaimer[0].replace("{DATE}", $.datepicker.formatDate("d.m.yy", new Date())) + "<br/>" + this.locale.disclaimer[1] + "<br/>" + this.locale.disclaimer[2] + "<div>",
+            "disclaimer": "<div class='urbanPlanDisclaimer'>" + this.locale.csv.disclaimer[0].replace("{DATE}", $.datepicker.formatDate("d.m.yy", new Date())) + "<br/>" + this.locale.csv.disclaimer[1] + "<div>",
             'summaryElementsTable': '<table id="urbanplanning-summary-table" class="display bordered" cellspacing="0" width="100%"><thead><tr>' +
             '<th>' + this.locale.table.municipality + '</th>' +
             '<th>' + this.locale.table.name + '</th>' +
