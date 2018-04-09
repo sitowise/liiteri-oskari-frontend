@@ -13,14 +13,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
     this.prefix = "DrawPlugin.";
     this.creatorId = undefined;
 
-    me.drawControls = null;
-    me.currentDrawing = null;
-    me.drawLayer = null;
-    me.editMode = false;
-    me.currentDrawMode = null;
-    me.prefix = 'DrawPlugin.';
-    me.creatorId = undefined;
-    var config = me.getConfig();
+    this.currentDrawing = null;
     if (config) {
         if (config.id) {
             // Note that the events and requests need to match the configured
@@ -322,24 +315,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.mapmodule.DrawPlugin',
                 standalone: true
             })
         };
-
-            me.modifyControls.select = new OpenLayers.Control.SelectFeature(
-                me.drawLayer,
-                {
-                    onBeforeSelect: me.modifyControls.modify.beforeSelectFeature,
-                    onSelect: me.modifyControls.modify.selectFeature,
-                    onUnselect: me.modifyControls.modify.unselectFeature,
-                    scope: me.modifyControls.modify
-                }
-            );
-
-
-            me.getMap().addLayers([me.drawLayer]);
-            for (key in me.drawControls) {
-                if (me.drawControls.hasOwnProperty(key)) {
-                    me.getMap().addControl(me.drawControls[key]);
-            }
-        }
+        
         for (key in this.modifyControls) {
             if (this.modifyControls.hasOwnProperty(key)) {
                 this._map.addControl(this.modifyControls[key]);

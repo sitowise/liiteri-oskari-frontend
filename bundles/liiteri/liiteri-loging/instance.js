@@ -148,10 +148,11 @@ Oskari.clazz
             me.sandbox = sandbox;
             // register to sandbox as a module
             sandbox.register(me);
-            if (!sandbox.getUser().isLoggedIn()) {
+            var user = Oskari.user();
+            if (!user.isLoggedIn()) {
               me._startGuide();
             } else {
-              if (typeof sandbox.getUser().getTosAccepted() === 'undefined' || sandbox.getUser().getTosAccepted() === null) {
+              if (typeof user.getTosAccepted() === 'undefined' || user.getTosAccepted() === null) {
                 me._startGuide(1);
               }
             }

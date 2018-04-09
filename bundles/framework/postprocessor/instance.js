@@ -64,7 +64,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                     okBtn.setHandler(function () {
                         dialog.close();
                     });
-                    dialog.show('Virhe', 'Haettua asemakaava-aluetta ei löytynyt', [okBtn]);
+                    dialog.show('Virhe', 'Haettua asemakaava-aluetta ei lï¿½ytynyt', [okBtn]);
                     this.completed = true;
                 }
             }
@@ -80,16 +80,16 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
             if (!featureId || !layerId) {
                 return;
             }
-                // move map to location
-                var points = this.state.featurePoints;
-                if (points) {
-                    this._showPoints(points);
-                }
+            // move map to location
+            var points = this.state.featurePoints;
+            if (points) {
+                this._showPoints(points);
+            }
             var sb = this.sandbox;
             // allow the map to settle before asking for highlight. We could also wait after map move events stop coming
             // The whole feature should be rewritten using RPC and pushing the data on the map.
             // Currently it uses Oskari and transport "creatively" and isn't all that stable
-            setTimeout(function() {
+            setTimeout(function () {
                 // request for highlight image, note that the map must be in correct
                 // location BEFORE this or we get a blank image
                 var builder = sb.getEventBuilder('WFSFeaturesSelectedEvent');
@@ -107,10 +107,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                     showError();
                     return;
                 }
-                
-                if(mapLayerService.isAllLayersLoaded()) {
+
+                if (mapLayerService.isAllLayersLoaded()) {
                     var layer = mapLayerService.findMapLayer(layerId);
-                    if(!layer) {
+                    if (!layer) {
                         showError();
                         return;
                     } else {
@@ -120,13 +120,13 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                         this.sandbox.postRequestByName('MapModulePlugin.MapMoveByLayerContentRequest', [layerId]);
                         this.ready = true;
                     }
-                dummyLayer.setId(layerId);
-                dummyLayer.setOpacity(100);
-                var event = builder(featureIdList, dummyLayer, true);
-                sb.notifyAll(event);
+                    dummyLayer.setId(layerId);
+                    dummyLayer.setOpacity(100);
+                    var event = builder(featureIdList, dummyLayer, true);
+                    sb.notifyAll(event);
 
+                }
             }, 500);
-            }
         },
         /**
          * @method _showPoints

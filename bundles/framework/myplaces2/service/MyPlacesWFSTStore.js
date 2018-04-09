@@ -43,9 +43,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
          * 'connects' to store (does not but might)
          */
         connect: function () {
-			
-			this._fixGetFeatureBug();
-			
             var url = this.url;
             this.protocols.categories = new OpenLayers.Protocol.WFS({
                 version: '1.1.0',

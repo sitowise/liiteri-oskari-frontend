@@ -1065,6 +1065,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
          */
         handleLayerSelectionChanged: function (layer, isSelected, keepLayersOrder, groupName) {
             // add layer
+            
             if (isSelected) {
                 var me = this,
                     sandbox = me.instance.getSandbox(),

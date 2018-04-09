@@ -64,7 +64,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.personaldata.PersonalDataBundle"
             "src": "../../../../bundles/framework/personaldata/resources/css/personaldata.css"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/framework/myplaces2/MyPlacesTab.js",
+            "src": "../../../../bundles/framework/myplaces2/MyPlacesTab.js"
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/personaldata/UserPopup.js"

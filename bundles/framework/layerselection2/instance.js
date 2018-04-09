@@ -163,7 +163,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.layerselection2.LayerSelectionBu
              */
             'AfterMapLayerAddEvent': function (event) {
                 //this.plugins['Oskari.userinterface.Tile'].refresh();
-                this.plugins['Oskari.userinterface.Flyout'].handleLayerSelectionChanged(event.getMapLayer(), true, event.getKeepLayersOrder(), event.getGroupName());
+                this.plugins['Oskari.userinterface.Flyout'].handleLayerSelectionChanged(event.getMapLayer(), true);
             },
             /**
              * @method MapLayerEvent
