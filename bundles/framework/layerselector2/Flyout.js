@@ -329,10 +329,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             } else {
                 tab = {
                     getTabPanel: function () {
-                        var tabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
-                        tabPanel.setTitle(item.view.getTitle());
-                        tabPanel.setContent(item.view.container);
-                        return tabPanel;
+                        if(!item.view.tabPanel) {
+                            item.view.tabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
+                            item.view.tabPanel.setTitle(item.view.getTitle());
+                            item.view.tabPanel.setContent(item.view.container);
+                        }
+                        return item.view.tabPanel;
                     },
                     setLayerSelected: function (x, y) {
                         return;
@@ -668,32 +670,32 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
             me.filters.push(filter);
             var loc = me.instance.getLocalization('layerFilter');
 
-            me.layerTabs.forEach(function(tab){
+            me.layerTabs.forEach(function (tab) {
                 var filterButton = me.filterTemplate.clone(),
                     filterContainer = tab.getTabPanel().getContainer().find('.layerselector2-layer-filter');
 
                 filterButton.attr('data-filter', filterName);
-            filterButton.find('.filter-text').html(toolText);
-            filterButton.attr('title', tooltip);
-            filterButton.find('.filter-icon').addClass('filter-'+filterName);
-            filterButton.find('.filter-icon').addClass(iconClassDeactive);
+                filterButton.find('.filter-text').html(toolText);
+                filterButton.attr('title', tooltip);
+                filterButton.find('.filter-icon').addClass('filter-' + filterName);
+                filterButton.find('.filter-icon').addClass(iconClassDeactive);
 
-            filterButton.unbind('click');
-            filterButton.bind('click', function(){
-                    var filterIcon = filterContainer.find('.filter-icon.' + 'filter-'+filterName);
-                me.deactivateAllFilters(filterName);
-                if(filterIcon.hasClass(iconClassDeactive)){
-                    // Activate this filter
+                filterButton.unbind('click');
+                filterButton.bind('click', function () {
+                    var filterIcon = filterContainer.find('.filter-icon.' + 'filter-' + filterName);
+                    me.deactivateAllFilters(filterName);
+                    if (filterIcon.hasClass(iconClassDeactive)) {
+                        // Activate this filter
                         me._setFilterIconClasses(filterName);
                         me.activateFilter(filterName);
                         me._setFilterTooltip(filterName, loc.tooltips.remove);
-                } else {
-                    // Deactivate all filters
-                    me.deactivateAllFilters();
-                }
-            });
+                    } else {
+                        // Deactivate all filters
+                        me.deactivateAllFilters();
+                    }
+                });
 
-            filterContainer.append(filterButton);
+                filterContainer.append(filterButton);
             });
         },
 

@@ -1065,12 +1065,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselection2.Flyout',
          */
         handleLayerSelectionChanged: function (layer, isSelected, keepLayersOrder, groupName) {
             // add layer
-            
+
             if (isSelected) {
                 var me = this,
                     sandbox = me.instance.getSandbox(),
                     scale = sandbox.getMap().getScale(),
-                    listContainer = jQuery('ul.selectedLayersList'),
+                    listContainer = $(me.container).find('ul.selectedLayersList'),
                     layerContainer = this._createLayerContainer(layer, groupName),
                     footer = layerContainer.find('div.layer-tools'), // footer tools
                     previousLayers = [];
