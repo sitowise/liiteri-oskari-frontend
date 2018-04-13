@@ -54,7 +54,10 @@ function() {
 		}, {
 		    "src": "../../../../libraries/jquery/plugins/DataTables-1.10.7/media/css/jquery.dataTables.css",
 		    "type": "text/css"
-		}],
+		}, {
+            "type": "text/css",
+            "src": "../../../../bundles/liiteri/liiteri-workspaces/resources/css/style.css"
+        }],
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
@@ -63,9 +66,6 @@ function() {
             "lang" : "en",
             "type" : "text/javascript",
             "src" : "../../../../bundles/liiteri/liiteri-workspaces/resources/locale/en.js"
-        }, {
-            "type": "text/css",
-            "src": "../../../../bundles/liiteri/liiteri-workspaces/resources/css/style.css"
         }]
     },
     "bundle" : {
