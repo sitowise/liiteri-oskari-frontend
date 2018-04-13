@@ -1,3 +1,14 @@
 #mapstatsHover_contentDiv {
     padding: 5px;
-}
+    display: inline-block; }
+
+
+.olControlLoadingPanel {
+            background-image: url(/Oskari/bundles/framework/mapstats/resources/images/ajax-loader.gif);
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-position:center;
+            background-repeat:no-repeat;
+            display: none;
+        }

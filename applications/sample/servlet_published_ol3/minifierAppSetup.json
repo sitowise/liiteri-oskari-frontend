@@ -1,140 +1,511 @@
 {
-    "startupSequence": [{
-            "bundlename": "mapfull_ol3",
-            "metadata": {
-                "Import-Bundle": {
-                    "mapwmts": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "mapwfs2": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "mapstats": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "mapanalysis": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "mapuserlayers": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "maparcgis": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "mapmodule": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    },
-                    "mapfull": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    },
-                    "oskariui": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    },
-                    "ui-components": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "divmanazer",
-            "metadata": {
-                "Import-Bundle": {
-                    "divmanazer": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "infobox",
-            "metadata": {
-                "Import-Bundle": {
-                    "infobox": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    }
-                }
-            }
-        }, {
-            "bundlename" : "coordinatetool",
-            "bundleinstancename" : "coordinatetool",
-            "metadata" : {
-                "Import-Bundle" : {
-                    "coordinatetool" : {
-                        "bundlePath" : "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "statsgrid",
-            "metadata": {
-                "Import-Bundle": {
-                    "statsgrid": {
-                        "bundlePath": "../../../packages/statistics/"
-                    }
-                }
-            }
-        },{
-            "bundlename": "toolbar",
-            "metadata": {
-                "Import-Bundle": {
-                    "toolbar": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    }
-                }
-            }
-        }, {
-            "bundlename" : "publishedstatehandler",
-            "metadata" : {
-                "Import-Bundle" : {
-                    "publishedstatehandler" : {
-                        "bundlePath" : "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "featuredata2",
-            "metadata": {
-                "Import-Bundle": {
-                    "featuredata2": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "drawtools",
-            "metadata": {
-                "Import-Bundle": {
-                    "drawtools": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "routingService",
-            "metadata": {
-                "Import-Bundle": {
-                    "routingService": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "maprotator",
-            "metadata": {
-                "Import-Bundle": {
-                    "maprotator": {
-                        "bundlePath": "../../../packages/mapping/ol3/"
-                    }
-                }
-            }
-        }, {
-            "bundlename": "rpc",
-            "metadata": {
-                "Import-Bundle": {
-                    "rpc": {
-                        "bundlePath": "../../../packages/framework/bundle/"
-                    }
-                }
-            }
-        }
-    ]
+	"startupSequence": [
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"openlayers-default-theme": {
+						"bundlePath": "../../../packages/openlayers/bundle/"
+					},
+					"openlayers-full-map": {
+						"bundlePath": "../../../packages/openlayers/bundle/"
+					}
+				}
+			},
+			"fi": "OpenLayers",
+			"sv": "OpenLayers",
+			"bundleinstancename": "openlayers-default-theme",
+			"en": "OpenLayers",
+			"title": "OpenLayers",
+			"bundlename": "openlayers-default-theme",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"mapmyplaces": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"maparcgis": {
+						"bundlePath": "../../../packages/arcgis/bundle/"
+					},
+					"oskariui": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapstats": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapwfs2": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapuserlayers": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"ui-components": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapmodule-plugin": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapanalysis": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapfull": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					},
+					"mapwmts": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "mapfull",
+			"sv": "mapfull",
+			"bundleinstancename": "mapfull",
+			"en": "mapfull",
+			"title": "Map",
+			"bundlename": "mapfull",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"divmanazer": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "divmanazer",
+			"sv": "divmanazer",
+			"bundleinstancename": "divmanazer",
+			"en": "divmanazer",
+			"title": "Oskari DIV Manazer",
+			"bundlename": "divmanazer",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"toolbar": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "toolbar",
+			"sv": "toolbar",
+			"bundleinstancename": "toolbar",
+			"en": "toolbar",
+			"title": "Toolbar",
+			"bundlename": "toolbar",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-ui": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-ui",
+			"sv": "liiteri-ui",
+			"bundleinstancename": "liiteri-ui",
+			"en": "liiteri-ui",
+			"title": "liiteri-ui",
+			"bundlename": "liiteri-ui",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"search": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "search",
+			"sv": "search",
+			"bundleinstancename": "search",
+			"en": "search",
+			"title": "Haku",
+			"instanceProps": {},
+			"bundlename": "search"
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"infobox": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "infobox",
+			"sv": "infobox",
+			"bundleinstancename": "infobox",
+			"en": "infobox",
+			"title": "Infobox",
+			"bundlename": "infobox",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-servicepackages": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-servicepackages",
+			"sv": "liiteri-servicepackages",
+			"bundleinstancename": "liiteri-servicepackages",
+			"en": "liiteri-servicepackages",
+			"title": "liiteri-servicepackages",
+			"bundlename": "liiteri-servicepackages",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"layerselector2": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "layerselector2",
+			"sv": "layerselector2",
+			"bundleinstancename": "layerselector2",
+			"en": "layerselector2",
+			"title": "Maplayer selection",
+			"bundlename": "layerselector2",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"layerselection2": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "layerselection2",
+			"sv": "layerselection2",
+			"bundleinstancename": "layerselection2",
+			"en": "layerselection2",
+			"title": "Chosen maplayers",
+			"bundlename": "layerselection2",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"statsgrid": {
+						"bundlePath": "../../../packages/statistics/bundle/"
+					},
+					"geostats": {
+						"bundlePath": "../../../packages/libraries/bundle/"
+					}
+				}
+			},
+			"fi": "statsgrid",
+			"sv": "statsgrid",
+			"bundleinstancename": "statsgrid",
+			"en": "statsgrid",
+			"title": "Statistics grid",
+			"bundlename": "statsgrid",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"maplegend": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "maplegend",
+			"sv": "maplegend",
+			"bundleinstancename": "maplegend",
+			"en": "maplegend",
+			"title": "Map legend",
+			"bundlename": "maplegend",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"personaldata": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "personaldata",
+			"sv": "personaldata",
+			"bundleinstancename": "personaldata",
+			"en": "personaldata",
+			"title": "Personal data",
+			"bundlename": "personaldata",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-workspaces": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-workspaces",
+			"sv": "liiteri-workspaces",
+			"bundleinstancename": "liiteri-workspaces",
+			"en": "liiteri-workspaces",
+			"title": "liiteri-workspaces",
+			"bundlename": "liiteri-workspaces",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"metadataflyout": {
+						"bundlePath": "../../../packages/catalogue/bundle/"
+					}
+				}
+			},
+			"fi": "metadataflyout",
+			"sv": "metadataflyout",
+			"bundleinstancename": "metadataflyout",
+			"en": "metadataflyout",
+			"title": "Metadata Flyout",
+			"bundlename": "metadataflyout",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"analyse": {
+						"bundlePath": "../../../packages/analysis/bundle/"
+					}
+				}
+			},
+			"fi": "analyysi",
+			"sv": "analys",
+			"bundleinstancename": "analyse",
+			"en": "analyse",
+			"title": "Analysis UI",
+			"bundlename": "analyse",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"myplaces2": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "Kohteet",
+			"sv": "Platsar",
+			"bundleinstancename": "myplaces2",
+			"en": "Places",
+			"title": "My places",
+			"bundlename": "myplaces2",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-loging": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-loging",
+			"sv": "liiteri-loging",
+			"bundleinstancename": "liiteri-loging",
+			"en": "liiteri-loging",
+			"title": "liiteri-loging",
+			"bundlename": "liiteri-loging",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-feedback": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-feedback",
+			"sv": "liiteri-feedback",
+			"bundleinstancename": "liiteri-feedback",
+			"en": "liiteri-feedback",
+			"title": "liiteri-feedback",
+			"bundlename": "liiteri-feedback",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-chart": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-chart",
+			"sv": "liiteri-chart",
+			"bundleinstancename": "liiteri-chart",
+			"en": "liiteri-chart",
+			"title": "liiteri-chart",
+			"bundlename": "liiteri-chart",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-announcements": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-announcements",
+			"sv": "liiteri-announcements",
+			"bundleinstancename": "liiteri-announcements",
+			"en": "liiteri-announcements",
+			"title": "liiteri-announcements",
+			"bundlename": "liiteri-announcements",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-usergisdata": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-usergisdata",
+			"sv": "liiteri-usergisdata",
+			"bundleinstancename": "liiteri-usergisdata",
+			"en": "liiteri-usergisdata",
+			"title": "liiteri-usergisdata",
+			"bundlename": "liiteri-usergisdata",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"liiteri-urbanplanning": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "liiteri-urbanplanning",
+			"sv": "liiteri-urbanplanning",
+			"bundleinstancename": "liiteri-urbanplanning",
+			"en": "liiteri-urbanplanning",
+			"title": "liiteri-urbanplanning",
+			"bundlename": "liiteri-urbanplanning",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Import-Bundle": {
+					"publisher2": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"bundleinstancename": "publisher2",
+			"title": "Publisher",
+			"bundlename": "publisher2"
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"user-layers": {
+						"bundlePath": "../../../packages/liiteri/bundle/"
+					}
+				}
+			},
+			"fi": "user-layers",
+			"sv": "user-layers",
+			"bundleinstancename": "user-layers",
+			"en": "user-layers",
+			"title": "user-layers",
+			"bundlename": "user-layers",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"myplacesimport": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "myplacesimport",
+			"sv": "myplacesimport",
+			"bundleinstancename": "myplacesimport",
+			"en": "myplacesimport",
+			"title": "myplacesimport",
+			"bundlename": "myplacesimport",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"printout": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "printout",
+			"sv": "printout",
+			"bundleinstancename": "printout",
+			"en": "printout",
+			"title": "printout",
+			"bundlename": "printout",
+			"instanceProps": {}
+		},
+		{
+			"metadata": {
+				"Require-Bundle-Instance": [],
+				"Import-Bundle": {
+					"featuredata2": {
+						"bundlePath": "../../../packages/framework/bundle/"
+					}
+				}
+			},
+			"fi": "featuredata2",
+			"sv": "featuredata2",
+			"bundleinstancename": "featuredata2",
+			"en": "featuredata2",
+			"title": "Feature data",
+			"bundlename": "featuredata2",
+			"instanceProps": {}
+		}
+	]
 }

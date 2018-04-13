@@ -48,6 +48,9 @@ function() {
 		}, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/liiteri/user-layers/event/LayersModified.js"
+        }, {
+            "type": "text/css",
+            "src": "../../../../bundles/liiteri/user-layers/resources/css/style.css"
         }],
         "locales" : [{
             "lang" : "fi",
@@ -57,9 +60,6 @@ function() {
             "lang" : "en",
             "type" : "text/javascript",
             "src" : "../../../../bundles/liiteri/user-layers/resources/locale/en.js"
-        }, {
-            "type": "text/css",
-            "src": "../../../../bundles/liiteri/user-layers/resources/css/style.css"
         }]
     },
     "bundle" : {

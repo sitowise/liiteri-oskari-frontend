@@ -101,7 +101,7 @@ input[type="submit"], input[type="button"], input[type="reset"], button {
   width: auto;
 }
 input[type="submit"]:hover:enabled, input[type="submit"]:focus, input[type="button"]:hover:enabled, input[type="button"]:focus, input[type="reset"]:hover:enabled, input[type="reset"]:focus, button:hover:enabled, button:focus {
-  background: #DFF4FF;
+  background-color:#ff8000;
   border: 1px solid #A7CEDF;
   /* Hover color doesn't really matter... */
   color: #0091FF;
@@ -109,12 +109,11 @@ input[type="submit"]:hover:enabled, input[type="submit"]:focus, input[type="butt
 
 /* This is used in buttons */
 input[type="submit"], input[type="button"], input[type="reset"], button, .lfr-actions, .lfr-actions ul {
-  background: #d4d4d4 url(../images/portlet/header_bg.png) repeat-x 0 0;
+  background-color: #0186d1;
   border: 1px solid;
   border-color: #C8C9CA #9E9E9E #9E9E9E #C8C9CA;
   color: #3C3C3C;
   font-weight: bold;
-  text-shadow: 1px 1px #FFF;
 }
 
 .aui-button-disabled input[type], .aui-button-disabled button, .aui-button-disabled input[type]:hover, .aui-button-disabled input[type]:focus, .aui-button-disabled button:hover, .aui-button-disabled button:focus {
@@ -127,7 +126,7 @@ input[type="submit"], input[type="button"], input[type="reset"], button, .lfr-ac
 
 /* This is used in buttons */
 input[type="submit"]:hover:enabled, input[type="button"]:hover:enabled, input[type="reset"]:hover:enabled, button:hover:enabled, .lfr-actions:hover, .lfr-actions:hover ul {
-  background: #b9ced9 url(../images/application/state_hover_bg.png) repeat-x 0 0;
+  background-color:#ff8000;
   border-color: #627782;
   /* Hover color doesn't really matter... */
   color: #369;
@@ -135,7 +134,7 @@ input[type="submit"]:hover:enabled, input[type="button"]:hover:enabled, input[ty
 
 /* This is used in buttons */
 input[type="submit"]:focus, input[type="button"]:focus, input[type="reset"]:focus, button:focus, .lfr-actions:focus, .lfr-actions:focus ul {
-  background: #ebebeb url(../images/application/state_active_bg.png) repeat-x 0 0;
+  background-color:#019bcd;
   border-color: #555;
 }
 
