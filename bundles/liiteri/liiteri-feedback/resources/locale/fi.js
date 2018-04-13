@@ -27,7 +27,18 @@ Oskari.registerLocalization({
             "validation": "Täytä pakolliset kentät",
 		},
 		"title": "Anna palautetta",
-		"manual" : "Käyttöohjeet",
+		"manual" : {
+			"text" : "Käyttöohjeet",
+			"link" : "http://www.ymparisto.fi/fi-FI/Elinympariston_tietopalvelu_Liiteri/Kayttoohjeet"
+		},
+		"privacy" : {
+			"text" : "Tietosuojaohje",
+			"link" : "http://www.ymparisto.fi/download/noname/%7B8183269B-E542-446E-A406-E59A3D5484C9%7D/136329"
+		},
+		"area" : {
+			"text" : "Aluemuutokset",
+			"link" : "http://www.ymparisto.fi/download/noname/%7BB8E38FA6-6F91-4457-B48E-0CE2481E2F27%7D/135925"
+		},
         "button": {
             "next" : "Seuraava",
             "previous" : "Edellinen",

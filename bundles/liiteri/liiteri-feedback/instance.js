@@ -285,10 +285,14 @@ Oskari.clazz.define(
 			    };
 		        me.getSandbox().postRequestByName('userinterface.UpdateExtensionRequest', [extension, 'toggle']);
 		    });
-			var manualLink = jQuery('<span><a href="http://www.ymparisto.fi/download/noname/%7BFF66BA66-CFC2-415B-ACFF-435C9A57CF39%7D/108617" target="_blank">' + me._localization.manual + '</a></span>');
+			var manualLink = jQuery('<span><a href="' + me._localization.manual.link + '" target="_blank">' + me._localization.manual.text + '</a></span>');
+			var privacyLink = jQuery('<span><a href="' + me._localization.privacy.link + '" target="_blank">' + me._localization.privacy.text + '</a></span>');
+			var areaLink = jQuery('<span><a href="' + me._localization.area.link + '" target="_blank">' + me._localization.area.text + '</a></span>');
 			var linkContainer = jQuery('<div class="footerLinkContainer"></div>');
 			linkContainer.append(feedbackLink);
 		    linkContainer.append(manualLink);
+		    linkContainer.append(privacyLink);
+		    linkContainer.append(areaLink);
 		    $('#footer-nav').append(linkContainer);
 		},
 		
