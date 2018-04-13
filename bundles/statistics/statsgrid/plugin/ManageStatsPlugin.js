@@ -77,7 +77,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.conf = jQuery.extend(true, config, defaults);
         this._locale = locale || {};
         this.templates = {
-            'csvButton': '<span class="statsgrid-csv-button link"></span>',
+            'csvButton': '<span class="statsgrid-csv-button action-link"></span>',
             'statsgridTotalsVar': '<span class="statsgrid-variable"></span>',
             'subHeader': '<span class="statsgrid-grid-subheader"></span>',
             'gridHeaderMenu': '<li><input type="checkbox" /><label></label></li>',
@@ -1757,16 +1757,19 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             selectorsContainer.append(me.getTypeSelectorHTML([]));
             selectorsContainer.append(me.getDirectionSelectorHTML([]));
             
-            selectorsContainer.find('select.gender').chosen({disable_search: true});
-            selectorsContainer.find('select.type').chosen({placeholder_text: me._locale.selectIndicatorPlaceholder});
+            selectorsContainer.find('select.gender').chosen({disable_search: true,
+                width: "210px"});
+            selectorsContainer.find('select.type').chosen({placeholder_text: me._locale.selectIndicatorPlaceholder,
+                width: "210px"});
             me.createDemographicsSelects(container, null);
             // we use chosen to create autocomplete version of indicator select element.
             sel.chosen({
-                disable_search: true
+                disable_search: true,
+                width: "210px"
             });
             
             sel.val(lastVal).change();
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
 
         getTwowayIndicatorMeta: function(container, indicator) {
@@ -1907,7 +1910,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
 
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
 
         updateIndicatorsSelectByIds: function(container, ids) {
@@ -1947,7 +1950,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
 
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
 
         updateIndicatorsSelectByThemes: function(container, themesFilter) {
@@ -1996,7 +1999,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             me.updateIndicatorsSelectByIds(container, uniqueIds);
 
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
 
         /**
@@ -3010,7 +3013,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 sel.chosen({
                     disable_search: true,
-                    placeholder_text: "Valitse vuosi"
+                    placeholder_text: "Valitse vuosi",
+                    width: "210px"
                 });
 
                 sel.chosen().change(function(e) {
@@ -3030,7 +3034,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 parameters.append(fetchButtonRow);
 
                 var additionalButtonsRow = jQuery('<div></div>');
-                createChartButton = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' link"><span class="glyphicon glyphicon-stats"></span> ' + this._locale.createChart + ' &gt;</span>');
+                createChartButton = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' action-link"><span class="glyphicon glyphicon-stats"></span> ' + this._locale.createChart + ' &gt;</span>');
                 createChartButton.click(function(e) {
                     var element = jQuery(e.currentTarget);
                     element.loadingOverlay();
@@ -3052,7 +3056,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 additionalButtonsRow.append(csvLink);
 
                 var additionalButtonsRow2 = jQuery('<div></div>');
-                var printLink = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' link"><span class="glyphicon glyphicon-print"></span> ' + this._locale.print + ' &gt;</span>');
+                var printLink = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' action-link"><span class="glyphicon glyphicon-print"></span> ' + this._locale.print + ' &gt;</span>');
                 printLink.click(function() {
                     var request = me._sandbox.getRequestBuilder('printout.PrintMapRequest')();
                     me._sandbox.request(me, request);
@@ -3149,13 +3153,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     node.setSelected(false);
                 });
             } else {
-                $('#indi').val('-2').trigger("liszt:updated");
-                $('select.gender').val('total').trigger("liszt:updated");
-                $('select.type').val([]).trigger("liszt:updated");                
+                $('#indi').val('-2').trigger("chosen:updated");
+                $('select.gender').val('total').trigger("chosen:updated");
+                $('select.type').val([]).trigger("chosen:updated");                
             }
             var yearSelect = $('.yearsel').find('select');
             yearSelect.val("newest");
-            yearSelect.trigger("liszt:updated");
+            yearSelect.trigger("chosen:updated");
 
             me._setCurrentAreaFilter();
             me.geometryFilter.reset();
@@ -4700,7 +4704,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             sel.val(newValues);
             sel.prop('disabled', '');
             
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
         /**
          * Create HTML for gender selector
@@ -4768,7 +4772,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
             sel.val(values[values.length - 1]);
             sel.prop('disabled', '');
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
         updateTypeSelectorValues: function (sel, values) {
             var i,
@@ -4780,7 +4784,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
             sel.val(values[values.length - 1]);
             sel.prop('disabled', '');
-            sel.trigger("liszt:updated");
+            sel.trigger("chosen:updated");
         },
         updateDirectionSelectorValues: function (sel, values) {
             var i,

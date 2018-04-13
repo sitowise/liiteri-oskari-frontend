@@ -487,13 +487,13 @@ div.contentContainer .slick-header {
 	margin: 8px 10px 10px 10px
 }
 
-.indisel a.chzn-default {
+.indisel a.chosen-default {
 	padding: 1px 7px;
 	color: rgb(51, 51, 51);
 	border-radius: 4px;
 }
 
-.indisel .chzn-container-single .chzn-single div b {
+.indisel .chosen-container-single .chosen-single div b {
 	background-position-y: -3px;
 }
 
@@ -534,11 +534,11 @@ CSV FILES MODULE
 	content: "\e114";
 }
 
-.statsgrid span.link:hover {
+.statsgrid span.action-link:hover {
 color: #ff8000;
 }
 
-.statsgrid span.link {
+.statsgrid span.action-link {
 cursor: pointer;
 margin-left: 10px;
 color: #00bce9;
@@ -569,11 +569,11 @@ color: #898989;
   margin-left: 5px;
 }
 
-.statsgrid .chzn-container-multi .chzn-choices .search-field input {
+.statsgrid .chosen-container-multi .chosen-choices .search-field input {
   height: auto;
 }
 
-.statsgrid .chzn-container-multi .chzn-choices {
+.statsgrid .chosen-container-multi .chosen-choices {
   max-height: 200px !important;
   overflow-y: auto;
 }

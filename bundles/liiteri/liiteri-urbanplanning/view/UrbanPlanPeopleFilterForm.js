@@ -94,7 +94,7 @@ Oskari.clazz.define(
                     selectMunicipality.chosen({ allow_single_deselect: true, no_results_text: me.locale.search.noResultText });
                     fillMunicipalitySelectCb.initialized = true;
                 } else {
-                    selectMunicipality.trigger('liszt:updated');
+                    selectMunicipality.trigger('chosen:updated');
                 }
 
                 me._selectFilter('municipality');
@@ -123,7 +123,7 @@ Oskari.clazz.define(
                     selectConsult.chosen({ allow_single_deselect: true, no_results_text: me.locale.search.noResultText });
                     fillConsultSelectCb.initialized = true;
                 } else {
-                    selectConsult.trigger('liszt:updated');
+                    selectConsult.trigger('chosen:updated');
                 }
 
                 me._selectFilter('consult');
@@ -141,7 +141,7 @@ Oskari.clazz.define(
                     fillMunicipalitySelectCb, me.view.errorCb);
 
                 selectMunicipality.find('option').remove();
-                selectMunicipality.trigger('liszt:updated');
+                selectMunicipality.trigger('chosen:updated');
 
                 me.instance.addFilterToUrl('ely', $(e.target).val());
             });
@@ -232,17 +232,17 @@ Oskari.clazz.define(
             if (result.personType == 'MunicipalityContact') {
                 result.ely = $("#peopleElyInput").val();
                 result.municipality = $("#peopleMunicipalityInput").val();
-                $("#peopleConsultInput").val('').change().trigger('liszt:updated');
+                $("#peopleConsultInput").val('').change().trigger('chosen:updated');
             } else if (result.personType == 'MunicipalityConsult') {
                 result.ely = $("#peopleElyInput").val();
                 result.municipality = $("#peopleMunicipalityInput").val();
                 result.authorizedOnly = true;
-                $("#peopleConsultInput").val('').change().trigger('liszt:updated');
+                $("#peopleConsultInput").val('').change().trigger('chosen:updated');
             } else if (result.personType == 'MunicipalityConsultDetailed') {
                 result.personType = 'MunicipalityConsult';
                 result.search = $("#peopleConsultInput").val();
-                $("#peopleElyInput").val('').change().trigger('liszt:updated');
-                $("#peopleMunicipalityInput").val('').change().trigger('liszt:updated');
+                $("#peopleElyInput").val('').change().trigger('chosen:updated');
+                $("#peopleMunicipalityInput").val('').change().trigger('chosen:updated');
             }
 
             return result;
@@ -271,7 +271,7 @@ Oskari.clazz.define(
             if (filterName == 'ely') {
                 param = this.instance.getUrlParameter('ely');
                 if (param != null) {
-                    this.container.find('#peopleElyInput').val(param).trigger("liszt:updated");;
+                    this.container.find('#peopleElyInput').val(param).trigger("chosen:updated");;
                 }
             }
 
@@ -279,7 +279,7 @@ Oskari.clazz.define(
             if (filterName == 'municipality') {
                 param = this.instance.getUrlParameter('municipality');
                 if (param != null) {
-                    this.container.find('#peopleMunicipalityInput').val(param).trigger("liszt:updated");;
+                    this.container.find('#peopleMunicipalityInput').val(param).trigger("chosen:updated");;
                 }
             }
 
@@ -287,7 +287,7 @@ Oskari.clazz.define(
             if (filterName == 'consult') {
                 param = this.instance.getUrlParameter('consult');
                 if (param != null) {
-                    this.container.find('#peopleConsultInput').val(param).trigger("liszt:updated");;
+                    this.container.find('#peopleConsultInput').val(param).trigger("chosen:updated");;
                 }
             }
         }

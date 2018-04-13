@@ -17,8 +17,8 @@
             '<div class="filterText">' +
             '</div>' +
             '</div>' +
-            '<div class="filter-cloud-content chzn-container chzn-container-multi">' +
-            '<ul class="chzn-choices"></ul>' +
+            '<div class="filter-cloud-content chosen-container chosen-container-multi">' +
+            '<ul class="chosen-choices"></ul>' +
             '</div>' +
             '</div>'),
             'filterItem': jQuery('<li class="search-choice"><span></span><a href="javascript:void(0)" class="search-choice-close"></a></li>'),
@@ -171,7 +171,7 @@
             for (var id in this.itemsById) {
                 delete this.itemsById[id];
             }            
-            container.find("ul.chzn-choices").empty();
+            container.find("ul.chosen-choices").empty();
             for (var id in this.uiById) {
                 delete this.uiById[id];
             }
@@ -249,7 +249,7 @@
             me._appendOptionValues(select, null, values);
 
             /* send event */
-            select.trigger('liszt:updated');
+            select.trigger('chosen:updated');
         },
         _handleAddNewCategoriesFilter: function (element) {
             var me = this;
