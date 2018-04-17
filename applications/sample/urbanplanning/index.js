@@ -66,7 +66,7 @@ jQuery(document).ready(function () {
         // check that both setup and config are loaded 
         // before actually starting the application
         if (appSetup && appConfig && userData && dynamicAppSetup) {
-            appConfig.mapfull.conf.user = userData;
+            appSetup.env.user = userData;
             appConfig['liiteri-ui'].conf.analytics = dynamicAppSetup.configuration['liiteri-ui'].conf.analytics;
             var app = Oskari.app;
             app.setApplicationSetup(appSetup);
