@@ -80,3 +80,19 @@ div.drawHelper div.infoText {
 a.categoryOp {
 	margin-right: 15px;
 }
+
+.myplaces-draw-box {
+  width: 32px;
+  height: 32px;
+  background-image: url('../images/icons.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -1405px -32px !important;
+}
+
+.myplaces-draw-circle {
+  width: 32px;
+  height: 32px;
+  background-image: url('../images/icons.png') !important;
+  background-repeat: no-repeat !important;
+  background-position: -1437px -32px !important;
+}
