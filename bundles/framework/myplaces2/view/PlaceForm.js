@@ -21,7 +21,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
 
         this.template = jQuery('<div class="myplacesform">' +
 			'<div class="field onlyLabelCheckbox">' + 
-			'<input type="checkbox" name="onlylabel"/>' + loc.placeOnlyLabel.label +
+			'<input type="checkbox" data-name="onlylabel"/>' + this.loc('placeform.placeOnlyLabel.label') +
 			'</div>' +
             '<div class="field">' +
             '    <div class="help icon-info" title="' + this.loc('placeform.tooltip') + '"></div>' +
@@ -107,7 +107,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
                 ui.find('input[data-name=placeAttention]').attr('value', this.initialValues.place.attention_text);
                 ui.find('input[data-name=placelink]').attr('value', this.initialValues.place.link);
                 ui.find('input[data-name=imagelink]').attr('value', this.initialValues.place.imageLink);
-				ui.find('input[name=onlylabel]').attr('checked', (this.initialValues.place.onlyLabel === 'true'));
+				ui.find('input[data-name=onlylabel]').attr('checked', (this.initialValues.place.onlyLabel === 'true'));
                 this._updateImageUrl(this.initialValues.place.imageLink, ui);
             }
 
@@ -144,7 +144,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.PlaceForm",
                 var placeName = onScreenForm.find('input[data-name=placename]').val(),
                     placeDesc = onScreenForm.find('input[data-name=placedesc]').val(),
                     placeAttention = onScreenForm.find('input[data-name=placeAttention]').val(),
-                    placeLink = onScreenForm.find('input[data-name=placelink]').val();
+                    placeLink = onScreenForm.find('input[data-name=placelink]').val(),
+                    onlyLabel = onScreenForm.find('input[data-name=onlyLabel]').val();
                 if (placeLink) {
                     if (placeLink.indexOf('://') === -1 || placeLink.indexOf('://') > 6) {
                         placeLink = 'http://' + placeLink;

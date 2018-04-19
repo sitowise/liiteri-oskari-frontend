@@ -285,8 +285,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.ButtonHandler",
             buttons.push(cancelBtn);
 
             if (me.instance.sandbox.getUser().isLoggedIn()) {
-                cancelBtn.setTitle(locBtns.close);
-                finishBtn.setTitle(locBtns.saveAsMyPlace);
+                cancelBtn.setTitle(me.loc('buttons.close'));
+                finishBtn.setTitle(me.loc('buttons.saveAsMyPlace'));
             }
 
 
