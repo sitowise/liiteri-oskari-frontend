@@ -138,9 +138,9 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-ui.plugin.TilePlugin',
             }
         },
         eventHandlers: {
-            'LayersLoadingEvent' : function (event) {
-                this._afterLayersLoadingEvent(event);
-            },
+            // 'LayersLoadingEvent' : function (event) {
+            //     this._afterLayersLoadingEvent(event);
+            // },
         },
         onEvent: function(event) {
             var me = this,
