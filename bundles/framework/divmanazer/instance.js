@@ -887,7 +887,7 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
                     },
                     attach: {
                         left: this.getMapdivOffset().left,
-                        top: '30px'
+                        top: '0px'
                     }
                 }
         },
