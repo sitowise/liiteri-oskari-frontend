@@ -747,14 +747,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
         },
         _getExpandedBbox : function(bbox) {
             var ratio = 1.5; //default ratio set in OpenLayers.Layer.Grid.ratio
-            var center = bbox.getCenterLonLat();
-            var tileWidth = bbox.getWidth() * ratio;
-            var tileHeight = bbox.getHeight() * ratio;
+            var lon = (bbox.right + bbox.left) / 2;
+            var lat = (bbox.top + bbox.bottom) / 2;
+            var tileWidth = (bbox.right - bbox.left) * ratio;
+            var tileHeight = (bbox.top - bbox.bottom) * ratio;
 
-            var bounds = new OpenLayers.Bounds(center.lon - (tileWidth / 2),
-                                  center.lat - (tileHeight / 2),
-                                  center.lon + (tileWidth / 2),
-                                  center.lat + (tileHeight / 2));
+            var bounds = new OpenLayers.Bounds(lon - (tileWidth / 2),
+                lat - (tileHeight / 2),
+                lon + (tileWidth / 2),
+                lat + (tileHeight / 2));
             return bounds;
         },
         _validateClassificationParameters: function (computationMethod, breaksInput) {
@@ -850,7 +851,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
                 var params = {
                     'indicatorData': JSON.stringify(indicatorData),
                     'size': zoneType,
-                    'bbox': me._getExpandedBbox(me._sandbox.getMap().getBbox()),
+                    'bbox': me._getExpandedBbox(me._sandbox.getMap().getExtent()),
                     'numberOfClasses': numberOfClasses,
                     'method': computationMethod,
                     'mode': classificationmode
