@@ -434,8 +434,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
         },
             'AfterMapMoveEvent': function() {
                 var me = this;
-                me.plugin.mapStatusChanged();
-                this.plugins['Oskari.userinterface.Flyout'].locateOnMapFID = null;
+                if (me.plugin) {
+                    me.plugin.mapStatusChanged();
+                }
+                if (this.plugins['Oskari.userinterface.Flyout']) {
+                    this.plugins['Oskari.userinterface.Flyout'].locateOnMapFID = null;
+                }
             },
 
             WFSFeatureGeometriesEvent: null
