@@ -184,8 +184,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
             },
             'LayersLoadingEvent' : function (event) { 
                 //set clicked feature after layers are drawn so that the highlighting works properly
-                var mapLayerService = this.sandbox.getService('Oskari.mapframework.service.MapLayerService');
-                if(event.getOperation() == 'stop' && this.ready && !this.completed && mapLayerService) {
+                var mapLayerService = this.sandbox.getService('Oskari.mapframework.service.MapLayerService'),
+                    wfsLayerService = this.sandbox.getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService');
+                if(event.getOperation() == 'stop' && this.ready && !this.completed && mapLayerService && wfsLayerService) {
                     var layerId = this.state.highlightFeatureLayerId;
                     var featureId = this.state.highlightFeatureId;
                     this.completed = true;
@@ -201,7 +202,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.postprocessor.PostProcessorBundl
                         featureIdList.push(featureId);
                     }
                     var layer = mapLayerService.findMapLayer(layerId);
-                    layer.setClickedFeatureIds(featureIdList);
+                    wfsLayerService.setWFSFeaturesSelections(layer.getId(), featureIdList, true);
 
                     var event = builder(featureIdList, layer, true);
                     this.sandbox.notifyAll(event);
