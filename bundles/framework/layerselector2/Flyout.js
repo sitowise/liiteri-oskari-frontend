@@ -341,6 +341,12 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                     },
                     updateLayerContent: function (x, y) {
                         return;
+                    },
+                    setState: function () {
+
+                    },
+                    getState: function() {
+                        
                     }
                 }
             }
