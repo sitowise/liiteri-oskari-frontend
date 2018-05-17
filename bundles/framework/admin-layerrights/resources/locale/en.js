@@ -27,7 +27,8 @@ Oskari.registerLocalization(
                 "title": "Error",
                 "message": "Map layer rights could not been updated."
             },
-            "selectValue": "Select value"
+            "selectValue": "Select value",
+            "selectAll": "Select all"
         },
         "save" : "Save",
         "selectRole": "Role",

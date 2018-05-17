@@ -316,18 +316,22 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             thCell.html(columnsLoc.name);
             headerRow.append(thCell);
 
+            var thCellControlHeader = me._templates.cellTh.clone();
+            thCellControlHeader.html(columnsLoc.selectAll);
+            controlRow.append(thCellControlHeader);
+
             jQuery.each(layerRightsJSON[0].permissions, function(index, header) {
                 var thCell = me._templates.cellTh.clone();
-                var tdCell = me._templates.cellTd.clone();
+                var thCellControl = me._templates.cellTh.clone();
                 var checkboxCtrl = me._templates.checkboxCtrl.clone();
                 var headerName = header.name;
                 if (typeof columnsLoc[header.name] !== 'undefined') {
                     headerName = columnsLoc[header.name];
                 }
                 checkboxCtrl.addClass(header.name);
-                tdCell.append(checkboxCtrl);
+                thCellControl.append(checkboxCtrl);
                 thCell.html(headerName);
-                controlRow.append(tdCell);
+                controlRow.append(thCellControl);
                 headerRow.append(thCell);
             });
             thead.append(headerRow);

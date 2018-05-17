@@ -89,3 +89,8 @@ span.fancytree-drag-helper-img,
 {
 	background-image: url("../images/icons.gif") !important;
 }
+
+
+table.layer-rights-table thead tr {
+    display: table-header-group !important;
+}

@@ -27,7 +27,8 @@ Oskari.registerLocalization(
                 "title": "Virhe",
                 "message": "Karttatasojen oikeuksia ei voitu päivittää."
             },
-            "selectValue": "Valitse tunniste"
+            "selectValue": "Valitse tunniste",
+            "selectAll": "Valitse kaikki"
         },
         "save" : "Tallenna",
         "selectRole": "Rooli",
