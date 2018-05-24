@@ -39,6 +39,10 @@ Oskari.registerLocalization(
         "info": {
             "title": "Info",
             "success": "Permissions have been updated"
-        }
+        },
+        // Liiteri specific
+        "searchText": "Sök",
+        "resultsCount": "Visar {start} till {end} av totalt {all} rader",
+        "resultsFiltered": "(filtrerade från totalt {all} rader)"
     }
 });

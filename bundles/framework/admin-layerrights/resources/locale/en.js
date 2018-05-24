@@ -40,6 +40,10 @@ Oskari.registerLocalization(
         "info": {
             "title": "Info",
             "success" : "Permissions have been updated"
-        }
+        },
+        // Liiteri specific
+        "searchText": "Search",
+        "resultsCount": "Showing {start} to {end} of {all}",
+        "resultsFiltered": "(filtered from {all} total entries)"
     }
 });

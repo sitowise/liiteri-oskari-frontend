@@ -40,6 +40,10 @@ Oskari.registerLocalization(
         "info": {
             "title": "Info",
             "success": "Oikeudet on päivitetty"
-        }
+        },
+        // Liiteri specific
+        "searchText": "Etsi hakutuloksista",
+        "resultsCount": "Näytetään rivit {start} - {end} (yhteensä {all})",
+        "resultsFiltered": "(suodatettu {all} tuloksen joukosta)"
     }
 });
