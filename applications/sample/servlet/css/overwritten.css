@@ -94,3 +94,22 @@ span.fancytree-drag-helper-img,
 table.layer-rights-table thead tr {
     display: table-header-group !important;
 }
+
+form#admin-layerrights-form {
+	margin-left: 16px;
+}
+
+table#workspaces-table, table#shared-workspaces-table, table#userwmslayers-table {
+	margin-left: 0;
+	margin-right: 0;
+	width: 100% !important;
+}
+
+div.admin-layerrights-flyout div.extra-container div.search {
+	float: left;
+}
+
+div.admin-layerrights-flyout div.extra-container div.layerCount {
+	float: right;
+	margin-right: 10px;
+}
