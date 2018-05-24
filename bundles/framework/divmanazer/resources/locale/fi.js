@@ -1,5 +1,4 @@
-Oskari.registerLocalization(
-{
+Oskari.registerLocalization({
     "lang": "fi",
     "key": "DivManazer",
     "value": {
@@ -7,11 +6,11 @@ Oskari.registerLocalization(
             "noValue": "Ei arvoa",
             "tick": "{value, number}"
         },
-      "tooltips": {
-        "dot": "Muokkaa pisteen esitystapaa",
-        "area": "Muokkaa alueen esitystapaa",
-        "line": "Muokkaa viivan esitystapaa"
-      },
+        "tooltips": {
+            "dot": "Muokkaa pisteen esitystapaa",
+            "area": "Muokkaa alueen esitystapaa",
+            "line": "Muokkaa viivan esitystapaa"
+        },
         "buttons": {
             "add": "Lisää",
             "cancel": "Peruuta",
@@ -246,6 +245,7 @@ Oskari.registerLocalization(
             }
         },
         "Grid": {
+            "cellValue": "{value, number}",
             "columnSelector": {
                 "title": "Ominaisuudet",
                 "tooltip": "Näytä sarakkeet"
@@ -338,7 +338,14 @@ Oskari.registerLocalization(
                 "getAggregateAnalysisFailed": "Tunnuslukujen haku epäonnistui.",
                 "noAggregateAnalysisPopupTitle": "Tunnuslukuja ei löytynyt",
                 "noAggregateAnalysisPopupContent": "Kyseiselle tasolle ei ole laskettu tunnuslukuja. Voit laskea tunnusluvut haluamallesi aineistolle Analyysi-toiminnon avulla.."
+            }
+        },
+        "fileInput": {
+            "fileupload": "Raahaa lähtöaineiston sisältävä tiedosto tähän tai",
+            "link": "valitse selaamalla",
+            "uploading": "Ladataan",
+            "success": "Valmis",
+            "error": "Virhe!",
         }
     }
-}
 });

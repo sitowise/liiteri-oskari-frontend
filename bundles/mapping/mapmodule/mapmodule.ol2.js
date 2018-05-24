@@ -29,8 +29,8 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.MapModule',
      */
 
     function (id, imageUrl, options, mapDivId) {
-		this._defaulfMarkerShape = 2;
-		this._preSVGIconUrl = 'data:image/svg+xml;base64,';
+        this._defaulfMarkerShape = 2;
+        this._preSVGIconUrl = 'data:image/svg+xml;base64,';
     }, {
 
         _getContainerWithClasses: function (containerClasses) {
@@ -70,8 +70,8 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.MapModule',
          * @return {OpenLayers.Map}
          */
         _initImpl: function (sandbox, options, map) {
-            /*Added to handle pink tiles */
-      	    var olOpts = options.openLayers || {};
+            /* Added to handle pink tiles */
+              var olOpts = options.openLayers || {};
             OpenLayers.IMAGE_RELOAD_ATTEMPTS = olOpts.imageReloadAttemps || 5;
             OpenLayers.Util.onImageLoadErrorColor = olOpts.onImageLoadErrorColor || 'transparent';
 

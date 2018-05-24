@@ -240,6 +240,7 @@ Oskari.registerLocalization(
             }
         },
         "Grid": {
+            "cellValue": "{value, number}",
             "columnSelector": {
                 "title": "Properties",
                 "tooltip": "Show columns"
@@ -333,6 +334,13 @@ Oskari.registerLocalization(
                 "noAggregateAnalysisPopupTitle": "Statistical Values Not Found",
                 "noAggregateAnalysisPopupContent": "The statistical values are not computed for this map layer. You can compute them in the Analysis function."
             }
+        },
+        "fileInput": {
+                "fileupload": "Drag a file here or",
+                "link":"select by browsing",
+                "uploading":"Loading",
+                "success":"Sucess",
+                "error":"Error!",
         }
     }
 });

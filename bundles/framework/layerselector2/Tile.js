@@ -12,7 +12,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
      */
 
     function (instance) {
-        //"use strict";
+        
         this.instance = instance;
         this.container = null;
         this.template = null;
@@ -22,7 +22,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * @return {String} the name for the component
          */
         getName: function () {
-            //"use strict";
+            
             return 'Oskari.mapframework.bundle.layerselector2.Tile';
         },
         getSequenceNumber: function () {
@@ -40,7 +40,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * Interface method implementation
          */
         setEl: function (el, width, height) {
-            //"use strict";
+            
             this.container = jQuery(el);
             
             var title = this.container.children('.oskari-tile-title');
@@ -72,7 +72,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * Interface method implementation, clears the container
          */
         stopPlugin: function () {
-            //"use strict";
+            
             this.container.empty();
         },
         /**
@@ -80,7 +80,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * @return {String} localized text for the title of the tile
          */
         getTitle: function () {
-            //"use strict";
+            
             return this.instance.getLocalization('title');
         },
         /**
@@ -88,7 +88,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * @return {String} localized text for the description of the tile
          */
         getDescription: function () {
-            //"use strict";
+            
             return this.instance.getLocalization('desc');
         },
         /**
@@ -96,7 +96,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * Interface method implementation, does nothing atm
          */
         getOptions: function () {
-            //"use strict";
+            
         },
         /**
          * @method setState
@@ -105,7 +105,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Tile',
          * Interface method implementation, does nothing atm
          */
         setState: function (state) {
-            //"use strict";
+            
         },
         /**
          * @method refresh
