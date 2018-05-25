@@ -178,8 +178,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher2.PublisherBundleInstan
             }
             if (blnEnabled) {
                 var stateRB = Oskari.requestBuilder('StateHandler.SetStateRequest');
-                this.getSandbox().request(this, stateRB(data.configuration));
-                if (data.uuid) {
+
+                if (stateRB) {
+                    this.getSandbox().request(this, stateRB(data.configuration));
+                }
+                if(data.uuid) {
                     this._showEditNotification();
                 }
 

@@ -316,18 +316,22 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
             thCell.html(columnsLoc.name);
             headerRow.append(thCell);
 
+            var thCellControlHeader = me._templates.cellTh.clone();
+            thCellControlHeader.html(columnsLoc.selectAll);
+            controlRow.append(thCellControlHeader);
+
             jQuery.each(layerRightsJSON[0].permissions, function(index, header) {
                 var thCell = me._templates.cellTh.clone();
-                var tdCell = me._templates.cellTd.clone();
+                var thCellControl = me._templates.cellTh.clone();
                 var checkboxCtrl = me._templates.checkboxCtrl.clone();
                 var headerName = header.name;
                 if (typeof columnsLoc[header.name] !== 'undefined') {
                     headerName = columnsLoc[header.name];
                 }
                 checkboxCtrl.addClass(header.name);
-                tdCell.append(checkboxCtrl);
+                thCellControl.append(checkboxCtrl);
                 thCell.html(headerName);
-                controlRow.append(tdCell);
+                controlRow.append(thCellControl);
                 headerRow.append(thCell);
             });
             thead.append(headerRow);
@@ -492,7 +496,77 @@ Oskari.clazz.define('Oskari.framework.bundle.admin-layerrights.Flyout',
                 // store unaltered data so we can do a dirty check on save
                 me.cleanData = mappedResult;
                 var table = me.createLayerRightGrid(mappedResult);
-                jQuery(me.container).find('.admin-layerrights-layers').empty().append(table);
+                var el = jQuery(me.container).find('.admin-layerrights-layers');
+                el.empty();
+
+                /**********************************************
+                * Liiteri specific layer search box
+                ***********************************************/
+                var layerCountEl =  jQuery('<div class="admin-layerrights layerCount"></div>');
+                var updateLayerCountText = function(opts) {
+                    var layersTable = jQuery('table.layer-rights-table');
+                    var layers = layersTable.find('tbody tr');
+                    var localeOptions = opts || {
+                        start: 0,
+                        end: layers.length,
+                        all: layers.length
+                    };
+
+                    var text = Oskari.getMsg('admin-layerrights', 'resultsCount', localeOptions);
+                    if(typeof localeOptions.filteredAll !== 'undefined') {
+                        text += ' ' + Oskari.getMsg('admin-layerrights', 'resultsFiltered', {all:localeOptions.filteredAll});
+                    }
+                    layerCountEl.html(text);
+                };
+
+                var search = jQuery('<div class="search">'+Oskari.getMsg('admin-layerrights', 'searchText') +': <input type="text"></input></div>');
+                var input = search.find('input');
+                input.on('keyup', function(){
+                    var filter = input.val().toLowerCase();
+                    var layersTable = jQuery('table.layer-rights-table');
+                    var counts = {
+                        visible: 0,
+                        all: 0
+                    };
+                    layersTable.find('tbody tr').each(function(){
+                        var el = jQuery(this);
+                        var layerNameEl = el.find('span.layer-name');
+                        if(layerNameEl) {
+                            var layerName = layerNameEl.html().toLowerCase();
+                            if(layerName.indexOf(filter) > -1) {
+                                el.show();
+                                counts.visible++;
+                            } else {
+                                el.hide();
+                            }
+                            counts.all++;
+                        }
+                    });
+
+                    // update also founded texts
+                    var opts = {
+                        start: 0,
+                        end: counts.visible,
+                        all:counts.visible
+                    };
+                    if(filter !== '') {
+                        opts.filteredAll = counts.all;
+                    }
+                    updateLayerCountText(opts);
+                });
+                var extraContainer = jQuery('<div class="extra-container"></div>');
+                extraContainer.append(search);
+                extraContainer.append(layerCountEl);
+                el.append(extraContainer);
+                /*************************************************
+                * Liiteri specifics end
+                *************************************************/
+
+
+                el.append(table);
+
+                // Liiteri specific
+                updateLayerCountText();
             });
         },
         /**

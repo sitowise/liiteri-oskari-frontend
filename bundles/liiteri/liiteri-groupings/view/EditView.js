@@ -1136,7 +1136,8 @@ function (instance) {
             statsDropDown.chosen({
                 no_results_text: "Ei hakutuloksia",
                 placeholder_text: "Valitse",
-                search_contains: true
+				search_contains: true,
+				width: "300px" //select is not in dom yet and chosen would render it as 0 width because real width is not known
             });
 		    
 		}

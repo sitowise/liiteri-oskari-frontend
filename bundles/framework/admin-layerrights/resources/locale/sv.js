@@ -26,7 +26,8 @@ Oskari.registerLocalization(
                 "title": "Rätter har inte uppdaterats",
                 "message": "Sparning av rätter lyckas inte."
             },
-            "selectValue": "Markera värdet"
+            "selectValue": "Markera värdet",
+            "selectAll": "Markera all"
         },
         "save" : "save",
         "selectRole": "Role",
@@ -38,6 +39,10 @@ Oskari.registerLocalization(
         "info": {
             "title": "Info",
             "success": "Permissions have been updated"
-        }
+        },
+        // Liiteri specific
+        "searchText": "Sök",
+        "resultsCount": "Visar {start} till {end} av totalt {all} rader",
+        "resultsFiltered": "(filtrerade från totalt {all} rader)"
     }
 });

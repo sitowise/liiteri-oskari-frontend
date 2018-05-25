@@ -59,7 +59,7 @@
             	//me.sandbox.postRequestByName('ShowAdminLayerselectorFlyoutRequest');
             });
             content.find("#showCreateMapTabAction").click(function () {
-                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('Publisher'), 'toggle']);
+                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('Publisher2'), 'toggle']);
             	//me.sandbox.postRequestByName('ShowPublisherFlyoutRequest');
             });
             content.find("#logoutInAction").click(function () {
