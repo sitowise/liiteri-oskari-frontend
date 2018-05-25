@@ -1193,7 +1193,7 @@ define([
                     layerType: 'collection',
                     isBase: me.model.isBaseLayer(),
                     //inspireTheme: groupElement.find('#add-layer-inspire-theme').val(),
-                    userThemeId: groupElement.find('#add-layer-inspire-theme').val()
+                    userThemeId: groupElement.find('#add-layer-inspire-theme').val(),
                     maplayerGroups: me.options.groupId
                 };
 

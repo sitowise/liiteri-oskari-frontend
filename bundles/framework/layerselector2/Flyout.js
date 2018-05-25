@@ -369,8 +369,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.Flyout',
                     tab.showLayerGroups(groups);
                 } else if (tab.servicePackage) {
 
-				}
-            }
+                }
+            });
             //delay this a bit, otherwise it will be called many times during startup
             //TODO: for real solution fix handleLayerRemoved and handleLayerAdded
             if(this.populateGroupingsTimeout) {

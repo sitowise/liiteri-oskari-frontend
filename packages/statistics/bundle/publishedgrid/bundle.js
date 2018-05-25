@@ -24,57 +24,57 @@ function() {
 
         "scripts" : [{
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteripublishedgrid/instance.js"
+            "src" : "../../../../bundles/liiteri/liiteri-publishedgrid/instance.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/liiteristatsgrid/domain/RequestQueue.js"
+            "src": "../../../../bundles/liiteri/liiteri-statsgrid/domain/RequestQueue.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/plugin/ManageClassificationPlugin.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/plugin/ManageClassificationPlugin.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/plugin/ManageStatsPlugin.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/plugin/ManageStatsPlugin.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/event/StatsDataChangedEvent.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/event/StatsDataChangedEvent.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/event/IndicatorsEvent.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/event/IndicatorsEvent.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/liiteristatsgrid/event/IndicatorAdded.js"
+            "src": "../../../../bundles/liiteri/liiteri-statsgrid/event/IndicatorAdded.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/service/StatisticsService.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/service/StatisticsService.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/request/TooltipContentRequest.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/request/TooltipContentRequest.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/request/TooltipContentRequestHandler.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/request/TooltipContentRequestHandler.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/request/IndicatorsRequest.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/request/IndicatorsRequest.js"
         }, {
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/request/IndicatorsRequestHandler.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/request/IndicatorsRequestHandler.js"
         },{
             "type": "text/javascript",
             "src": "../../../../bundles/framework/divmanazer/component/buttons/CloseButton.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/liiteristatsgrid/domain/AreaFilter.js"
+            "src": "../../../../bundles/liiteri/liiteri-statsgrid/domain/AreaFilter.js"
         }, {
             "type": "text/javascript",
-            "src": "../../../../bundles/statistics/liiteristatsgrid/domain/GeometryFilter.js"
+            "src": "../../../../bundles/liiteri/liiteri-statsgrid/domain/GeometryFilter.js"
         }, {
             "type" : "text/css",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/resources/css/style.css"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/resources/css/style.css"
         }, {
             "type" : "text/css",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/resources/css/classifyplugin.css"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/resources/css/classifyplugin.css"
         }, {
-            "src" : "../../../../bundles/statistics/liiteripublishedgrid/resources/css/publishedgrid.css",
+            "src" : "../../../../bundles/liiteri/liiteri-publishedgrid/resources/css/publishedgrid.css",
             "type" : "text/css"
         }, {
             "type" : "text/css",
@@ -161,15 +161,15 @@ function() {
         "locales" : [{
             "lang" : "fi",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/resources/locale/fi.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/resources/locale/fi.js"
         }, {
             "lang" : "sv",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/resources/locale/sv.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/resources/locale/sv.js"
         }, {
             "lang" : "en",
             "type" : "text/javascript",
-            "src" : "../../../../bundles/statistics/liiteristatsgrid/resources/locale/en.js"
+            "src" : "../../../../bundles/liiteri/liiteri-statsgrid/resources/locale/en.js"
         }]
     },
     "bundle" : {
