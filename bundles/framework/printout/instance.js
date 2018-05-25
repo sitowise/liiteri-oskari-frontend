@@ -110,10 +110,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
             me.backendConfiguration.formatProducers["image/png"] = (conf && !jQuery.isEmptyObject(conf.backendConfiguration) ? conf.backendConfiguration.formatProducers["image/png"] : null) || '';
 
             if (!me.backendConfiguration.formatProducers["application/pdf"]){
-                me.backendConfiguration.formatProducers["application/pdf"] = sandbox.getAjaxUrl() + 'action_route=GetPrint&format=application/pdf&';
+                me.backendConfiguration.formatProducers["application/pdf"] = sandbox.getAjaxUrl() + 'action_route=GetPreview&format=application/pdf&';
             }
             if (!me.backendConfiguration.formatProducers["image/png"]){
-                me.backendConfiguration.formatProducers["image/png"] = sandbox.getAjaxUrl() + 'action_route=GetPrint&format=image/png&';
+                me.backendConfiguration.formatProducers["image/png"] = sandbox.getAjaxUrl() + 'action_route=GetPreview&format=image/png&';
             }
             // requesthandler
             this.printoutHandler = Oskari.clazz.create('Oskari.mapframework.bundle.printout.request.PrintMapRequestHandler', sandbox, function () {
@@ -143,7 +143,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
             }
 
             $(".tool.tool-print").appendTo($("[tbgroup=default-myplaces]"));
-            
+
             // create the PrintService for handling ajax calls
             // and common functionality.
             var printService = Oskari.clazz.create(
@@ -281,7 +281,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                 // view/BasicPrintOut.js should be changed as well
                 // to parse the geoJson for the backend.
                 if (geoJson) {
-                    this.geoJson[geoJson.id] = geoJson;                
+                    this.geoJson[geoJson.id] = geoJson;
                 }
                 // Save the tile data per layer for later use.
                 if (tileData && layerId) {

@@ -732,7 +732,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
             }
             var contentOptionArgs = contentOptions.join(''),
                 formatArgs = '&format=' + selections.format,
-                parameters = maplinkArgs + '&action_route=GetPrint' + pageSizeArgs + pageTitleArgs + contentOptionArgs + formatArgs + saveFileArgs + layoutArgs;
+                parameters = maplinkArgs + '&action_route=GetPreview' + pageSizeArgs + pageTitleArgs + contentOptionArgs + formatArgs + saveFileArgs + layoutArgs;
 
             url = url + parameters;
 
