@@ -563,8 +563,8 @@ Oskari.clazz.define(
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
                         // transform coordinates from browser projection to current
-                        var lonlat = me.transformCoordinates({ 
-                            lon: position.coords.longitude, 
+                        var lonlat = me.transformCoordinates({
+                            lon: position.coords.longitude,
                             lat: position.coords.latitude }, 'EPSG:4326');
                         sandbox.notifyAll(evtBuilder(lonlat.lon, lonlat.lat));
                         // notify callback

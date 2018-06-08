@@ -288,10 +288,11 @@ Oskari.clazz.define(
                 {
                     "type": "text/javascript",
                     "src": "../../../../bundles/framework/mapmodule-plugin/plugin/layers/LayersLoadingPlugin.js"
-                },  {
+                },
+                {
                     "type": "text/javascript",
                     "src": "../../../../bundles/framework/mapmodule-plugin/event/LayersLoadingEvent.js"
-                },                
+                },
                 /**
                  * Layers plugin
                  */

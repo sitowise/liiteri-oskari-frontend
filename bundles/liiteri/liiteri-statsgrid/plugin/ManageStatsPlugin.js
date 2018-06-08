@@ -117,12 +117,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.container = null;
 
         this.data = null;
-        this.ignoreCache = false;        
+        this.ignoreCache = false;
 
         this.collapse = null;
 
         this.geomFilterIdAttributes = [];
-        
+
         this.WFSLayerService = null;
 
         this.columnComparisonOptions = [{
@@ -334,7 +334,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             var elems = jQuery(selector);
-            
+
             elems.find('option').attr('disabled', false);
 
             if (Object.keys(timePeriods).length > 0) {
@@ -364,7 +364,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
         },
-        
+
         displayFilterCategoryChangedNotification: function(oldCategory, newCategory) {
             var me = this,
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
@@ -438,18 +438,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             var me = this,
                 areaFilterLevels = [];
-            
+
             var isEmpty = function(value) {
                 if(typeof value === 'undefined')
                     return true;
-                
-                if(value === null) 
+
+                if(value === null)
                     return true;
-                
-                if(value.length === 0) 
+
+                if(value.length === 0)
                     return true;
             }
-            
+
             if(me._state.indicators.length > 0) {
                 if (!isEmpty(me._state.indicators[0].geometry) && me.mode !== 'twoway') {
                     areaFilterLevels.push("FINLAND");
@@ -466,7 +466,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 levels.push(v.child);
                                 v = me._categoriesHierarchy[v.child];
                             }
-    
+
                             if (areaFilterLevels.length == 0 || levels.length < areaFilterLevels.length) {
                                 areaFilterLevels = levels;
                             }
@@ -475,7 +475,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             }
             var elems = jQuery(selector);
-            
+
             elems.find('option').attr('disabled', false);
 
             if (timePeriods.length > 0) {
@@ -654,7 +654,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         }
 
                         indicatorsSourceSelect.show();
-                        indicatorsSourceSelect.val('servicePackage').change();                        
+                        indicatorsSourceSelect.val('servicePackage').change();
                         //me.instance.changeMode('servicePackage');
                     } else {
                         indicatorsSourceSelect.find("option[value='servicePackage']").remove();
@@ -786,7 +786,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 } else {
                     $('.indicatorsSourceSelect').hide();
                 }
-                    
+
                 $('.slick-spanheader-columns').show();
             } else if (newmode == 'servicePackage') {
                 if (me.instance.servicePackageData != null) {
@@ -797,7 +797,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     $('.indicatorsSourceSelect').val('servicePackage');
                 } else {
                     $('.indicatorsSourceSelect').hide();
-                }                    
+                }
                 $('.slick-spanheader-columns').show();
             }
         },
@@ -859,7 +859,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         },
         /**
          * @method resetState
-         * Reset filters when changing mode 
+         * Reset filters when changing mode
          */
         resetState: function(me) {
             me.geometryFilter.reset();
@@ -1160,7 +1160,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 // sendstats
                 var column = me._getColumnById(me._state.currentColumn);
                 me.sendStatsData(column);
-                /* 
+                /*
                 //TODO find a way to tell openlayers that some area should be hilighted without clicking them
                 me.selectedMunicipalities[column.code] = (item.sel == "checked");
                 */
@@ -1380,7 +1380,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                     newCategory.municipality = newCategory.title;
                                 }
                                 newCategory.municipality = newCategory.municipality + " (" + functionalRow.areaYear + ")";
-                                
+
                                 items.push(newCategory);
                             }
                         });
@@ -1498,7 +1498,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (item.sel != parentItem.sel) {
                         item.sel = parentItem.sel;
                         data.updateItem(item.id, item);
-                    }                        
+                    }
                 }
             }
             data.collapseGroup('empty');
@@ -1639,7 +1639,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 var metadataUrl = me._sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=indicator_metadata&indicator=' + elementId + '&version=1.1';
                                 me.statsService.fetchStatsData(metadataUrl, cb);
                             }
-                        }                        
+                        }
                     }
                 }
             }
@@ -1648,7 +1648,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var me = this;
 
             var servicePackageData = me.instance.servicePackageData;
-            if (servicePackageData) {                
+            if (servicePackageData) {
                 var indicatorsdata = me.translateServicePackagetoIndicatorsData(servicePackageData);
 
                 if (indicatorsdata) {
@@ -1756,7 +1756,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             selectorsContainer.append(me.getGenderSelectorHTML([]));
             selectorsContainer.append(me.getTypeSelectorHTML([]));
             selectorsContainer.append(me.getDirectionSelectorHTML([]));
-            
+
             selectorsContainer.find('select.gender').chosen({disable_search: true,
                 width: "210px"});
             selectorsContainer.find('select.type').chosen({placeholder_text: me._locale.selectIndicatorPlaceholder,
@@ -1767,7 +1767,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 disable_search: true,
                 width: "210px"
             });
-            
+
             sel.val(lastVal).change();
             sel.trigger("chosen:updated");
         },
@@ -2046,7 +2046,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         node.searchKey = searchKey + " " + node.title.toUpperCase();
                     } else {
                         node.searchKey = node.title.toUpperCase();
-                    }                    
+                    }
                     createTreeNode(node, value.themes, value.indicators, node.searchKey);
 
                     //do not include in tree if branch is empty
@@ -2056,11 +2056,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             parent.orderNumber = node.orderNumber;
                         }
                     }
-                });                
+                });
                 $.each(indicators, function(index, value) {
                     var item = $.grep(indicatorData, function(item) {
                         return item.id == value;
-                    });                    
+                    });
                     if (item.length > 0 && item[0].name) {
                         var node = {
                             //title: item[0].name[lang] + " " + item[0].orderNumber,
@@ -2084,7 +2084,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 });
                 //parent.title = parent.title + " " + parent.orderNumber;
             }
-            
+
             createTreeNode(tree, treeData.themes, []);
 
             var stack = [tree];
@@ -2094,8 +2094,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     currentElement.children.sort(comparerByOrderNumber);
                     for (var ix = 0; ix < currentElement.children.length; ix++) {
                         stack.push(currentElement.children[ix]);
-                    }                    
-                }                
+                    }
+                }
             }
             tree.children.sort(comparerByName);
 
@@ -2124,7 +2124,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 }
                             }
                         }
-                    }                    
+                    }
 
                     var indicators = [];
 
@@ -2284,7 +2284,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (a.title > b.title) return 1;
                     return 0;
                 });
-                
+
                 _.each(item.children, function(children, index) {
                     children.children.sort(function(a, b) {
                         if (a.hasOwnProperty("orderNumber") && b.hasOwnProperty("orderNumber")
@@ -2334,7 +2334,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     } else {
                         checkbox.attr("disabled", true).attr('checked', false);
                     }
-                    
+
                     if (data.node.isSelected()) {
                         /* expand node and subnodes */
                         var stack = [data.node];
@@ -2348,7 +2348,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 }
                             }
                         }
-                    } 
+                    }
                 },
                 expand: function (event, data) {
                     /* remove default style because it sets overlflow: hidden */
@@ -2610,15 +2610,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             if(typeof dataSources !== 'undefined') {
                 for (var i = 0; i < dataSources.length; i++) {
                     dataSources[i].years.sort();
-                    
+
                     ds.push({"name": dataSources[i].name,
                             "yearStart": dataSources[i].years[0],
                             "yearEnd": dataSources[i].years[dataSources[i].years.length - 1]});
                 }
             }
-            
+
             ds.sort(function(a,b) { return b.yearStart - a.yearStart});
-            
+
             for(var i = 0; i < ds.length; ++i) {
                 if (i != 0)
                     result += "<br/>";
@@ -2935,7 +2935,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     me.updateYearSelectorValues(container.find('select.year'), combinedIndicator.years);
                     year = combinedIndicator.years[0];
                 }
-                
+
                 // if there is a classification.sex we can create gender select
                 if (combinedIndicator.classifications && combinedIndicator.classifications.sex && combinedIndicator.classifications.sex.values.length > 0) {
                     me.updateGenderSelectorValues(container.find('select.gender'), combinedIndicator.classifications.sex.values);
@@ -3108,14 +3108,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         _updateDirectionSelector: function() {
             var me = this,
                 filterDirection = me.container.find('select.direction').val();
-            
+
             if(me.currentAreaFilter.hasFilterDirection()) {
                 filterDirection = me.currentAreaFilter.getFilterDirection();
             }
-            
+
             if (typeof me.geometryFilter.getDirection() !== 'undefined') {
                 filterDirection = me.geometryFilter.getDirection();
-            }                    
+            }
 
             $.each(this.container.find('select.direction option'), function(index, item) {
                 if(item.value !== filterDirection) {
@@ -3123,7 +3123,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             });
         },
-        
+
         _updateButtons: function() {
             var me = this,
                 items = [$("span.create-chart"), $('span.statsgrid-csv-button')];
@@ -3155,7 +3155,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             } else {
                 $('#indi').val('-2').trigger("chosen:updated");
                 $('select.gender').val('total').trigger("chosen:updated");
-                $('select.type').val([]).trigger("chosen:updated");                
+                $('select.type').val([]).trigger("chosen:updated");
             }
             var yearSelect = $('.yearsel').find('select');
             yearSelect.val("newest");
@@ -3187,8 +3187,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             group = me._categoriesGroupKeys[grp],
             gender = gender !== null && gender !== undefined ? gender : 'total',
             functionalRows = [];
-        
-            if (me.isIndicatorPresent()) {                
+
+            if (me.isIndicatorPresent()) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
                 cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
@@ -3200,12 +3200,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 // destroy possible open instance
                 me._destroyPopup('IndicatorPresent');
-    
+
                 cancelBtn.setTitle(cancelLoc);
                 cancelBtn.setHandler(function () {
                     me._destroyPopup('IndicatorPresent');
                 });
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
@@ -3213,29 +3213,29 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     me._destroyPopup('IndicatorPresent');
                     me.fetchButtonClickHandler(container, indicator);
                 });
-    
+
                 dialogButtons.push(continueBtn);
                 dialogButtons.push(cancelBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'IndicatorPresent',
                     popup: dialog,
                     content: content
                 });
-                
+
                 return;
             } else {
                 var leftWidth = 60;
-                
+
                 $('.oskariui-center').width((100 - leftWidth) + '%');
                 $('.oskariui-left').width(leftWidth + '%');
-                
+
                 $('.hideSelectorsButton').show();
                 /** a hack to notify openlayers of map size change */
                 me.instance.getSandbox().findRegisteredModuleInstance('MainMapModule').updateSize();
             }
-            
+
             if (me.mode === 'twoway' && me.geometryFilter.isEmpty() && me.currentAreaFilter.isEmpty()) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
@@ -3246,25 +3246,25 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 // destroy possible open instance
                 me._destroyPopup('noFilterSelected');
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
                     me._destroyPopup('noFilterSelected');
                 });
-    
+
                 dialogButtons.push(continueBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'noFilterSelected',
                     popup: dialog,
                     content: content
                 });
-                
+
                 return;
             }
-            
+
             if(me.mode === 'twoway' && types === null) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
@@ -3275,25 +3275,25 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 // destroy possible open instance
                 me._destroyPopup('noTypeSelected');
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
                     me._destroyPopup('noTypeSelected');
                 });
-    
+
                 dialogButtons.push(continueBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'noTypeSelected',
                     popup: dialog,
                     content: content
                 });
-                
+
                 return;
             }
-            
+
             if(year === null) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
@@ -3304,44 +3304,44 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 // destroy possible open instance
                 me._destroyPopup('noYearSelected');
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
                     me._destroyPopup('noYearSelected');
                 });
-    
+
                 dialogButtons.push(continueBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'noYearSelected',
                     popup: dialog,
                     content: content
                 });
-                
+
                 return;
             }
 
             var nodes = $('#functionalAreasTree').fancytree("getTree").getSelectedNodes();
-            
+
             $.each(nodes, function(index, item) {
                if(!item.folder) {
                    functionalRows.push({key: item.data.categoryKey, id: item.data.categoryId, title: item.title + " (" + item.data.year + ")", areaYear: item.data.year});
-               } 
+               }
             });
-            
+
             if($('#functionalAreasIntersection').is(':checked')) {
                 functionalRows.push({key: "intersection", id: 1, title: 'Leikkaus', areaYear: functionalRows[0].areaYear});
             }
-            
+
             me._state.functionalRows = functionalRows;
-            
+
             var indicatorYearPairs = [],
                 totalSelected = 0,
                 impossibleIndicatorYearPairs = [],
                 possibleRegions = [];
-    
+
             for(var i = 0; i < indicator.length; ++i) {
                 var indi = indicator[i];
                 var selectedYears = year.slice();
@@ -3376,7 +3376,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         impossibleYears.push(selectedYears[j]);
                     }
                 }
-                
+
                 indicatorYearPairs.push({indicator: indi, selectedYears: arrayYears});
                 if(impossibleYears.length > 0) {
                     impossibleIndicatorYearPairs.push({indicator: indi, impossibleYears: impossibleYears});
@@ -3386,7 +3386,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 } else {
                     totalSelected += arrayYears.length * types.length;
                 }
-                
+
                 if(typeof indi.timePeriods !== 'undefined') {
                     for (var ix = 0; ix < indi.timePeriods.length; ++ix) {
                        if($.inArray(""+indi.timePeriods[ix].Id, arrayYears) > -1 || $.inArray(indi.timePeriods[ix].Id, arrayYears) > -1) {
@@ -3395,7 +3395,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                    }
                }
             }
-            
+
             var commonRegions = null;
 
             for (var i = 0; i < possibleRegions.length; ++i) {
@@ -3414,8 +3414,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     });
                 }
             }
-            
-            
+
+
             if(commonRegions !== null && (!me.geometryFilter.isEmpty() || !me.currentAreaFilter.isEmpty())) {
                 if(!me.geometryFilter.isEmpty()) {
                     commonRegions = $.grep(commonRegions, function(element) {
@@ -3444,7 +3444,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     });
                 }
             }
-            
+
             if(me.mode !== 'twoway' && (possibleRegions.length === 0 || commonRegions === null || commonRegions.length === 0)) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
@@ -3452,18 +3452,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 continueLoc = "Jatka",
                 content = jQuery('<div>Tilastoja ei voida näyttää tehdyillä valinnoilla. Tilastojen laskenta voi olla mahdollista vaihtamalla valittu vuosi, valitsemalla vähemmän tilastoja tai poistamalla mahdollinen aluerajaus käytöstä.</div>').clone(),
                 dialogButtons = [];
-                
+
                 // destroy possible open instance
                 me._destroyPopup('impossibleSelections');
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
                     me._destroyPopup('impossibleSelections');
                 });
-    
+
                 dialogButtons.push(continueBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'impossibleSelections',
@@ -3473,7 +3473,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 return;
             }
-            
+
             if(commonRegions !== null && $.inArray(group, commonRegions) < 0) {
                 var elems = $('select.innerSelector[name="filterCategorySelector"]');
                 var oldCategory = elems.val();
@@ -3484,12 +3484,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         return false;
                     }
                 });
-                
+
                 if(newCategory !== null) {
                     grp = newCategory;
                     group = me._categoriesGroupKeys[grp];
                 }
-                
+
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
                 continueBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
@@ -3505,32 +3505,32 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     } else {
                         content = contentLevelChanged;
                     }
-                    
+
                     // destroy possible open instance
                     me._destroyPopup('categoryNotAvailable');
-                    
+
                     continueBtn.setTitle(continueLoc);
                     continueBtn.addClass('primary');
                     continueBtn.setHandler(function (e) {
                         me._destroyPopup('categoryNotAvailable');
                     });
-        
+
                     dialogButtons.push(continueBtn);
-                    
+
                     dialog.show(dialogTitle, content, dialogButtons);
                     me.popups.push({
                         name: 'categoryNotAvailable',
                         popup: dialog,
                         content: content
                     });
-                    
+
                     if(newCategory === null) {
                         return;
                     }
                 }
             }
-            
-    
+
+
             if(totalSelected > 25) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 dialogTitle = 'Virhe',
@@ -3541,22 +3541,22 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 // destroy possible open instance
                 me._destroyPopup('over25Selected');
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
                     me._destroyPopup('over25Selected');
                 });
-    
+
                 dialogButtons.push(continueBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'over25Selected',
                     popup: dialog,
                     content: content
                 });
-                
+
                 return;
             } else if (impossibleIndicatorYearPairs.length > 0) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
@@ -3565,9 +3565,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 continueLoc = "Jatka",
                 content = jQuery('<div>Kaikkia valittuja tilastoja ei ole saatavilla kaikilta valituilta vuosilta.<br/>Tilastotaulukkoon ei tuoda mittareita:<br/><div id="impossibleIndicatorYearPairsPopupContent"><div></div>').clone(),
                 dialogButtons = [];
-                
+
                 var list = content.find('#impossibleIndicatorYearPairsPopupContent');
-                
+
                 $.each(impossibleIndicatorYearPairs, function(index, item) {
                    var indi = item.indicator;
                    var years = item.impossibleYears;
@@ -3585,25 +3585,25 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 // destroy possible open instance
                 me._destroyPopup('impossibleIndicatorYearPairs');
-                
+
                 continueBtn.setTitle(continueLoc);
                 continueBtn.addClass('primary');
                 continueBtn.setHandler(function (e) {
                     me._destroyPopup('impossibleIndicatorYearPairs');
                 });
-    
+
                 dialogButtons.push(continueBtn);
-                
+
                 dialog.show(dialogTitle, content, dialogButtons);
                 me.popups.push({
                     name: 'impossibleIndicatorYearPairs',
                     popup: dialog,
                     content: content
                 });
-            } 
+            }
 
             jQuery('.statsgrid').find('.slick-header').find('.selector').find('.innerSelector').val(grp).change();
-            
+
             var loadedIndicators = 0;
             for (var ix = 0; ix < indicatorYearPairs.length; ++ix) {
                 var indicatorItem = indicatorYearPairs[ix].indicator;
@@ -3656,10 +3656,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 var event = eventBuilder(indicator, me._state.functionalRows);
                 me._sandbox.notifyAll(event);
             }
-            
+
             me._state.visualizationAreaCategory = {key: "administrative", id: 1};
         },
-        
+
         isIndicatorPresent: function () {
             var me = this;
             var result = false;
@@ -3705,8 +3705,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     for (var j = 0; j < noOfVariants; j++) {
                         var serieId = serieVariantsIds[j];
                         data.series[j].push(item[serieId] != null ? item[serieId] : 0);
-                    }                    
-                }                
+                    }
+                }
             });
             var request = me._sandbox.getRequestBuilder('liiteri-chart.ShowChartRequest')(data);
             me._sandbox.request(me, request);
@@ -3781,14 +3781,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             } else {
                 $('#contentMap .oskariui-mode-content').loadingOverlay({ iconClass: 'liiteri-logo-icon' });
             }
-            
+
         },
         _hideOverlay: function () {
             if (!this._published) {
                 $('#contentMap').loadingOverlay('remove');
             } else {
                 $('#contentMap .oskariui-mode-content').loadingOverlay('remove');
-            }            
+            }
         },
         /**
          * Get Sotka data for one indicator
@@ -3819,7 +3819,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (me._state.indicators === null || me._state.indicators === undefined) {
                         me._state.indicators = [];
                     }
-                    
+
                     var themes = [];
                     if(me.getFlatIndicatorsdata()) {
                         var indicator = $.grep(me.getFlatIndicatorsdata(), function(item, index) {
@@ -3835,7 +3835,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         var indicator = $.grep(me._state.indicators, function(item, index) {
                             return item.id == indicatorId;
                         });
-                        themes = indicator[0].themes;                
+                        themes = indicator[0].themes;
                     }
 
                     me._state.indicators.push({
@@ -3859,7 +3859,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if(typeof me._state.loadState === 'undefined') {
                         me._state.loadState = {};
                     }
-                    
+
                     $.each(me._state.functionalRows, function(index, functionalArea) {
                         me._state.loadState[indicatorId + ":" + functionalArea.key + ":" + functionalArea.id + ":" + functionalArea.areaYear] = true;
                     });
@@ -3919,7 +3919,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     break;
                 }
             }
-            
+
             gndrs = indi.gender;
 
             var errorCb = function(jqXHR, textStatus) {
@@ -3957,15 +3957,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 'direction': indi.direction,
                 'gender': indi.gender
             };
-            
+
             me._showOverlay();
             if(indi.mode !== 'twoway') {
                 me.statsService.fetchIndicatorData2(params);
             } else {
                 me.statsService.fetchTwowayIndicatorData2(params);
             }
-        },        
-        
+        },
+
         getFunctionalAreaIndicatorData: function(indicator, group, functionalArea, cb) {
             var me = this,
                 indi,
@@ -3976,7 +3976,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     break;
                 }
             }
-            
+
             gndrs = indi.gender;
 
             var errorCb = function(jqXHR, textStatus) {
@@ -4000,9 +4000,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     me.showMessage(me._locale.connectionErrors.errorTitle, me._locale.connectionErrors.indicatorDataError);
                 }
             };
-            
+
             var filter = [];
-            
+
             if(functionalArea.key === "intersection") {
                 $.each(me._state.functionalRows, function(index, item) {
                     if(item.key !== "intersection") {
@@ -4015,14 +4015,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             } else {
                 filter.push({"key":functionalArea.key,"values":[functionalArea.id]});
             }
-            
+
             if(indi.filter) {
                 var areaFilter = JSON.parse(indi.filter);
                 if(areaFilter && areaFilter.length > 0) {
                     filter = filter.concat({"boolean":"AND"}, areaFilter);
                 }
             }
-                
+
             var params = {
                 'indicator': indi.id,
                 'year': indi.year,
@@ -4036,7 +4036,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 'gender': indi.gender,
                 'areaYear': functionalArea.areaYear
             };
-    
+
             me._showOverlay();
             if(indi.mode !== 'twoway') {
                 me.statsService.fetchIndicatorData2(params);
@@ -4044,7 +4044,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me.statsService.fetchTwowayIndicatorData2(params);
             }
         },
-        
+
         /**
          * Get indicator column id.
          *
@@ -4099,7 +4099,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 });
                 themes = indicator[0].themes;
             }
-            
+
             var fullName = "",
                 unit = meta.unit == null ? me.indicatorsMeta[indicatorId].unit : meta.unit,
                 name = indicatorName + '<br/>';
@@ -4118,14 +4118,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     indicatorName = typename[0].name;
                     orderNumber = typename[0].orderNumber;
                 }
-                
+
             }
-            
+
             if(themes) {
                 for(var i = Math.max(0, themes.length - 2); i < themes.length; ++i) {
                     fullName = fullName + themes[i].fi + '<br/>';
                 }
-            }            
+            }
 
             fullName = fullName + name;
             columns.push({
@@ -4185,7 +4185,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     return text;
                 }
             });
-            
+
             var newColumns = me._fixColumns(columns);
 
             me.grid.setColumns(newColumns);
@@ -4208,7 +4208,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             me.updateGridRegionCategorySelector();
             me._updateButtons();
         },
-        
+
         _fixColumns: function(columns) {
             var newColumns = [];
             var staticColumns = columns.slice(0,2);
@@ -4225,7 +4225,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     var grandParent = $.grep(newColumns, function(item, index) {
                         return item.id === ""+themes[themes.length - 2].id;
                     });
-    
+
                     if(grandParent.length > 0) {
                         grandParent = grandParent[0];
                     } else {
@@ -4236,11 +4236,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                   columns: []};
                         newColumns.push(grandParent);
                     }
-                    
+
                     var parent = $.grep(grandParent.columns, function(item, index) {
                         return item.id === ""+themes[themes.length - 1].id;
                     });
-    
+
                     if(parent.length > 0) {
                         parent = parent[0];
                     } else {
@@ -4254,17 +4254,17 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             grandParent.orderNumber = parent.orderNumber;
                         }
                     }
-                    
+
                     parent.columns.push(column);
                     if(parent.orderNumber > column.orderNumber) {
                         parent.orderNumber = column.orderNumber;
                     }
                 }
             });
-            
+
             var sortColumns = function(columns) {
                 for(var i = 0; i < columns.length; ++i) {
-                    
+
                     if(typeof columns[i].columns !== 'undefined') {
                         sortColumns(columns[i].columns);
                     }
@@ -4289,7 +4289,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     });
                 }
             }
-            
+
             sortColumns(newColumns);
 
             return staticColumns.concat(newColumns);
@@ -4308,22 +4308,22 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 regions = this.regionCategories[category],
                 regionIds = [],
                 dataMissing = true;
-            
+
             data = data || me.indicatorsData[columnId];
-            
+
             if(typeof regions !== 'undefined') {
 
                 for(var i = 0; i < regions.length; ++i) {
                     regionIds.push(regions[i].id);
-                }            
-                
+                }
+
                 for(var i = 0; i < data.length; ++i) {
                     if(jQuery.inArray(data[i].region, regionIds) > -1) {
                         dataMissing = false;
                         break;
                     }
                 }
-                
+
                 if(dataMissing) {
                     if(typeof me._state.loadState === 'undefined') {
                         me._state.loadState = {};
@@ -4336,7 +4336,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             me._state.loadState[columnId+ ":" + functionalArea.key + ":" + functionalArea.id + ":" + functionalArea.areaYear] = true;
                         });
                     }
-                    
+
                     this.getAdditionalAreaIndicatorData(columnId, category, regionIds, function (found) {
                         if(me._state.functionalRows.length == 0) {
                             delete me._state.loadState[columnId + ":administrative:1"];
@@ -4352,12 +4352,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             $.each(me._state.functionalRows, function(index, functionalArea) {
                                 me.getFunctionalAreaIndicatorData(columnId, category, functionalArea, function(columnId, data, columns) {
                                     delete me._state.loadState[columnId+ ":" + functionalArea.key + ":" + functionalArea.id + ":" + functionalArea.areaYear];
-                                    
+
                                     if($.isEmptyObject(me._state.loadState)) {
                                         me._hideOverlay();
                                         me._hideEmptyItemsInGrid();
                                     }
-                                    
+
                                     if(++done == me._state.functionalRows.length) {
                                         if(found) {
                                             me._updateIndicatorDataToGrid(columnId, data, columns, functionalArea.key === me._state.visualizationAreaCategory.key && functionalArea.id === me._state.visualizationAreaCategory.id);
@@ -4367,7 +4367,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             });
                         }
                     });
-                    
+
                     return;
                 }
             }
@@ -4388,7 +4388,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     } else {
                         value = indicData['primary value'].replace(',', '.');
                     }
-                    
+
                     if (regionId !== null && regionId !== undefined) {
                         // find region
                         // if region is whole Finland and geometry filter is turned on then add new item for each filter
@@ -4440,7 +4440,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             if (item.id === "finland:-1") {
                                 if(column.indicatorData.geometry != null && column.indicatorData.geometry.length > 0) {
                                     item.municipality = "Karttarajaus";
-                                } else { 
+                                } else {
                                     item.municipality = item.title;
                                 }
                             }
@@ -4501,7 +4501,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             me.updateDemographicsButtons(indicatorId, gender, year);
-            me.grid.setSortColumn(me._state.currentColumn, true);            
+            me.grid.setSortColumn(me._state.currentColumn, true);
         },
         /**
          * Displays a warning in the header if the indicator data
@@ -4616,7 +4616,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             this.updateGridRegionCategorySelector();
 
             this.sendStatsData(undefined);
-            
+
             this._updateButtons();
             /*
             if (columnId === this._state.currentColumn) {
@@ -4679,14 +4679,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 oldValues = sel.val(),
                 newValues = [];
             sel.empty();
-            
+
             var extraOption = "newest",
                 extraOptionTitle = "Uusin mahdollinen";
 
             if($.inArray(extraOption, oldValues) > -1) {
                 newValues.push(extraOption);
             }
-            
+
             opt = jQuery('<option value=' + extraOption + '>' + extraOptionTitle + '</option>');
             sel.append(opt);
             for (i = 0; i < years.length; i++) {
@@ -4696,14 +4696,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     newValues.push(years[i]);
                 }
             }
-            
+
             if(newValues.length === 0) {
                 newValues.push(extraOption);
             }
-            
+
             sel.val(newValues);
             sel.prop('disabled', '');
-            
+
             sel.trigger("chosen:updated");
         },
         /**
@@ -4724,7 +4724,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             sel.change(function (e) {
                 me.updateDemographicsButtons(null, e.target.value, null);
             });
-            
+
             return gender;
         },
         getTypeSelectorHTML: function (values) {
@@ -4797,7 +4797,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             sel.val(values[0]);
             sel.prop('disabled', '');
         },
-        
+
         /**
          * Sends the selected column's data from the grid
          * in order to create the visualization.
@@ -4828,11 +4828,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 areaCategory;
             // Set current column to be stated
             me._state.currentColumn = curCol ? curCol.id : undefined;
-            
+
             if(typeof me._state.visualizationAreaCategory === 'undefined' || !me._state.visualizationAreaCategory) {
                 me._state.visualizationAreaCategory = {key: "administrative", id: 1};
             }
-            
+
             areaCategory = me._state.visualizationAreaCategory;
 
             // Get values of selected column
@@ -4868,13 +4868,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             curCol.indicatorData.dataSource = datasource;
 
             var timePeriod = [];
-            
+
             if(indicatorMetadata.timePeriods) {
                 timePeriod = $.grep(indicatorMetadata.timePeriods, function(item, index) {
                     return item.Id == curCol.indicatorData.year;
                 });
             }
-            
+
             if(timePeriod.length > 0) {
                 var areaTypes = _.map(timePeriod[0].AreaTypes, function(item) {
                     return item.Id;
@@ -4883,10 +4883,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             // Send the data trough the stats service.
-            me.statsService.sendStatsData(me._layer, {                
+            me.statsService.sendStatsData(me._layer, {
                 CHECKED_COUNT: this.getItemsByGroupingKey('checked').length, // how many municipalities there is checked
                 CUR_COL: curCol,
-                VIS_NAME: me._layer.getWmsName(), //"ows:kunnat2013",  
+                VIS_NAME: me._layer.getWmsName(), //"ows:kunnat2013",
                 VIS_ATTR: me._layer.getFilterPropertyName(), //"kuntakoodi",
                 VIS_CODES: munArray,
                 VIS_NAMES: visArray,
@@ -5085,7 +5085,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         me.showMessage(me._locale.connectionErrors.errorTitle, me._locale.connectionErrors.indicatorDataError);
                     }
                 };
-                
+
                 var errorCb = function (jqXHR, textStatus) {
                     me._hideOverlay();
                     me.showMessage(me._locale.connectionErrors.errorTitle, me._locale.connectionErrors.indicatorDataXHRError);
@@ -5165,7 +5165,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 dialog.show(title, message, [okBtn]);
                 me.dialog = dialog;
             }
-            
+
             return dialog;
         },
 
@@ -5196,12 +5196,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     me.getSotkaIndicatorsMeta(container, indicators.sotka, function () {
                         //send ajax calls and build the grid
                         me.getSotkaIndicatorsData(container, indicators.sotka, function () {
-    
+
                             if (state.currentColumn !== null && state.currentColumn !== undefined) {
                                 if (state.municipalities) {
                                     me._showSelectedAreas(state.municipalities);
                                 }
-    
+
                                 // current column is needed for rendering map
                                 // sendstats
                                 var column = me._getColumnById(state.currentColumn);
@@ -5211,13 +5211,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                     me.filterColumn(column, state.filterMethod, state.filterInput);
                                     state.filterInput = [];
                                 }
-    
+
                                 // Area filter
                                 if ((state.filterRegion !== null) && (typeof state.filterRegion !== "undefined") && (state.filterRegion.length > 0)) {
                                     me.filterColumnByRegion(column, state.filterRegion);
                                     state.filterRegion = [];
                                 }
-    
+
                                 me.stateIndicatorsLoaded = true;
                                 me.sendStatsData(column);
                                 me.grid.setSortColumn(state.currentColumn, true);
@@ -5233,12 +5233,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     me.getTwowayIndicatorsMeta(container, indicators.sotka, function () {
                         //send ajax calls and build the grid
                         me.getSotkaIndicatorsData(container, indicators.sotka, function () {
-    
+
                             if (state.currentColumn !== null && state.currentColumn !== undefined) {
                                 if (state.municipalities) {
                                     me._showSelectedAreas(state.municipalities);
                                 }
-    
+
                                 // current column is needed for rendering map
                                 // sendstats
                                 var column = me._getColumnById(state.currentColumn);
@@ -5248,13 +5248,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                     me.filterColumn(column, state.filterMethod, state.filterInput);
                                     state.filterInput = [];
                                 }
-    
+
                                 // Area filter
                                 if ((state.filterRegion !== null) && (typeof state.filterRegion !== "undefined") && (state.filterRegion.length > 0)) {
                                     me.filterColumnByRegion(column, state.filterRegion);
                                     state.filterRegion = [];
                                 }
-                                
+
                                 me.stateIndicatorsLoaded = true;
                                 me.sendStatsData(column);
                                 me.grid.setSortColumn(state.currentColumn, true);
@@ -5341,7 +5341,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         }
                     }
 
-                    
+
                     // add additional info
                     for (j = 0; j < this.conf.additionalItems.length; j++) {
                         additionalItem = this.conf.additionalItems[j];
@@ -5377,7 +5377,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 var indicator = $.grep(this.indicators, function(item, index) {
                     return item.id == indicatorId;
                 });
-                
+
                 if(indicator && indicator.length > 0 && indicator[0].dataSources) {
                     var dataSource = $.grep(indicator[0].dataSources, function(item, index) {
                         return $.inArray(parseInt(column.indicatorData.year, 10), item.years) > -1;
@@ -5399,7 +5399,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * A method to get statistical variables
          * @private _getStatistic
          */
-        _getStatistic: function (gridTotals, columnId, type) {            
+        _getStatistic: function (gridTotals, columnId, type) {
             var me = this,
                 value = {},
                 totalsItem = null,
@@ -5458,7 +5458,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
          * @private _initHeaderPlugin
          */
         _initHeaderPlugin: function (columns, grid) {
-            
+
             var me = this,
                 i;
             // lets create an empty container for menu items
@@ -5598,13 +5598,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         }
                     }
 
-                    //FIXME 
-                    //TODO we need to create grouping for statistical variables 
+                    //FIXME
+                    //TODO we need to create grouping for statistical variables
                     // instead of using subheader!
 
                     //reduce the number of variables
                     me.dataView.refresh();
-                    // setColumns fires slickgrid resizing (cssrules etc.) 
+                    // setColumns fires slickgrid resizing (cssrules etc.)
                     // => variables disappear
                     me.grid.setColumns(me._fixColumns(me.grid.getColumns()));
                     // this prints variables again.
@@ -5656,7 +5656,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             });
 
             me.updateGridRegionCategorySelector();
-            
+
             if (me._state.functionalRows != null && me._state.functionalRows.length > 0)
                 me._expandAllSubitemsInGrid();
 
@@ -5665,13 +5665,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             if (me._layer._categoryMappings.wmsNames[category]) {
                 me._setLayerToCategory(category);
-    
+
                 // send the stats parameters for the visualization
                 if (me._state.currentColumn) {
                     currColumn = me._getColumnById(me._state.currentColumn);
                     me.sendStatsData(currColumn);
-                }                   
-            }            
+                }
+            }
         },
 
         _setLayerToCategory: function (category) {
@@ -5825,7 +5825,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 this.popups.splice(i, 1);
             }
         },
-        _createFilterByAllRegionsPopup: function () {            
+        _createFilterByAllRegionsPopup: function () {
             var me = this;
 
             me._destroyPopup('filterByAllRegionsPopup');
@@ -5838,7 +5838,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var dialogTitle = me._locale.filterTitle;
             form.setTitle(dialogTitle);
             var params = [];
-            
+
             _.each(this.regionCategories, function (values, name) {
                 if(me._categoriesHierarchy[name].type === "administrative" && values.length > 1) {
                     params.push({
@@ -5862,7 +5862,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 var validationResult = form.validateSelections();
                 var filterValues = form.getFilterValues();
                 if(validationResult.validated || filterValues.data.length === 0) {
-                    me._setCurrentAreaFilter(filterValues);                
+                    me._setCurrentAreaFilter(filterValues);
                     me._destroyPopup('filterByAllRegionsPopup');
                     me.updateFilterRegionCategorySelector();
                 } else {
@@ -5876,7 +5876,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             if (!me.currentAreaFilter.isEmpty()) {
                 form.setFilterValues(me.currentAreaFilter.getData());
             }
-            
+
             me.popups.push({
                 name: 'filterByAllRegionsPopup',
                 popup: dialog,
@@ -5942,7 +5942,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me._destroyPopup('filterBySelectedAreaPopup');
                 me._setLayerVisibility(true);
             });
-            
+
             clearBtn.setTitle(clearLoc);
             clearBtn.setHandler(function () {
                 me.geometryFilter.reset();
@@ -5957,7 +5957,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 // restore theme map layer
                 me._setLayerVisibility(true);
             });
-            
+
             filterBtn.setTitle(filterLoc);
             filterBtn.addClass('primary');
             filterBtn.addClass('filterBtn');
@@ -6058,12 +6058,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 // restore theme map layer
                 me._setLayerVisibility(true);
             });
-            
+
             // Description text
             content.find('.filter-desc').text(me._locale.areaFilterDescription);
-    
+
             clickedGeometries = me._updateGeometriesInfoInPopup(layerFilterContainer);
-    
+
             if (clickedGeometries == 0) {
                 filterBtn.setEnabled(false);
             }
@@ -6074,10 +6074,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 var typeSelectDiv = jQuery('<div>' + me._locale.filterForm.selectType + ' </div>'),
                     typeSelector = jQuery('<select class="type"></select>'),
                     filterContainer = content.find('.filter-container');
-                
+
                 typeSelector.append(jQuery('<option value="home">' + me._locale.filterForm.typeHome + '</option>'));
                 typeSelector.append(jQuery('<option value="work">' + me._locale.filterForm.typeWork + '</option>'));
-                
+
                 typeSelectDiv.append(typeSelector);
                 filterContainer.append(typeSelectDiv);
             }
@@ -6092,15 +6092,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 // restore theme map layer
                 me._setLayerVisibility(true);
             });
-            
-            dialogButtons.push(drawBtn);            
+
+            dialogButtons.push(drawBtn);
 
             if(!me.geometryFilter.isEmpty()) {
-                dialogButtons.push(clearBtn);                
+                dialogButtons.push(clearBtn);
             }
-            
+
             dialogButtons.push(cancelBtn);
-            
+
             dialog.show(dialogTitle, content, dialogButtons);
             me.popups.push({
                 name: 'filterBySelectedAreaPopup',
@@ -6226,7 +6226,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     });
                 }
             }
-            
+
             if(attributes.length === 0) { //no attributes, add __fid so that user can select something
                 attributes.push({
                     id: '__fid',
@@ -6236,7 +6236,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
             return attributes;
         },
-        
+
         _createFilterExistsPopup: function (type, callback) {
             var me = this,
             dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
@@ -6250,7 +6250,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
         // destroy possible open instance
         me._destroyPopup('filterExists');
-        
+
         if(type == 'area') {
             content.find('.filter-desc').text('Tilastoille on jo valittuna aluerajaus. Karttarajauksen lisääminen poistaa aiemman rajauksen.');
         } else {
@@ -6261,7 +6261,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         cancelBtn.setHandler(function () {
             me._destroyPopup('filterExists');
         });
-        
+
         continueBtn.setTitle(continueLoc);
         continueBtn.addClass('primary');
         continueBtn.setHandler(function (e) {
@@ -6271,14 +6271,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             } else {
                 me.instance.sandbox.findRegisteredModuleInstance('StatisticsButtonHandler').sendStopDrawRequest(true);
                 me.geometryFilter.reset();
-                me._updateGeometryFilter();                
+                me._updateGeometryFilter();
             }
             callback();
         });
 
         dialogButtons.push(continueBtn);
         dialogButtons.push(cancelBtn);
-        
+
         dialog.show(dialogTitle, content, dialogButtons);
         me.popups.push({
             name: 'filterExists',
@@ -6286,7 +6286,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             content: content
         });
         },
-        
+
         destroyPopups: function () {
             // destroy header popups
             if (this.headerMenuPlugin) this.headerMenuPlugin.hide();
@@ -6389,7 +6389,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 i;
 
             for (i = 0; i < items.length; i++) {
-                item = items[i];                
+                item = items[i];
                 if (item.sel === 'checked') {
                     if (item[column.id] === null || item[column.id] === undefined) {
                         item.sel = 'empty';
@@ -6430,7 +6430,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
             return false;
         },
-        
+
         _showCreatingCsvPopUp: function() {
             var me = this, lang = Oskari.getLang(),
                 sandbox = this.instance.getSandbox(),
@@ -6489,14 +6489,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         //get the indicator's name
                         var indicatorName = "";
                         if (item.indicatorData) {
-                            
+
                             indicatorName = item.indicatorData.name;
-                            
+
                             var unit = item.indicatorData.unit == null ? me.indicatorsMeta[item.indicatorData.id].unit : item.indicatorData.unit;
                             if (unit && unit != '') {
                                 indicatorName += ' [' + unit + ']';
                             }
-                            
+
                             indicatorName += ' (' + item.indicatorData.year.replace('&#9658;', '->') + ')';
                         }
                         columnNames.push(indicatorName);
@@ -6516,7 +6516,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     }
                 });
 
-                //add themes structure                
+                //add themes structure
                 for (var themeIdx = 0; themeIdx < maxThemeDepth; themeIdx++) {
                     var row = {};
                     for (i = 0; i < columnIds.length; i++) {
@@ -6528,16 +6528,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         else {
                             if (indicatorMap[colId].themes != null) {
                                 var fixedIdx = indicatorMap[colId].themes.length - maxThemeDepth + themeIdx;
-                                if (fixedIdx >= 0 
+                                if (fixedIdx >= 0
                                     && indicatorMap[colId].themes[fixedIdx] != null
                                     && indicatorMap[colId].themes[fixedIdx][lang] != null) {
                                     row[colId] = indicatorMap[colId].themes[fixedIdx][lang];
                                 } else {
-                                    row[colId] = '';    
+                                    row[colId] = '';
                                 }
                             } else {
                                 row[colId] = '';
-                            }                                                           
+                            }
                         }
                     }
                     data.push(row);
@@ -6560,10 +6560,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (item.sel === 'checked' && (functionalAreas || item._parent == null)) {
                         for (var i = 0; i < columnIds.length; i++) {
                             if (columnIds[i] == 'code') {
-                                row[columnIds[i]] = me._zeroFill(item[columnIds[i]], 3);                                
+                                row[columnIds[i]] = me._zeroFill(item[columnIds[i]], 3);
                             } else {
                                 row[columnIds[i]] = item[columnIds[i]];
-                            }                            
+                            }
                         }
                         data.push(row);
                     }
@@ -6579,13 +6579,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 );
 
                 var csvLink = $('#statistics-download-csv-file');
-                
+
                 if (csvLink) {
                     csvLink.remove();
                 }
-                
+
                 var ua = window.navigator.userAgent;
-                
+
                 if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
                     var blob = new Blob(['\uFEFF' + csvString],{
                         type: "text/csv;charset=utf-8;"
@@ -6599,7 +6599,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         .attr('href','data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
                         .attr('download', me._locale.csv.csvFileName + '.csv')
                         .appendTo('body');
-    
+
                     $('#statistics-download-csv-file').ready(function() {
                         $('#statistics-download-csv-file').get(0).click();
                     });
@@ -6622,11 +6622,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var array = typeof jsonData != 'object' ? JSON.parse(jsonData) : jsonData;
 
             var str = '';
-            
+
             //get toady's date and format it
             var today = new Date();
             var todayFormatted = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear(); //Finnish format: dd.mm.yyyy
-            
+
             //find data sources of selected indicators
             var dataSources = [];
             for (var i = 0; i < this.indicators.length; i++) {
@@ -6635,7 +6635,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     dataSources.push(dataSource);
                 }
             }
-            
+
             //add metadata to the file
             str += this._locale.csv.fileHeader + ', ' + todayFormatted + '\r\n';
             str += this._locale.csv.dataSources + ': ' + dataSources.join(', ') + '\r\n';
@@ -6659,13 +6659,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         line += nullSymbolizer + fieldSeparator;
                     }
                 }
-                
+
                 line = line.slice(0, -1);
                 str += line + '\r\n';
             }
             return str;
         },
-        
+
         _quoteValue: function(value, quoteSymbol, fieldSeparator) {
             if(value.indexOf(quoteSymbol) > -1 || value.indexOf(fieldSeparator) > -1  || value.indexOf('\n') > -1  || value.indexOf('\r') > -1 ) {
                 return quoteSymbol + value.replace(new RegExp(quoteSymbol, "g"), quoteSymbol+quoteSymbol) + quoteSymbol;
@@ -6673,10 +6673,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 return value;
             }
         },
-        
+
         _findDataSourceForIndicator: function (indicator) {
             var selectedAreaType = this._categoriesGroupKeys[this._selectedRegionCategory];
-            
+
             //find selected time period for this indicator
             var selectedTimePeriod = '';
             for (var i = 0; i < this.getState().indicators.length; i++) {
@@ -6686,7 +6686,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     break;
                 }
             }
-            
+
             //find a proper data source based on selected time period and area type of current indicator
             if(indicator.timePeriods) {
                 for (var t = 0; t < indicator.timePeriods.length; t++) {
@@ -6919,13 +6919,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 areaCategory = this._state.visualizationAreaCategory;
 
             if(item) {
-                content += item.municipality;            
+                content += item.municipality;
                 if (currColumn && item[currColumn] !== null && item[currColumn] !== undefined) {
                     content += '<br />' + this._getVisualizationAwareValue(item, currColumn, areaCategory);
                 } else if (currColumn && item[currColumn + "_PrivacyLimitTriggered"] !== null && item[currColumn + "_PrivacyLimitTriggered"] !== undefined && item[currColumn + "_PrivacyLimitTriggered"]) {
-                    content +=  '<br />' + "Piilotettu"; 
+                    content +=  '<br />' + "Piilotettu";
                 }
-            }            
+            }
 
             content += '</p>';
 
@@ -6958,7 +6958,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var me = this,
                 lang = Oskari.getLang(),
                 indiId = indicator.id,
-                indiMeta = me.indicatorsMeta[indiId];            
+                indiMeta = me.indicatorsMeta[indiId];
 
             if (indiMeta) {
                 indiMeta.count += 1;
@@ -7038,7 +7038,17 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     el.width("40%");
                 }
                 el.show();
-            }            
+            }
+        },
+        /**
+         * @public @method hasUI
+         * Override if need be.
+         *
+         *
+         * @return {Boolean} false
+         */
+        hasUI: function () {
+            return true;
         },
         toogleMapView: function () {
             var el = this.getMapElement();
