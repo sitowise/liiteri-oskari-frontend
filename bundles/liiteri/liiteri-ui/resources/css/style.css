@@ -97,8 +97,11 @@ div.ajax-loader {
 .sharingContainer .form-group label {
     padding-right: 5px;
 }
-/*Hide get capabilities update button*/
+/*Hide get capabilities update buttons*/
 div.admin-layerselector .oskariTabs .admin-layer-recheck-all {
+    display: none !important;
+}
+div.admin-layerselector .add-layer-btn.add-layer-recheck {
     display: none !important;
 }
 /*Hide userlayers tab*/
