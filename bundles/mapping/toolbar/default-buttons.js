@@ -60,87 +60,73 @@ Oskari.clazz.category(
                 group;
 
             var buttonGroups = [{
-                    'name': 'basictools',
-                    'buttons': {
-                        'zoombox': {
-                            iconCls: 'tool-zoombox',
-                            tooltip: loc.zoom,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_zoom_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(false)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        },
-                        'select': {
-                            iconCls: 'tool-pan',
-                            tooltip: loc.pan,
-                            selected: true,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_navigate_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(true)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        },
-                        'featureinfo' : {
-                            iconCls: 'tool-feature-info',
-                            tooltip: loc.featureinfo,
-                            sticky: true,
-                            callback: function () {
-                                me.getSandbox().request(me, gfiReqBuilder(true));
-                            }
-                        },
-                        'clear': {
-                            iconCls: 'tool-clear',
-                            tooltip: loc.clear,
-                            sticky: false,
-                            callback: function () {
-                                me.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService').emptyAllWFSFeatureSelections();
-                            }
-                        },
-                        'measureline': {
-                            iconCls: 'tool-measure-line',
-                            tooltip: loc.measure.line,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_measure_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(false)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
-                        },
-                        'measurearea': {
-                            iconCls: 'tool-measure-area',
-                            tooltip: loc.measure.area,
-                            sticky: true,
-                            callback: function () {
-                                var toolname = 'map_control_measure_area_tool';
-                                if(gfiReqBuilder) {
-                                    me.getSandbox().request(
-                                        me,
-                                        gfiReqBuilder(false)
-                                    );
-                                }
-                                me.getSandbox().request(me, reqBuilder(toolname));
-                            }
+                'name' : 'basictools',
+                'buttons': {
+                    'zoombox' : {
+                        iconCls: 'tool-zoombox',
+                        tooltip: loc.zoom,
+                        sticky: true,
+                        callback: function () {
+                            rn = 'map_control_zoom_tool';
+                            me.getSandbox().request(me, gfiReqBuilder(false));
+                            me.getSandbox().request(me, reqBuilder(rn));
+                        }
+                    },
+                    'select' : {
+                        iconCls: 'tool-pan',
+                        tooltip: loc.pan,
+                        selected: true,
+                        sticky: true,
+                        callback: function () {
+                            rn = 'map_control_navigate_tool';
+                            me.getSandbox().request(me, gfiReqBuilder(false));
+                            me.getSandbox().request(me, reqBuilder(rn));
+                        }
+                    },
+                    'featureinfo' : {
+                        iconCls: 'tool-feature-info',
+                        tooltip: loc.featureinfo,
+                        sticky: true,
+                        callback: function () {
+                            me.getSandbox().request(me, gfiReqBuilder(true));
+                        }
+                    },
+                    'clear': {
+                        iconCls: 'tool-clear',
+                        tooltip: loc.clear,
+                        sticky: false,
+                        callback: function () {
+                            me.getSandbox().getService('Oskari.mapframework.bundle.mapwfs2.service.WFSLayerService').emptyAllWFSFeatureSelections();
                         }
                     }
-                }, {
+                }
+            },
+            {
+                'name' : 'measuretools',
+                'buttons': {
+                    'measureline' : {
+                        iconCls: 'tool-measure-line',
+                        tooltip: loc.measure.line,
+                        sticky: true,
+                        callback: function () {
+                            rn = 'map_control_measure_tool';
+                            me.getSandbox().request(me, gfiReqBuilder(false));
+                            me.getSandbox().request(me, reqBuilder(rn));
+                        }
+                    },
+                    'measurearea' : {
+                        iconCls: 'tool-measure-area',
+                        tooltip: loc.measure.area,
+                        sticky: true,
+                        callback: function () {
+                            rn = 'map_control_measure_area_tool';
+                            me.getSandbox().request(me, gfiReqBuilder(false));
+                            me.getSandbox().request(me, reqBuilder(rn));
+                        }
+                    }
+                }
+            },
+            {
                     'name': 'viewtools',
                     'buttons': {
                         'link': {
