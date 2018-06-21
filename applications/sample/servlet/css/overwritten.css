@@ -113,3 +113,14 @@ div.admin-layerrights-flyout div.extra-container div.layerCount {
 	float: right;
 	margin-right: 10px;
 }
+/*Hide get capabilities update buttons*/
+div.admin-layerselector .oskariTabs .admin-layer-recheck-all {
+    display: none !important;
+}
+div.admin-layerselector .add-layer-btn.add-layer-recheck {
+    display: none !important;
+}
+/*Hide userlayers tab*/
+div.oskariTabs .tabsHeader ul li.userlayers {
+    display: none !important;
+}
