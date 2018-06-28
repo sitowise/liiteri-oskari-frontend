@@ -47,7 +47,7 @@ function () {
 		}
 		return this._localization;
 	},
-	
+
 	/**
 	 * @method getSandbox
 	 * @return {Oskari.mapframework.sandbox.Sandbox}
@@ -56,7 +56,7 @@ function () {
 		//"use strict";
 		return this.sandbox;
 	},
-	
+
     eventHandlers: {
 		//TODO Add checking if GIS layers or my places comes. Do not refresh after every change in the map!
 		'MapLayerEvent': function (event) {
@@ -74,7 +74,7 @@ function () {
     },
     /**
      * DefaultExtension method for doing stuff after the bundle has started.
-     * 
+     *
      * @method start
      */
     start: function () {
@@ -91,33 +91,33 @@ function () {
 		me.sandbox = sandbox;
 		/* Register to sandbox in order to be able to listen to events */
 		sandbox.register(me);
-		
+
 		//register event handlers
 		for (p in me.eventHandlers) {
 			if (me.eventHandlers.hasOwnProperty(p)) {
 				sandbox.registerForEventByName(me, p);
 			}
 		}
-		
+
 		//Adding User GIS data tab to Layer Selector
 		myLayersTabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
 		myLayersTabPanel.setId(me.myLayersTabId);
 		myLayersTabPanel.setTitle(loc.tabs.myLayers);
 		dropdownTabs.push(myLayersTabPanel);
-		
+
 		sharedLayersTabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
 		sharedLayersTabPanel.setId(me.sharedLayersTabId);
 		sharedLayersTabPanel.setTitle(loc.tabs.sharedLayers);
 		dropdownTabs.push(sharedLayersTabPanel);
-		
+
 		me.userGisDataTab = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab", me, loc.myLayersTab, dropdownTabs);
 
 		//Is this used?
 		//me.populateUserGisData();
-		
+
 		//request = me.sandbox.getRequestBuilder('liiteri-hierarchical-layerlist.AddTabRequest')(me.userGisDataTab, false);
 		//sandbox.request(me, request);
-		
+
 		this._handleSharingUserGisDataLink();
 	},
 	populateUserGisData: function () {
@@ -134,13 +134,13 @@ function () {
 			sharedGroupList = [],
 			myPlacesService = me.sandbox.getService('Oskari.mapframework.bundle.myplaces2.service.MyPlacesService'),
 			mapLayerService = me.sandbox.getService('Oskari.mapframework.service.MapLayerService');
-		
+
 		if (me.userGisDataTab) {
 			me._getUnexpiredUserGisData('own', function(resp) {
 				if (resp) {
 					//My places
-					var groupMyPlaces = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.myPlaces);
-					
+					var groupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
+
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "MY_PLACES") {
@@ -152,7 +152,7 @@ function () {
 										layer.userDataId = resp[i].id;
 										layer.expirationDate = resp[i].expirationDate;
 										layer.users = resp[i].users;
-										
+
 										groupMyPlaces.addLayer(layer);
 									}
 								}
@@ -160,10 +160,10 @@ function () {
 						}
 					}
 					myGroupList.push(groupMyPlaces);
-					
+
 					//Analysis
-					var groupAnalysis = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.analysis);
-					
+					var groupAnalysis = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.analysis);
+
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "ANALYSIS") {
@@ -172,16 +172,16 @@ function () {
 									analysisLayer.userDataId = resp[i].id;
 									analysisLayer.expirationDate = resp[i].expirationDate;
 									analysisLayer.users = resp[i].users;
-									
+
 									groupAnalysis.addLayer(analysisLayer);
 								}
 							}
 						}
 					}
 					myGroupList.push(groupAnalysis);
-					
+
 					//Imported my places
-					var groupImported = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.importedData);
+					var groupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
@@ -190,16 +190,16 @@ function () {
 									importedLayer.userDataId = resp[i].id;
 									importedLayer.expirationDate = resp[i].expirationDate;
 									importedLayer.users = resp[i].users;
-									
+
 									groupImported.addLayer(importedLayer);
 								}
 							}
 						}
 					}
 					myGroupList.push(groupImported);
-					
+
 	                //Own WMS layers
-                    var groupUserLayers = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.userLayers);
+                    var groupUserLayers = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.userLayers);
                     if (mapLayerService) {
                         for (var i = 0; i < resp.length; i++) {
                             if (resp[i].dataType == "USERWMS") {
@@ -217,12 +217,12 @@ function () {
 					me.userGisDataTab.showLayerGroups(myGroupList, me.myLayersTabId);
 				}
 			});
-			
+
 			me._getUnexpiredUserGisData('shared', function(resp) {
 				if (resp) {
 					//Shared My places
-					var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.myPlaces);
-					
+					var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
+
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "MY_PLACES") {
@@ -233,7 +233,7 @@ function () {
 									if (layer) {
 										layer.userDataId = resp[i].id;
 										layer.expirationDate = resp[i].expirationDate;
-										
+
 										sharedGroupMyPlaces.addLayer(layer);
 									}
 								}
@@ -241,9 +241,9 @@ function () {
 						}
 					}
 					sharedGroupList.push(sharedGroupMyPlaces);
-					
+
 					//Shared Analysis
-					var sharedGroupAnalysis = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.analysis);
+					var sharedGroupAnalysis = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.analysis);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "ANALYSIS") {
@@ -251,16 +251,16 @@ function () {
 								if (analysisLayer && analysisLayer.shared) {
 									analysisLayer.userDataId = resp[i].id;
 									analysisLayer.expirationDate = resp[i].expirationDate;
-									
+
 									sharedGroupAnalysis.addLayer(analysisLayer);
 								}
 							}
 						}
 					}
 					sharedGroupList.push(sharedGroupAnalysis);
-					
+
 					//Shared Imported my places
-					var sharedGroupImported = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.importedData);
+					var sharedGroupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
@@ -268,14 +268,14 @@ function () {
 								if (importedLayer && importedLayer.shared) {
 									importedLayer.userDataId = resp[i].id;
 									importedLayer.expirationDate = resp[i].expirationDate;
-									
+
 									sharedGroupImported.addLayer(importedLayer);
 								}
 							}
 						}
 					}
 					sharedGroupList.push(sharedGroupImported);
-					
+
 					me.userGisDataTab.showLayerGroups(sharedGroupList, me.sharedLayersTabId);
 				}
 			});
@@ -284,7 +284,7 @@ function () {
 	_getUnexpiredUserGisData: function (contentType, successCallback, errorCallback) {
 		var me = this,
 			url = me.getSandbox().getAjaxUrl() + 'action_route=GetGisData&type=' + contentType + '&iefix=' + (new Date()).getTime();
-		
+
 		jQuery.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -303,24 +303,24 @@ function () {
 		var me = this;
 		var user = this.sandbox.getUser();
 		if (user.isLoggedIn()) {
-			
+
 			//Get the parameters from URL
 			var permissionId = me._getParameterValueFromUrl('user_gis_data_sharing_id');
 			var email = me._getParameterValueFromUrl('email');
 			var token = me._getParameterValueFromUrl('token');
-			
+
 			if (permissionId == null || email == null || token == null) {
 				//If parameters are not available in URL, try reading them from Cookies
 				permissionId = me._getParameterValueFromCookie('sharingUserGisDataPermissionId');
 				email = me._getParameterValueFromCookie('sharingUserGisDataEmail');
 				token = me._getParameterValueFromCookie('sharingUserGisDataToken');
-				
+
 				//Remove the params from cookies
-				document.cookie = "sharingUserGisDataPermissionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC"; 
+				document.cookie = "sharingUserGisDataPermissionId=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 				document.cookie = "sharingUserGisDataEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 				document.cookie = "sharingUserGisDataToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 			}
-			
+
 			if (permissionId && email && token) {
 			    var link = me.sandbox.getAjaxUrl() + "action_route=ShareResource&permissionId=" + permissionId + "&token=" + token;
 				this._sendRequest(link, function(resp) {
@@ -339,7 +339,7 @@ function () {
 					if (myPlacesImportService) {
 						myPlacesImportService.getUserLayers();
 					}
-					
+
 					var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
 					dialog.show(me.getLocalization('view').notification.newLayer, resp);
 					dialog.fadeout();
@@ -375,13 +375,13 @@ function () {
 		var regexS = "[\\?&]" + paramName + "=([^&#]*)";
 		var regex = new RegExp(regexS);
 		var results = regex.exec(window.location.href);
-		
+
 		if (results != null) {
 			return results[1];
 		}
 		return null;
 	},
-	_getParameterValueFromCookie: function (paramName) {		
+	_getParameterValueFromCookie: function (paramName) {
 		var name = paramName + "=";
 		var ca = document.cookie.split(';');
 		for(var i=0; i<ca.length; i++) {
@@ -389,22 +389,22 @@ function () {
 			while (c.charAt(0)==' ') {
 				c = c.substring(1);
 			}
-			
+
 			if (c.indexOf(name) != -1) {
 				return c.substring(name.length,c.length);
 			}
 		}
 		return null;
 	},
-	
+
 	_setParameterValueInCookie: function (paramName, paramValue, days) {
 		var d = new Date();
 		d.setTime(d.getTime() + (days*24*60*60*1000));
 		var expires = "expires="+d.toUTCString();
 		document.cookie = paramName + "=" + paramValue + "; " + expires;
 	},
-	
-	_sendRequest: function(url, successCb, errorCb) {			
+
+	_sendRequest: function(url, successCb, errorCb) {
 		jQuery.ajax({
 			type: "GET",
 			//dataType: 'json',
@@ -424,7 +424,7 @@ function () {
 					errorCb(jqXHR, textStatus);
 				}
 			}
-		});			
+		});
 	}
 }, {
     "extend" : ["Oskari.userinterface.extension.DefaultExtension"]
