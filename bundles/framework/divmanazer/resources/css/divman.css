@@ -214,7 +214,7 @@
   
   @media screen {
     .oskari-attached {
-      min-width: 520px;
+      min-width: 610px;
       max-width: 840px; }
               
       #oskari-flyout-admin-layerrights, #oskari-flyout-liiteri-groupings
@@ -224,7 +224,7 @@
       }
   
     .oskari-attached {
-      min-width: 520px;
+      min-width: 610px;
       max-width: 715px; }
   
     .oskari-detached {

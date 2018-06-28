@@ -142,7 +142,8 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
             //sandbox.registerAsStateful(me.mediator.bundleId, me);
 
             /* IE fixes for flyout height others use CSS media query */
-            if (this._isMsieLowerThanNine()) {
+            //REMOVE
+            /*if (this._isMsieLowerThanNine()) {
                 toFix = this.compiledTemplates['Oskari.userinterface.Flyout'].children('.oskari-flyoutcontentcontainer');
                 height = this.flyoutContainer.height();
                 ieFixClasses = this.ieFixClasses;
@@ -168,7 +169,7 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
                 }
             } else {
                 return false;
-            }
+            }*/
         },
         /**
          * @method update

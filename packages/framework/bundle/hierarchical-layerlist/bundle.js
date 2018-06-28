@@ -75,6 +75,12 @@ Oskari.clazz.define("Oskari.framework.bundle.hierarchical-layerlist.Hierarchical
             }, {
                 "type": "text/css",
                 "src": "../../../../libraries/jstree/themes/default/style.css"
+            },{
+                "type": "text/javascript",
+                "src": "../../../../bundles/liiteri/liiteri-hierarchical-layerlist/request/AddTabRequest.js"
+            }, {
+                "type": "text/javascript",
+                "src": "../../../../bundles/liiteri/liiteri-hierarchical-layerlist/request/AddTabRequestHandler.js"
             }, {
                 "type": "text/javascript",
                 "src": "../../../../bundles/framework/layerselector2/request/ShowFilteredLayerListRequest.js"

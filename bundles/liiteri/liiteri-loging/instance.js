@@ -34,7 +34,7 @@ Oskari.clazz
             'footer' : '<div class="footerContainer">',
             'incorrectLogin': '<div class="alert alert-danger" role="alert">' + this._localization.page1.incorrectLogin + '</div>',
             'externalLoginForm' :
-                + '<div class="form-item">'
+                 '<div class="form-item">'
                 + '<div class="row2">'
                 + '<div class="form-item"><div class="form-tile">'
                 + '<span class="login-ext login-oiva link">'

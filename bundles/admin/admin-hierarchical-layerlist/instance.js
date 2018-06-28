@@ -193,7 +193,8 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundleInstan
             me.service.addLayerlistOption('plugins', ['checkbox', 'changed', 'wholerow', 'types', 'search', 'state', 'conditionalselect', 'dnd'], false);
             me.service.addLayerlistOption('dnd', {
                 use_html5: true,
-                inside_pos: 'last'
+                inside_pos: 'last',
+                drag_selection: false
             });
         },
 
@@ -227,6 +228,7 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundleInstan
             jQuery(document).on('dnd_stop.vakata', function(event, data) {
                 //If the drag target group is not open, we have to open it.
                 //Otherwise we can't get the necessary information of the drag operation.
+                console.log(data);
                 var targetGroup = data.data.origin.get_node(jQuery(data.event.target).prop('id').split('_anchor')[0]);
                 var draggedNode = data.data.origin.get_node(data.data.nodes[0]);
                 if (!draggedNode.type) {
