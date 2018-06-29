@@ -30,6 +30,10 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundle",
             "scripts": [
             {
                 "type": "text/javascript",
+                "src": "../../../../libraries/backbone/comp.js"
+            },
+            {
+                "type": "text/javascript",
                 "src": "../../../../bundles/admin/admin-hierarchical-layerlist/instance.js"
             }, {
                 "type": "text/javascript",

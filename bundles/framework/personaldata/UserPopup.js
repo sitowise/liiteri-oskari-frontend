@@ -19,9 +19,9 @@
             } else {
                 //ui.attachTo($('.user-mapicon'), { template: me.template });
                 ui.show();
-                this.attachEvents();       
+                this.attachEvents();
             }
-            
+
         },
         attachEvents: function () {
             var me = this;
@@ -64,7 +64,7 @@
             });
             content.find("#logoutInAction").click(function () {
                 window.location.replace(me.sandbox.getAjaxUrl() + "action=logout");
-            });            
+            });
         },
         createUi: function () {
             var me = this;
@@ -79,7 +79,7 @@
             var clearDiv = jQuery('<div style="clear: both"></div>');
             this.locale = this.instance.getLocalization()["menuItems"];
             userData.append(userIcon);
-            userData.append(description);            
+            userData.append(description);
             content.append(userData);
             content.append(clearDiv);
 
@@ -89,10 +89,10 @@
 
                 var workspacesTabLink = jQuery('<div class="linkRow"><a class="addButton" id="showWorkspacesTabAction">' + this.locale.workspaces + ' &#8250;</a></div>');
                 content.append(workspacesTabLink);
-                
+
                 var userLayersTabLink = jQuery('<div class="linkRow"><a class="addButton" id="showUserLayersTabAction">' + this.locale.userLayers + ' &#8250;</a></div>');
                 content.append(userLayersTabLink);
-                
+
                 var isAdmin = false;
                 var roles = user.getRoles();
                 $.each(roles, function (index, role){
@@ -101,28 +101,28 @@
                 		isAdmin = true;
         			}
                 });
-                
+
                 if (isAdmin)
                 {
                 	$("<div>").addClass("menuLineDivider").appendTo(content);
-                	
+
 	                var groupingLink = $('<div class="linkRow"><a class="addButton" id="showGroupingsTabAction">' +  this.locale.groupings + ' &#8250;</a></div>');
 	                content.append(groupingLink);
-	                
+
 	                var announcementsLink = $('<div class="linkRow"><a class="addButton" id="showAnnouncementsTabAction">' +  this.locale.announcements + ' &#8250;</a></div>');
 	                content.append(announcementsLink);
-	                
+
 	                var layerrightsLink = $('<div class="linkRow"><a class="addButton" id="showLayerrightsTabAction">' +  this.locale.layerRights + ' &#8250;</a></div>');
 	                content.append(layerrightsLink);
-	                
+
 	                var adminMapLayersLink = $('<div class="linkRow"><a class="addButton" id="showAdminMapLayersTabAction">' +  this.locale.adminMapLayers + ' &#8250;</a></div>');
 	                content.append(adminMapLayersLink);
-	                
+
 	                $("<div>").addClass("menuLineDivider").appendTo(content);
-                }               
+                }
                 var createMapLink = $('<div class="linkRow"><a class="addButton" id="showCreateMapTabAction">' +  this.locale.createMap + ' &#8250;</a></div>');
                 content.append(createMapLink);
-                
+
                 var logoutLink = jQuery('<div class="linkRow"><a class="addButton" id="logoutInAction">' +  this.locale.logout + ' &#8250;</a></div>');
                 content.append(logoutLink);
             } else {
@@ -133,7 +133,7 @@
 
             dialog.setContent(content);
 
-            
+
 
             //dialog.show('Save the workspace', content);//, [saveBtn, cancelBtn]);
             //dialog.makeModal();
