@@ -123,7 +123,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
         * Checks the file upload form file size
         * @private
         */
-        /*
+        
         __checkFileSize: function(locale){
             var me = this,
                 maxFileSizeMb = me.instance.conf.maxFileSizeMb,
@@ -166,7 +166,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             }
 
 
-        },*/
+        },
         /**
          * Creates the template for file upload form
          *

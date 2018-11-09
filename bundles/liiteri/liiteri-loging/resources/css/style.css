@@ -91,7 +91,8 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
   padding: 10px; }
 
 .loging-window .headerContainer h3 {
-  margin: 0px 0px 50px 0px; }
+  margin: 0px 0px 50px 0px;
+  text-align: center }
 
 .loging-window .footerContainer {
   text-align: center;
@@ -168,7 +169,6 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
   display: inline-block; }
 
 .loging-window .form-item .row2 {
-  margin-left: 120px;
   display: inline-block; }
 
 .loging-window .form-item {
