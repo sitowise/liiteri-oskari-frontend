@@ -115,8 +115,8 @@ function () {
 		//Is this used?
 		//me.populateUserGisData();
 
-		//request = me.sandbox.getRequestBuilder('liiteri-hierarchical-layerlist.AddTabRequest')(me.userGisDataTab, false);
-		//sandbox.request(me, request);
+        request = me.sandbox.getRequestBuilder('hierarchical-layerlist.AddTabRequest')(me.userGisDataTab, false);
+        sandbox.request(me, request);
 
 		this._handleSharingUserGisDataLink();
 	},
@@ -194,7 +194,11 @@ function () {
 									groupImported.addLayer(importedLayer);
 								}
 							}
-						}
+                        }
+
+                        //var layerId = "userlayer_512";
+                       // groupImported.addLayer(mapLayerService.findMapLayer(layerId)); 
+
 					}
 					myGroupList.push(groupImported);
 
