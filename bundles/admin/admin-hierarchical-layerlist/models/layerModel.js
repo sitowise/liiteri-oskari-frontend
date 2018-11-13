@@ -14,10 +14,7 @@ if (!Function.prototype.bind) {
                     aArgs.concat(Array.prototype.slice.call(arguments)));
             };
 
-        if (this.prototype) {
-            // Function.prototype doesn't have a prototype property
-            fNOP.prototype = this.prototype; 
-        }
+        fNOP.prototype = this.prototype;
         fBound.prototype = new fNOP();
 
         return fBound;

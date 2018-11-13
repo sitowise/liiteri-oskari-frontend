@@ -111,7 +111,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplacesimport.MyPlacesImportBun
             },
             "Bundle-Version": "1.0.0",
             "Import-Namespace": ["Oskari", "jquery"],
-            "Import-Bundle": {}
+            "Import-Bundle": {},
+            "maxFileSizeMb": 10
         }
     },
 
