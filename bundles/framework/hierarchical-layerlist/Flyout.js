@@ -532,6 +532,35 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
             me.selectedTab.updateSelectedLayers();
         },
 
+        addTab: function (item) {
+            var me = this;
+            var tab = null;
+
+            if (item.view.getTabPanel
+                && item.view.setLayerSelected
+                && item.view.updateLayerContent) {
+                tab = item.view;
+            } else {
+                tab = {
+                    getTabPanel: function () {
+                        var tabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
+                        tabPanel.setTitle(item.view.getTitle());
+                        tabPanel.setContent(item.view.container);
+                        return tabPanel;
+                    },
+                    setLayerSelected: function (x, y) {
+                        return;
+                    },
+                    updateLayerContent: function (x, y) {
+                        return;
+                    }
+                }
+            }
+
+            me.layerTabs.push(tab);
+            me.tabContainer.addPanel(tab.getTabPanel(), item.first);
+        },
+
         /**
          * @public @method focus
          * Focuses the first panel's search field (if available)
