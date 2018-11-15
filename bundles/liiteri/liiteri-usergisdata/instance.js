@@ -113,9 +113,9 @@ function () {
 		me.userGisDataTab = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab", me, loc.myLayersTab, dropdownTabs);
 
 		//Is this used?
-		//me.populateUserGisData();
+        //me.populateUserGisData();
 
-        request = me.sandbox.getRequestBuilder('hierarchical-layerlist.AddTabRequest')(me.userGisDataTab, false);
+        request = me.sandbox.getRequestBuilder('layerselector2.AddTabRequest')(me.userGisDataTab, false);
         sandbox.request(me, request);
 
 		this._handleSharingUserGisDataLink();
@@ -195,10 +195,6 @@ function () {
 								}
 							}
                         }
-
-                        //var layerId = "userlayer_512";
-                       // groupImported.addLayer(mapLayerService.findMapLayer(layerId)); 
-
 					}
 					myGroupList.push(groupImported);
 
