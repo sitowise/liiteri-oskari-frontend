@@ -139,7 +139,7 @@ function () {
 			me._getUnexpiredUserGisData('own', function(resp) {
 				if (resp) {
 					//My places
-					var groupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
+					var groupMyPlaces = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.myPlaces);
 
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
@@ -162,7 +162,7 @@ function () {
 					myGroupList.push(groupMyPlaces);
 
 					//Analysis
-					var groupAnalysis = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.analysis);
+					var groupAnalysis = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.analysis);
 
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
@@ -181,7 +181,7 @@ function () {
 					myGroupList.push(groupAnalysis);
 
 					//Imported my places
-					var groupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
+					var groupImported = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
@@ -199,7 +199,7 @@ function () {
 					myGroupList.push(groupImported);
 
 	                //Own WMS layers
-                    var groupUserLayers = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.userLayers);
+                    var groupUserLayers = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.userLayers);
                     if (mapLayerService) {
                         for (var i = 0; i < resp.length; i++) {
                             if (resp[i].dataType == "USERWMS") {
@@ -221,7 +221,7 @@ function () {
 			me._getUnexpiredUserGisData('shared', function(resp) {
 				if (resp) {
 					//Shared My places
-					var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
+					var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.myPlaces);
 
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
@@ -243,7 +243,7 @@ function () {
 					sharedGroupList.push(sharedGroupMyPlaces);
 
 					//Shared Analysis
-					var sharedGroupAnalysis = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.analysis);
+					var sharedGroupAnalysis = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.analysis);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "ANALYSIS") {
@@ -260,7 +260,7 @@ function () {
 					sharedGroupList.push(sharedGroupAnalysis);
 
 					//Shared Imported my places
-					var sharedGroupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
+					var sharedGroupImported = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
