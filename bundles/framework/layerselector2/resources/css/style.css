@@ -243,11 +243,11 @@ div.layerselector2 .collapse-icon {
 }
 
 div.layer-accordion {
-    /*position: absolute;*/
+    position: absolute;
     overflow-y: auto;
     top: 0;
     bottom: 0;
-    /*margin-top: 200px;*/
+    margin-top: 230px;
     width: 515px;
 }
 
