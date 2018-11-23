@@ -354,7 +354,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             if (elems.find('option:selected').attr('disabled') === "disabled") {
-                var oldCategory = elems.val();
+                var oldCategory = elems.find('option:selected').val();
                 if(typeof elems.find("option:not([disabled]):first").val() !== 'undefined') {
                     elems.find('option:selected').removeAttr("selected");
                     elems.val(elems.find("option:not([disabled]):first").val()).change();
