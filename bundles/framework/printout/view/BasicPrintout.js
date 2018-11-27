@@ -565,7 +565,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.printout.view.BasicPrintout',
                 me.instance.sendCanceledEvent('previous');
             });
             me.backBtn.insertTo(buttonCont);
-            me.backBtn.hide();
 
             var saveBtn = Oskari.clazz.create(
                 'Oskari.userinterface.component.buttons.SaveButton'
