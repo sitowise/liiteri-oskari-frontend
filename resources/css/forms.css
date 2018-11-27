@@ -151,7 +151,6 @@ button.primary, input.primary {
   /*background-image: url(../images/blue_button_liuku.png);*/
   border-color: #0000BF #0000DE #0000DE #0000BF;
   color: #FFF;
-  text-shadow: 1px 1px #AAF;
 }
 
 /* Doesn't seem to be in use, nothing sets the focus class in oskari */
