@@ -733,7 +733,6 @@ Oskari.clazz.define(
                 if (group.layerListPanel != null) {
                     group.layerListPanel.setVisible(true);
                     group.layerListPanel.close();
-                    group.layerListPanel.setTitle(group.getTitle() + ' (' + layers.length + ')');
                 }
                 if (group.badge) {
                     group.badge.updateContent(layers.length);
