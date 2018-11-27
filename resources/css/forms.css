@@ -109,9 +109,12 @@ input[type="submit"]:hover:enabled, input[type="submit"]:focus, input[type="butt
 
 /* This is used in buttons */
 input[type="submit"], input[type="button"], input[type="reset"], button, .lfr-actions, .lfr-actions ul {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
   background-color: #0186d1;
   border: 1px solid;
   border-color: #C8C9CA #9E9E9E #9E9E9E #C8C9CA;
+  border-radius: 2px;
   color: #3C3C3C;
   font-weight: bold;
 }
@@ -145,7 +148,7 @@ input.aui-form-validator-error, textarea.aui-form-validator-error, select.aui-fo
 /* This is used in all primary buttons */
 button.primary, input.primary {
   background-color: #217ad4;
-  background-image: url(../images/blue_button_liuku.png);
+  /*background-image: url(../images/blue_button_liuku.png);*/
   border-color: #0000BF #0000DE #0000DE #0000BF;
   color: #FFF;
   text-shadow: 1px 1px #AAF;
