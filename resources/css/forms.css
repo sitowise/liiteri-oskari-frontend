@@ -104,7 +104,7 @@ input[type="submit"]:hover:enabled, input[type="submit"]:focus, input[type="butt
   background-color:#ff8000;
   border: 1px solid #A7CEDF;
   /* Hover color doesn't really matter... */
-  color: #0091FF;
+  /*color: #0091FF;*/
 }
 
 /* This is used in buttons */
