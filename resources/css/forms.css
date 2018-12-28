@@ -102,9 +102,6 @@ input[type="submit"], input[type="button"], input[type="reset"], button {
 }
 input[type="submit"]:hover:enabled, input[type="submit"]:focus, input[type="button"]:hover:enabled, input[type="button"]:focus, input[type="reset"]:hover:enabled, input[type="reset"]:focus, button:hover:enabled, button:focus {
   background-color:#ff8000;
-  border: 1px solid #A7CEDF;
-  /* Hover color doesn't really matter... */
-  /*color: #0091FF;*/
 }
 
 /* This is used in buttons */
@@ -112,10 +109,7 @@ input[type="submit"], input[type="button"], input[type="reset"], button, .lfr-ac
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   background-color: #0186d1;
-  border: 1px solid;
-  border-color: #C8C9CA #9E9E9E #9E9E9E #C8C9CA;
-  border-radius: 2px;
-  color: #3C3C3C;
+  color: #FFF;
   font-weight: bold;
 }
 
@@ -128,11 +122,9 @@ input[type="submit"], input[type="button"], input[type="reset"], button, .lfr-ac
 }
 
 /* This is used in buttons */
-input[type="submit"]:hover:enabled, input[type="button"]:hover:enabled, input[type="reset"]:hover:enabled, button:hover:enabled, .lfr-actions:hover, .lfr-actions:hover ul {
+ .lfr-actions:hover, .lfr-actions:hover ul {
   background-color:#ff8000;
   border-color: #627782;
-  /* Hover color doesn't really matter... */
-  color: #369;
 }
 
 /* This is used in buttons */
@@ -147,9 +139,6 @@ input.aui-form-validator-error, textarea.aui-form-validator-error, select.aui-fo
 
 /* This is used in all primary buttons */
 button.primary, input.primary {
-  background-color: #217ad4;
-  /*background-image: url(../images/blue_button_liuku.png);*/
-  border-color: #0000BF #0000DE #0000DE #0000BF;
   color: #FFF;
 }
 
