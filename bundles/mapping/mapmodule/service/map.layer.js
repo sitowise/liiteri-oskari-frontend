@@ -1256,6 +1256,8 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
 
             layer.setOrderNumber(mapLayerJson.orderNumber);
 
+            layer.setDownloadServiceUrl(mapLayerJson.downloadServiceUrl);
+
             return layer;
         },
         parseUrls: function (commaSeparatedUrlList) {
