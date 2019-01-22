@@ -332,6 +332,14 @@ Oskari.clazz.define(
                             cellIndex = '0' + cellIndex.toString();
                         }
                         jQuery('#' + cellIndex + colorType + 'ColorCell').css('border', '3px solid #ffffff');
+
+                        if (me.values.fillStyle === 4) {
+                            // Color has been selected but fill style is transparent
+                            // Unselect fill style
+                            me.values.fillStyle = -1;
+                            me._styleUnselectedButton(jQuery('div#4fillstyle.icon-button'));
+                        }
+
                         me._updatePreview(dialogContent);
                     });
                     //instead of selecting always black,
@@ -368,6 +376,14 @@ Oskari.clazz.define(
                         }
                     }
                     me.values[(colorType === '0') ? 'lineColor' : 'fillColor'] = values.join('');
+
+                    if (me.values.fillStyle === 4) {
+                        // Color has been selected but fill style is transparent
+                        // Unselect fill style
+                        me.values.fillStyle = -1;
+                        me._styleUnselectedButton(jQuery('div#4fillstyle.icon-button'));
+                    }
+
                     me._updatePreview();
                 };
 
@@ -462,25 +478,29 @@ Oskari.clazz.define(
                 content.find('.custom-color').change(customColorChangeHandler.bind(null, c.toString()));
             }
 
+            var removeColorHandler = function (type, index) {
+                if (me.activeColorCell[index] > -1) {
+                    var activeCell = me.activeColorCell[index].toString();
+                    if (me.activeColorCell[index] < 10) {
+                        activeCell = '0' + activeCell;
+                    }
+                    jQuery('#' + activeCell + index + 'ColorCell').css('border', '1px solid #000000');
+                }
+
+                me.activeColorCell[index] = -1;
+                me.values[type + 'Color'] = null;
+
+                jQuery('#color-checkbox-' + index).attr('checked', false);
+                jQuery('input.custom-color.' + me.colorTypes[index]).prop('disabled', true);
+            };
+
             // remove color links
             ['line', 'fill'].forEach(function(type, index){
                 content = dialogContent.find('.remove-color-' + type);
                 jQuery('<a href="#">' + me.loc[type + 'Remove'] + '</a>').appendTo(content).click(function(e){
                     e.preventDefault();
 
-                    if (me.activeColorCell[index] > -1) {
-                        var activeCell = me.activeColorCell[index].toString();
-                        if (me.activeColorCell[index] < 10) {
-                            activeCell = '0' + activeCell;
-                        }
-                        jQuery('#' + activeCell + index + 'ColorCell').css('border', '1px solid #000000');
-                        }
-
-                    me.activeColorCell[index] = -1;
-                    me.values[type + 'Color'] = null;
-
-                    jQuery('#color-checkbox-' + index).attr('checked', false);
-                    jQuery('input.custom-color.' + me.colorTypes[index]).prop('disabled', true);
+                    removeColorHandler(type, index);
 
                     if(type === 'fill'){
                         if (me.values.fillStyle !== -1) {
@@ -515,10 +535,20 @@ Oskari.clazz.define(
                         }
                         me._styleSelectedButton(jQuery('div#' + newValue + 'fillstyle.icon-button'));
                         me.values.fillStyle = newValue;
+                        // Set fill color value to null when transparent is selected
+                        if (newValue === 4) {
+                            removeColorHandler('fill', 1);
+                        }
                     }
                     me._updatePreview(dialogContent);
                 });
                 content.append(fillBtnContainer);
+            }
+
+            if (me.values.fillStyle === -1 && me.values.fillColor == null) {
+                // No fill color, style must be transparent
+                me.values.fillStyle = 4;
+                me._styleSelectedButton(content.find('div#4fillstyle.icon-button'));
             }
 
             this._updatePreview(dialogContent);
@@ -527,6 +557,10 @@ Oskari.clazz.define(
             saveBtn.setTitle(me.loc.buttons.save);
             saveBtn.addClass('primary showSelection');
             saveBtn.setHandler(function () {
+                // Transparent color fill style is saved as -1
+                if (me.values.fillStyle === 4) {
+                    me.values.fillStyle = -1;
+                }
                 renderDialog.close();
                 if (me.saveCallback) {
                     me.saveCallback();
@@ -597,7 +631,8 @@ Oskari.clazz.define(
 
             preview.empty();
             // Patterns (IE8 compatible version)
-            if (me.values.fillStyle >= 0) {
+            if (me.values.fillStyle >= 0 && me.values.fillStyle < 4) {
+                // Fillstyle 4 = transparent (no need to create svg)
                 var pathSvg = jQuery('<path></path>');
                 switch (parseInt(me.values.fillStyle)) {
                 case 0:
