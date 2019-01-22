@@ -5975,8 +5975,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         allDropdownsSelected = false;
                     }
                 }
-
-                var MAX_GEOMETRIES = 60;
+                
+                var MAX_GEOMETRIES = (me.mode === 'twoway' ? 60 : 200);
                 var OPT_GEOMETRIES = 5;
                 var numberOfSelectedGeoms = 0;
                 //check number of selected geometries of all layers
