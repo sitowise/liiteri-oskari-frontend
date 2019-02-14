@@ -6143,11 +6143,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         });
 
                         var fields = l.getAttributes().fields;
-                        $.each(fields, function(index, field) {
-                            if(field !== 'the_geom') {
-                                attributes.push({'id': 'property_json.' + field, 'name': field});
-                            }
-                        });
+                        if (fields != null) {
+                            $.each(fields, function(index, field) {
+                                if(field !== 'the_geom') {
+                                    attributes.push({'id': 'property_json.' + field, 'name': field});
+                                }
+                            });
+                        }
                     }
 
                     me._appendOptionValues(attributeSelector, me._locale.geometryFilter.selectAttrInstr, attributes);
