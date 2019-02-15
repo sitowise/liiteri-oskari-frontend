@@ -139,7 +139,7 @@ Oskari.clazz.define(
                 checkbox.bind(
                     'change',
                     function () {
-                        if (jQuery(this).attr('checked')) {
+                        if (jQuery(this).prop('checked')) {
                             // Set cookie not to show guided tour again
                             jQuery.cookie(
 								"liiteri-announcements-id_" + step.announcementId, "1", {

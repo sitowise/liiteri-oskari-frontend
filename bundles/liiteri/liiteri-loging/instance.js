@@ -615,7 +615,7 @@ Oskari.clazz
               var label = labelTemplate.clone();
               label.append(this._localization['tourseen'].label);
               checkbox.bind('change', function() {
-                if (jQuery(this).attr('checked')) {
+                if (jQuery(this).prop('checked')) {
                   // Set cookie not to show guided tour again
                   jQuery.cookie("pti_tour_seen", "1", {
                     expires : 365
