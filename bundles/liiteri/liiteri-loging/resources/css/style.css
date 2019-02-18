@@ -1,26 +1,23 @@
 /* Override popup styles */
 .divmanazerpopup.loging-window {
-    min-height: 200px;
-    top: 15%;
-    left: 30%;
-    border: solid 1px #c1c1c1;
-    border-radius: 5px;
-    -moz-box-shadow: 0 0 3px #ccc;
-    -webkit-box-shadow: 0 0 3px #ccc;
-    box-shadow: 0 0 3px #ccc;
-}
+  min-height: 200px;
+  top: 15%;
+  left: 30%;
+  border: solid 1px #c1c1c1;
+  border-radius: 5px;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc; }
 
 .divmanazerpopup.loging-window .actions {
-    display: none;
-}
+  display: none; }
 
 .divmanazerpopup.loging-window h3 {
   margin: 0;
   font-weight: normal; }
 
 .divmanazerpopup.loging-window .popupHeader {
-    display: none;
-}
+  display: none; }
 
 div.divmanazerpopup.loging-window.bluetitle h3 {
   color: #fff;
@@ -91,131 +88,108 @@ div.divmanazerpopup.loging-window.bluetitle h3 span {
   cursor: move; }
 
 .loging-window .headerContainer {
-    padding: 10px;
-}
+  padding: 10px; }
 
 .loging-window .headerContainer h3 {
-    margin: 0px 0px 50px 0px;
-}
+  margin: 0px 0px 50px 0px;
+  text-align: center }
 
 .loging-window .footerContainer {
-    text-align: center;
-    background-image: url(../images/liiteri-pattern.png);
-	height: 100px;
-}
+  text-align: center;
+  background-image: url(../images/liiteri-pattern.png);
+  height: 100px; }
 
 .loging-window .bodyContainer {
-    padding: 10px 10px 10px 10px;
-}
+  padding: 10px 10px 10px 10px; }
 
-.loging-window .bodyContainer input[type="text"],.loging-window .bodyContainer input[type="password"] {
-    border-radius: 0px;
-    padding: 5px 1px;
-    border: 1px solid;
-    border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
-    background-image: none;
-}
+.loging-window .bodyContainer input[type="text"], .loging-window .bodyContainer input[type="password"] {
+  border-radius: 0px;
+  padding: 5px 1px;
+  border: 1px solid;
+  border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
+  background-image: none; }
 
 .loging-window td {
-    width: 50%;
-    border: none;
-}
+  width: 50%;
+  border: none; }
 
 .loging-window td.col1 {
-    width: 25%;
-    border: none;
-}
+  width: 25%;
+  border: none; }
 
 .loging-window td label {
-    text-align: right;
-    padding-right: 20px;
-    width: 100%;
-}
+  text-align: right;
+  padding-right: 20px;
+  width: 100%; }
 
 .loging-window .logo {
-    margin: 0px auto;
-    background-image: url(../images/liiteri-logo.png);
-    background-repeat: no-repeat;
-    width: 252px;
-    height: 62px;
-}
+  margin: 0px auto;
+  background-image: url(../images/liiteri-logo.png);
+  background-repeat: no-repeat;
+  width: 252px;
+  height: 62px; }
 
 .loging-window .footerContainer .copyright {
-    color: #999;
-    font-size: 0.8em;
-    padding-top: 25px;
-}
+  color: #999;
+  font-size: 0.8em;
+  padding-top: 25px; }
 
 .loging-window button, .loging-window input[type="button"], .loging-window input[type="submit"] {
-    padding: 10px 20px 10px 20px;
-    text-decoration: none;
-    margin-top: 5px;
-    font-weight: normal;
-    text-shadow: none;
-}
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  margin-top: 5px;
+  font-weight: normal;
+  text-shadow: none; }
 
 .loging-window .form-item span.link {
-    cursor: pointer;
-    color: #00bce9;
-    font-size: large;
-}
+  cursor: pointer;
+  color: #00bce9;
+  font-size: large; }
 
 .loging-window .form-item span.link-extra {
-    color: initial;
-    font-size: small;
-}
+  color: initial;
+  font-size: small; }
 
 .loging-window .form-item span.link:hover {
-	color:#ff8000;
-}
+  color: #ff8000; }
 
 .loging-window .form-item label {
-    float: left;
-    padding-top: 6px;
-    width: 100px;
-    text-align: right;
-}
+  float: left;
+  padding-top: 6px;
+  width: 100px;
+  text-align: right; }
 
 .loging-window .form-item input.form-text {
-    width: 300px;
-    margin-left: 20px;
-    margin-right: 80px;
-}
+  width: 300px;
+  margin-left: 20px;
+  margin-right: 80px; }
 
 .loging-window .form-item input[type="checkbox"] {
-    margin-left: 120px;
-    display: inline-block;
-}
+  margin-left: 120px;
+  display: inline-block; }
 
 .loging-window .form-item .row2 {
-    margin-left: 120px;
-    display: inline-block;
-}
+  display: inline-block; }
 
 .loging-window .form-item {
-    overflow: hidden;
-    clear: both;
-    width: 570px;
-}
+  overflow: hidden;
+  clear: both;
+  width: 570px; }
 
 .loging-window .form-item .form-tile {
-    float: left;
-    margin-right: 15px;
-    margin-bottom: 15px;
-    margin-top: 15px;
-    margin-left: 10px;
-    max-width: 260px;
-    height: 60px;
-}
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  margin-left: 10px;
+  max-width: 260px;
+  height: 60px; }
 
 .loging-window .packageSelection {
-    margin: 5px;
-}
+  margin: 5px; }
 
 .loging-window .bodyContainer {
-    width: 600px;
-}
+  width: 600px; }
 
 .loging-window .loginContainer .errorMessage {
-    text-align: center;
-}
+  text-align: center; }

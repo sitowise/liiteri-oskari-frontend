@@ -130,6 +130,9 @@ div.admin-layerselector {
             float:right;
         }
 
+        .admin-layer-recheck-all {
+            float: right;
+        }
     }
 
     /* layer container */
@@ -172,38 +175,6 @@ div.admin-layerselector {
 
         .layer-title {
             margin-top: 4px;
-        }
-
-        div.backendstatus-down {
-            height: 20px !important;
-            margin-bottom: 2px; 
-            cursor: pointer;
-        }
-
-        div.backendstatus-maintenance {
-            height: 20px !important;
-            margin-bottom: 2px; 
-            cursor: pointer;
-        }
-
-        div.backendstatus-ok {
-            height: 20px !important;
-            margin-top: -2px;
-            margin-bottom: 2px;
-            cursor: pointer;
-        }
-
-        div.backendstatus-unknown {
-            height: 20px !important;
-            margin-bottom: 2px; 
-        }
-
-        div.layer-backendstatus-icon {
-            float : left;
-            width : 20px;
-            height: 16px;
-            margin-right: 4px;
-            background-repeat: no-repeat;
         }
 
         div.layer-icon {
@@ -253,6 +224,33 @@ div.admin-layerselector {
                 width: 309px;
             }
 
+        }
+
+        .add-layer-input-area.add-layer-forced-proj-area {
+            line-height: 40px;
+        }
+
+        .add-layer-forced-proj-input {
+            float: none;
+            width: 150px;
+        }
+
+        .add-layer-forced-proj {
+            background-color: #fff;
+            border: solid 1px #aaa;
+            padding: 5px 28px 5px 5px;
+            margin-right: 5px;
+            border-radius: 5px;
+            position: relative;
+        }
+        .add-layer-forced-proj .icon-close {
+            top: 7px;
+            right: 5px;
+            opacity: 0.5;
+        }
+
+        .add-layer-forced-proj-inputgroup {
+            white-space: nowrap;
         }
 
     }
@@ -310,6 +308,10 @@ div.admin-layerselector {
         margin: 5px 10px;
     }
 
+    .add-layer-recheck {
+        margin-left: 25px;
+    }
+
     button.admin-arrange-layers {
         background-color: #eee;
         background-image: url('arrange-icon.png');
@@ -329,6 +331,7 @@ div.admin-layerselector {
 
     .add-layer-record,
     .add-layer-send,
+    .add-layer-style,
     .add-class-record,
     .add-class-send,
     .add-group-record {
@@ -336,6 +339,12 @@ div.admin-layerselector {
         margin-bottom: 8px;
         overflow: hidden;
         position: relative;
+    }
+
+    .add-layer-style-import-block {
+        display:none;
+        margin: 8px;
+        border: 2pt solid blue;
     }
 
     .add-layer-separation {
@@ -433,6 +442,20 @@ div.admin-layerselector {
             float: right;
             margin-right: 10px;
         }
+        select {
+            &.add-layer-input {
+                height: 36px;
+            }
+        }
+        .add-layer-input {
+            &.mid {
+                width: 217px;
+                float: left;
+            }
+            &.long {
+                width: 297px;
+            }
+        }
 
     }
 
@@ -501,7 +524,9 @@ div.admin-layerselector {
     }
 
 }
-
+div.admin-layerselector .accordion .accordion_panel .header {
+    display: block;
+  }
 div.divmanazerpopup div.content div.admin-layerselector {
 
     margin-right: 20px;

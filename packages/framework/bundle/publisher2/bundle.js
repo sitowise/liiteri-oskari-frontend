@@ -129,14 +129,14 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher2.PublisherBundle", fun
             "type": "text/javascript",
             "src": "../../../../bundles/framework/publisher2/tools/ControlsTool.js"
         },
-        {
-            "type": "text/javascript",
-            "src": "../../../../bundles/framework/publisher2/tools/ShowStatsTableTool.js"
-        },
-        {
-            "type": "text/javascript",
-            "src": "../../../../bundles/framework/publisher2/tools/ClassifyTool.js"
-        },
+        //{
+        //    "type": "text/javascript",
+        //    "src": "../../../../bundles/framework/publisher2/tools/ShowStatsTableTool.js"
+        //},
+        //{
+        //    "type": "text/javascript",
+        //    "src": "../../../../bundles/framework/publisher2/tools/ClassifyTool.js"
+        //},
         {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/publisher2/tools/GetInfoTool.js"
@@ -154,6 +154,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher2.PublisherBundle", fun
             "src": "../../../../bundles/framework/publisher2/tools/FeaturedataTool.js"
         },
         {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/publisher2/tools/CrosshairTool.js"
+        },
+        {
             "type": "text/css",
             "src": "../../../../bundles/framework/publisher2/resources/css/style.css"
         }, {
@@ -162,20 +166,46 @@ Oskari.clazz.define("Oskari.mapframework.bundle.publisher2.PublisherBundle", fun
         }, {
             "type": "text/javascript",
             "src": "../../../../bundles/framework/publisher2/request/PublishMapEditorRequestHandler.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/publisher2/request/ShowPublisherFlyoutRequest.js"
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/publisher2/request/ShowPublisherFlyoutRequestHandler.js"
         }],
 
         "locales": [{
-            "lang": "en",
-            "type": "text/javascript",
-            "src": "../../../../bundles/framework/publisher2/resources/locale/en.js"
+          "lang": "en",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/en.js"
         }, {
-            "lang": "fi",
-            "type": "text/javascript",
-            "src": "../../../../bundles/framework/publisher2/resources/locale/fi.js"
+          "lang": "fi",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/fi.js"
         }, {
-            "lang": "sv",
-            "type": "text/javascript",
-            "src": "../../../../bundles/framework/publisher2/resources/locale/sv.js"
+          "lang": "sv",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/sv.js"
+        }, {
+          "lang": "et",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/et.js"
+        }, {
+          "lang": "is",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/is.js"
+        }, {
+          "lang": "nb",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/nb.js"
+        }, {
+          "lang": "nn",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/nn.js"
+        }, {
+          "lang": "sk",
+          "type": "text/javascript",
+          "src": "../../../../bundles/framework/publisher2/resources/locale/sk.js"
         }]
     },
     "bundle": {

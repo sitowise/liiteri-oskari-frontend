@@ -42,26 +42,9 @@ Oskari.registerLocalization(
             "type-wms": "kartlager",
             "type-wfs": "Dataprodukt"
         },
-        "backendStatus": {
-            "OK": {
-                "tooltip": "Kartlagret är tillgängligt just nu.",
-                "iconClass": "backendstatus-ok"
-            },
-            "DOWN": {
-                "tooltip": "Kartlagret är inte tillgängligt just nu.",
-                "iconClass": "backendstatus-down"
-            },
-            "MAINTENANCE": {
-                "tooltip": "Avbrott i kartlagrets tillgänglighet är att vänta inom de närmaste dagarna.",
-                "iconClass": "backendstatus-maintenance"
-            },
-            "UNKNOWN": {
-                "tooltip": "",
-                "iconClass": "backendstatus-ok"
-            }
-        },
         "admin": {
             "capabilitiesLabel": "Capabilities",
+            "capabilitiesRemarks": "(*)  Kart CRS är inte understödja i service capabilities",
             "confirmResourceKeyChange": "Du har ändrat gränssnittjänstens unik namn- eller URL-address. För säkerhets skull, nuvarande rättigheter till kartlager ska raderas. Fortsätt?",
             "confirmDeleteLayerGroup": "Kartlagergrupp blir raderad. Fortsätt?",
             "confirmDeleteLayer": "Kartlager blir raderad. Fortsätt?",
@@ -107,6 +90,13 @@ Oskari.registerLocalization(
             "wmsServiceMetaId": "Gränssnittjänstens metadata-tagg",
             "wmsServiceMetaIdDesc": "Gränssnittjänstens metadata-filtagg",
             "layerNameAndDesc": "Lagrets namn och kort beskrivning",
+            "layerProps": "Lagrets enskaper",
+            "forcedSRS": "Tvingade SRS",
+            "forcedSRSInfo": "Tvångs SRS jämfört med GetCapabilites",
+            "forcedSRSAdd": "Tillägga",
+            "supportedSRS": "Stöd SRS",
+            "missingSRS": "Saknade SRS",
+            "missingInfo": "Denna kartlager stöder inte vissa applikationens standardprojektioner",
             "metaInfoIdDesc": "Geodata&shy;registrets metadata filtagg, som unikt identifierar metadatans XML beskrivning",
             "metaInfoId": "Metadatans filtagg",
             "wmsName": "Unik namn för kartlager",
@@ -130,7 +120,15 @@ Oskari.registerLocalization(
             "opacity": "Opacitet",
             "opacityDesc": "Lagrets opacitet (0% gör lagret genomskinligt)",
             "style": "Förvald utseende",
-            "styleDesc": "Förvald utseende",
+            "addSldStyleDesc": "Välj stil för kart lag",
+            "addSldStyle": "Välj sld stil",
+            "importStyle": "Ny SLD stil",
+            "addNewStyle": "Sätta ny SLD stil",
+            "sldStyleName": "Stil namn",
+            "sldFileContentDesc": "Kopiera/sätta SLD fil innehåll (xml) till tekst block",
+            "sldFileContent": "SLD fil innehåll",
+            "styleDesc": "Förvald stil",
+            "sldStylesFetchError": "Cou SLD styles",
             "minScale": "Minimi&shy;skala",
             "minScaleDesc": "Lagrets minimiskala (1:5669294)",
             "minScalePlaceholder": "5669294 (1:5669294)Lagrets minimiskala",
@@ -142,12 +140,16 @@ Oskari.registerLocalization(
             "legendImage": "URL adress för kartförklaringar",
             "legendImageDesc": "URL adress för kartförklaringar beskriver kartlager.",
             "legendImagePlaceholder": "Ge ett ny adress för kartförklaring.",
+            "legendUrl": "Välja kartförklaring URL",
+            "legendUrlDesc": "Välja standardval kartförklaring",
+            "noServiceLegendUrl": "Legend URL is not in wms service legends",
             "gfiContent": "Tilläggande text för GFI-dialog",
             "gfiResponseType": "GFI svartyp",
             "gfiResponseTypeDesc": "Svarets typ dvs Get Feature Info (GFI)",
             "gfiStyle": "GFI stil",
             "gfiStyleDesc": "GFI stil (XSLT)",
             "manualRefresh": "Manual refresh",
+            "resolveDepth": "Resolve xlink:hrefs",
             "matrixSetId": "WMTS MatrixSetId",
             "matrixSetIdDesc": "WMTS-tjänstens MatrixSetId",
             "matrixSet": "Teknisk beskrivning av WMTS-tjänsten",
@@ -196,13 +198,41 @@ Oskari.registerLocalization(
             "errorTitle": "Fel",
             "warningTitle": "Varning",
             "successTitle": "Lagrat",
-            "warning_some_of_the_layers_could_not_be_parsed": "Nägra kartlager kunde inte bearbetas."
+            "warning_some_of_the_layers_could_not_be_parsed": "Nägra kartlager kunde inte bearbetas.",
+            "addDataprovider": "Dataprovider",
+            "groupTitle": "Gruppnivå namn",
+            "addDataproviderButton": "Tillägg",
+            "maplayerGroups": "Maplayer-grupper",
+            "selectMaplayerGroupsButton": "Välj grupper"
         },
         "cancel": "Tillbaka",
         "add": "Tillägg",
         "save": "Lagra",
         "delete": "Ta bort",
-        "ok": "OK"
+        "ok": "OK",
+        "close": "Stäng",
+        "query": "Hämta",
+        "recheckTitle": "Hämta getCapabilities",
+        "recheckAllButton": "Hämta alla getCapabilities",
+        "recheckAll": "Vill du hämta getCapabilites för alla kartlager? Operationen kan ta många minuter.",
+        "recheckAllSucceeded": "Uppdatering lyckades för {success, number} lager, misslyckades för {fail, number} lager. Uppdatera sidan för att se uppdaterade data.",
+        "recheckSucceeded": "Uppdatering lyckades.",
+        "recheckFailReason": "Uppdatering misslyckades: {reason}",
+        "recheckFail": "Uppdatering misslyckades.",
+        "recheckFailTimeout": "Uppdatering tidgräns överstegs. Processen fortsätter på servern.",
+        "successMessages": {
+            "dataproviderSave": {
+                "title": "Dataprovider var framgångsrika",
+                "message": "Dataprovider var framgångsrika"
+            }
+        },
+        "groupTitles": {
+            "localePrefix": "Namnet på",
+            "addDataprovider": "Lägg till dataprovider",
+            "selectLayerGroups": "Välj lagergrupper"
+        },
+        "buttons": {
+            "add": "Tillägg"
+        }
     }
-}
-);
+});

@@ -1,0 +1,587 @@
+#contentMap.statsgrid-contentMap {
+  position: relative; }
+
+.oskariui-mode-content {
+  height: 100%;
+  background-color: white; }
+  .oskariui-mode-content.statsgrid-mode {
+    overflow: hidden;
+    height: auto;
+    width: 100%;
+    position: absolute;
+    bottom: 0; }
+
+.oskariui-left {
+  float: left; }
+
+.oskariui-center {
+  float: left; }
+
+
+.statsgrid_100 {
+  height: 100%; }
+
+#statsTree, #functionalAreasTree {
+  height: 240px;
+  /* overflow: hidden;*/
+}
+
+#statsTree ul.ui-fancytree , #functionalAreasTree ul.ui-fancytree {
+    height: 240px;
+}
+.statsgrid div.info {
+  margin-left: 10px;
+  padding-top: 0px;
+  }
+.statsgrid div.selectors-container span.glyphicon {
+  margin-right: 4px;
+  }
+.statsgrid {
+  min-width: 100%;
+  min-height: 100%;
+  height: 100%; 
+  }
+  .statsgrid .statsgrid-table {
+    min-height: 80%;
+    height: 80%;
+    font: 12px "Open Sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif; }
+  .statsgrid .idContainer {
+    margin: 4px;
+    border: 1pt solid #40B0C0;
+    border-radius: 5px;
+    padding: 4px;
+    background-color: #80F0A0;
+    cursor: pointer; }
+  .statsgrid .indicator-cont {
+    /*float: left;*/
+    position: relative; }
+    .statsgrid .indicator-cont .icon-info {
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      margin: 7px; }
+  .statsgrid .municipal-grid {
+    height: 80%;
+    z-index: 1; 
+  }
+
+  .statsgrid .selectors-container {
+    padding-top: 15px;
+  }
+
+  .statsgrid .selectors-container .selectors-year .yearsel{
+    padding-top: 15px;
+  }
+    .statsgrid .selectors-container button {
+      /*float: right;*/
+      clear: both;
+      margin: 20px 20px 10px 10px; }
+    .statsgrid .selectors-container button:disabled, .statsgrid .selectors-container input:disabled, .statsgrid .selectors-container select:disabled {
+      opacity: 0.25; }
+    .statsgrid .selectors-container input[type=checkbox]:disabled {
+      opacity: initial; }
+    .statsgrid .selectors-container .cannot-display-indicator {
+      margin-left: 10px; }
+  .statsgrid .selector-cont {
+    clear: both; }
+    .statsgrid .selector-cont label {
+      float: left;
+      width: 60px;
+      /*padding: 10px;
+      font-weight: bold;
+      font-size: 1.2em;*/ }
+    .statsgrid .selector-cont select {
+      /*float: right;*/ }
+
+      .statsgrid .selector-cont select.parameter {
+        width: 100px; }
+ .statsgrid .selector-cont.directionsel {
+ 	display: none;
+ }
+  .statsgrid .selectors-container {
+    /*
+      position: relative;
+    height: 30%;
+        */
+    padding-top: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ie-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box; }
+
+    .statsgrid .selectors-container .new-indicator-cont {
+	  display: none;
+      float: left;
+      margin-top: 8px;
+      padding-left: 10px; }
+      .statsgrid .selectors-container .new-indicator-cont input {
+        float: right;
+        margin: 0px; }
+		
+	.statsgrid .selectors-container label {
+		margin-left: 10px;
+		margin-right: 10px;
+      width: 80px;
+	}
+
+    .statsgrid .selectors-container h5 {
+		margin-left: 10px;
+		text-transform: none;
+		font-weight: 600;
+		font-size: 15px;
+    }
+	.statsgrid .selectors-container select{
+		position: relative;
+		margin-bottom: 5px;
+		width: 200px;
+	}
+
+.statsgrid-totals-label {
+  font-weight: normal; }
+
+.statsgrid-totals-label-bold {
+  font-weight: bold; }
+
+.statsgrid-show-total-selects label, .statsgrid-show-row-selects label {
+  margin-left: 5px; }
+
+.statsgrid-show-row-selects {
+  border-top: solid 1px black;
+  padding-top: 5px; }
+
+/**
+ * Style the drop-down menu here since the plugin stylesheet mostly contains structural CSS.
+ */
+.slick-header-menu {
+  border: 1px solid #999;
+  background: #fcfcfc;
+  padding: 2px;
+  -moz-box-shadow: 2px 2px 2px silver;
+  -webkit-box-shadow: 2px 2px 2px silver;
+  -o-box-shadow: 2px 2px 2px silver;
+  -ms-box-shadow: 2px 2px 2px silver;
+  box-shadow: 2px 2px 2px silver;
+  min-width: 100px;
+  z-index: 20; }
+  .slick-header-menu .slick-header-menuitem {
+    padding: 2px 4px;
+    border: 1px solid transparent;
+    border-radius: 3px; }
+    .slick-header-menu .slick-header-menuitem:hover {
+      border-color: silver;
+      background: white; }
+
+.slick-header-menuitem-disabled {
+  border-color: transparent !important;
+  background: inherit !important; }
+
+.icon-help {
+  background-image: url(/Oskari/libraries/slickgrid/images/help.png); }
+
+.statsgrid-highlight-row {
+  background-color: yellow; }
+
+/* Filter popup */
+.divmanazerpopup .filter-row {
+  clear: both;
+  padding-top: 10px; }
+.divmanazerpopup .filter-label {
+  float: left;
+  width: 100px;
+  font-weight: bold; }
+.divmanazerpopup .filter-value {
+  float: left;
+  margin-left: 10px; }
+.divmanazerpopup .filter-container:after {
+  content: "";
+  display: table;
+  clear: both; }
+.divmanazerpopup .filter-select {
+  width: 195px; }
+.divmanazerpopup .filter-input {
+  width: 70px;
+  float: left;
+  margin-top: 10px; }
+.divmanazerpopup .filter-between {
+  display: none;
+  float: left;
+  margin: 20px 10px;
+  width: 10px;
+  text-align: center; }
+
+div.filter-region-select select {
+  width: 350px; }
+div.filter-region-select ul {
+  margin: 0 !important; }
+
+.statsgrid-remove-indicator {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 16px !important;
+  height: 16px !important; }
+
+.statsgrid-no-indicator-data {
+  position: absolute;
+  top: inherit;
+  right: 30px;
+  width: 20px !important;
+  height: 20px !important; }
+
+.statsgrid-hide-header {
+  visibility: hidden; }
+
+form.add-indicator h2 {
+  margin-left: 10px; }
+form.add-indicator fieldset {
+  border: 0;
+  margin: 0;
+  padding: 10px; }
+  form.add-indicator fieldset legend {
+    font-size: 16px;
+    font-weight: bold; }
+  form.add-indicator fieldset label {
+    clear: left;
+    float: left;
+    display: block;
+    font-size: 14px;
+    line-height: 16px;
+    width: 150px; }
+  form.add-indicator fieldset input, form.add-indicator fieldset select {
+    clear: right;
+    display: block;
+    float: left;
+    margin-left: 0; }
+  form.add-indicator fieldset button {
+    float: right;
+    margin-left: 15px; }
+  form.add-indicator fieldset textarea {
+    display: block;
+    height: 100px;
+    width: 100%;
+    margin-bottom: 5px;
+    clear: both; }
+form.add-indicator hr {
+  border: solid 1px black;
+  margin: 0 0 10px; }
+form.add-indicator .municipalities {
+  position: absolute;
+  bottom: 40px;
+  top: 510px;
+  left: -10px;
+  width: 100%;
+  overflow: auto;
+  margin: 0; }
+  form.add-indicator .municipalities .municipality-row label {
+    display: inline-block;
+    padding-left: 10px;
+    width: 150px;
+    font-weight: bold;
+    font-size: 14px; }
+form.add-indicator .form-submit {
+  height: 40px;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  padding: 0; }
+  form.add-indicator .form-submit button {
+    float: right;
+    margin: 5px; }
+    form.add-indicator .form-submit button.cancel-form-button {
+      float: left; }
+
+.indicator-name-link {
+  color: #0085d1;
+  cursor: pointer; }
+  
+h5.indicator-msg-popup {
+	font-size: 12px;
+    line-height: 22px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+	color: #989898;
+}
+
+.statsgrid-sum {
+    font-weight: bold;
+}
+
+.statsgrid-copyright {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.statistic-name-header {
+    margin-right: 18px;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.statsgrid .indicatorsSource {
+	width: 350px;
+	float: left;
+	height: 100%;
+	border-right: 1px solid #dddddd;
+	border-top: solid 1px #dddddd;
+	padding-left: 5px;
+	padding-top: 5px;
+    overflow: auto;
+}
+
+.statsgrid .indicatorsSourceSelect {	
+	margin: 10px;
+}
+
+.statsgrid .slick-header .selector .innerSelector {
+    width: 100%;
+    font-weight: normal;
+    font-size: 13px;
+}
+
+.statsgrid .selector {
+    margin-bottom: 5px;
+}
+
+.statsgrid .slick-header-column {
+    height: 130px;
+}
+
+.statsgrid .slick-spanheader-columns .slick-header-column {
+	height: 44px;
+	padding: 0px;
+}
+
+.statsgrid .headerBorder {
+  	text-overflow: ellipsis;
+  	overflow: hidden;
+}
+
+.statsgrid .headerAlignWithBorder {
+	padding: 0px;
+	margin: 0px;	
+}
+
+.statsgrid .headerBorder.headerAlignWithBorder {
+	float: left;
+}
+
+.statsgrid .slick-header-column .title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    height: 75px;
+}
+
+.statsgrid .slick-header-column .iconContainer {
+    position: absolute;
+    bottom: 0px;
+    padding-left: 5px;
+}
+
+.statsgrid .slick-header-column .iconContainer .glyphicon {
+    margin-right: 5px;
+    font-size: 16px;
+}
+
+
+.statsgrid {
+    font-family: "Open Sans", Arial, sans-serif;
+}
+
+.statsgrid-totals-label, .statsgrid-totals-label-bold {
+    text-align: right;
+}
+
+.statsgrid-variable {
+    width: 100%;
+    display: block;
+    font-size: 10px;
+}
+
+.statsgrid select, .statsgrid input {
+    padding: 0px 4px;
+}
+
+/* views */
+
+div.viewContainer {
+    height: 100%;
+    border-left: solid 1px #9c9c9c;
+    border-right: solid 1px #9c9c9c;
+}
+
+	div.viewContainer h4 {
+		margin-bottom: 0px;
+		padding-bottom: 0px;
+		margin-top: 0px;
+		margin-left: 10px;
+		padding-top: 10px;
+	}
+	
+div.viewTitle {
+    
+}
+
+span.toogleHideView {
+    font-size: 22px;
+    cursor: pointer;
+}
+
+span.topOne {
+    position: absolute;
+    top: 20px;
+    right: 15px;
+}
+
+span.bottomOne {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 2;
+}
+
+span.hideSelectorsButton {
+    position: absolute;
+	left: 360px;
+}
+
+span.hideSelectorsButton.top {
+	top: 27px;	
+}
+
+span.hideSelectorsButton.bottom {
+	bottom: 15px;
+	z-index: 2;
+}
+
+div.contentContainer {
+    position: absolute;
+    top: 50px;
+    bottom: 0px;
+    right: 1px;
+    left: 1px;    
+}
+
+div.contentContainer .slick-header {
+	border-top: solid 1px #dddddd;
+}
+
+.liiteri-logo-icon {
+	background-image: url("/Oskari/resources/2014_Liiteri_logo_153x55px.png");
+    display: inline-block;
+    height: 55px;
+    width: 153px;
+}
+
+.selector-button {
+	color: white;
+}
+
+.statsgrid .selectors-container  button.small-button{
+	font-size: 11px;
+	width: 130px;
+	margin: 8px 10px 10px 10px
+}
+
+.indisel a.chosen-default {
+	padding: 1px 7px;
+	color: rgb(51, 51, 51);
+	border-radius: 4px;
+}
+
+.indisel .chosen-container-single .chosen-single div b {
+	background-position-y: -3px;
+}
+
+/*
+CSV FILES MODULE
+*/
+#statsgrid-csv-container
+{
+	width: 450px;
+}
+
+#statsgrid-csv-container .csv-format-row
+{
+	height: 40px;
+    position: relative;
+    width: 100%;
+}
+
+#statsgrid-csv-container .csv-format-select
+{
+	position: absolute;
+    right: 0;
+}
+
+#functionalAreasSelector input {
+	margin-left: 10px;
+}
+
+#functionalAreasSelector label.longLabel {
+	width: 300px;
+}
+
+.selectors-container h5 a span.glyphicon::before {
+	content: "\e080";
+}
+
+.selectors-container h5.open a span.glyphicon::before {
+	content: "\e114";
+}
+
+.statsgrid span.action-link:hover {
+color: #ff8000;
+}
+
+.statsgrid span.action-link {
+cursor: pointer;
+margin-left: 10px;
+color: #00bce9;
+font-size: 13px;
+}
+
+.statsgrid span.disabled{
+color: #898989;
+}
+
+.statsgrid i.expand-icon {
+  width: 12px;
+  height: 12px;
+  background-image: url(../images/expand-icon.png);
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.statsgrid i.collapse-icon {
+  width: 12px;
+  height: 12px;
+  background-image: url(../images/collapse-icon.png);
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.statsgrid .chosen-container-multi .chosen-choices .search-field input {
+  height: auto;
+}
+
+.statsgrid .chosen-container-multi .chosen-choices {
+  max-height: 200px !important;
+  overflow-y: auto;
+}
+
+div.divmanazerpopup.stats-compare-dialog {
+  max-width: 280px;
+}
+
+div.stats-compare-instructions {
+  margin-bottom: 10px;
+}

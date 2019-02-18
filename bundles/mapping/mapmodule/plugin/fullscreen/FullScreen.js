@@ -7,7 +7,6 @@ Oskari.clazz.define(
     /**
      * @static @method create called automatically on construction
      *
-     *
      */
     function () {
         var me = this;
@@ -16,47 +15,65 @@ Oskari.clazz.define(
         me._defaultLocation = 'top left';
         me._index = 1;
         me._name = 'FullScreenPlugin';
-        me._fullscreen = null;
+        me._element = null;
+        me.state = {};
+        me._sandbox = null;
     },
     {
-
         /**
-         * @private @method  _createControlElement
-         * Binds a click event to the toggle image and adds the div to the DOM.
+         * @method _createControlElement
+         *
+         * @return {jQuery}
+         * Plugin jQuery element
          */
-        _createControlElement: function () {
-            // FIXME do this with classes...
-            var me = this,
-                fsimg = this.getMapModule().getImageUrl() +
-                '/mapping/mapmodule/resources/images/',
-                el = jQuery(
-                    '<div class="fullscreenDiv">' +
-                    '<img class="fullscreenDivImg" src="' + fsimg + 'hide-navigation.png' + '"></img>' +
-                    '</div>'
-                );
-
+        _createControlElement: function() {
+            var me = this;
+            el = jQuery(
+                '<div class="mapplugin fullscreenDiv">' +
+                '<img class="fullscreenDivImg" src="' + me._getImagePath('hide-navigation.png') + '"></img>' +
+                '</div>'
+            );
             el.find('.fullscreenDivImg').bind('click', function (event) {
                 event.preventDefault();
-                me.getSandbox().postRequestByName(
-                    'MapFull.MapWindowFullScreenRequest'
-                );
-
-                if (jQuery(this).attr('src').match(/hide-navigation/)) {
-                    jQuery(this).attr('src', fsimg + 'show-navigation.png');
+                if (me.state.fullscreen) {
+                    me._showNavigation();
                 } else {
-                    jQuery(this).attr('src', fsimg + 'hide-navigation.png');
+                    me._hideNavigation();
                 }
             });
             return el;
         },
+        /**
+         * @method _startPluginImpl
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        _startPluginImpl : function(sandbox) {
+            var me = this;
+            me.setEnabled(me._enabled);
+            return me.setVisible(me._visible);
+        },
+        /**
+         * @method _stopPluginImpl
+         *
+         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         *          reference to application sandbox
+         */
+        _stopPluginImpl : function(sandbox) {
+            this.removeFromPluginContainer(this.getElement());
+        },
+
+        _getImagePath: function(image) {
+            return this.getMapModule().getImageUrl() + '/mapping/mapmodule/resources/images/' + image;
+        },
 
         /**
-         * @private @method  _createRequestHandlers
-         *
+         * @private @method  createRequestHandlers
          *
          * @return {Object} Request handler map
          */
-        _createRequestHandlers: function () {
+        createRequestHandlers: function () {
             return {
                 'MapModulePlugin.ToggleFullScreenControlRequest':
                     Oskari.clazz.create(
@@ -64,8 +81,46 @@ Oskari.clazz.define(
                         this
                     )
             };
-        }
+        },
+        setState: function(state){
+            var me = this;
+            me.state = state || {};
 
+            if(me.state.fullscreen) {
+                me._hideNavigation();
+            } else {
+                me._showNavigation();
+            }
+        },
+        getState: function() {
+            var me = this;
+            return me.state;
+        },
+        _showNavigation: function(){
+            var me = this;
+            if(!me._element) {
+                return;
+            }
+            me._element.find('.fullscreenDivImg').attr('src', me._getImagePath('hide-navigation.png'));
+            me.state = {
+                fullscreen: false
+            };
+
+            me.getMapModule().getMapEl().parents('#contentMap').removeClass('oskari-map-window-fullscreen');
+            me._sandbox.postRequestByName('MapFull.MapWindowFullScreenRequest');
+        },
+        _hideNavigation: function(){
+            var me = this;
+            if(!me._element) {
+                return;
+            }
+            me._element.find('.fullscreenDivImg').attr('src', me._getImagePath('show-navigation.png'));
+            me.state = {
+                fullscreen: true
+            };
+            me.getMapModule().getMapEl().parents('#contentMap').addClass('oskari-map-window-fullscreen');
+            me._sandbox.postRequestByName('MapFull.MapWindowFullScreenRequest');
+        }
     },
     {
         extend: ['Oskari.mapping.mapmodule.plugin.BasicMapModulePlugin'],

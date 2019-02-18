@@ -202,7 +202,7 @@
             me._appendOptionValues(select, null, values);
 
             /* send event */
-            select.trigger('liszt:updated');
+            select.trigger('chosen:updated');
         },
         _handleAddNewCategoriesFilter: function (element) {
             this.filterRows++;

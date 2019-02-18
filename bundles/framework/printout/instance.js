@@ -143,7 +143,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
             }
 
             $(".tool.tool-print").appendTo($("[tbgroup=default-myplaces]"));
-            
+
             // create the PrintService for handling ajax calls
             // and common functionality.
             var printService = Oskari.clazz.create(
@@ -281,7 +281,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundleInstance"
                 // view/BasicPrintOut.js should be changed as well
                 // to parse the geoJson for the backend.
                 if (geoJson) {
-                    this.geoJson[geoJson.id] = geoJson;                
+                    this.geoJson[geoJson.id] = geoJson;
                 }
                 // Save the tile data per layer for later use.
                 if (tileData && layerId) {

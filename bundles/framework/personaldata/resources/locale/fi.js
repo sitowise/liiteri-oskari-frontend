@@ -7,6 +7,13 @@ Oskari.registerLocalization(
         "desc": "Omat tiedot",
         "notLoggedIn": "Kirjautuneena käyttäjävä voit tarkistaa täällä käyttäjätietosi sekä omat kohteesi, karttanäkymäsi, upotetut karttasi, indikaattorisi, analyysisi ja aineistosi.",
         "notLoggedInText": "Kirjaudu sisään",
+        "register": "Rekisteröidy",
+        "projectionError": {
+            "title" : "Projektiot eivät ole yhteensopivia",
+            "msg": "Vaihdetaan projektiota karttajulkaisun muokkauksen mahdollistamiseksi.",
+            "ok": "OK",
+            "cancel": "Peruuta"
+        },
         "tabs": {
             "myviews": {
                 "title": "Karttanäkymät",
@@ -32,7 +39,7 @@ Oskari.registerLocalization(
                     "cancel": "Peruuta",
                     "error_noname": "Karttanäkymän nimi puuttuu. Anna nimi ja yritä uudelleen.",
                     "deletetitle": "Poista karttanäkymä",
-                    "deletemsg": "Haluatko poistaa valitun karttanäkymän?",
+                    "deletemsg": "Haluatko poistaa karttanäkymän \"{name}\"?",
                     "default": "Oletusnäkymä"
         },
         "save": {
@@ -89,7 +96,7 @@ Oskari.registerLocalization(
                     "cancel": "Peruuta",
                     "error_noname": "Kartan nimi on pakollinen tieto. Anna kartalle nimi ja yritä uudelleen.",
                     "deletetitle": "Poista julkaistu kartta",
-                    "deletemsg": "Haluatko poistaa tämän julkaistun kartan? Kartta ei tämän jälkeen näy enää verkkosivullasi.",
+                    "deletemsg": "Haluatko poistaa julkaistun kartan \"{name}\"? Kartta ei tämän jälkeen näy enää verkkosivullasi.",
                     "showErrorTitle": "Karttanäkymässä on puutteita",
                     "showConfirmMissing": "Osa karttatasoista ei ole käytettävissä. Haluatko silti avata karttanäkymän?",
                     "showConfirmNotLoaded": "Osa karttatasoista ei latautunut karttanäkymään."
@@ -114,7 +121,8 @@ Oskari.registerLocalization(
                     "notsaved": "Kartan julkaisu epäonnistui.",
                     "notdeleted": "Kartan poisto epäonnistui.",
                     "makePublic": "Kartan muuttaminen julkiseksi epäonnistui.",
-                    "makePrivate": "Kartan muuttaminen yksityiseksi epäonnistui."
+                    "makePrivate": "Kartan muuttaminen yksityiseksi epäonnistui.",
+                    "loadfailed": "Julkaistujen karttojen haku epäonnistui."
                 }
             },
             "account": {
@@ -145,7 +153,13 @@ Oskari.registerLocalization(
     "button": {
       "yes": "Kyllä",
       "no": "Ei"
+        },
+        "guidedTour": {
+            "title": "Omat tiedot",
+            "message": "Omat tiedot -valikosta voit tarkistaa tallentamasi paikkatiedot ja käyttäjätilisi tiedot. <br/><br/> Tarkista ja päivitä omat kohteet, karttanäkymät, julkaistut kartat, indikaattorit, analyysit ja aineistot. <br/><br> Vain kirjautuneet käyttäjät voivat nähdä Omat tiedot.",
+            "openLink": "Näytä Omat tiedot",
+            "closeLink": "Piilota Omat tiedot",
+            "tileText": "Omat tiedot"
     }
   }
-}
-);
+});

@@ -225,7 +225,7 @@ Oskari.clazz.define(
                     }
                 }
             });
-            $('#markingsMainMarkNameInput').trigger("liszt:updated");
+            $('#markingsMainMarkNameInput').trigger("chosen:updated");
             
             if (area.is(':checked')) {
                 this.instance.addFilterToUrl('areaType', area.prop('value'), true);    
@@ -252,11 +252,11 @@ Oskari.clazz.define(
 
                 param = this.instance.getUrlParameter('municipalityId');
                 if (param != null) {
-                    this.container.find('#markingsMunicipalityIdInput').val(param).trigger("liszt:updated");;
+                    this.container.find('#markingsMunicipalityIdInput').val(param).trigger("chosen:updated");;
                 }
                 param = this.instance.getUrlParameter('mainMarkName');
                 if (param != null) {
-                    this.container.find('#markingsMainMarkNameInput').val(param).trigger("liszt:updated");;
+                    this.container.find('#markingsMainMarkNameInput').val(param).trigger("chosen:updated");;
                 }
             }
             

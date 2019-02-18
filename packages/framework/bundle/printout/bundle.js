@@ -21,7 +21,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundle", functi
     "protocol": ["Oskari.bundle.Bundle", "Oskari.mapframework.bundle.extension.ExtensionBundle"],
     "source": {
 
-        "scripts": [{
+        "scripts":  [{
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/jquery.imagesLoaded.js"
         }, {
@@ -160,7 +160,27 @@ Oskari.clazz.define("Oskari.mapframework.bundle.printout.PrintoutBundle", functi
             "lang": "uk",
             "type": "text/javascript",
             "src": "../../../../bundles/framework/printout/resources/locale/uk.js"
-        }]
+        }, {
+            "lang": "is",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/printout/resources/locale/is.js"
+        }, {
+            "lang": "it",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/printout/resources/locale/it.js"
+        }, {
+            "lang": "nb",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/printout/resources/locale/nb.js"
+        }, {
+            "lang": "fr",
+            "type": "text/javascript",
+            "src": "../../../../bundles/framework/printout/resources/locale/fr.js"
+          }, {
+              "lang": "nn",
+              "type": "text/javascript",
+              "src": "../../../../bundles/framework/printout/resources/locale/nn.js"
+          }]
     },
     "bundle": {
         "manifest": {

@@ -7,6 +7,13 @@ Oskari.registerLocalization(
         "desc": "Mina uppgifter",
         "notLoggedIn": "Mina uppgifter innehåller din användarprofil och alla dina sparade funktioner, kartvyer, inbäddade kartor, indikatorer, analys och dataset.  <a href='/web/sv/login'>Logga in</a>.",
         "notLoggedInText": "Logga in.",
+        "register": "Registrera dig",
+        "projectionError": {
+            "title" : "Projektionerna är inkompatibla",
+            "msg": "Utbytas projektionen för att redigera kartpubliceringen",
+            "ok": "OK",
+            "cancel": "Avbryt"
+        },
         "tabs": {
             "myviews": {
                 "title": "Mina kartvyer",
@@ -31,7 +38,7 @@ Oskari.registerLocalization(
                     "cancel": "Avbryt",
                     "error_noname": "Skriv namnet på kartvyn",
                     "deletetitle": "Ta bort kartvyn",
-                    "deletemsg": "Vill du ta bort denna kartvy?"
+                    "deletemsg": "Vill du ta bort denna kartvy \"{name}\"?"
                 },
                 "save": {
                     "success": "Kartvyn har sparats.",
@@ -87,7 +94,7 @@ Oskari.registerLocalization(
                     "cancel": "Avbryt",
                     "error_noname": "Namnge kartan",
                     "deletetitle": "Ta bort den inbäddade kartan",
-                    "deletemsg": "Vill du ta bort den inbäddade kartan? Efter radering kartan kommer inte längre att visas på din webbplats.",
+                    "deletemsg": "Vill du ta bort den inbäddade kartan \"{name}\"? Efter radering kartan kommer inte längre att visas på din webbplats.",
                     "showErrorTitle": "Ofullständig kartvy",
                     "showConfirmMissing": "Kartvyn är ofullständig. Några av kartlagren är inte tillgängliga. Vill du fortfarande öppna den här kartvyn?",
                     "showConfirmNotLoaded": "Alla kartlager har ännu inte laddats ned. Försök på nytt senare."
@@ -112,7 +119,8 @@ Oskari.registerLocalization(
                     "notsaved": "Den inbäddade kartan kunde inte sparas. Försök på nytt senare.",
                     "notdeleted": "Den inbäddade kartan kunde inte tas bort. Försök på nytt senare.",
                     "makePublic": "Den inbäddade kartan kunde inte publiceras. Försök på nytt senare.",
-                    "makePrivate": "Den inbäddade kartan kunde inte avpubliceras. Försök på nytt senare."
+                    "makePrivate": "Den inbäddade kartan kunde inte avpubliceras. Försök på nytt senare.",
+                    "loadfailed": "De inbäddade kartor kunde inte laddas ned. Försök på nytt senare."
                 }
             },
             "account": {
@@ -130,7 +138,13 @@ Oskari.registerLocalization(
         "button": {
             "yes": "Ja",
             "no": "Nej"
+        },
+        "guidedTour": {
+            "title": "Min data",
+            "message": "\"Min data\"-menyn innehåller alla dina sparade platser, kartvyer, inbäddade kartor, indikatorer, analys och dataset. Där kan du också kontrollera din kontoinformation. Mina data visas endast för inloggade användare.",
+            "openLink": "Visa Mina data",
+            "closeLink": "Göm Mina data",
+            "tileText": "Min data"
         }
     }
-}
-);
+});

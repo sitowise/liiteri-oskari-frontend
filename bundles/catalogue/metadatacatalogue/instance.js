@@ -51,12 +51,38 @@ Oskari.clazz.define(
         this.drawCoverage = false;
         // Search result actions array.
         this.searchResultActions = [];
+        this.conf = this.conf || {};
+        this.state = this.state || {};
     }, {
         /**
          * @static
          * @property __name
          */
         __name: 'catalogue.bundle.metadatacatalogue',
+        /**
+         * @static
+         * @property __drawStyle
+         */
+        __drawStyle:{
+            draw : {
+                fill : {
+                     color: 'rgba(35, 216, 194, 0.3)'
+                },
+                stroke : {
+                      color: 'rgba(35, 216, 194, 1)',
+                      width: 2
+                }
+            },
+            modify : {
+                fill : {
+                     color: 'rgba(0, 0, 238, 0.3)'
+                },
+                stroke : {
+                      color: 'rgba(0, 0, 238, 1)',
+                      width: 2
+                }
+            }
+        },
         /**
          * @static
          * @property templates
@@ -113,6 +139,8 @@ Oskari.clazz.define(
                 '<div class="metadataResultHeader">' +
                 '  <div class="panelHeader resultTitle"></div>' +
                 '  <div class="panelHeader resultLinks">' +
+                '    <a href="JavaScript:void(0);" class="showDatasets filter-link" data-value="dataset,series"></a>' +
+                '    <a href="JavaScript:void(0);" class="showServices filter-link" data-value="service"></a>' +
                 '    <a href="JavaScript:void(0);" class="showLink"></a>' +
                 '    <a href="JavaScript:void(0);" class="modifyLink"></a>' +
                 '  </div>' +
@@ -153,7 +181,7 @@ Oskari.clazz.define(
         },
         /**
          * @method setSandbox
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         * @param {Oskari.Sandbox} sandbox
          * Sets the sandbox reference to this component
          */
         setSandbox: function (sandbox) {
@@ -161,7 +189,7 @@ Oskari.clazz.define(
         },
         /**
          * @method getSandbox
-         * @return {Oskari.mapframework.sandbox.Sandbox}
+         * @return {Oskari.Sandbox}
          */
         getSandbox: function () {
             return this.sandbox;
@@ -232,7 +260,7 @@ Oskari.clazz.define(
             }
 
             var optionServName =
-                'Oskari.catalogue.bundle.metadatacatalogue.service.MetadataOptionService';
+              'Oskari.catalogue.bundle.metadatacatalogue.service.MetadataOptionService';
             me.optionService = Oskari.clazz.create(optionServName, optionAjaxUrl);
 
             var searchServName =
@@ -302,14 +330,21 @@ Oskari.clazz.define(
             /**
              * @method FeatureData.FinishedDrawingEvent
              */
-            'MetaData.FinishedDrawingEvent': function (event) {
+            'DrawingEvent': function (event) {
                 var me = this,
                     coverageFeature;
 
-                coverageFeature = this.selectionPlugin.getFeaturesAsGeoJSON();
+                if(event.getId() !== me.getName() || event.getIsFinished() !== true || me.drawCoverage){
+                    return;
+                }
+
+                coverageFeature = event.getGeoJson();
 
                 this.coverageButton.val(me.getLocalization('deleteArea'));
                 this.coverageButton[0].data = JSON.stringify(coverageFeature);
+                this.coverageButton.prop('disabled', false).css({
+                  'border-color': ''
+                });
                 this.drawCoverage = false;
 
                 document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
@@ -326,15 +361,17 @@ Oskari.clazz.define(
                 }
 
                 if (!isShown && me.drawCoverage === false) {
-                    if (me.selectionPlugin) {
-                        me.selectionPlugin.stopDrawing();
-                    }
+                    me._stopCoverage();
                     if (me.coverageButton) {
                         me.coverageButton.val(me.getLocalization('delimitArea'));
                     }
                     me.drawCoverage = true;
-                    document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
-                    var emptyData = {};
+
+                    var input = document.getElementById('oskari_metadatacatalogue_forminput_searchassistance');
+                    if(input) {
+                        input.focus();
+                    }
+
                     if (me.coverageButton) {
                         me.coverageButton[0].data = '';
                     }
@@ -486,7 +523,9 @@ Oskari.clazz.define(
                         search[dropdownDef.attr('name')] = dropdownDef.find(':selected').val();
                     }
                     // Coverage geometry
-                    search[me.coverageButton.attr('name')] = me.coverageButton[0].data;
+                    if (me.coverageButton && me.coverageButton[0] && me.coverageButton[0].data) {
+                        search[me.coverageButton.attr('name')] = me.coverageButton[0].data;
+                    }
                 }
                 me.lastSearch = field.getValue();
 
@@ -559,6 +598,7 @@ Oskari.clazz.define(
                 okButton = dialog.createCloseButton('OK');
 
             dialog.setId('oskari_search_error_popup');
+            dialog.makeModal();
 
             dialog.show(
                 this.getLocalization('metadataoptionservice_alert_title'),
@@ -583,10 +623,10 @@ Oskari.clazz.define(
                 dropdownDef,
                 emptyOption,
                 newOption,
+                renderCoverageButton = (_.filter(dataFields, {'field':'coverage'}).length > 0),
                 checkboxChange = function () {
                     me._updateOptions(advancedContainer);
                 };
-
             for (i = 0; i < dataFields.length; i += 1) {
                 dataField = dataFields[i];
                 if (dataField.values.length === 0) {
@@ -648,35 +688,46 @@ Oskari.clazz.define(
                 advancedContainer.append(newRow);
             }
 
-            newRow = me.templates.buttonRow.clone();
-            newLabel = me.getLocalization('searchArea');
-            newRow.find('div.rowLabel').append(newLabel);
+            if (renderCoverageButton) {
+                newRow = me.templates.buttonRow.clone();
+                newLabel = me.getLocalization('searchArea');
+                newRow.find('div.rowLabel').append(newLabel);
 
-            var newButton = me.templates.metadataButton.clone();
-            this.coverageButton = newButton.find('.metadataCoverageDef');
-            this.coverageButton.attr('value', me.getLocalization('delimitArea'));
-            this.coverageButton.attr('name', 'coverage');
-            this.drawCoverage = true;
+                var newButton = me.templates.metadataButton.clone();
+                this.coverageButton = this._initCoverageButton(me, newButton);
+                this.drawCoverage = true;
 
-            this.coverageButton.on('click', function () {
-                if (me.drawCoverage === true) {
-                    me._getCoverage();
-                } else {
-                    me.selectionPlugin.stopDrawing();
-                    me.coverageButton.val(me.getLocalization('delimitArea'));
-                    me.drawCoverage = true;
-                    document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
-                    var emptyData = {};
-                    me.coverageButton[0].data = '';
-                    me._removeFeaturesFromMap();
-                }
-            });
+                this.coverageButton.on('click', function (){
+                  if (me.drawCoverage === true) {
+                      me.coverageButton.prop('disabled', true).css({
+                      'border-color': '#0099CB'
+                      });
+                      me.coverageButton.val(me.getLocalization('startDraw'));
+                      me._getCoverage();
+                      me.drawCoverage = false;
+                    }else {
+                        me.drawCoverage = true;
+                        me._stopCoverage();
+                        me.coverageButton.val(me.getLocalization('delimitArea'));
+                        document.getElementById('oskari_metadatacatalogue_forminput_searchassistance').focus();
+                        var emptyData = {};
+                        me.coverageButton[0].data = '';
+                        me._removeFeaturesFromMap();
+                    }
+                });
 
-            newRow.append(newButton);
+                newRow.append(newButton);
 
-            advancedContainer.append(newRow);
+                advancedContainer.append(newRow);
+            }
 
             me._updateOptions(advancedContainer);
+        },
+        _initCoverageButton: function(me, newButton){
+          this.coverageButton = newButton.find('.metadataCoverageDef');
+          this.coverageButton.attr('value', me.getLocalization('delimitArea'));
+          this.coverageButton.attr('name', 'coverage');
+          return this.coverageButton;
         },
 
         /**
@@ -700,17 +751,14 @@ Oskari.clazz.define(
 
         _getCoverage: function () {
             var me = this;
-            var mapModule = this.sandbox.findRegisteredModuleInstance('MainMapModule');
+            
+            me.sandbox.postRequestByName('DrawTools.StartDrawingRequest', [me.getName(), 'Box', {
+                style: me.__drawStyle
+            }]);
+        },
 
-            var config = {
-                id: 'MetaData',
-                enableTransform: true
-            };
-
-            this.selectionPlugin = Oskari.clazz.create('Oskari.mapframework.bundle.featuredata2.plugin.MapSelectionPlugin', config, me.sandbox);
-            mapModule.registerPlugin(this.selectionPlugin);
-            mapModule.startPlugin(this.selectionPlugin);
-            this.selectionPlugin.startDrawing({drawMode: 'square'});
+        _stopCoverage: function() {
+            this.sandbox.postRequestByName('DrawTools.StopDrawingRequest', [this.getName(), true]);
         },
 
         /**
@@ -763,7 +811,6 @@ Oskari.clazz.define(
          */
         _showResults: function (metadataCatalogueContainer, data) {
             var me = this;
-
             me.lastResult = data.results;
             var resultPanel = metadataCatalogueContainer.find('.metadataResults'),
                 searchPanel = metadataCatalogueContainer.find('.metadataSearching'),
@@ -781,6 +828,7 @@ Oskari.clazz.define(
             showLink.click(function () {
                 jQuery('table.metadataSearchResult tr').show();
                 showLink.hide();
+                resultHeader.find('.filter-link').show();
             });
             var modifyLink = resultHeader.find('.modifyLink');
             modifyLink.html(me.getLocalization('modifySearch'));
@@ -796,6 +844,12 @@ Oskari.clazz.define(
                 resultPanel.show();
                 return;
             }
+
+            var showDatasetsLink = resultHeader.find('.showDatasets');
+            showDatasetsLink.html(me.getLocalization('showDatasets'));
+
+            var showServicessLink = resultHeader.find('.showServices');
+            showServicessLink.html(me.getLocalization('showServices'));
 
             // render results
             var table = me.templates.resultTable.clone(),
@@ -872,6 +926,30 @@ Oskari.clazz.define(
             resultPanel.append(table);
             optionPanel.hide();
             resultPanel.show();
+
+
+            //filter functionality
+            resultHeader.find('.filter-link').on('click', function(event) {
+                var filterValues = jQuery(event.currentTarget).data('value').split(',');
+                //hide filterlinks and show "show all"-link
+                resultHeader.find('.filter-link').hide();
+                resultHeader.find('.showLink').show();
+
+                var allRows = table.find('tr[class*=filter-]');
+                _.each(allRows, function(item) {
+                    var classNameFound = false;
+                    for (var i = 0; i < filterValues.length; i++) {
+                        if (jQuery(item).hasClass('filter-'+filterValues[i])) {
+                            classNameFound = true;
+                        }
+                    }
+
+                    if (!classNameFound) {
+                        jQuery(item).hide();
+                    }
+
+                });
+            });
         },
 
         _populateResultTable: function (resultsTableBody) {
@@ -914,12 +992,38 @@ Oskari.clazz.define(
                     row = results[i];
                     resultContainer = me.templates.resultTableRow.clone();
                     resultContainer.addClass('res' + i);
+
+                    //resultcontainer filtering
+                    if (row.natureofthetarget) {
+                        resultContainer.addClass('filter-'+row.natureofthetarget);
+                    }
                     resultContainer.data('resultId', row.id);
                     cells = resultContainer.find('td').not('.spacer');
                     titleText = row.name;
                     // Include organization information if available
                     if ((row.organization) && (row.organization.length > 0)) {
                         titleText = titleText + ', ' + row.organization;
+                    }
+
+                    // Include identification
+                    var identification = row.identification;
+                    var isIdentificationCode = (identification && identification.code && identification.code.length>0) ? true : false;
+                    var isIdentificationDate = (identification && identification.date && identification.date.length>0) ? true : false;
+                    var isUpdateFrequency = (identification && identification.updateFrequency && identification.updateFrequency.length > 0) ? true : false;
+                    if(isIdentificationCode && isIdentificationDate) {
+                        var locIdentificationCode = me.getLocalization('identificationCode')[identification.code];
+                        if(!locIdentificationCode) {
+                            locIdentificationCode = identification.code;
+                        }
+
+                        //only add the date for certain types of targets
+                        if (row.natureofthetarget === 'dataset' || row.natureofthetarget === 'series') {
+                            titleText = titleText + ' (' + locIdentificationCode + ':' + identification.date;
+                            if (isUpdateFrequency) {
+                                titleText += ', '+me.getLocalization('updated')+': '+identification.updateFrequency;
+                            }
+                            titleText += ')';
+                        }
                     }
                     // Add title
                     jQuery(cells[0]).append(titleText);
@@ -1130,14 +1234,6 @@ Oskari.clazz.define(
                 // Hide layer
                 if (jQuery(this).html() === hideText) {
                     // Set previously selected layer only invisible
-                    /* if (layerSelected) {
-                     request = visibilityRequestBuilder(layer.getId(), false);
-                     // Unselect previously unselected layer
-                     } else {
-                     builder = me.sandbox.getRequestBuilder('RemoveMapLayerRequest');
-                     request = builder(layer.getId());
-                     }*/
-
                     builder = me.sandbox.getRequestBuilder('RemoveMapLayerRequest');
                     layerSelected = false;
 
@@ -1147,7 +1243,7 @@ Oskari.clazz.define(
                 } else {
                     // Select previously unselected layer
                     if (!layerSelected) {
-                        me.sandbox.postRequestByName('AddMapLayerRequest', [layer.getId(), false, layer.isBaseLayer()]);
+                        me.sandbox.postRequestByName('AddMapLayerRequest', [layer.getId()]);
                     }
                     // Set layer visible
                     request = visibilityRequestBuilder(layer.getId(), true);

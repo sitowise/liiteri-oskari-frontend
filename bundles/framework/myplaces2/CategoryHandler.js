@@ -14,6 +14,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
         this.instance = instance;
         // init layers from link (for printing) on initial load
         this.initialLoad = true;
+        this.loc = Oskari.getMsg.bind(null, 'MyPlaces2');
         this.validateTool = Oskari.clazz.create('Oskari.userinterface.component.FormInput');
     }, {
         __name: 'MyPlacesCategoryHandler',
@@ -34,13 +35,11 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          * implements Module protocol start methdod
          */
         start: function () {
-            var me = this;
-
-            var sandbox = this.instance.sandbox;
-            var user = sandbox.getUser(),
+            var me = this,
+                sandbox = this.instance.sandbox,
                 p;
 
-            if (user.isLoggedIn()) {
+            if (Oskari.user().isLoggedIn()) {
                 sandbox.register(me);
                 for (p in me.eventHandlers) {
                     if (me.eventHandlers.hasOwnProperty(p)) {
@@ -78,7 +77,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
              * Checks if categories have been changed and updates corresponding maplayers accordingly
              * @param {Oskari.mapframework.myplaces.event.MyPlacesChangedEvent} event
              */
-            'MyPlaces.MyPlacesChangedEvent': function (event) {
+            'MyPlaces.MyPlacesChangedEvent': function () {
                 this._handlePlacesChanged();
             }
         },
@@ -115,10 +114,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                     sandbox.requestByName(this.getName(), "RemoveMapLayerRequest", [layer.getId()]);
                     // remove maplayer from all layers
                     mapLayerService.removeLayer(layer.getId());
-
-                    // remove grid tab for category
-                    //var catID = layer.getId().substring(this.instance.idPrefix.length + 1);
-                    //this.uiItems.gridPanel.removeCategory(catID);
                 }
             }
 
@@ -146,7 +141,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                         myplacesLayer = mapLayerService.createMapLayer(json);
                     mapLayerService.addLayer(myplacesLayer, this.initialLoad);
                 }
-                //this.uiItems.gridPanel.addOrUpdateCategory(cat);
             }
 
             if (this.initialLoad) {
@@ -157,9 +151,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 this._processStartupLinkLayers(sandbox);
                 // done here because layers aren't added to the service before this
                 this.initialLoad = false;
-
-                // preselect the first category
-                //this.uiItems.gridPanel.showCategory();
             }
         },
         /**
@@ -171,7 +162,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 layer = this.sandbox.findMapLayerFromSelectedMapLayers(layerId);
             if (!layer) {
                 var request = this.sandbox.getRequestBuilder('AddMapLayerRequest')(layerId, true);
-                // FIXME: not a registered module so this should fail?
                 this.sandbox.request(this.getName(), request);
             }
         },
@@ -208,7 +198,6 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
         _getMapLayerJson: function (categoryModel) {
             var baseJson = this._getMapLayerJsonBase();
             baseJson.wmsUrl = this.instance.conf.wmsUrl + categoryModel.getId() + "&";
-            //baseJson.wmsUrl = "/karttatiili/myplaces?myCat=" + categoryModel.getId() + "&";
             baseJson.name = categoryModel.getName();
             baseJson.id = this._getMapLayerId(categoryModel.getId());
             if (categoryModel.isPublic()) {
@@ -233,15 +222,14 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          * @return {Object}
          */
         _getMapLayerJsonBase: function () {
-            var catLoc = this.instance.getLocalization('category'),
-                json = {
+            var json = {
                     wmsName: 'oskari:my_places_categories',
                     type: "myplaceslayer",
                     isQueryable: true,
                     opacity: 50,
                     metaType: this.instance.idPrefix,
-                    orgName: catLoc.organization,
-                    inspire: catLoc.inspire
+                    orgName: this.loc('category.organization'),
+                    inspire: this.loc('category.inspire')
                 };
             if (this.instance.conf &&
                 this.instance.conf.layerDefaults &&
@@ -260,9 +248,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          *
          */
         _processStartupLinkLayers: function (sandbox) {
-            var mapLayers = sandbox.getRequestParameter('mapLayers');
+            var mapLayers = Oskari.util.getRequestParam('mapLayers');
 
-            if (mapLayers === null || mapLayers === "") {
+            if (!mapLayers) {
                 // no linked layers
                 return;
             }
@@ -279,7 +267,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 splitted = layerStrings[i].split("+");
                 layerId = splitted[0];
                 opacity = splitted[1];
-                //var style = splitted[2];
+
                 if (layerId !== null && layerId.indexOf(this.instance.idPrefix) !== -1) {
                     rb = null;
                     r = null;
@@ -325,14 +313,12 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 };
             form.setValues(values);
             var content = form.getForm();
-            content.find('input[name=categoryname]').val(category.name);
+            content.find('input[data-name=categoryname]').val(category.name);
 
             var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 buttons = [],
-                saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
-                btnLoc = this.instance.getLocalization('buttons'),
-                catLoc = this.instance.getLocalization('categoryform').edit;
-            saveBtn.setTitle(btnLoc.save);
+                saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+            saveBtn.setTitle(me.loc('buttons.save'));
             saveBtn.addClass('primary');
             saveBtn.setHandler(function () {
                 var values = form.getValues(),
@@ -348,24 +334,24 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 me.instance.sandbox.postRequestByName('EnableMapKeyboardMovementRequest');
             });
             var cancelBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            cancelBtn.setTitle(btnLoc.cancel);
+            cancelBtn.setTitle(me.loc('buttons.cancel'));
             cancelBtn.setHandler(function () {
                 dialog.close();
+                me.instance.sandbox.postRequestByName('EnableMapKeyboardMovementRequest');
             });
             buttons.push(saveBtn);
             buttons.push(cancelBtn);
-            dialog.show(catLoc.title, content, buttons);
-            dialog.moveTo('div.personaldata ul li select', 'right');
             dialog.makeModal();
+            dialog.show(me.loc('categoryform.edit.title'), content, buttons);
+            dialog.moveTo('div.personaldata ul li select', 'right');
             //bind listeners etc. for category form
             form.start();
 
         },
         showValidationErrorMessage: function (errors) {
-            var loc = this.instance.getLocalization(),
-                dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            okBtn.setTitle(loc.buttons.ok);
+            okBtn.setTitle(this.loc('buttons.ok'));
             okBtn.addClass('primary');
             okBtn.setHandler(function () {
                 dialog.close(true);
@@ -378,7 +364,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 row.append(errors[i].error);
                 content.append(row);
             }
-            dialog.show(loc.validation.title, content, [okBtn]);
+            dialog.makeModal();
+            dialog.show(this.loc('validation.title'), content, [okBtn]);
+
         },
         /**
          * @method _showMessage
@@ -388,16 +376,17 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          * @param {String} message popup message
          */
         _showMessage: function (title, message) {
-            var loc = this.instance.getLocalization(),
-                dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
+            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 okBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-            okBtn.setTitle(loc.buttons.ok);
+            okBtn.setTitle(this.loc('buttons.ok'));
             okBtn.addClass('primary');
+
             okBtn.setHandler(function () {
                 dialog.close(true);
             });
             dialog.show(title, message, [okBtn]);
         },
+
         /**
          * @method hasIllegalChars
          * Checks value for problematic characters
@@ -407,6 +396,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
             this.validateTool.setValue(value);
             return !this.validateTool.checkValue();
         },
+
         /**
          * @method _validateNumber
          * Checks value for number and number range
@@ -419,84 +409,87 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
         /**
          * @method _isColor
          * Checks value for a hex color
-         * @return {Boolean} true if ok, false -> not a color
+         * @return {Boolean} true if ok, false -> not a color. null is valid color.
          * @private
          */
         _isColor: function (value) {
+            if(value === null) {
+                return true;
+            }
             return this.validateTool.validateHexColor(value);
         },
         validateCategoryFormValues: function (values) {
             var errors = [];
+            var me = this;
             if (!values) {
                 return errors;
             }
-            var loc = this.instance.getLocalization('validation');
 
             if (!values.name) {
                 errors.push({
                     field: 'name',
-                    error: loc.categoryName
+                    error: me.loc('validation.categoryName')
                 });
-            } else if (this.hasIllegalChars(values.name)) {
+            } else if (Oskari.util.sanitize(values.name) !== values.name) {
                 errors.push({
                     field: 'name',
-                    error: loc.categoryNameIllegal
+                    error: me.loc('validation.categoryNameIllegal')
                 });
             }
 
             if (!this._validateNumber(values.dot.shape, 0, 6)) {
                 errors.push({
                     field: 'dotShape',
-                    error: loc.dotShape
+                    error: me.loc('validation.dotShape')
                 });
             }
             if (!this._validateNumber(values.dot.size, 1, 5)) {
                 errors.push({
                     field: 'dotSize',
-                    error: loc.dotSize
+                    error: me.loc('validation.dotSize')
                 });
             }
             if (!this._isColor(values.dot.color)) {
                 errors.push({
                     field: 'dotColor',
-                    error: loc.dotColor
+                    error: me.loc('validation.dotColor')
                 });
             }
             if (!this._validateNumber(values.line.width, 1, 50)) {
                 errors.push({
                     field: 'lineWidth',
-                    error: loc.lineSize
+                    error: me.loc('validation.lineSize')
                 });
             }
             if (!this._isColor(values.line.color)) {
                 errors.push({
                     field: 'lineColor',
-                    error: loc.lineColor
+                    error: me.loc('validation.lineColor')
                 });
             }
             if (!this._validateNumber(values.area.lineWidth, 0, 50)) {
                 errors.push({
                     field: 'areaLineWidth',
-                    error: loc.areaLineSize
+                    error: me.loc('validation.areaLineSize')
                 });
             }
             if (!this._isColor(values.area.lineColor)) {
                 errors.push({
                     field: 'areaLineColor',
-                    error: loc.areaLineColor
+                    error: me.loc('validation.areaLineColor')
                 });
             }
             if (!this._isColor(values.area.fillColor)) {
                 errors.push({
                     field: 'areaFillColor',
-                    error: loc.areaFillColor
+                    error: me.loc('validation.areaFillColor')
                 });
             }
             return errors;
         },
         getCategoryFromFormValues: function (values) {
             var category = Oskari.clazz.create('Oskari.mapframework.bundle.myplaces2.model.MyPlacesCategory');
-            category.setName(values.name);
+            category.setName(Oskari.util.sanitize(values.name));
             category.setId(values.id);
 
             category.setDotSize(values.dot.size);
@@ -521,22 +514,24 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
         },
         saveCategory: function (category) {
             var me = this,
-                loc = me.instance.getLocalization('notification'),
                 serviceCallback = function (blnSuccess, model, blnNew) {
                     if (blnSuccess) {
                         var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
-                        dialog.show(loc.categorySaved.title, loc.categorySaved.message);
+                        dialog.show(me.loc('notification.categorySaved.title'), me.loc('notification.categorySaved.message'));
                         dialog.fadeout();
                         // refresh map layer on map -> send update request
                         var layerId = me._getMapLayerId(category.getId()),
-                            request = me.instance.sandbox.getRequestBuilder('MapModulePlugin.MapLayerUpdateRequest')(layerId, true);
+                            request = me.instance.sandbox.getRequestBuilder('MapModulePlugin.MapLayerUpdateRequest')(layerId, true),
+                            layerIsSelected = me.instance.sandbox.isLayerAlreadySelected(layerId);
+                        if (layerIsSelected){
                         me.instance.sandbox.request(me, request);
+                        }
                     } else {
                         // blnNew should always be true since we are adding a category
                         if (blnNew) {
-                            me.instance.showMessage(loc.error.title, loc.error.addCategory);
+                            me.instance.showMessage(me.loc('notification.error.title'), me.loc('notification.error.addCategory'));
                         } else {
-                            me.instance.showMessage(loc.error.title, loc.error.editCategory);
+                            me.instance.showMessage(me.loc('notification.error.title'), me.loc('notification.error.editCategory'), blnNew);
                         }
                     }
                 };
@@ -551,29 +546,28 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          */
         confirmDeleteCategory: function (category) {
             var me = this,
-                btnLoc = me.instance.getLocalization('buttons'),
                 service = this.instance.getService(),
                 defaultCategory = service.getDefaultCategory(),
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
-                loc,
                 deleteBtn;
+
+            dialog.makeModal();
+
             if (defaultCategory.getId() === category.getId()) {
                 // cannot delete default category
-                loc = me.instance.getLocalization();
-                var okBtn = dialog.createCloseButton(loc.buttons.ok);
-                dialog.show(loc.notification.error.title, loc.notification.error.deleteDefault, [okBtn]);
+                var okBtn = dialog.createCloseButton(me.loc('buttons.ok'));
+                dialog.show(me.loc('notification.error.title'), me.loc('notification.error.deleteDefault'), [okBtn]);
                 return;
             }
             var places = service.getPlacesInCategory(category.getId()),
                 buttons = [],
-                cancelBtn = dialog.createCloseButton(btnLoc.cancel);
+                cancelBtn = dialog.createCloseButton(me.loc('buttons.cancel'));
             buttons.push(cancelBtn);
 
-            loc = me.instance.getLocalization('notification');
             var content = '';
             if (places.length > 0) {
                 deleteBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-                deleteBtn.setTitle(btnLoc.deleteCategoryAndPlaces);
+                deleteBtn.setTitle(me.loc('buttons.deleteCategoryAndPlaces'));
                 deleteBtn.setHandler(function () {
                     dialog.close();
                     // delete category and each place in it
@@ -581,24 +575,21 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 });
                 buttons.push(deleteBtn);
 
-                //var moveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-                //moveBtn.setTitle(btnLoc.movePlaces);
-                //moveBtn.addClass('primary');
-                //moveBtn.setHandler(function () {
-                //    dialog.close();
-                //    // move the places in the category to default category
-                //    me._deleteCategory(category, true);
-                //});
-                //buttons.push(moveBtn);
-                //var locParams = [category.getName(), places.length, defaultCategory.getName()];
-                //content = this._formatMessage(loc.categoryDelete.deleteConfirmMove, locParams);
-				
-				var locParams = [category.getName(), places.length];
-                content = this._formatMessage(loc.categoryDelete.deleteWithObjectsConfirm, locParams);
+                var moveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
+                moveBtn.setTitle(me.loc('buttons.movePlaces'));
+                moveBtn.addClass('primary');
+                moveBtn.setHandler(function () {
+                    dialog.close();
+                    // move the places in the category to default category
+                    me._deleteCategory(category, true);
+                });
+                buttons.push(moveBtn);
+                var locParams = [category.getName(), places.length, defaultCategory.getName()];
+                content = me.loc('notification.categoryDelete.deleteConfirmMove', locParams);
             } else {
 
                 deleteBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
-                deleteBtn.setTitle(btnLoc.deleteCategory);
+                deleteBtn.setTitle(me.loc('buttons.deleteCategory'));
                 deleteBtn.addClass('primary');
                 buttons.push(deleteBtn);
                 deleteBtn.setHandler(function () {
@@ -607,11 +598,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                     me._deleteCategory(category, false);
                 });
 
-                content = this._formatMessage(loc.categoryDelete.deleteConfirm, [category.getName()]);
+                content = me.loc('notification.categoryDelete.deleteConfirm', [category.getName()]);
             }
 
-            dialog.show(loc.categoryDelete.title, content, buttons);
-            dialog.makeModal();
+            dialog.show(me.loc('notification.categoryDelete.title'), content, buttons);
         },
         /**
          *@method _formatMessage
@@ -650,11 +640,10 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          * Internal method to handle server response for category delete
          * @private
          */
-        _deleteCategoryCallback: function (success, movePlaces, categoryId) {
+        _deleteCategoryCallback: function (success, movePlaces) {
             var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 service = this.instance.getService(),
-                me = this,
-                loc;
+                me = this;
             if (success) {
                 if (movePlaces) {
                     // places moved to default category -> update it
@@ -664,24 +653,21 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                     this.instance.sandbox.request(this, request);
                 }
                 // NOTE OK
-                loc = me.instance.getLocalization();
-                dialog.show(loc.notification.categoryDelete.title, loc.notification.categoryDelete.deleted);
+                dialog.show(me.loc('notification.categoryDelete.title'), me.loc('notification.categoryDelete.deleted'));
                 dialog.fadeout();
             } else {
                 // error handling
-                loc = me.instance.getLocalization();
-                var okBtn = dialog.createCloseButton(loc.buttons.ok);
-                dialog.show(loc.notification.error.title, loc.notification.error.deleteCategory, [okBtn]);
+                var okBtn = dialog.createCloseButton(me.loc('buttons.ok'));
+                dialog.show(me.loc('notification.error.title'), me.loc('notification.error.deleteCategory'), [okBtn]);
             }
         },
         confirmPublishCategory: function (category, makePublic) {
             var me = this,
-                loc = me.instance.getLocalization(),
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
                 service = this.instance.getService(),
                 buttons = [],
                 msg,
-                cancelBtn = dialog.createCloseButton(loc.buttons.cancel);
+                cancelBtn = dialog.createCloseButton(me.loc('buttons.cancel'));
             buttons.push(cancelBtn);
 
             var operationalBtn = Oskari.clazz.create('Oskari.userinterface.component.Button');
@@ -696,21 +682,20 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
             var locParams = [category.getName()];
 
             if (makePublic) {
-                operationalBtn.setTitle(loc.buttons.changeToPublic);
-                msg = this._formatMessage(loc.notification.categoryToPublic.message, locParams);
-                dialog.show(loc.notification.categoryToPublic.title, msg, buttons);
+                operationalBtn.setTitle(me.loc('buttons.changeToPublic'));
+                msg = me.loc('notification.categoryToPublic.message', locParams);
+                dialog.show(me.loc('notification.categoryToPublic.title'), msg, buttons);
             } else {
-                operationalBtn.setTitle(loc.buttons.changeToPrivate);
-                msg = this._formatMessage(loc.notification.categoryToPrivate.message, locParams);
-                dialog.show(loc.notification.categoryToPrivate.title, msg, buttons);
+                operationalBtn.setTitle(me.loc('buttons.changeToPrivate'));
+                msg = me.loc('notification.categoryToPrivate.message', locParams);
+                dialog.show(me.loc('notification.categoryToPrivate.title'), msg, buttons);
             }
         },
 
         _handlePublishCategory: function (category, makePublic, wasSuccess) {
-            var loc;
+            var me = this;
             if (!wasSuccess) {
-                loc = this.instance.getLocalization("notification");
-                this._showMessage(loc.error.title, loc.error.generic);
+                this._showMessage(me.loc('notification.error.title'), me.loc('notification.error.generic'));
                 return;
             }
             var sandbox = this.instance.sandbox;
@@ -720,8 +705,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
                 mapLayer = mapLayerService.findMapLayer(layerId);
             if (!mapLayer) {
                 // maplayer not found, this should not be possible
-                loc = this.instance.getLocalization("notification");
-                this._showMessage(loc.error.title, loc.error.generic);
+                this._showMessage(me.loc('notification.error.title'), me.loc('notification.error.generic'));
                 return;
             }
             if (makePublic) {

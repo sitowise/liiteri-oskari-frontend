@@ -181,3 +181,9 @@ div.analyse-filter-popup-content div.filter-option {
 div.analyse-filter-popup-content div.analyse-filter-clicked-features input:disabled+label {
   opacity: .5;
 }
+
+.tool-analysis {
+  width: 32px;
+  height: 32px;
+  background-image: url('../images/analysis_32x32px.png') !important;
+}

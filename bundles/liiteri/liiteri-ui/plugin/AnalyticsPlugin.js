@@ -44,9 +44,6 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-ui.plugin.AnalyticsPlugin',
             'AfterMapLayerAddEvent': function (event) {
                 if(typeof ga !== 'undefined') {
                     var name = event.getMapLayer().getName();
-                    if(typeof event.getGroupName() !== 'undefined') {
-                        name = event.getGroupName() + " / " + event.getMapLayer().getName();
-                    }
                     //change name of users own layers, so that they are not confused with "real" layers
                     if(event.getMapLayer().getLayerType() === "myplaces" ||
                             event.getMapLayer().getLayerType() === "analysis" ||

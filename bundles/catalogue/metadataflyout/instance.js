@@ -3,7 +3,7 @@
  */
 Oskari.clazz.define(
     'Oskari.catalogue.bundle.metadataflyout.MetadataFlyoutBundleInstance',
-    function () {
+    function() {
         this.map = null;
         this.core = null;
         this.sandbox = null;
@@ -15,6 +15,8 @@ Oskari.clazz.define(
         this.loader = null;
         this.layerPlugin = null;
         this.layer = null;
+        this.conf = this.conf || {};
+        this.state = this.state || {};
     }, {
         /**
          * @static
@@ -23,22 +25,22 @@ Oskari.clazz.define(
          */
         __name: 'catalogue.bundle.metadataflyout',
 
-        getName: function () {
+        getName: function() {
             return this.__name;
         },
 
         /**
          * @method getSandbox
          */
-        getSandbox: function () {
+        getSandbox: function() {
             return this.sandbox;
         },
 
-        getLocale: function () {
+        getLocale: function() {
             return this._locale;
         },
 
-        getLoader: function () {
+        getLoader: function() {
             return this.loader;
         },
 
@@ -75,8 +77,7 @@ Oskari.clazz.define(
             wmsUrl: 'x',
             opacity: 60,
             checked: 'false',
-            styledLayerDescriptor:
-                '<StyledLayerDescriptor version="1.0.0" ' +
+            styledLayerDescriptor: '<StyledLayerDescriptor version="1.0.0" ' +
                 'xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" ' +
                 '    xmlns="http://www.opengis.net/sld" ' +
                 '    xmlns:ogc="http://www.opengis.net/ogc" ' +
@@ -122,7 +123,8 @@ Oskari.clazz.define(
          * @method implements BundleInstance start methdod
          *
          */
-        start: function () {
+        start: function() {
+            var me = this;
             if (this.started) {
                 return;
             }
@@ -139,11 +141,14 @@ Oskari.clazz.define(
                 p;
 
             this.sandbox = sandbox;
-
+            this.mapmodule = this.sandbox.findRegisteredModuleInstance("MainMapModule");
             /* loader */
             this.loader = Oskari.clazz.create(
-                'Oskari.catalogue.bundle.metadataflyout.service.MetadataLoader',
-                sandbox.getAjaxUrl()
+                'Oskari.catalogue.bundle.metadataflyout.service.MetadataLoader', {
+                    baseUrl: sandbox.getAjaxUrl(),
+                    srs: me.mapmodule.getProjection()
+
+                }
             );
 
             sandbox.register(this);
@@ -153,21 +158,6 @@ Oskari.clazz.define(
                     sandbox.registerForEventByName(this, p);
                 }
             }
-
-            /* request handler */
-            /*
-            this._requestHandlers['catalogue.ShowMetadataRequest'] =
-                Oskari.clazz.create(
-                    'Oskari.catalogue.bundle.metadataflyout.request.' +
-                        'ShowMetadataRequestHandler',
-                    sandbox,
-                    this
-                );
-            sandbox.addRequestHandler(
-                'catalogue.ShowMetadataRequest',
-                this._requestHandlers['catalogue.ShowMetadataRequest']
-            );
-*/
 
             var request = sandbox.getRequestBuilder(
                 'userinterface.AddExtensionRequest'
@@ -189,17 +179,91 @@ Oskari.clazz.define(
             };
 
             for (var key in this._requestHandlers) {
-                sandbox.addRequestHandler(key, this._requestHandlers[key])
+                sandbox.addRequestHandler(key, this._requestHandlers[key]);
             }
-
-
 
             /* stateful */
             sandbox.registerAsStateful(this.mediator.bundleId, this);
 
+            // handle state
+            var state = me.getState();
+            me.setState(state);
+
+            me._setupLayerTools();
+
+        },
+        /**
+         * Fetches reference to the map layer service
+         * @return {Oskari.mapframework.service.MapLayerService}
+         */
+        getLayerService: function() {
+            return this.sandbox.getService('Oskari.mapframework.service.MapLayerService');
         },
 
-        init: function () {
+        /**
+         * Adds tools for all layers
+         */
+        _setupLayerTools: function() {
+            var me = this;
+            // add tools for feature data layers
+            var service = this.getLayerService();
+            var layers = service.getAllLayers();
+            _.each(layers, function(layer) {
+                me._addTool(layer, true);
+            });
+            // update all layers at once since we suppressed individual events
+            var event = me.sandbox.getEventBuilder('MapLayerEvent')(null, 'tool');
+            me.sandbox.notifyAll(event);
+        },
+
+        /**
+         * Adds the metadata tool for layer
+         * @method  @private _addTool
+         * @param  {String| Number} layerId layer to process
+         * @param  {Boolean} suppressEvent true to not send event about updated layer (optional)
+         */
+        _addTool: function(layer, suppressEvent) {
+            var me = this;
+            var service = me.getLayerService();
+            if (typeof layer !== 'object') {
+                // detect layerId and replace with the corresponding layerModel
+                layer = service.findMapLayer(layer);
+            }
+            if (!layer || !layer.getMetadataIdentifier()) {
+                return;
+            }
+
+            // add feature data tool for layer
+            var tool = Oskari.clazz.create('Oskari.mapframework.domain.Tool');
+            tool.setName('metadata');
+            tool.setIconCls('show-metadata-tool');
+            tool.setTooltip(me._locale.tooltip);
+            var subLayers = layer.getSubLayers();
+            var additionalUuidsCheck = {};
+            var additionalUuids = [];
+            if (subLayers && subLayers.length > 0) {
+                for (var s = 0; s < subLayers.length; s += 1) {
+                    var subUuid = subLayers[s].getMetadataIdentifier();
+                    if (subUuid && subUuid !== '' && !additionalUuidsCheck[subUuid]) {
+                        additionalUuidsCheck[subUuid] = true;
+                        additionalUuids.push({
+                            uuid: subUuid
+                        });
+                    }
+                }
+            }
+            tool.setCallback(function() {
+                me.sandbox.postRequestByName('catalogue.ShowMetadataRequest', [{
+                        uuid: layer.getMetadataIdentifier()
+                    },
+                    additionalUuids
+                ]);
+            });
+
+            service.addToolForLayer(layer, tool, suppressEvent);
+        },
+
+        init: function() {
             return null;
         },
 
@@ -208,12 +272,12 @@ Oskari.clazz.define(
          *
          * implements bundle instance update method
          */
-        update: function () {},
+        update: function() {},
 
         /**
          * @method onEvent
          */
-        onEvent: function (event) {
+        onEvent: function(event) {
             var handler = this.eventHandlers[event.getName()];
             if (!handler) {
                 return;
@@ -229,23 +293,45 @@ Oskari.clazz.define(
          *
          */
         eventHandlers: {
-            AfterMapLayerAddEvent: function (event) {
+            AfterMapLayerAddEvent: function(event) {
                 /* this might react when layer added */
                 /* this.scheduleShowMetadata(event.getMapLayer().getMetadataResourceUUID(); */
             },
             /**
              * @method AfterMapLayerRemoveEvent
              */
-            AfterMapLayerRemoveEvent: function (event) {
+            AfterMapLayerRemoveEvent: function(event) {
                 /* this might react when layer removed */
                 /* this.scheduleShowMetadata(event.getMapLayer().getMetadataResourceUUID(); */
             },
             /**
-             * @method AfterMapLayerRemoveEvent
+             * @method userinterface.ExtensionUpdatedEvent
+             * Fetch when flyout is opened
              */
-            AfterMapMoveEvent: function (event) {
-                /* this might react when map moved */
-            }
+            'userinterface.ExtensionUpdatedEvent': function(event) {
+                var me = this;
+                if (event.getExtension().getName() !== me.getName()) {
+                    // not me -> do nothing
+                    return;
+                }
+                var viewState = event.getViewState();
+                if (viewState == 'close') {
+                    this.state = {};
+                }
+            },
+            'MapLayerEvent': function(event) {
+                if (event.getOperation() !== 'add') {
+                    // only handle add layer
+                    return;
+                }
+
+                if (event.getLayerId()) {
+                    this._addTool(event.getLayerId());
+                } else {
+                    // ajax call for all layers
+                    this._setupLayerTools();
+                }
+            },
         },
 
         /**
@@ -253,7 +339,7 @@ Oskari.clazz.define(
          *
          * implements bundle instance stop method
          */
-        stop: function () {
+        stop: function() {
             var sandbox = this.sandbox,
                 p;
 
@@ -265,8 +351,7 @@ Oskari.clazz.define(
             );
             */
             for (var key in this._requestHandlers) {
-                sandbox.removeRequestHandler(key, this._requestHandlers[key]
-                );
+                sandbox.removeRequestHandler(key, this._requestHandlers[key]);
             }
 
             /* sandbox cleanup */
@@ -287,11 +372,11 @@ Oskari.clazz.define(
             this.started = false;
         },
 
-        setSandbox: function (sandbox) {
+        setSandbox: function(sandbox) {
             this.sandbox = null;
         },
 
-        startExtension: function () {
+        startExtension: function() {
             this.plugins['Oskari.userinterface.Flyout'] =
                 Oskari.clazz.create(
                     'Oskari.catalogue.bundle.metadataflyout.Flyout',
@@ -301,19 +386,19 @@ Oskari.clazz.define(
                 );
         },
 
-        stopExtension: function () {
+        stopExtension: function() {
             this.plugins['Oskari.userinterface.Flyout'] = null;
         },
 
-        getTitle: function () {
+        getTitle: function() {
             return this.getLocale().title;
         },
 
-        getDescription: function () {
+        getDescription: function() {
             return 'Sample';
         },
 
-        getPlugins: function () {
+        getPlugins: function() {
             return this.plugins;
         },
 
@@ -321,7 +406,7 @@ Oskari.clazz.define(
          * @method scheduleShowMetadata
          * schedules a refresh of the UI to load metadata asynchronously
          */
-        scheduleShowMetadata: function (allMetadata) {
+        scheduleShowMetadata: function(allMetadata) {
             /** update flyout content */
             this.plugins[
                 'Oskari.userinterface.Flyout'
@@ -332,66 +417,23 @@ Oskari.clazz.define(
                 'userinterface.UpdateExtensionRequest', [this, 'detach']
             );
         },
-
-        /**
-         *  @method showExtentOnMap
-         */
-        showExtentOnMap: function (uuid, env, atts) {
-            var me = this,
-                sandbox = me.getSandbox();
-            if (!env) {
-                return;
-            }
-
-            var feats = [],
-                n,
-                vals,
-                e,
-                ep,
-                ef;
-
-            for (n = 0; n < env.length; n += 1) {
-                vals = env[n];
-                e = new OpenLayers.Bounds(
-                    vals.westBoundLongitude,
-                    vals.southBoundLatitude,
-                    vals.eastBoundLongitude,
-                    vals.northBoundLatitude
-                );
-                ep = e.toGeometry();
-                ef = new OpenLayers.Feature.Vector(ep);
-                ef.attributes = atts || ef.attributes;
-                feats.push(ef);
-            }
-
-            var evt = sandbox.getEventBuilder('FeaturesAvailableEvent')(
-                me.layer,
-                feats,
-                'application/nlsfi-x-openlayers-feature',
-                Oskari.getSandbox().getMap().getSrsName(),
-                //"EPSG:3067",
-                'replace'
-            );
-
-            me.sandbox.notifyAll(evt);
-        },
-
         /**
          * @method setState
          * @param {Object} state bundle state as JSON
          */
-        setState: function (state) {
-            this.plugins['Oskari.userinterface.Flyout'].setContentState(state);
+        setState: function(state) {
+            this.state = state;
+            if (state && state.current) {
+                this.scheduleShowMetadata(state.current);
+            }
         },
 
         /**
          * @method getState
          * @return {Object} bundle state as JSON
          */
-        getState: function () {
-            return this.plugins[
-                'Oskari.userinterface.Flyout'
-            ].getContentState();
+        getState: function() {
+            return this.state;
         }
     }, {
         protocol: [

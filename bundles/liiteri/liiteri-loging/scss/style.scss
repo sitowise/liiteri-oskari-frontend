@@ -1,81 +1,221 @@
 /* Override popup styles */
-
-.divmanazerpopup.guidedtour {
-    font-family: Arial, sans-serif;
+.divmanazerpopup.loging-window {
+  min-height: 200px;
+  top: 15%;
+  left: 30%;
+  border: solid 1px #c1c1c1;
+  border-radius: 5px;
+  -moz-box-shadow: 0 0 3px #ccc;
+  -webkit-box-shadow: 0 0 3px #ccc;
+  box-shadow: 0 0 3px #ccc;
 }
 
-.divmanazerpopup.guidedtour h3 {
-    margin: 0;
-    font-weight: normal;
+.divmanazerpopup.loging-window .actions {
+  display: none;
 }
 
-div.divmanazerpopup.guidedtour.bluetitle h3 {
-    color: #fff;
-    background-color: #1995fd;
-    border-radius: 3px 3px 0 0;
+.divmanazerpopup.loging-window h3 {
+margin: 0;
+font-weight: normal; }
+
+.divmanazerpopup.loging-window .popupHeader {
+  display: none;
 }
 
-div.divmanazerpopup.guidedtour.bluetitle h3 span {
-    float: right;
-    font-size: 13px;
-    padding-top: 3px;
+div.divmanazerpopup.loging-window.bluetitle h3 {
+color: #fff;
+background-color: #1995fd;
+border-radius: 3px 3px 0 0; }
+
+div.divmanazerpopup.loging-window.bluetitle h3 span {
+float: right;
+font-size: 13px;
+padding-top: 3px; }
+
+.divmanazerpopup.loging-window .content {
+font-size: 13px;
+line-height: 18px; }
+
+.divmanazerpopup.loging-window .content a {
+color: #0090ff;
+text-decoration: underline; }
+
+.divmanazerpopup.loging-window .actions input {
+display: inline-block;
+zoom: 1;
+/* zoom and *display = ie7 hack for display:inline-block */
+*display: inline;
+vertical-align: baseline;
+margin: 0 2px;
+outline: none;
+cursor: pointer;
+text-align: center;
+text-decoration: none;
+font: 12px/100% Arial, sans-serif;
+font-weight: bold;
+padding: 4px 10px;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+color: #fff;
+border: solid 1px #2670b5;
+text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.35);
+background: #3996ed;
+background: -webkit-gradient(linear, left top, left bottom, from(#3a97ee), to(#217ad4));
+background: -moz-linear-gradient(top, #3a97ee, #217ad4);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3a97ee', endColorstr='#217ad4');
+/* unquote for libsass bug */ }
+
+.divmanazerpopup.loging-window .actions input:hover {
+text-decoration: none;
+color: #fff;
+background: -webkit-gradient(linear, left top, left bottom, from(#3a97ee), to(#217ad4));
+background: -moz-linear-gradient(top, #59abf8, #2b8df0);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3a97ee', endColorstr='#217ad4');
+/* unquote for libsass bug */ }
+
+.divmanazerpopup.loging-window .actions input:active {
+position: relative;
+top: 1px;
+color: #19456d;
+text-shadow: none;
+background: -webkit-gradient(linear, left top, left bottom, from(#217ad4), to(#3a97ee));
+background: -moz-linear-gradient(top, #217ad4, #3a97ee);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#217ad4', endColorstr='#3a97ee');
+/* unquote for libsass bug */ }
+
+.divmanazerpopup.loging-window.arrow:after, .divmanazerpopup.loging-window.arrow:before {
+display: none; }
+
+.divmanazerpopup.loging-window.draggable {
+cursor: move; }
+
+.loging-window .headerContainer {
+  padding: 10px;
 }
 
-.divmanazerpopup.guidedtour .content {
-    font-size: 13px;
-    line-height: 18px;
+.loging-window .headerContainer h3 {
+  margin: 0px 0px 50px 0px;
 }
 
-.divmanazerpopup.guidedtour .content a {
-    color: #0090ff;
-    text-decoration: underline;
+.loging-window .footerContainer {
+  text-align: center;
+  background-image: url(../images/liiteri-pattern.png);
+height: 100px;
 }
 
-.divmanazerpopup.guidedtour .actions input {
-    display: inline-block;
-    zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
-    *display: inline;
-    vertical-align: baseline;
-    margin: 0 2px;
-    outline: none;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    font: 12px/100% Arial, sans-serif;
-    font-weight: bold;
-    padding: 4px 10px;
-    -webkit-border-radius: 4px; 
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    color: #fff;
-    border: solid 1px #2670b5;
-    text-shadow: 1px 1px 0 rgba(0,0,0,.35);
-    background: #3996ed;
-    background: -webkit-gradient(linear, left top, left bottom, from(#3a97ee), to(#217ad4));
-    background: -moz-linear-gradient(top,  #3a97ee,  #217ad4);
-    filter: unquote("progid:DXImageTransform.Microsoft.gradient(startColorstr='#3a97ee', endColorstr='#217ad4')"); /* unquote for libsass bug */
-}
-.divmanazerpopup.guidedtour .actions input:hover {
-    text-decoration: none;
-    color: #fff;
-    background: -webkit-gradient(linear, left top, left bottom, from(#3a97ee), to(#217ad4));
-    background: -moz-linear-gradient(top,  #59abf8,  #2b8df0);
-    filter: unquote("progid:DXImageTransform.Microsoft.gradient(startColorstr='#3a97ee', endColorstr='#217ad4')"); /* unquote for libsass bug */
-}
-.divmanazerpopup.guidedtour .actions input:active {
-    position: relative;
-    top: 1px;
-    color: #19456d;
-    text-shadow: none;
-    background: -webkit-gradient(linear, left top, left bottom, from(#217ad4), to(#3a97ee));
-    background: -moz-linear-gradient(top,  #217ad4,  #3a97ee);
-    filter: unquote("progid:DXImageTransform.Microsoft.gradient(startColorstr='#217ad4', endColorstr='#3a97ee')"); /* unquote for libsass bug */
+.loging-window .bodyContainer {
+  padding: 10px 10px 10px 10px;
 }
 
-.divmanazerpopup.guidedtour.arrow:after, .divmanazerpopup.guidedtour.arrow:before {
-    display: none;
+.loging-window .bodyContainer input[type="text"],.loging-window .bodyContainer input[type="password"] {
+  border-radius: 0px;
+  padding: 5px 1px;
+  border: 1px solid;
+  border-color: #BFBFBF #DEDEDE #DEDEDE #BFBFBF;
+  background-image: none;
 }
 
-.divmanazerpopup.guidedtour.draggable {
-    cursor: move;
+.loging-window td {
+  width: 50%;
+  border: none;
+}
+
+.loging-window td.col1 {
+  width: 25%;
+  border: none;
+}
+
+.loging-window td label {
+  text-align: right;
+  padding-right: 20px;
+  width: 100%;
+}
+
+.loging-window .logo {
+  margin: 0px auto;
+  background-image: url(../images/liiteri-logo.png);
+  background-repeat: no-repeat;
+  width: 252px;
+  height: 62px;
+}
+
+.loging-window .footerContainer .copyright {
+  color: #999;
+  font-size: 0.8em;
+  padding-top: 25px;
+}
+
+.loging-window button, .loging-window input[type="button"], .loging-window input[type="submit"] {
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  margin-top: 5px;
+  font-weight: normal;
+  text-shadow: none;
+}
+
+.loging-window .form-item span.link {
+  cursor: pointer;
+  color: #00bce9;
+  font-size: large;
+}
+
+.loging-window .form-item span.link-extra {
+  color: initial;
+  font-size: small;
+}
+
+.loging-window .form-item span.link:hover {
+color:#ff8000;
+}
+
+.loging-window .form-item label {
+  float: left;
+  padding-top: 6px;
+  width: 100px;
+  text-align: right;
+}
+
+.loging-window .form-item input.form-text {
+  width: 300px;
+  margin-left: 20px;
+  margin-right: 80px;
+}
+
+.loging-window .form-item input[type="checkbox"] {
+  margin-left: 120px;
+  display: inline-block;
+}
+
+.loging-window .form-item .row2 {
+  margin-left: 120px;
+  display: inline-block;
+}
+
+.loging-window .form-item {
+  overflow: hidden;
+  clear: both;
+  width: 570px;
+}
+
+.loging-window .form-item .form-tile {
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  margin-left: 10px;
+  max-width: 260px;
+  height: 60px;
+}
+
+.loging-window .packageSelection {
+  margin: 5px;
+}
+
+.loging-window .bodyContainer {
+  width: 600px;
+}
+
+.loging-window .loginContainer .errorMessage {
+  text-align: center;
 }

@@ -43,9 +43,6 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
          * 'connects' to store (does not but might)
          */
         connect: function () {
-			
-			this._fixGetFeatureBug();
-			
             var url = this.url;
             this.protocols.categories = new OpenLayers.Protocol.WFS({
                 version: '1.1.0',
@@ -160,7 +157,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
 
                 category = Oskari.clazz.create('Oskari.mapframework.bundle.myplaces2.model.MyPlacesCategory');
                 category.setId(id);
-                category.setName(featAtts.category_name);
+                category.setName(Oskari.util.sanitize(featAtts.category_name));
                 category.setDefault("true" === featAtts['default']);
                 category.setLineWidth(featAtts.stroke_width);
                 category.setLineStyle(featAtts.stroke_dasharray);
@@ -170,8 +167,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 category.setAreaLineWidth(featAtts.border_width);
                 category.setAreaLineStyle(featAtts.border_dasharray);
                 category.setAreaLineCorner(featAtts.border_linejoin);
-                category.setAreaLineColor(this._formatColorFromServer(featAtts.border_color));
-                category.setAreaFillColor(this._formatColorFromServer(featAtts.fill_color));
+                category.setAreaLineColor(typeof featAtts.border_color === 'string' ? this._formatColorFromServer(featAtts.border_color) : null);
+                category.setAreaFillColor(typeof featAtts.fill_color === 'string' ? this._formatColorFromServer(featAtts.fill_color) : null);
                 category.setAreaFillStyle(featAtts.fill_pattern);
                 category.setDotShape(featAtts.dot_shape);
                 category.setDotColor(this._formatColorFromServer(featAtts.dot_color));
@@ -245,8 +242,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                     'border_width': m.getAreaLineWidth(),
                     'border_dasharray': m.getAreaLineStyle(),
                     'border_linejoin': m.getAreaLineCorner(),
-                    'border_color': this._prefixColorForServer(m.getAreaLineColor()),
-                    'fill_color': this._prefixColorForServer(m.getAreaFillColor()),
+                    'border_color': typeof m.getAreaLineColor() === 'string' ? this._prefixColorForServer(m.getAreaLineColor()) : null,
+                    'fill_color': typeof m.getAreaFillColor() === 'string' ? this._prefixColorForServer(m.getAreaFillColor()) : null,
                     'fill_pattern': m.getAreaFillStyle(),
                     'dot_color': this._prefixColorForServer(m.getDotColor()),
                     'dot_size': m.getDotSize(),
@@ -452,11 +449,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
                 id = this._parseNumericId(f.fid);
                 place = Oskari.clazz.create('Oskari.mapframework.bundle.myplaces2.model.MyPlace');
                 place.setId(id);
-                place.setName(featAtts.name);
-                place.setDescription(featAtts.place_desc);
-                place.setAttention_text(featAtts.attention_text);
-                place.setLink(featAtts.link);
-                place.setImageLink(featAtts.image_url);
+                place.setName(Oskari.util.sanitize(featAtts.name));
+                place.setDescription(Oskari.util.sanitize(featAtts.place_desc));
+                place.setAttention_text(Oskari.util.sanitize(featAtts.attention_text));
+                place.setLink(Oskari.util.sanitize(featAtts.link));
+                place.setImageLink(Oskari.util.sanitize(featAtts.image_url));
                 place.setCategoryID(featAtts.category_id);
                 place.setCreateDate(featAtts.created);
                 place.setUpdateDate(featAtts.updated);
@@ -675,31 +672,5 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplaces2.service.MyPlacesWFSTSt
          */
         disconnect: function () {
 
-        },
-		
-		/*
-         * @method _fixGetFeatureBug
-         *
-         * Fixes bug in IE11 where OpenLayers create invalid 'GetFeature' request.
-		 * TODO: there is probably better way to solve this.
-		 * Resources:
-		 * http://stackoverflow.com/questions/21255173/malformed-wfs-xmlhttprequest-from-gwt-openlayers-in-ie11
-		 * http://osgeo-org.1560.x6.nabble.com/WFS-and-IE-11-td5090636.html
-		 * 
-         */
-		_fixGetFeatureBug: function() {
-			var _class = OpenLayers.Format.XML;
-			var originalWriteFunction = _class.prototype.write;
-
-			var patchedWriteFunction = function() {
-				var child = originalWriteFunction.apply( this, arguments );
-
-				// NOTE: Remove the rogue namespaces as one block of text.
-				child = child.replace(new RegExp('xmlns:NS\\d+="" NS\\d+:', 'g'), '');
-
-				return child;
 			}
-
-			_class.prototype.write = patchedWriteFunction;
-		}
     });

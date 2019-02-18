@@ -10,6 +10,8 @@ Oskari.registerLocalization(
             "show": "Visa",
             "hide": "Göm",
             "hidden": "Kartlagret är tillfälligt dolt.",
+            "unsupported-projection": "Denna kartlager kan inte visas med den valda kartprojektionen.",
+            "change-projection": "Ändra kartprojektion",
             "out-of-scale": "Data som ingår i detta kartlager kan inte visas på den valda skalnivån.",
             "move-to-scale": "Gå till en lämplig skalnivå.",
             "out-of-content-area": "Detta kartlager saknar innehåll vid dessa koordinater.",
@@ -104,7 +106,13 @@ Oskari.registerLocalization(
                     "boolean_operator_missing": "Den logiska operatören saknas."
                 }
             }
+        },
+        "guidedTour": {
+            "title": "Valda kartlager",
+            "message": "I \"Valda kartlager\"-menyn kan du definiera hur de valda kartlagren visas. Du kan sortera kartlagren genom att dra dem. Du kan också definiera opacitet och för några av kartlagren kan du också välja den fördefinierade stilen. För dataprodukter är det möjligt att visa funktions data i tabellform. Kartlagret kan visas eller döljas.",
+            "openLink": "Visa Valda kartlager",
+            "closeLink": "Göm Valda kartlager",
+            "tileText": "Valda kartlager"
         }
     }
-}
-);
+});

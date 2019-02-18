@@ -8,7 +8,7 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.ToolSelectionHandler',
      * @method create called automatically on construction
      * @static
      *
-     * @param {Oskari.mapframework.sandbox.Sandbox}
+     * @param {Oskari.Sandbox}
      *            sandbox reference to sandbox
      * @param {Oskari.mapframework.mapmodule.ControlsPlugin}
      *            controlsPlugin reference to controlsPlugin
@@ -34,39 +34,49 @@ Oskari.clazz.define('Oskari.mapframework.mapmodule.ToolSelectionHandler',
             var stateHandler;
             var type = null;
             var id = null;
-            if (toolName === 'map_control_tool_prev') {
-                // custom history (TODO: more testing needed + do this with request
-                // instead of findRegisteredModuleInstance)
-                stateHandler = me.sandbox.findRegisteredModuleInstance('StateHandler');
-                if (stateHandler) {
-                    stateHandler.historyMovePrevious();
-                }
-
-            } else if (toolName === 'map_control_tool_next') {
-                // custom history (TODO: more testing needed + do this with request
-                // instead of findRegisteredModuleInstance)
-                stateHandler = me.sandbox.findRegisteredModuleInstance('StateHandler');
-                if (stateHandler) {
-                    stateHandler.historyMoveNext();
-                }
-            } else if (toolName === 'map_control_select_tool') {
-                // clear selected area
-                var slp = me.sandbox.findRegisteredModuleInstance('SketchLayerPlugin');
-                if (slp) {
-                    slp.clearBbox();
-                }
-            } else if (toolName === 'map_control_zoom_tool' && me.controlsPlugin._zoomBoxTool) {
-                me.controlsPlugin._zoomBoxTool.activate();
-            } else if (toolName === 'map_control_measure_tool') {
-                type = 'LineString';
-                id = 'measureline';
-                me.sandbox.postRequestByName('DrawTools.StartDrawingRequest', [id, type, {
-                                   allowMultipleDrawing: 'single'}]);
-            } else if (toolName === 'map_control_measure_area_tool') {
-                type = 'Polygon';
-                id = 'measurearea';
-                me.sandbox.postRequestByName('DrawTools.StartDrawingRequest', [id, type, {
-                                   allowMultipleDrawing: 'single'}]);
+            switch ( toolName ) {
+                case 'map_control_tool_prev':
+                    // custom history (TODO: more testing needed + do this with request
+                    // instead of findRegisteredModuleInstance)
+                    stateHandler = me.sandbox.findRegisteredModuleInstance('StateHandler');
+                    if (stateHandler) {
+                        stateHandler.historyMovePrevious();
+                    }
+                    break;
+                case 'map_control_tool_next':
+                    // custom history (TODO: more testing needed + do this with request
+                    // instead of findRegisteredModuleInstance)
+                    stateHandler = me.sandbox.findRegisteredModuleInstance('StateHandler');
+                    if (stateHandler) {
+                        stateHandler.historyMoveNext();
+                    }
+                    break;
+                case 'map_control_select_tool':
+                    // clear selected area
+                    var slp = me.sandbox.findRegisteredModuleInstance('SketchLayerPlugin');
+                    if (slp) {
+                        slp.clearBbox();
+                    }
+                    break;
+                case 'map_control_zoom_tool':
+                    me.publisherToolbarPlugin.mouseDragZoomInteraction();
+                    break;
+                case 'map_control_measure_tool':
+                    type = 'LineString';
+                    id = 'measureline';
+                    me.sandbox.postRequestByName('DrawTools.StartDrawingRequest', [id, type, {
+                                allowMultipleDrawing: 'single',
+                                showMeasureOnMap: true}]);
+                    break;
+                case 'map_control_measure_area_tool':
+                    type = 'Polygon';
+                    id = 'measurearea';
+                    me.sandbox.postRequestByName('DrawTools.StartDrawingRequest', [id, type, {
+                                allowMultipleDrawing: 'single',
+                                showMeasureOnMap: true}]);
+                    break;
+                default:
+                    break;
             }
         }
     }, {

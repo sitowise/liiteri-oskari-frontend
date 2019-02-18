@@ -3,6 +3,10 @@ Oskari.registerLocalization(
     "lang": "en",
     "key": "DivManazer",
     "value": {
+        "graph": {
+            "noValue": "N/A",
+            "tick": "{value, number}"
+        },
         "buttons": {
             "add": "Add",
             "cancel": "Cancel",
@@ -216,6 +220,7 @@ Oskari.registerLocalization(
                     "labelOr": "or",
                     "labelCustom": "Custom colour (RGB 0-255)"
                 },
+                "lineRemove": "Remove line style and colour",
                 "color": {
                     "label": "Fill colour",
                     "labelOr": "or",
@@ -224,6 +229,7 @@ Oskari.registerLocalization(
                 "fill": {
                     "label": "Fill pattern"
                 },
+                "fillRemove": "Remove fill colour and pattern",
                 "preview": {
                     "label": "Preview"
                 },
@@ -234,6 +240,7 @@ Oskari.registerLocalization(
             }
         },
         "Grid": {
+            "cellValue": "{value, number}",
             "columnSelector": {
                 "title": "Properties",
                 "tooltip": "Show columns"
@@ -245,6 +252,7 @@ Oskari.registerLocalization(
                     "title": "Additional settings",
                     "dataSource": "Data source",
                     "metadata": "Metadata link",
+                    "layerName": "Map layer name",
                     "export_selection": "Export only selected features"
                 },
                 "columns": {
@@ -264,7 +272,75 @@ Oskari.registerLocalization(
                     "tabulator": "Tabulator"
                 }
             }
+        },
+        "FilterDialog": {
+            "title": "Filter Features",
+            "description": "Filter Features at Layer:",
+            "cancelButton": "Cancel",
+            "clearButton": "Clear All",
+            "refreshButton": "Refresh",
+            "addFilter": "Add Filter",
+            "removeFilter": "Remove Filter",
+            "content": {
+                "title": "Geographical Filter"
+            },
+            "bbox": {
+                "on": "Only features visible on the map",
+                "off": "All features"
+            },
+            "clickedFeatures": {
+                "clickedFeaturesLabel": "Only features selected on the map",
+                "filterByGeometryLabel": "Only features filling the selected option:",
+                "filterByGeometryIntersect": "Features intersecting selected features",
+                "filterByGeometryContains": "Features inside selected features"
+            },
+            "values": {
+                "title": "Attribute Filter",
+                "placeholders": {
+                    "case-sensitive": "Filter is case-sensitive.",
+                    "attribute": "Attribute",
+                    "boolean": "Logical operator",
+                    "operator": "Operator",
+                    "attribute-value": "Value"
+                },
+                "info": {
+                    "bboxOff": "Without geographic filter all the features are included in the analysis. Please add an attribute filter or select \"Only features visible on the map\" in the geographic filter.",
+                    "filterByGeometrySelected": "You can filter by attributes only if \"All features\" is selected in the geographic filter above."
+                },
+                "equals": "equals",
+                "like": "is like",
+                "notEquals": "does not equal",
+                "notLike": "is not like",
+                "greaterThan": "is greater than",
+                "lessThan": "is less than",
+                "greaterThanOrEqualTo": "is greater than or equal to",
+                "lessThanOrEqualTo": "is less than or equal to"
+            },
+            "validation": {
+                "title": "Error",
+                "attribute_missing": "The attribute is missing. Please select an attribute and try again.",
+                "operator_missing": "The operator is missing. Please select an operator and try again.",
+                "value_missing": "The value is missing. Please type a value and try again.",
+                "boolean_operator_missing": "The logical operator is missing. Please select a logical operator and try again.",
+                "bbox_selected_with_no_properties": "Without geographic filter all the features are included in the analysis. Please add an attribute filter or select \"Only features visible on the map\" in the geographic filter."
+            },
+            "aggregateAnalysisFilter": {
+                "addAggregateFilter": "Use statistical values",
+                "aggregateValueSelectTitle": "Select Statistical Values",
+                "selectAggregateAnalyse": "Select analysis layer",
+                "selectIndicator": "Select property",
+                "selectReadyButton": "Close",
+                "getAggregateAnalysisFailed": "The statistical values could not be fetched.",
+                "noAggregateAnalysisPopupTitle": "Statistical Values Not Found",
+                "noAggregateAnalysisPopupContent": "The statistical values are not computed for this map layer. You can compute them in the Analysis function."
+            }
+        },
+        "fileInput": {
+                "fileupload": "Drag a file here or",
+                "link":"select by browsing",
+                "uploading":"Loading",
+                "success":"Sucess",
+                "error":"Error!",
         }
     }
-}
-);
+});

@@ -109,16 +109,7 @@ Oskari.clazz.define(
 					this._createUI();
 				}
 
-				// Check cookie 'pti_tour_seen'. Value '1' means that tour 
-				// is not to be started
-				// jQuery cookie plugin: 
-				//   resources/framework/bundle/guidedtour/js/jquery.cookie.js 
-				//   github.com/carhartl/jquery-cookie/
-				
-				//if (jQuery.cookie('pti_tour_seen') != '1') {
-				//me._startGuide();
 				me._getAnnouncements();
-				//}
 			}
         },
 		
@@ -462,37 +453,12 @@ Oskari.clazz.define(
             if (step.appendTourSeenCheckbox) {
                 content.append('<br><br>');
                 var checkboxTemplate =
-                    jQuery('<input type="checkbox" ' + 'name="pti_tour_seen" ' + 'id="pti_tour_seen" ' + 'value="1">');
+                    jQuery('<input type="checkbox" ' + 'name="liiteri_announcements_not_seen" ' + 'id="liiteri_announcements_not_seen" ' + 'value="1">');
                 var checkbox = checkboxTemplate.clone();
                 var labelTemplate =
-                    jQuery('<label for="pti_tour_seen"></label>');
+                    jQuery('<label for="liiteri_announcements_not_seen"></label>');
                 var label = labelTemplate.clone();
                 label.append(this._localization['tourseen'].label);
-                checkbox.bind(
-                    'change',
-                    function () {
-                        if (jQuery(this).attr('checked')) {
-                            // Set cookie not to show guided tour again
-                            jQuery.cookie(
-                                //"pti_tour_seen", "1", {
-                                //    expires: 365
-                                //}
-								"liiteri-announcements-id_" + step.announcementId, "1", {
-                                    expires: 365
-                                }
-                            );
-                        } else {
-                            // Revert to show guided tour on startup
-                            jQuery.cookie(
-                                //"pti_tour_seen", "0", {
-                                //    expires: 1
-                                //}
-								"liiteri-announcements-id_" + step.announcementId, "0", {
-									expires: 1
-                                }
-                            );
-                        }
-                    });
                 content.append(checkbox);
                 content.append('&nbsp;');
                 content.append(label);
@@ -525,8 +491,30 @@ Oskari.clazz.define(
             var me = this,
                 buttons = [],
                 bn,
-                closeTxt = me._localization['button']['close'];
-            var closeBtn = dialog.createCloseButton(closeTxt);
+                closeTxt = me._localization['button']['close'],
+                closeBtn = Oskari.clazz.create('Oskari.userinterface.component.buttons.CloseButton');
+
+            closeBtn.setTitle(closeTxt);
+            closeBtn.setHandler(function () {
+                if (jQuery('#liiteri_announcements_not_seen').prop('checked')) {
+                    // Set cookie not to show the announcement anymore
+                    jQuery.cookie(
+						"liiteri-announcements-id_" + me._guideSteps[me.guideStep].announcementId, "seen", {
+							expires: 365
+						}
+                    );
+                } else {
+                    // Set cookie not to show the announcement during this session (it will be shown only after log in again)
+                    var currentSessionId = jQuery.cookie("JSESSIONID");
+                    jQuery.cookie(
+						"liiteri-announcements-id_" + me._guideSteps[me.guideStep].announcementId, currentSessionId, {
+							expires: 1
+						}
+                    );
+                }
+
+                dialog.close(true);
+            });
             buttons.push(closeBtn);
 
             //if (this.guideStep > 1) {
@@ -654,11 +642,14 @@ Oskari.clazz.define(
 				//	"deletetOnlyPermission": deletetOnlyPermission
 				//},
 				success: function (data) {
-					var dataArray = data.announcements;				
+				    var dataArray = data.announcements;
+				    var currentSessionId = jQuery.cookie("JSESSIONID");
 					me._guideSteps = [];
-					
-					for (var i=0; i < dataArray.length; i++) {
-					    if (jQuery.cookie('liiteri-announcements-id_' + dataArray[i].id) != '1') {
+
+                    //show only those announcements which haven't been checked as 'do not show again' and haven't been shown in current session yet
+					for (var i = 0; i < dataArray.length; i++) {
+					    var announcementCookie = jQuery.cookie('liiteri-announcements-id_' + dataArray[i].id);
+					    if (announcementCookie != 'seen' && announcementCookie != currentSessionId) {
 							me._guideSteps.push({
 								appendTourSeenCheckbox: true,
 	

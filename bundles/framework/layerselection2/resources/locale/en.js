@@ -10,6 +10,8 @@ Oskari.registerLocalization(
             "show": "Show",
             "hide": "Hide",
             "hidden": "The map layer is temporarily hidden.",
+            "unsupported-projection": "Map layer cannot be shown in selected map projection.",
+            "change-projection": "Change map projection",
             "out-of-scale": "The map layer cannot be shown at this scale level.",
             "move-to-scale": "Please move to a suitable map level.",
             "out-of-content-area": "The map layer has no features at the map view area.",
@@ -104,7 +106,13 @@ Oskari.registerLocalization(
                     "boolean_operator_missing": "The logical operator is missing."
                 }
             }
+        },
+        "guidedTour": {
+            "title": "Selected Layers",
+            "message": "In the Selected Layers menu you can find all the open map layers and define settings how to display them on the map view. <br/><br/> Sort map layers by dragging them. <br/> Control map layer opacity. <br/> Select a different style, if it is available. <br/> Open feature data in the table, if data are available. <br/> Show or hide map layers temporarily.",
+            "openLink": "Show Selected Layers",
+            "closeLink": "Hide Selected Layers",
+            "tileText": "Selected Layers"
         }
     }
-}
-);
+});

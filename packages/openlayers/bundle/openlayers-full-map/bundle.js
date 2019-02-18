@@ -27,7 +27,7 @@
         "src": "../../../../libraries/proj4js-1.0.1/proj4js-compressed.js"
       }, {
         "type": "text/javascript",
-        "src": "../../../../libraries/OpenLayers/OpenLayers.2_13_1-full-map.js"
+        "src": "../../../../libraries/OpenLayers/OpenLayers-2.13.1.js"
       }]
     },
     "bundle": {

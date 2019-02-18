@@ -1,6 +1,6 @@
 /**
  * @class Oskari.mapframework.ui.module.common.mapmodule.Plugin
- * 
+ *
  * Interface/protocol definition for map plugins
  */
 Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.LayersLoadingPlugin',
@@ -31,7 +31,7 @@ function() {
     /**
      * @method setMapModule
      * Sets reference to reference to map module
-     * @param {Oskari.mapframework.ui.module.common.MapModule} mapModule 
+     * @param {Oskari.mapframework.ui.module.common.MapModule} mapModule
      */
     setMapModule: function (mapModule) {
         this.mapModule = mapModule;
@@ -71,7 +71,7 @@ function() {
             if (this.eventHandlers.hasOwnProperty(p)) {
                 sandbox.registerForEventByName(this, p);
             }
-        }        
+        }
         this._control = new OpenLayers.Control.OLLayerEventsControl({ subscribers: [this]});
         this._map.addControl(this._control);
     },
@@ -109,12 +109,22 @@ function() {
     },
     /**
      * @property {Object} eventHandlers
-     * Best practices: defining which 
+     * Best practices: defining which
      * events bundle is listening and how bundle reacts to them
      * @static
      */
     eventHandlers : {},
 
+    /**
+     * @public @method hasUI
+     * Override if need be.
+     *
+     *
+     * @return {Boolean} false
+     */
+    hasUI: function () {
+        return false;
+    },
     /**
      * @method onEvent
      * @param {Oskari.mapframework.event.Event} event a Oskari event object

@@ -52,7 +52,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
          * @private @method _initImpl
          * Interface method for the module protocol.
          *
-         * @param {Oskari.mapframework.sandbox.Sandbox} sandbox
+         * @param {Oskari.Sandbox} sandbox
          *          reference to application sandbox
          */
         _initImpl: function () {
@@ -168,15 +168,8 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
 
                 openLayer.opacity = layer.getOpacity() / 100;
                 openLayer.setVisibility(layer.isInScale(sandbox.getMap().getScale()) && layer.isVisible());
-                me.getMap().addLayer(openLayer);
-                if (keepLayerOnTop) {
-                    me.getMap().setLayerIndex(
-                        openLayer,
-                        me.getMap().layers.length
-                    );
-                } else {
-                    me.getMap().setLayerIndex(openLayer, 0);
-                }
+                me._registerLayerEvents(openLayer, _layer);
+                me.getMapModule().addLayer(openLayer, !keepLayerOnTop);
             });
 
             me.getSandbox().printDebug(
@@ -215,16 +208,8 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
                 openLayer.opacity = layer.getOpacity() / 100;
                 openLayer.setVisibility(layer.isInScale(sandbox.getMap().getScale()) && layer.isVisible());
 
-                me.getMap().addLayer(openLayer);
-
-                if (keepLayerOnTop) {
-                    me.getMap().setLayerIndex(
-                        openLayer,
-                        me.getMap().layers.length
-                    );
-                } else {
-                    me.getMap().setLayerIndex(openLayer, 0);
-                }
+            me._registerLayerEvents(openLayer, layer);
+            me.getMap().addLayer(openLayer, !keepLayerOnTop);
 
                 // Set queryable
                 layer.setQueryable(true);
@@ -234,6 +219,28 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.plugin.ArcGisLayerPlugin',
                 layer.getId()
             );
         },
+        /**
+         * Adds event listeners to ol-layers
+         * @param {OL2 layer} layer
+         * @param {Oskari layerconfig} oskariLayer
+         *
+         */
+         _registerLayerEvents: function(layer, oskariLayer){
+           var me = this;
+
+           layer.events.register("tileloadstart", layer, function(){
+             me.getMapModule().loadingState( oskariLayer.getId(), true);
+           });
+
+           layer.events.register("tileloaded", layer, function(){
+             me.getMapModule().loadingState( oskariLayer.getId(), false);
+           });
+
+          layer.events.register("tileerror", layer, function(){
+            me.getMapModule().loadingState( oskariLayer.getId(), null, true );
+
+         });
+         },
 
         /**
          * @method _afterMapLayerRemoveEvent

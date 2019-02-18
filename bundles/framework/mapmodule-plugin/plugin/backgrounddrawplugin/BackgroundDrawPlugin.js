@@ -114,6 +114,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.BackgroundDrawP
 
         this._sandbox = null;
     },
+    /**
+     * @public @method hasUI
+     * Override if need be.
+     *
+     *
+     * @return {Boolean} false
+     */
+    hasUI: function () {
+        return false;
+    },
     /* @method start
      * called from sandbox
      */

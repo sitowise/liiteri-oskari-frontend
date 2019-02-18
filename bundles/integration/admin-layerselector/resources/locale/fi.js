@@ -11,7 +11,7 @@ Oskari.registerLocalization(
         },
         "tile": {
             "title": "A: Karttatasot",
-            "tooltip": "NOT TRANSLATED"
+            "tooltip": ""
         },
         "view": {
             "title": "",
@@ -42,26 +42,9 @@ Oskari.registerLocalization(
             "type-wms": "Karttataso",
             "type-wfs": "Tietotuote"
         },
-        "backendStatus": {
-            "OK": {
-                "tooltip": "Karttataso on saatavilla tällä hetkellä.",
-                "iconClass": "backendstatus-ok"
-            },
-            "DOWN": {
-                "tooltip": "Karttataso ei ole saatavilla tällä hetkellä.",
-                "iconClass": "backendstatus-down"
-            },
-            "MAINTENANCE": {
-                "tooltip": "Karttatason saatavuudessa on tiedossa katkoksia lähipäivinä.",
-                "iconClass": "backendstatus-maintenance"
-            },
-            "UNKNOWN": {
-                "tooltip": "",
-                "iconClass": "backendstatus-ok"
-            }
-        },
         "admin": {
             "capabilitiesLabel": "Capabilities",
+            "capabilitiesRemarks": "(*)  Nykyisen kartan koordinaatisto ei ole tuettuna palvelun capabilities tiedoissa",
             "confirmResourceKeyChange": "Olet muuttanut Karttatason yksilöivä nimi- tai Rajapinnan osoite -kentän arvoja. Tietoturvasyistä karttatason käyttöoikeudet poistetaan ja ne täytyy asettaa uudelleen. Haluatko jatkaa?",
             "confirmDeleteLayerGroup": "Karttatasoryhmä poistetaan. Haluatko jatkaa?",
             "confirmDeleteLayer": "Karttataso poistetaan. Haluatko jatkaa?",
@@ -93,7 +76,7 @@ Oskari.registerLocalization(
             "wms1_1_1": "WMS 1.1.1",
             "wms1_3_0": "WMS 1.3.0",
             "getInfo": "Hae tiedot",
-            "editWfs": "Muokkaa WFS-tiedostoa",
+            "editWfs": "Muokkaa WFS-tietoja",
             "selectClass": "Valitse aihe",
             "selectClassDesc": "Valitse listalta karttatasoa kuvaava aihe.",
             "baseName": "Taustakarttatason nimi",
@@ -111,6 +94,13 @@ Oskari.registerLocalization(
             "downloadServiceUrl": "Latauspalvelun osoite",
             "copyrightInfoDesc": "Tiedontuottaja",
             "copyrightInfo": "Tiedontuottaja",
+            "layerProps": "Karttatason ominaisuudet",
+            "forcedSRS": "Pakotetut projektiot",
+            "forcedSRSInfo": "Pakotetut projektiot verrattuna GetCapabilites-määritykseen",
+            "forcedSRSAdd": "Lisää",
+            "supportedSRS": "Tuetut projektiot",
+            "missingSRS": "Puuttuvat projektiot",
+            "missingInfo": "Sovelluksen oletusnäkymien projektiot, joita taso ei tue",
             "metaInfoIdDesc": "Metatiedon tiedostotunniste on XML-muotoisen metatietotiedoston tiedostotunniste. Se haetaan automaattisesti GetCapabilities-vastausviestistä.",
             "metaInfoId": "Metatiedon tiedosto&shy;tunniste",
             "wmsName": "Karttatason yksilöivä nimi",
@@ -135,6 +125,14 @@ Oskari.registerLocalization(
             "opacityDesc": "Määrittele, mikä on karttatason oletuspeittävyys. Jos peittävyys on 100 %, se peittää kaikki alla olevat tasot. Jos taas peittävyys on 0 %, karttataso ei näy lainkaan. Palvelun käyttäjät voivat sää-tää peittävyyttä ”Valitut karttatasot” -valikon kautta.",
             "style": "Oletustyyli",
             "styleDesc": "Valitse listalta, mitä tyyliä käytetään oletusarvoisesti karttanäkymissä. Käyttäjä voi vaihtaa tyyliä ”Valitut tasot”-valikon kautta. Tyylit määritellään GetCapabilities-vastausviestin wms:Style-elementissä, josta ne haetaan valintalistalle.",
+            "importStyle": "Uusi SLD tyyli",
+            "addNewStyle": "Lisää uuden SLD tyylin sisältö",
+            "sldStyleName": "Tyylin nimi",
+            "sldFileContentDesc": "Kopioi/liitä SLD tiedoston sisältö (xml) tekstikenttään",
+            "sldFileContent": "SLD:n sisältö",
+            "sldStylesFetchError": "SLD stilen kunde inte hämtas",
+            "addSldStyleDesc": "Valitse listalta, mitä tyylejä käytetään ko tasolle",
+            "addSldStyle": "Sld tyylivalinta",
             "minScale": "Pienin mittakaava",
             "minScaleDesc": "Pienin mittakaava haetaan automaattisesti GetCapabilities-vastausviestistä. Se on pienin mittakaava, jolla karttataso näytetään. Anna mittakaava mittakaavalukuna. Jos mittakaavarajoja ei ole määritelty, karttataso näytetään kaikilla mittakaavatasoilla.",
             "minScalePlaceholder": "Pienin mittakaava muodossa 5669294 (1:5669294)",
@@ -143,15 +141,19 @@ Oskari.registerLocalization(
             "maxScalePlaceholder": "Suurin mittakaava muodossa 1 (1:1)",
             "srsName": "Koordinaatti&shy;järjestelmä",
             "srsNamePlaceholder": "Koordinaattijärjestelmä",
-            "legendImage": "Karttaselitteen osoite",
-            "legendImageDesc": "Linkki karttaselitteeseen haetaan automaattisesti GetCapabilities-vastausviestistä.",
-            "legendImagePlaceholder": "Anna karttaselitteen url-osoite.",
+            "legendImage": "Oletuskarttaselite",
+            "legendImageDesc": "URL-osoite karttaselitteelle, joka näytetään tyyleillä, joilla ei palvelussa ole määritelty karttaselitettä",
+            "legendImagePlaceholder": "URL-osoite karttaselitteelle, joka näytetään tyyleillä, joilla ei palvelussa ole määritelty karttaselitettä",
+            "legendUrl": "Tuo oletuskarttaselite tyyliltä",
+            "legendUrlDesc": "Valitse oletuskarttaselite tarvittaessa tason selitteistä",
+            "noServiceLegendUrl": "Ei tuoda tyylien selitteistä",
             "gfiContent": "Kohdetietoikkunan lisäsisältö",
             "gfiResponseType": "GFI-vastaustyyppi",
             "gfiResponseTypeDesc": "Valitse listalta formaatti, jossa kohdetiedot (GFI) haetaan. Mahdolliset formaatit on määritelty WMS-palvelun GetCapabilities-vastausviestissä.",
             "gfiStyle": "GFI-tyyli (XSLT)",
             "gfiStyleDesc": "Määrittele kohdetietojen esitystapa XSLT-muunnoksen avulla.",
             "manualRefresh": "Manuaalinen päivitys",
+            "resolveDepth": "xlink:href haku",
             "matrixSetId": "WMTS-tiilimatrisin tunniste",
             "matrixSetIdDesc": "WMTS-tiilimatriisin tunniste (TileMatrixSet id) on tekninen tunniste. Se haetaan automaattisesti GetCapabilities-vastausviestistä.",
             "matrixSet": "WMTS-tason JSON",
@@ -200,13 +202,41 @@ Oskari.registerLocalization(
             "errorTitle": "Virhe",
             "warningTitle": "Varoitus",
             "successTitle": "Tallennettu",
-            "warning_some_of_the_layers_could_not_be_parsed": "Osaa tasoista ei voitu käsitellä."
+            "warning_some_of_the_layers_could_not_be_parsed": "Osaa tasoista ei voitu käsitellä.",
+            "addDataprovider": "Tiedontuottaja",
+            "groupTitle": "Taustakarttatason nimi",
+            "addDataproviderButton": "Lisää",
+            "maplayerGroups": "Tason ryhmät",
+            "selectMaplayerGroupsButton": "Valitse ryhmät"
         },
         "cancel": "Peruuta",
         "add": "Lisää",
         "save": "Tallenna",
         "delete": "Poista",
-        "ok": "OK"
+        "ok": "OK",
+        "close": "Sulje",
+        "query": "Hae",
+        "recheckTitle": "Päivitä getCapabilities",
+        "recheckAllButton": "Päivitä kaikki getCapabilities",
+        "recheckAll": "Haluatko hakea getCapabilities-määritykset kaikille karttatasoille? Toiminto saattaa kestää useita minuutteja.",
+        "recheckAllSucceeded": "GetCapabilities päivitys onnistui {success, number} tasolle, epäonnistui {fail, number} tasolle. Lataa sivu uudelleen nähdäksesi päivittyneet tiedot.",
+        "recheckSucceeded": "GetCapabilities päivitys onnistui.",
+        "recheckFailReason": "GetCapabilities päivitys epäonnistui: {reason}",
+        "recheckFail": "GetCapabilities päivitys epäonnistui.",
+        "recheckFailTimeout": "GetCapabilities päivitys aikakatkaistiin. Päivitys jatkuu palvelimella.",
+        "successMessages": {
+            "dataproviderSave": {
+                "title": "Tiedontuottajan tallennus onnistui",
+                "message": "Tiedontuottajan tallennus onnistui"
+            }
+        },
+        "groupTitles": {
+            "localePrefix": "Nimi kielellä",
+            "addDataprovider": "Lisää tiedontuottaja",
+            "selectLayerGroups": "Valitse karttatason ryhmät"
+        },
+        "buttons": {
+            "add": "Lisää"
+        }
     }
-}
-);
+});

@@ -32,7 +32,8 @@ Oskari.registerLocalization(
             "type-base": "Bakgrundskarta",
             "type-wms": "Kartlager (WMS, WMTS)",
             "type-wfs": "Dataprodukt (WFS)",
-            "type-wfs-manual": "Data product (WFS) - Layer is drawn on a map via Feature Data or via Refresh button action"
+            "type-wfs-manual": "Data product (WFS) - Layer is drawn on a map via Feature Data or via Refresh button action",
+            "unsupported-srs": "Ostödd kartprojektion"
         },
         "backendStatus": {
             "OK": {
@@ -43,13 +44,21 @@ Oskari.registerLocalization(
                 "tooltip": "Kartlagret är inte tillgängligt just nu.",
                 "iconClass": "backendstatus-down"
             },
+            "ERROR": {
+                "tooltip": "Kartlagret är inte tillgängligt just nu.",
+                "iconClass": "backendstatus-error"
+            },
             "MAINTENANCE": {
                 "tooltip": "Avbrott i kartlagrets tillgänglighet är att vänta inom de närmaste dagarna.",
                 "iconClass": "backendstatus-maintenance"
             },
             "UNKNOWN": {
                 "tooltip": "",
-                "iconClass": "backendstatus-ok"
+                "iconClass": "backendstatus-unknown"
+            },
+            "UNSTABLE": {
+                "tooltip": "",
+                "iconClass": "backendstatus-unstable"
             }
         },
         "buttons": {
@@ -65,14 +74,20 @@ Oskari.registerLocalization(
         "layerFilter": {
             "buttons": {
                 "newest": "Nyaste",
-                "stats": "Vektorlager"
+                "featuredata": "Vektorlager"
             },
             "tooltips": {
                 "newest": "Visa de ## nyaste kartlager",
-                "stats": "Visa endast vektorlager",
+                "featuredata": "Visa endast vektorlager",
                 "remove": "Ta bort filter"
             }
+        },
+        "guidedTour": {
+            "title": "Kartlager",
+            "message": "Från Kartlager-menyn du kan välja kartlagret för att visas på kartan. Du kan lista kartlager med tema eller dataleverantör. Du kan också söka kartlager med kartlagernamn, en dataleverantörs namn eller ett sökord. De valda kartlagren kan kontrolleras i valda lagren-menyn.",
+            "openLink": "Visa kartlagren",
+            "closeLink": "Göm kartlagren",
+            "tileText": "Kartlagren"
         }
     }
-}
-);
+});

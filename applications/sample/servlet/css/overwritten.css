@@ -4,3 +4,123 @@ table td {
 
 table {
   border-top-width: 0px; }
+
+#maptools-container
+{
+	position: relative;
+	height: 100%;
+}
+
+#footer-nav
+{
+	position: absolute;
+	bottom: 0px;
+}
+
+.myplacesimport
+{
+	padding: 0 15px !important;
+}
+
+#myplacesimport-form > .import-file
+{
+	width: 350px;
+}
+
+#myplacesimport-form > .import-file span.group-span-filestyle
+{
+	float: none;
+}
+
+.menuLineDivider
+{
+	border-bottom: 1px solid #00bce9;
+	margin-top: 10px;
+}
+
+#maptools {
+  width: 180px !important;
+  overflow: hidden;
+}
+
+.tool-feature-info {
+	width: 32px;
+	height: 32px;
+	background-image: url('../images/get_feature_info_32x32px.png') !important;
+}
+
+.tool-clear {
+	width: 32px;
+	height: 32px;
+	background-image: url('../images/icons.png') !important;
+	background-repeat: no-repeat !important;
+	background-position: -1469px -32px !important;
+}
+
+.tool-share-link {
+	width: 32px;
+	height: 32px;
+	background-image: url('../images/link.png') !important;
+	background-repeat: no-repeat !important;
+}
+
+.tool-share-facebook {
+	width: 64px;
+	height: 32px;
+	background-image: url('../images/facebook.png') !important;
+	background-repeat: no-repeat !important;
+}
+
+.tool-share-twitter {
+	width: 64px;
+	height: 32px;
+	background-image: url('../images/twitter.png') !important;
+	background-repeat: no-repeat !important;
+}
+
+span.fancytree-empty,
+span.fancytree-vline,
+span.fancytree-expander,
+span.fancytree-icon,
+span.fancytree-checkbox,
+span.fancytree-radio,
+span.fancytree-drag-helper-img,
+#fancytree-drop-marker
+{
+	background-image: url("../images/icons.gif") !important;
+}
+
+
+table.layer-rights-table thead tr {
+    display: table-header-group !important;
+}
+
+form#admin-layerrights-form {
+	margin-left: 16px;
+}
+
+table#workspaces-table, table#shared-workspaces-table, table#userwmslayers-table {
+	margin-left: 0;
+	margin-right: 0;
+	width: 100% !important;
+}
+
+div.admin-layerrights-flyout div.extra-container div.search {
+	float: left;
+}
+
+div.admin-layerrights-flyout div.extra-container div.layerCount {
+	float: right;
+	margin-right: 10px;
+}
+/*Hide get capabilities update buttons*/
+div.admin-layerselector .oskariTabs .admin-layer-recheck-all {
+    display: none !important;
+}
+div.admin-layerselector .add-layer-btn.add-layer-recheck {
+    display: none !important;
+}
+/*Hide userlayers tab*/
+div.oskariTabs .tabsHeader ul li.userlayers {
+    display: none !important;
+}

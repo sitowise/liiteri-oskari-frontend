@@ -11,7 +11,7 @@ Oskari.registerLocalization(
         },
         "tile": {
             "title": "A: Map Layers",
-            "tooltip": "NOT TRANSLATED"
+            "tooltip": ""
         },
         "view": {
             "title": "",
@@ -42,26 +42,9 @@ Oskari.registerLocalization(
             "type-wms": "Map layer",
             "type-wfs": "Data product"
         },
-        "backendStatus": {
-            "OK": {
-                "tooltip": "The map layer is currently available.",
-                "iconClass": "backendstatus-ok"
-            },
-            "DOWN": {
-                "tooltip": "The map layer is currently not available.",
-                "iconClass": "backendstatus-down"
-            },
-            "MAINTENANCE": {
-                "tooltip": "There will be short breaks in the map layer's availability during the next few days.",
-                "iconClass": "backendstatus-maintenance"
-            },
-            "UNKNOWN": {
-                "tooltip": "",
-                "iconClass": "backendstatus-ok"
-            }
-        },
         "admin": {
             "capabilitiesLabel": "Capabilities",
+            "capabilitiesRemarks": "(*)  Current map CRS is not supported in the service capabilities",
             "confirmResourceKeyChange": "You have changed the unique name or  the interface address for this map layer. For security reasons the user rights for this map layer will be removed and you must set them again. Do you want to continue?",
             "confirmDeleteLayerGroup": "The map layer group will be removed. Do you want to continue?",
             "confirmDeleteLayer": "The map layer will be removed. Do you want to continue?",
@@ -111,6 +94,13 @@ Oskari.registerLocalization(
             "downloadServiceUrl": "Download service URL",
             "copyrightInfoDesc": "Copyright info",
             "copyrightInfo" : "Copyright info",
+            "layerProps": "Map Layer Properties",
+            "forcedSRS": "Forced SRS",
+            "forcedSRSInfo": "View projections override compared to capabilities",
+            "forcedSRSAdd": "Add",
+            "supportedSRS": "Supported SRS",
+            "missingSRS": "Missing SRS",
+            "missingInfo": "App default view projections not supported by layer",
             "metaInfoIdDesc": "The metadata file identifier is an XML file identifier. It is fetched automatically from the GetCapabilities response.",
             "metaInfoId": "Metadata file identifier",
             "wmsName": "Unique name",
@@ -135,6 +125,14 @@ Oskari.registerLocalization(
             "opacityDesc": "Define the opacity that is used by default. If the opacity is 100%, it covers up all other layers below the layer. If the opacity is 0%, it is totally transparent. Users can control opacity in the ‘Selected Layers’ menu.",
             "style": "Default Style",
             "styleDesc": "The style options are fetched automatically from the GetCapabilities response. Select a default style from the list. If there are several options, users can select a theme in the ‘Selected Layers’ menu.",
+            "importStyle": "New sld style",
+            "addNewStyle": "Add new SLD style",
+            "sldStyleName": "Style name",
+            "sldFileContentDesc": "Copy/paste SLD file content (xml) to text area",
+            "sldFileContent": "SLD file content",
+            "sldStylesFetchError": "Couldn't get SLD styles",
+            "addSldStyleDesc": "Select styles for the current layer",
+            "addSldStyle": "Sld style selection",
             "minScale": "Minimum scale",
             "minScaleDesc": "The minimum scale is fetched automatically from the GetCapabilities response. The map layer is shown only if the scale is above this limit. Scales are defines as scale denominators. If scale limits are not defined, the map layers is shown at all scale levels.",
             "minScalePlaceholder": "Minimum scale in the form 5669294 (1:5669294)",
@@ -143,15 +141,19 @@ Oskari.registerLocalization(
             "maxScalePlaceholder": "Maximum scale in the form 1 (1:1)",
             "srsName": "Coordinate system",
             "srsNamePlaceholder": "Define a appropriate coordinate system.",
-            "legendImage": "Map legend URL",
-            "legendImageDesc": "The URL address for map legend is fetched automatically from the GetCapabilities response.",
+            "legendImage": "Default legend URL",
+            "legendImageDesc": "The URL address for map layer legend is fetched automatically from the GetCapabilities response.",
             "legendImagePlaceholder": "Give the URL address of the map legend.",
+            "legendUrl": "Legend URL selection",
+            "legendUrlDesc": "Select default legend via legend url selection",
+            "noServiceLegendUrl": "Legend URL is not in wms service legends",
             "gfiContent": "Additional GFI info",
             "gfiResponseType": "GFI response type",
             "gfiResponseTypeDesc": "Select a format for Get Feature Information (GFI). Possible formats are fetched automatically from the GetCapabilities response.",
             "gfiStyle": "GFI style (XSLT)",
             "gfiStyleDesc": "Define a style for Get Feature Information (GFI) as XSLT transformation.",
             "manualRefresh": "Manual refresh",
+            "resolveDepth": "Resolve depth",
             "matrixSetId": "WMTS TileMatrixSet ID",
             "matrixSetIdDesc": "WMTS TileMatrixSet ID is a technical tile matrix identifier. It is fetched automatically from the GetCapabilities response.",
             "matrixSet": "JSON for WMTS layer",
@@ -200,13 +202,41 @@ Oskari.registerLocalization(
             "errorTitle": "Error",
             "warningTitle": "Warning",
             "successTitle": "Saving Succeeded",
-            "warning_some_of_the_layers_could_not_be_parsed": "Some of the map layers could not be parsed."
+            "warning_some_of_the_layers_could_not_be_parsed": "Some of the map layers could not be parsed.",
+            "addDataprovider": "Dataprovider",
+            "groupTitle": "Map layer group name",
+            "addDataproviderButton": "Add",
+            "maplayerGroups": "Maplayer groups",
+            "selectMaplayerGroupsButton": "Select groups"
         },
         "cancel": "Cancel",
         "add": "Add",
         "save": "Save",
         "delete": "Remove",
-        "ok": "OK"
+        "ok": "OK",
+        "close": "Close",
+        "query": "Query",
+        "recheckTitle": "Re-check capabilities",
+        "recheckAllButton": "Re-check all capabilities",
+        "recheckAll": "Do you want to query getCapabilites for all layers? The operation can take many minutes.",
+        "recheckAllSucceeded": "Capabilites update succeeded for {success, number} layers, failed for {fail, number} layers. Reload page to see updated data.",
+        "recheckSucceeded": "Capabilities re-check succeeded.",
+        "recheckFailReason": "Capablities re-check failed: {reason}",
+        "recheckFail": "Capablities re-check failed.",
+        "recheckFailTimeout": "Capabilites check timeout. Process continues to run on server.",
+        "successMessages": {
+            "dataproviderSave": {
+                "title": "Dataprovider saving was successful",
+                "message": "Dataprovider saving was successful"
+            }
+        },
+        "groupTitles": {
+            "localePrefix": "Name in",
+            "addDataprovider": "Add dataprovider",
+            "selectLayerGroups": "Select layer groups"
+        },
+        "buttons": {
+            "add": "Add"
+        }
     }
-}
-);
+});

@@ -89,3 +89,57 @@ textarea#view_description {
 .personaldata .tabsHeader {
     margin-right: 21px;
 }
+
+/*View*/ 
+
+.personalDataViewHeader {
+	background-color: #FFFFFF;
+	padding: 5px 10px; 
+}
+
+.personalDataViewHeader .icon-close {
+	float: right; 
+}
+  
+.personalDataViewContainer .oskariTabs div.tab-content .label{
+	color: #000000;
+}
+
+.personaldata .label{
+	color: #000000;
+}
+
+/*Pop-up*/
+
+.personalDataContainer h3 {
+	display: none;
+}
+
+.personalDataContainer span.glyphicon {
+	font-size: 40px;
+	margin-right: 5px;
+}
+
+.personalDataContainer .linkRow {
+	margin-top: 10px;
+}
+
+.personalDataContainer .linkRow a{
+	cursor: pointer;
+}
+.personalDataContainer {
+    min-width: 250px;
+}
+
+.personalDataContainer .oskari-popover-title {
+    display: none;
+}
+
+.personalDataContainer .oskari-popover-inner {
+    border: none;
+    background: #fff;
+}
+
+.oskari-popover.personalDataContainer.bottom .oskari-arrow {
+    border-bottom: 5px solid #fff;
+}

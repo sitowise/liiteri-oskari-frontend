@@ -1,6 +1,6 @@
 
 (function() {
-	
+
   /**
    * @class Oskari.libraries.bundle.geostats.GeostatsBundle
    *
@@ -19,13 +19,14 @@
     "stop" : function() {
     }
   }, {
-   
+
     "protocol" : [ "Oskari.bundle.Bundle","Oskari.bundle.BundleInstance" ],
     "source" : {
 
       "scripts" : [
         {
           "type" : "text/javascript",
+          "expose" : "geostats",
           "src" : "../../../../libraries/geostats/geostats-0.9.min.js"
         },
 
@@ -36,11 +37,11 @@
       ]
     }
   });
-	/**
-	 * Install this bundle by instantating the Bundle Class
-	 * 
-	 */
-	Oskari.bundle_manager.installBundleClass("geostats",
-			"Oskari.libraries.bundle.geostats.GeostatsBundle");
+    /**
+     * Install this bundle by instantating the Bundle Class
+     *
+     */
+    Oskari.bundle_manager.installBundleClass("geostats",
+            "Oskari.libraries.bundle.geostats.GeostatsBundle");
 
 })();

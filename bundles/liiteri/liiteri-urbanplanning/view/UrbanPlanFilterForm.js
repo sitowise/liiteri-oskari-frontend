@@ -314,7 +314,7 @@
             }
             
             element.val('');
-            element.trigger("liszt:updated");
+            element.trigger("chosen:updated");
 
 
         },
@@ -363,7 +363,7 @@
                 $("#timeFromInput").val('');
                 $("#timeToInput").val('');
                 timeFilterEl.val('');
-                timeFilterEl.trigger("liszt:updated");
+                timeFilterEl.trigger("chosen:updated");
                 $("#timeFromInput").prop('disabled', 'disabled');
                 $("#timeToInput").prop('disabled', 'disabled');
 
@@ -401,7 +401,7 @@
             }
 
             element.val('');
-            element.trigger("liszt:updated");
+            element.trigger("chosen:updated");
         },
 
         _addOptions: function (id, array) {
@@ -473,7 +473,7 @@
             this.container.find("select").val("");
 
             this.container.find("select").change();
-            this.container.find("select").trigger("liszt:updated");
+            this.container.find("select").trigger("chosen:updated");
 
             this.container.find("#timeFromInput").val("");
             this.container.find("#timeToInput").val("");

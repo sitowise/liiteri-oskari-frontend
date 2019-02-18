@@ -4,7 +4,7 @@ Oskari.registerLocalization(
     "key": "admin-layerrights",
     "value": {
         "title": "Layer Rights",
-        "desc": "NOT TRANSLATED",
+        "desc": "",
         "tile": {
             "title": "Map Layer Rights"
         },
@@ -27,7 +27,8 @@ Oskari.registerLocalization(
                 "title": "Error",
                 "message": "Map layer rights could not been updated."
             },
-            "selectValue": "Select value"
+            "selectValue": "Select value",
+            "selectAll": "Select all"
         },
         "save" : "Save",
         "selectRole": "Role",
@@ -39,7 +40,10 @@ Oskari.registerLocalization(
         "info": {
             "title": "Info",
             "success" : "Permissions have been updated"
-        }
+        },
+        // Liiteri specific
+        "searchText": "Search",
+        "resultsCount": "Showing {start} to {end} of {all}",
+        "resultsFiltered": "(filtered from {all} total entries)"
     }
-}
-);
+});

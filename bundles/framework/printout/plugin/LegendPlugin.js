@@ -367,11 +367,7 @@ Oskari.clazz.define(
             me.printAreaLayer.addFeatures([fea_print_area]);
             me.printAreaLayer.redraw();
 
-            // Legend box
-            var feature_bbox = new OpenLayers.Feature.Vector(polygon, attributes);
-            me.headerLayer.addFeatures([feature_bbox]);
-
-            //Title - add title rows
+            //Title - add title rows (title points are added first because of the rendering problem in the printout backend)
             var titles = legend_geom.titles,
                 i;
 
@@ -390,6 +386,11 @@ Oskari.clazz.define(
                 var feature_label = new OpenLayers.Feature.Vector(label_point, pattributes);
                 me.headerLayer.addFeatures([feature_label]);
             }
+
+            // Legend box
+            var feature_bbox = new OpenLayers.Feature.Vector(polygon, attributes);
+            me.headerLayer.addFeatures([feature_bbox]);
+
             me.headerLayer.redraw();
         },
 
@@ -449,8 +450,7 @@ Oskari.clazz.define(
                 // create some attributes for the feature
                 var attributes = {
                     color: mycolor,
-                    name: myempty
-
+                    name: range.range
                 };
 
                 var feature_bbox = new OpenLayers.Feature.Vector(
@@ -459,22 +459,7 @@ Oskari.clazz.define(
                 );
 
                 me.boxesLayer.addFeatures([feature_bbox]);
-
-                //Title
-                point = new OpenLayers.Geometry.Point(x + outerGeomWidth, y - lineHeight);
-
-                // create some attributes for the feature
-                var pattributes = {
-                    name: range.range
-                };
-
-                var feature_label = new OpenLayers.Feature.Vector(
-                    point,
-                    pattributes
-                );
-
-                me.boxesLayer.addFeatures([feature_label]);
-
+                
                 y_LU = y_LU - outerLineHeight;
             }
             me.boxesLayer.redraw();

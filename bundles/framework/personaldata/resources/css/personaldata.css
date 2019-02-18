@@ -46,6 +46,7 @@ div.personaldata a.categoryOp {
   margin: 5px; }
   div.personaldata a.categoryOp div.icon {
     display: inline-block; }
+
 div.personaldata td div.icon {
   display: inline-block;
   vertical-align: top; }
@@ -57,57 +58,44 @@ textarea#view_description {
 /* Temporary hack for too-long tabHeader */
 .personaldata .tabsHeader {
   margin-right: 21px; }
- 
-/*View*/ 
 
+/*View*/
 .personalDataViewHeader {
-	background-color: #FFFFFF;
-	padding: 5px 10px; 
-}
+  background-color: #FFFFFF;
+  padding: 5px 10px; }
 
 .personalDataViewHeader .icon-close {
-	float: right; 
-}
-  
-.personalDataViewContainer .oskariTabs div.tab-content .label{
-	color: #000000;
-}
+  float: right; }
 
-.personaldata .label{
-	color: #000000;
-}
+.personalDataViewContainer .oskariTabs div.tab-content .label {
+  color: #000000; }
+
+.personaldata .label {
+  color: #000000; }
 
 /*Pop-up*/
-
 .personalDataContainer h3 {
-	display: none;
-}
+  display: none; }
 
 .personalDataContainer span.glyphicon {
-	font-size: 40px;
-	margin-right: 5px;
-}
+  font-size: 40px;
+  margin-right: 5px; }
 
 .personalDataContainer .linkRow {
-	margin-top: 10px;
-}
+  margin-top: 10px; }
 
-.personalDataContainer .linkRow a{
-	cursor: pointer;
-}
+.personalDataContainer .linkRow a {
+  cursor: pointer; }
+
 .personalDataContainer {
-    min-width: 250px;
-}
+  min-width: 250px; }
 
 .personalDataContainer .oskari-popover-title {
-    display: none;
-}
+  display: none; }
 
 .personalDataContainer .oskari-popover-inner {
-    border: none;
-    background: #fff;
-}
+  border: none;
+  background: #fff; }
 
 .oskari-popover.personalDataContainer.bottom .oskari-arrow {
-    border-bottom: 5px solid #fff;
-}
+  border-bottom: 5px solid #fff; }

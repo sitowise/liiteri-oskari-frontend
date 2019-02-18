@@ -7,6 +7,7 @@ Oskari.registerLocalization(
         "desc": "Mine data",
         "notLoggedIn": "Mine data inneholder din brukerprofil og dine lagrede forekomster, kart, 'embeddede' kart, indikatorer, analyser og datasett. <a href='/web/nb/login'>Logg inn for å sjekke dine data</a>.",
         "notLoggedInText": "Logg inn for å kontrollere dine data",
+        "register": "Register",
         "tabs": {
             "myviews": {
                 "title": "Mine kart",
@@ -19,7 +20,8 @@ Oskari.registerLocalization(
                     "description": "Beskrivelse",
                     "publish": "Publisert",
                     "edit": "Tilpass",
-                    "delete": "Slett"
+                    "delete": "Slett",
+                    "default": "Standard"
                 },
                 "popup": {
                     "edit": "Tilpass kartet",
@@ -31,7 +33,8 @@ Oskari.registerLocalization(
                     "cancel": "Avbryt",
                     "error_noname": "Skriv navn på kartet",
                     "deletetitle": "Slett kartet",
-                    "deletemsg": "Vil du slette dette kartet?"
+                    "deletemsg": "Vil du slette dette kartet?",
+                    "default": "Standard kart"
                 },
                 "save": {
                     "success": "Kartet er lagret",
@@ -45,7 +48,8 @@ Oskari.registerLocalization(
                     "ok": "OK",
                     "save": "Lagre",
                     "cancel": "Avbryt",
-                    "toolbarsave": "Lagre kartet"
+                    "toolbarsave": "Lagre kartet",
+                    "saveCurrent": "Lagre gjeldende kart"
                 },
                 "error": {
                     "title": "Feil!",
@@ -131,5 +135,4 @@ Oskari.registerLocalization(
             "no": "Nei"
         }
     }
-}
-);
+});

@@ -34,7 +34,7 @@ Oskari.clazz
             'footer' : '<div class="footerContainer">',
             'incorrectLogin': '<div class="alert alert-danger" role="alert">' + this._localization.page1.incorrectLogin + '</div>',
             'externalLoginForm' :
-                + '<div class="form-item">'
+                 '<div class="form-item">'
                 + '<div class="row2">'
                 + '<div class="form-item"><div class="form-tile">'
                 + '<span class="login-ext login-oiva link">'
@@ -148,10 +148,11 @@ Oskari.clazz
             me.sandbox = sandbox;
             // register to sandbox as a module
             sandbox.register(me);
-            if (!sandbox.getUser().isLoggedIn()) {
+            var user = Oskari.user();
+            if (!user.isLoggedIn()) {
               me._startGuide();
             } else {
-              if (typeof sandbox.getUser().getTosAccepted() === 'undefined' || sandbox.getUser().getTosAccepted() === null) {
+              if (typeof user.getTosAccepted() === 'undefined' || user.getTosAccepted() === null) {
                 me._startGuide(1);
               }
             }
@@ -614,7 +615,7 @@ Oskari.clazz
               var label = labelTemplate.clone();
               label.append(this._localization['tourseen'].label);
               checkbox.bind('change', function() {
-                if (jQuery(this).attr('checked')) {
+                if (jQuery(this).prop('checked')) {
                   // Set cookie not to show guided tour again
                   jQuery.cookie("pti_tour_seen", "1", {
                     expires : 365

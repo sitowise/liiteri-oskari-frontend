@@ -17,7 +17,7 @@ Oskari.registerLocalization({
         },
         "page1": {
             "welcomeTitle": "Welcome to Liiteri",
-            "welcomeMessage": "We welcome you to our humble home as you enlighten our abode with your warmth and smiley nature. We are truly grateful to you for your visit here and hope to have memorable moments throughout your visit.",
+            "welcomeMessage": "",
             "oivaLogin": "Kirjaudu Oiva-tunnuksilla &#8250;",
             "idaLogin": "Kirjaudu sopimusasiakkaana &#8250;",
             "oivaRegister": "Hanki Oiva-tunnukset tästä &#8250;",

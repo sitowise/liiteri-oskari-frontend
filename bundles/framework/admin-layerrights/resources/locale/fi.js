@@ -4,7 +4,7 @@ Oskari.registerLocalization(
     "key": "admin-layerrights",
     "value": {
         "title": "Tasojen oikeudet",
-        "desc": "NOT TRANSLATED",
+        "desc": "",
         "tile": {
             "title": "Tasojen oikeudet"
         },
@@ -27,7 +27,8 @@ Oskari.registerLocalization(
                 "title": "Virhe",
                 "message": "Karttatasojen oikeuksia ei voitu päivittää."
             },
-            "selectValue": "Valitse tunniste"
+            "selectValue": "Valitse tunniste",
+            "selectAll": "Valitse kaikki"
         },
         "save" : "Tallenna",
         "selectRole": "Rooli",
@@ -39,7 +40,10 @@ Oskari.registerLocalization(
         "info": {
             "title": "Info",
             "success": "Oikeudet on päivitetty"
-        }
+        },
+        // Liiteri specific
+        "searchText": "Etsi hakutuloksista",
+        "resultsCount": "Näytetään rivit {start} - {end} (yhteensä {all})",
+        "resultsFiltered": "(suodatettu {all} tuloksen joukosta)"
     }
-}
-);
+});

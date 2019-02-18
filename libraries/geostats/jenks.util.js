@@ -29,7 +29,7 @@ function mean(a) {
 /**   array_search in javascript -----------------*/
 
 function array_search(needle, haystack, argStrict) {
-    // Searches the array for a given value and returns the corresponding key if successful 
+    // Searches the array for a given value and returns the corresponding key if successful
     //
     // ex : array_search ('string' ou chiffre, tableau)
     // version: 909.322
@@ -80,9 +80,9 @@ function determineClass(indVal, nbClass, classCounterTab) {
 }
 
 /**  function extractBounds */
-// Role : cette fonction determine, à partir de la liste "compteurClasse" donnée par jenks, 
+// Role : cette fonction determine, à partir de la liste "compteurClasse" donnée par jenks,
 // la liste des bornes des différentes classe
-// Aim : this function set with "classCounter" given by Jenks, the classes list of bounds 
+// Aim : this function set with "classCounter" given by Jenks, the classes list of bounds
 
 function extractBounds(values, classCounter) {
 

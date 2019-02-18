@@ -6,7 +6,8 @@ Oskari.registerLocalization(
         "title": "Mine data",
         "desc": "Mine data",
         "notLoggedIn": "Mine data innehelde brukarprofilen din og dine lagra førekomstar, kart, 'embeddede' kart, indikatorar, analyser og datasett. <a href='/web/nb/login'>Logg inn for å sjekke dine data</a>.",
-        "notLoggedInText": "NOT TRANSLATED",
+        "notLoggedInText": "Logg inn",
+        "register": "Register",
         "tabs": {
             "myviews": {
                 "title": "Mine kart",
@@ -19,7 +20,8 @@ Oskari.registerLocalization(
                     "description": "Framstilling",
                     "publish": "Publisert",
                     "edit": "Tilpass",
-                    "delete": "Slett"
+                    "delete": "Slett",
+                    "default": "Standard"
                 },
                 "popup": {
                     "edit": "Tilpass kartet",
@@ -31,7 +33,8 @@ Oskari.registerLocalization(
                     "cancel": "Avbryt",
                     "error_noname": "Skriv namn på kartet",
                     "deletetitle": "Slett kartet",
-                    "deletemsg": "Vil du slette dette kartet?"
+                    "deletemsg": "Vil du slette dette kartet?",
+                    "default": "Standard visning"
                 },
                 "save": {
                     "success": "Kartet er lagra",
@@ -45,7 +48,8 @@ Oskari.registerLocalization(
                     "ok": "OK",
                     "save": "Lagre",
                     "cancel": "Avbryt",
-                    "toolbarsave": "Lagre kartet"
+                    "toolbarsave": "Lagre kartet",
+                    "saveCurrent": "Lagre gjeldande visning"
                 },
                 "error": {
                     "title": "Feil!",
@@ -123,7 +127,7 @@ Oskari.registerLocalization(
                 "changeInfo": "Oppdater kontoinformasjon",
                 "changePassword": "Endre passord",
                 "removeAccount": "Slett kontoen din",
-                "changeInfoUrl": "NOT TRANSLATED"
+                "changeInfoUrl": "/web/en/profile"
             }
         },
         "button": {
@@ -131,5 +135,4 @@ Oskari.registerLocalization(
             "no": "Nei"
         }
     }
-}
-);
+});
