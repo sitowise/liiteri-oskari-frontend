@@ -19,6 +19,8 @@ Oskari.registerLocalization(
                 "next": "Siirry seuraavaan näkymään."
             },
             "pan": "Siirrä karttaa hiirellä raahaamalla.",
+            "featureinfo": "Näytä kohteen ominaisuustiedot.",
+            "clear": "Poista valinnat.",
             "zoom": "Lähennä karttaa.",
             "measure": {
                 "line": "Mittaa etäisyys pisteiden välillä.",
