@@ -19,6 +19,8 @@ Oskari.registerLocalization(
                 "next": "Move to the next map view."
             },
             "pan": "Pan the map by dragging it with a mouse.",
+            "featureinfo": "Show feature info.",
+            "clear": "Clear selection.",
             "zoom": "Zoom in the map view.",
             "measure": {
                 "line": "Measure a line on the map.",
