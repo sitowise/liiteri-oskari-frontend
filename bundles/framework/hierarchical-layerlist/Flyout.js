@@ -532,34 +532,6 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
             me.selectedTab.updateSelectedLayers();
         },
 
-        addTab: function (item) {
-            var me = this;
-            var tab = null;
-
-            if (item.view.getTabPanel
-                && item.view.setLayerSelected
-                && item.view.updateLayerContent) {
-                tab = item.view;
-            } else {
-                tab = {
-                    getTabPanel: function () {
-                        var tabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
-                        tabPanel.setTitle(item.view.getTitle());
-                        tabPanel.setContent(item.view.container);
-                        return tabPanel;
-                    },
-                    setLayerSelected: function (x, y) {
-                        return;
-                    },
-                    updateLayerContent: function (x, y) {
-                        return;
-                    }
-                }
-            }
-
-            me.layerTabs.push(tab);
-            me.tabContainer.addPanel(tab.getTabPanel(), item.first);
-        },
 
         /**
          * @public @method focus
@@ -712,6 +684,51 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
             if (!notDeactivateThisFilter) {
                 me.activateFilter();
             }
+        },
+
+        /**
+        * Adds a tab to layerTabs; Liiteri custom method used by AddTabRequestHandler
+        * @method  @private addTab
+        * @param {Object} item  request data, object with properties: isFirst - is the tab added as first,
+        *                                                             view: a tab to be added
+        */
+        addTab: function (item) {
+            var me = this;
+            var tab = null;
+
+            if (item.view.getTabPanel
+                && item.view.setLayerSelected
+                && item.view.updateLayerContent) {
+                tab = item.view;
+            } else {
+                tab = {
+                    getTabPanel: function () {
+                        var tabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
+                        tabPanel.setTitle(item.view.getTitle());
+                        tabPanel.setContent(item.view.container);
+                        return tabPanel;
+                    },
+                    setLayerSelected: function (x, y) {
+                        return;
+                    },
+                    updateLayerContent: function (x, y) {
+                        return;
+                    }
+                }
+            }
+
+            me.layerTabs.push(tab);
+            me.tabContainer.addPanel(tab.getTabPanel(), item.first);
+        },
+
+        /**
+        * Selects a tab from layerTabs; Liiteri custom method used by SelectTabRequestHandler
+        * @method  @private selectTab
+        * @param {Object} tab a tab to be selected
+        */
+        selectTab: function (tab) {
+            var me = this;
+            me.tabContainer.select(tab.getTabPanel());
         }
     }, {
 

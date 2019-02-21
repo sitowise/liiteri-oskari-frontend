@@ -1,0 +1,256 @@
+#liiteriLayersTab div.layer-filter {
+    margin: 10px;
+    color: #949494;
+}
+
+#liiteriLayersTab div.header .badge-wrapper {
+    right: 8%;
+    max-width: 50px;
+}
+
+#liiteriLayersTab div.filter {
+    border: 1px solid #a4a4a4;
+    padding: 10px;
+    float: left;
+    cursor: pointer;
+    margin-bottom: 5px;
+    margin-left: -1px;
+}
+
+#liiteriLayersTab div.accordion div.accordion_panel div.content {
+    padding: 0;
+}
+
+#liiteriLayersTab div.layer {
+    padding: 6px 10px 6px 40px;
+    background-color: #ffffff;
+    clear: both;
+    /* Default line height is too high, make it so the text just fits */
+    min-height: 14px;
+    line-height: 14px;
+}
+
+    #liiteriLayersTab div.layer:nth-child(even) {
+        background-color: #f3f3f3;
+    }
+
+    #liiteriLayersTab div.layer input {
+        float: left;
+        margin-right: 5px;
+    }
+
+        #liiteriLayersTab div.layer input[type=checkbox] {
+            margin-top: -2px;
+        }
+
+    #liiteriLayersTab div.layer label.layer-title {
+        /* Let's just imagine this is tabular data... */
+        font-size: 12px;
+    }
+
+    #liiteriLayersTab div.layer div.layer-tools {
+        float: right;
+    }
+
+    #liiteriLayersTab div.layer div.layer-download-service {
+        float: left;
+    }
+
+    #liiteriLayersTab div.layer .layer-title.not-supported {
+        color: #888;
+    }
+
+    #liiteriLayersTab div.layer div.layer-icon {
+        float: left;
+        width: 16px;
+        height: 16px;
+        background-repeat: no-repeat;
+    }
+
+    #liiteriLayersTab div.layer div.layer-info {
+        width: 16px;
+        height: 16px;
+        margin-left: 5px;
+        float: right;
+    }
+
+    #liiteriLayersTab div.layer div.layer-backendstatus-icon {
+        float: left;
+        width: 20px;
+        height: 16px;
+        margin-right: 4px;
+        background-repeat: no-repeat;
+    }
+
+    #liiteriLayersTab div.layer div.layer-not-supported {
+        float: left;
+        margin-right: 4px;
+        background-repeat: no-repeat;
+        margin-top: -2px;
+    }
+
+    #liiteriLayersTab div.layer div.backendstatus-down {
+        height: 20px !important;
+        margin-bottom: 2px;
+        margin-top: -2px;
+        cursor: pointer;
+    }
+
+    #liiteriLayersTab div.layer div.backendstatus-maintenance {
+        height: 20px !important;
+        margin-bottom: 2px;
+        margin-top: -2px;
+        cursor: pointer;
+    }
+
+    #liiteriLayersTab div.layer div.backendstatus-ok {
+        height: 20px !important;
+        margin-bottom: 2px;
+        margin-top: -2px;
+        cursor: pointer;
+    }
+
+    #liiteriLayersTab div.layer div.backendstatus-unknown {
+        height: 20px !important;
+        margin-bottom: 2px;
+        margin-top: -2px;
+    }
+
+    #liiteriLayersTab div.layer div.backendstatus-unstable {
+        height: 20px !important;
+        margin-bottom: 2px;
+        margin-top: -2px;
+    }
+
+#liiteriLayersTab div.layerGroup {
+    background-color: #f3f3f3;
+    border: 1px solid #c0d0d0;
+    margin: 0;
+    padding: 0;
+}
+
+    #liiteriLayersTab div.layerGroup.open {
+        background-color: #FFFFFF;
+    }
+
+    #liiteriLayersTab div.layerGroup div.groupIcon {
+        display: inline-block;
+        margin-left: 12px;
+        vertical-align: middle;
+    }
+
+    #liiteriLayersTab div.layerGroup div.groupIcon {
+        display: inline-block;
+        margin-left: 12px;
+        vertical-align: middle;
+    }
+
+    #liiteriLayersTab div.layerGroup div.groupHeader {
+        display: inline-block;
+        padding: 8px 10px 8px 12px;
+    }
+
+#liiteriLayersTab div.tab-content {
+    padding: 0;
+}
+
+    #liiteriLayersTab div.tab-content div.oskarifield {
+        margin: 10px;
+        position: relative;
+    }
+
+        #liiteriLayersTab div.tab-content div.oskarifield input[type=text] {
+            width: 90%;
+        }
+
+        #liiteriLayersTab div.tab-content div.oskarifield .icon-close {
+            margin-right: -20px;
+        }
+
+        #liiteriLayersTab div.tab-content div.oskarifield .field-description {
+            padding: 3px 0;
+            color: #666;
+        }
+
+            #liiteriLayersTab div.tab-content div.oskarifield .field-description .icon-info {
+                display: inline-block;
+            }
+
+        #liiteriLayersTab div.tab-content div.oskarifield .related-keywords {
+            display: none;
+            overflow: hidden;
+            height: 30px;
+            line-height: 30px;
+        }
+
+            #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keywords-title {
+                box-sizing: border-box;
+                height: 30px;
+                line-height: 30px;
+                color: #000;
+                font-weight: bold;
+                float: left;
+            }
+
+            #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keyword-cont {
+                display: block;
+                box-sizing: border-box;
+                height: 30px;
+                line-height: 30px;
+                padding: 0 10px;
+                color: #0085D1;
+                float: left;
+            }
+
+                #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keyword-cont .keyword {
+                    float: left;
+                    min-width: 91px;
+                }
+
+                #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keyword-cont .type {
+                    background-color: #333438;
+                    border: solid 2px #FFDE00;
+                    color: #FFDE00;
+                    width: 34px;
+                    line-height: 16px;
+                    padding: 3px;
+                    margin: 2px;
+                    float: right;
+                    display: inline-block;
+                    text-align: center;
+                }
+
+            #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .focus {
+                background-color: #333438;
+                color: white;
+            }
+
+#liiteriLayersTab div.actionsContainer {
+    margin: 10px 5px 10px 15px;
+}
+
+    #liiteriLayersTab div.actionsContainer span {
+        margin-right: 20px;
+    }
+
+        #liiteriLayersTab div.actionsContainer span i {
+            margin-right: 5px;
+        }
+
+#liiteriLayersTab .expand-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/expand-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+}
+
+#liiteriLayersTab .collapse-icon {
+    width: 12px;
+    height: 12px;
+    background-image: url(../images/collapse-icon.png);
+    position: relative;
+    top: 1px;
+    display: inline-block;
+}
