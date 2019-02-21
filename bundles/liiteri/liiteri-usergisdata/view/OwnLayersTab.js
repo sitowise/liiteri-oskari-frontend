@@ -10,11 +10,11 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
      * @static
      */
 
-    function (instance, title, dropdownTabPanels) {
+    function (instance, title, subTabPanels) {
 		this.loc = null;
 		this.instance = instance;
 		this.title = title;
-		this.dropdownTabPanels = dropdownTabPanels;
+		this.subTabPanels = subTabPanels;
         this.templates = {
             'spinner': '<span class="spinner-text"></span>',
             'shortDescription': '<div class="field-description"></div>',
@@ -56,7 +56,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
                 oskarifield,
 				i,
 				tabsContainer,
-				dropDownTabPanel,
+				subTabPanel,
 				ownGisDataTab;
 
             me.loc = me.instance.getLocalization("view");
@@ -64,15 +64,15 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
                 'Oskari.userinterface.component.TabPanel');
             me.tabPanel.setTitle(me.title);
 			
-			tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabDropdownContainer', me.loc.noDataInfo);
+			tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer', me.loc.noDataInfo);
 
-			for (i = 0; i < me.dropdownTabPanels.length; i++) {
+			for (i = 0; i < me.subTabPanels.length; i++) {
 			
-				dropDownTabPanel = me.dropdownTabPanels[i];
-				oskarifield = me.getFilterField(dropDownTabPanel).getField();
+				subTabPanel = me.subTabPanels[i];
+				oskarifield = me.getFilterField(subTabPanel).getField();
 				oskarifield.addClass('stretched');
 
-				dropDownTabPanel.getContainer().append(oskarifield);
+				subTabPanel.getContainer().append(oskarifield);
 				oskarifield.find('.spinner-text').hide();
 
 				var buttonsContainer = jQuery('<div class="actionsContainer"></div>');
@@ -83,25 +83,25 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 				buttonsContainer.append(expandButton);
 				buttonsContainer.append(collapseButton);
 
-				dropDownTabPanel.getContainer().append(buttonsContainer);
-				dropDownTabPanel.accordion = Oskari.clazz.create(
+				subTabPanel.getContainer().append(buttonsContainer);
+				subTabPanel.accordion = Oskari.clazz.create(
 					'Oskari.userinterface.component.Accordion');
-				dropDownTabPanel.accordion.insertTo(dropDownTabPanel.getContainer());
+				subTabPanel.accordion.insertTo(subTabPanel.getContainer());
 
 				expandButton.click(function () {
 					var dataId = $(this).attr('data-id');
-					me.dropdownTabPanels[dataId].accordion.panels.forEach(function (p) {
+					me.subTabPanels[dataId].accordion.panels.forEach(function (p) {
 						p.open();
 					});
 				});
 				collapseButton.click(function () {
 					var dataId = $(this).attr('data-id');
-					me.dropdownTabPanels[dataId].accordion.panels.forEach(function (p) {
+					me.subTabPanels[dataId].accordion.panels.forEach(function (p) {
 						p.close();
 					});
 				});
 				
-				tabsContainer.addPanel(dropDownTabPanel);
+				tabsContainer.addPanel(subTabPanel);
 			}
 			
 			ownGisDataTab = jQuery(me.templates.ownGisDataTab);
@@ -166,21 +166,21 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
                 layerWrapper,
                 layerContainer,
                 selectedLayers,
-				dropDownTabPanel;
+				subTabPanel;
 				
-			for (var i = 0; i < me.dropdownTabPanels.length; i++) {
-				if (me.dropdownTabPanels[i].getId() == tabPanelId) {
-					dropDownTabPanel = me.dropdownTabPanels[i];
+			for (var i = 0; i < me.subTabPanels.length; i++) {
+				if (me.subTabPanels[i].getId() == tabPanelId) {
+					subTabPanel = me.subTabPanels[i];
 					break;
 				}
 			}
 			
-			if (dropDownTabPanel) {
+			if (subTabPanel) {
 
-				dropDownTabPanel.accordion.removeAllPanels();
-				dropDownTabPanel.layerContainers = undefined;
-				dropDownTabPanel.layerContainers = {};
-				dropDownTabPanel.layerGroups = groups;
+				subTabPanel.accordion.removeAllPanels();
+				subTabPanel.layerContainers = undefined;
+				subTabPanel.layerContainers = {};
+				subTabPanel.layerGroups = groups;
 				
 				for (i = 0; i < groups.length; i += 1) {
 					group = groups[i];
@@ -240,9 +240,9 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 						layerContainer = layerWrapper.getContainer();
 						groupContainer.append(layerContainer);
 
-						dropDownTabPanel.layerContainers[layer.getId()] = layerWrapper;
+						subTabPanel.layerContainers[layer.getId()] = layerWrapper;
 					}
-					dropDownTabPanel.accordion.addPanel(groupPanel);
+					subTabPanel.accordion.addPanel(groupPanel);
 				}
 
 				selectedLayers = me.instance.sandbox.findAllSelectedMapLayers();
@@ -250,7 +250,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 					me.setLayerSelected(selectedLayers[i].getId(), true);
 				}
 
-				me.filterLayers(dropDownTabPanel.filterField.getValue(), dropDownTabPanel);
+				me.filterLayers(subTabPanel.filterField.getValue(), subTabPanel);
 			}
         },
 
@@ -263,7 +263,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
          * Shows and hides layers by comparing the given keyword to the text in layer containers layer-keywords div.
          * Also checks if all layers in a group is hidden and hides the group as well.
          */
-        filterLayers: function (keyword, dropDownTabPanel, ids) {
+        filterLayers: function (keyword, subTabPanel, ids) {
             var me = this,
                 visibleGroupCount = 0,
                 visibleLayerCount,
@@ -282,20 +282,20 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 			}
 			// show all groups
 			
-			dropDownTabPanel.accordion.showPanels();
+			subTabPanel.accordion.showPanels();
 			if (!keyword || keyword.length === 0) {
-				me._showAllLayers(dropDownTabPanel);
+				me._showAllLayers(subTabPanel);
 				return;
 			}
 			// filter
-			for (i = 0; i < dropDownTabPanel.layerGroups.length; i += 1) {
-				group = dropDownTabPanel.layerGroups[i];
+			for (i = 0; i < subTabPanel.layerGroups.length; i += 1) {
+				group = subTabPanel.layerGroups[i];
 				layers = group.getLayers();
 				visibleLayerCount = 0;
 				for (n = 0; n < layers.length; n += 1) {
 					layer = layers[n];
 					layerId = layer.getId();
-					layerCont = dropDownTabPanel.layerContainers[layerId];
+					layerCont = subTabPanel.layerContainers[layerId];
 					bln = group.matchesKeyword(layerId, keyword);
 					layerCont.setVisible(bln);
 					if (bln) {
@@ -322,9 +322,9 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 			if (visibleGroupCount === 0) {
 				// empty result
 				loc = me.loc.errors;
-				dropDownTabPanel.accordion.showMessage(loc.noResults);
+				subTabPanel.accordion.showMessage(loc.noResults);
 			} else {
-				dropDownTabPanel.accordion.removeMessage();
+				subTabPanel.accordion.removeMessage();
 			}
         },      
 
@@ -350,7 +350,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
             return false;
         },
 
-        _showAllLayers: function (dropDownTabPanel) {
+        _showAllLayers: function (subTabPanel) {
             var i,
                 group,
                 layers,
@@ -359,17 +359,17 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
                 layerId,
                 layerCont;
 				
-			dropDownTabPanel.accordion.removeMessage();
+			subTabPanel.accordion.removeMessage();
 
-			if (dropDownTabPanel.layerGroups) {
-				for (i = 0; i < dropDownTabPanel.layerGroups.length; i += 1) {
-					group = dropDownTabPanel.layerGroups[i];
+			if (subTabPanel.layerGroups) {
+				for (i = 0; i < subTabPanel.layerGroups.length; i += 1) {
+					group = subTabPanel.layerGroups[i];
 					layers = group.getLayers();
 
 					for (n = 0; n < layers.length; n += 1) {
 						layer = layers[n];
 						layerId = layer.getId();
-						layerCont = dropDownTabPanel.layerContainers[layerId];
+						layerCont = subTabPanel.layerContainers[layerId];
 						if (layerCont) {
 							layerCont.setVisible(true);
 							if (n % 2 === 1) {
@@ -387,8 +387,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 			}
         },
         selectAllLayers : function(isSelected, sendEvent) {
-			for (var dropdownTabPanel in this.dropdownTabPanels) {
-				var layerContainers = dropdownTabPanel.layerContainers;
+			for (var subTabPanel in this.subTabPanels) {
+				var layerContainers = subTabPanel.layerContainers;
 				if (layerContainers) {
 					for (var layerId in layerContainers) {
 						var layerCont = layerContainers[layerId];
@@ -400,8 +400,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 			}
         },
         setLayerSelected: function (layerId, isSelected) {
-			for (var dropdownTabPanel in this.dropdownTabPanels) {
-				var layerContainers = dropdownTabPanel.layerContainers;
+			for (var subTabPanel in this.subTabPanels) {
+				var layerContainers = subTabPanel.layerContainers;
 				if (layerContainers) {
 					var layerCont = layerContainers[layerId];
 					if (layerCont) {
@@ -411,8 +411,8 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 			}
         },
         updateLayerContent: function (layerId, layer) {
-			for (var dropdownTabPanel in this.dropdownTabPanels) {
-				var layerContainers = dropdownTabPanel.layerContainers;
+			for (var subTabPanel in this.subTabPanels) {
+				var layerContainers = subTabPanel.layerContainers;
 				if (layerContainers) {
 					var layerCont = layerContainers[layerId];
 					if (layerCont) {
