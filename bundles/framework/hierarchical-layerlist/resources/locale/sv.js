@@ -101,6 +101,7 @@ Oskari.registerLocalization({
         },
         "manyLayersWarningAlready": {
             "text": "Kartan har för närvarande 10 eller flera kartlager. Om du fortsätter kommer det att orsaka prestandaproblem när du ökar kartlagren!"
-        }
+        },
+        "downloadLayer": "Lataa koneelle" //Liiteri custom code
     }
 });

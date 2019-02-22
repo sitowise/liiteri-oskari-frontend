@@ -410,5 +410,8 @@ div.hierarchical-layerlist .hierarchical-layerlist-tree {
     border: 1px solid #c0d0d0 !important; }
   div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-node[aria-level="1"] > div.jstree-wholerow {
     background-color: #f3f3f3 !important; }
-
+div.hierarchical-layerlist span.layer span.layer-download-service { /* Liiteri custom code */
+    float: left;
+    font-weight: normal;
+}
 /*# sourceMappingURL=style.css.map */

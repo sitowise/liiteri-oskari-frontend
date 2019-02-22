@@ -94,6 +94,7 @@ Oskari.registerLocalization({
         },
         "manyLayersWarningAlready": {
             "text": "The map currently has 10 or more map layers. If you continue, increasing the map layers will cause performance problems!"
-        }
+        },
+        "downloadLayer": "Download layer" //Liiteri custom code
     }
 });

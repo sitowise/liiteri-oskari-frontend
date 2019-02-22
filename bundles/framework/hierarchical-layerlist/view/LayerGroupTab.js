@@ -44,9 +44,10 @@ Oskari.clazz.define(
             noSearchResults: jQuery('<div class="hierarchical-layerlist-search-noresults"></div>'),
             layerContainer: jQuery('<span class="layer">' +
                 '<span class="layer-tools">' +
+                '   <span class= "layer-download-service"><a></a></span>' + //Liiteri custom code
                 '   <span class="layer-backendstatus-icon backendstatus-unknown" title=""></span>' +
                 '   <span class="layer-icon"></span>' +
-                '   <span class="layer-info"></span>' +
+                '   <span class="layer-info"></span>' +                
                 '</span>' +
                 '<span class="layer-title"></span>' +
                 '</span>')
@@ -577,6 +578,17 @@ Oskari.clazz.define(
             if (layer.getMetadataIdentifier() || subLmeta) {
                 layerInfo = tools.find('span.layer-info');
                 layerInfo.addClass('icon-info');
+            }
+
+            //Liiteri custom code
+            var downloadService = tools.find('.layer-download-service a');
+            if (layer.getPermission('download') === "download_permission_ok" && layer.getDownloadServiceUrl() != null && layer.getDownloadServiceUrl() != '') {
+                downloadService.attr('href', layer.getDownloadServiceUrl());
+                downloadService.attr('style', 'font-size: 13px; text-decoration: underline');
+                downloadService.attr('target', '_blank');
+                downloadService.text(me.instance.getLocalization('downloadLayer'));
+            } else {
+                downloadService.css("display", "none");
             }
 
             // setup id

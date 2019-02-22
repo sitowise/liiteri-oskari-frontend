@@ -94,6 +94,7 @@ Oskari.registerLocalization({
         },
         "manyLayersWarningAlready": {
             "text": "Kartalla on tällä hetkellä 10 tai enemmän karttasoa. Jos jatkat, saattaa karttatason lisääminen aiheuttaa suorituskykyongelmia!"
-        }
+        },
+        "downloadLayer": "Lataa koneelle" //Liiteri custom code
     }
 });
