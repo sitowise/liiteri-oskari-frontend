@@ -494,6 +494,11 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
                 if (me._currentFilter) {
                     me.activateFilter(me._currentFilter);
                 }
+
+                if (newTab.getId() === "userGisDataTab") {
+                    var request = me.sb.getRequestBuilder('liiteri-usergisdata.SelectCurrentTabRequest')(); //Usun¹c tab z requestu
+                    me.sb.request(me.instance, request);
+                }
             });
             me.tabContainer.insertTo(cel);
             for (i = 0; i < me.layerTabs.length; i += 1) {

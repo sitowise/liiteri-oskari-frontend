@@ -86,6 +86,12 @@ Oskari.registerLocalization({
                 "closeLayerTools": "Sulje tason toiminnot",
                 "zoomToLayerExtent": "Sovita taso karttanäkymään",
                 "can_be_published_map_user": "Karttatason voi julkaista upotetussa kartassa. Viikottainen käyttömäärä voi olla rajoitettu."
+            },
+            "breadcrumbs": { //Liiteri custom code
+                "myplaces": "Omat karttatasot",
+                "analysis": "Omat analyysit",
+                "userlayer": "Omat aineistot",
+                "userwms": "Rajapinta-aineistot"
             }
         },
         "manyLayersWarning": {
@@ -94,7 +100,7 @@ Oskari.registerLocalization({
         },
         "manyLayersWarningAlready": {
             "text": "Kartalla on tällä hetkellä 10 tai enemmän karttasoa. Jos jatkat, saattaa karttatason lisääminen aiheuttaa suorituskykyongelmia!"
-        },
+        },      
         "downloadLayer": "Lataa koneelle" //Liiteri custom code
     }
 });

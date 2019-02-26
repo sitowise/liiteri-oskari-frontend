@@ -93,6 +93,12 @@ Oskari.registerLocalization({
                 "closeLayerTools": "Stäng kartlagerfunktionerna",
                 "zoomToLayerExtent": "Matcha kartlager till kartvisningen",
                 "can_be_published_map_user": "Kartlagret får publiceras i ett inbäddat kartfönster. Antalet användare per vecka kan vara begränsat."
+            },
+            "breadcrumbs": { //Liiteri custom code
+                "myplaces": "Omat karttatasot",
+                "analysis": "Omat analyysit",
+                "userlayer": "Omat aineistot",
+                "userwms": "Rajapinta-aineistot"
             }
         },
         "manyLayersWarning": {
@@ -101,7 +107,7 @@ Oskari.registerLocalization({
         },
         "manyLayersWarningAlready": {
             "text": "Kartan har för närvarande 10 eller flera kartlager. Om du fortsätter kommer det att orsaka prestandaproblem när du ökar kartlagren!"
-        },
+        },      
         "downloadLayer": "Lataa koneelle" //Liiteri custom code
     }
 });

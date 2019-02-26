@@ -9,7 +9,8 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.request.AddT
 /**
  * @method create called automatically on construction
  * @static
- * @param {String} viewname for the view to be saved
+ * @param {Object} view view of the tab to be added
+ * @param Boolean is tab added as a first one
  */
 function (view, first) {
     this._first = !!first;

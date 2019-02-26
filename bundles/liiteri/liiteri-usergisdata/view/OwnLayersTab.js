@@ -10,10 +10,11 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
      * @static
      */
 
-    function (instance, title, subTabPanels) {
+    function (instance, title, subTabPanels, id) {
 		this.loc = null;
 		this.instance = instance;
-		this.title = title;
+        this.title = title;
+        this.id = id,
 		this.subTabPanels = subTabPanels;
         this.templates = {
             'spinner': '<span class="spinner-text"></span>',
@@ -55,7 +56,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
             var me = this,
                 oskarifield,
 				i,
-				tabsContainer,
 				subTabPanel,
 				ownGisDataTab;
 
@@ -63,8 +63,12 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
             me.tabPanel = Oskari.clazz.create(
                 'Oskari.userinterface.component.TabPanel');
             me.tabPanel.setTitle(me.title);
-			
-			tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer', me.loc.noDataInfo);
+            me.tabPanel.setId(me.id);
+
+            me.tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer', me.loc.noDataInfo);
+            me.tabsContainer.addTabChangeListener(function (previousTab, newTab) {
+                me.currentTab = newTab;
+            });
 
 			for (i = 0; i < me.subTabPanels.length; i++) {
 			
@@ -101,11 +105,11 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 					});
 				});
 				
-				tabsContainer.addPanel(subTabPanel);
+                me.tabsContainer.addPanel(subTabPanel);
 			}
 			
 			ownGisDataTab = jQuery(me.templates.ownGisDataTab);
-			tabsContainer.insertTo(ownGisDataTab);
+            me.tabsContainer.insertTo(ownGisDataTab);
 			me.tabPanel.getContainer().append(ownGisDataTab);
 			
         },

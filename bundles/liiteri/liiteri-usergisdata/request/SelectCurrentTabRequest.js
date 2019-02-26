@@ -1,30 +1,25 @@
 /**
- * @class Oskari.mapframework.bundle.hierarchical-layerlist.request.SelectTabRequest
- * Requests tab to be selected
+ * @class Oskari.liiteri.bundle.liiteri-usergisdata.request.SelectCurrentTabRequest
+ * 
  * 
  * Requests are build and sent through Oskari.mapframework.sandbox.Sandbox.
  * Oskari.mapframework.request.Request superclass documents how to send one.
  */
-Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.request.SelectTabRequest',
+Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-usergisdata.request.SelectCurrentTabRequest',
     /**
      * @method create called automatically on construction
      * @static
-     * @param {Object} tab tab to be selected
      */
-    function (tab) {
-        this._tab = tab;
+    function () {
     }, {
         /** @static @property __name request name */
-        __name: "hierarchical-layerlist.SelectTabRequest",
+        __name: "liiteri-usergisdata.SelectCurrentTabRequest",
         /**
          * @method getName
          * @return {String} request name
          */
         getName: function () {
             return this.__name;
-        },
-        getTab: function () {
-            return this._tab;
         }
     }, {
         /**

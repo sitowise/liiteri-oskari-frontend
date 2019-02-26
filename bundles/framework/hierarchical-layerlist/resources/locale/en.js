@@ -86,6 +86,12 @@ Oskari.registerLocalization({
                 "closeLayerTools": "Close layer tools",
                 "zoomToLayerExtent": "Zoom to layer extent",
                 "can_be_published_map_user": "The map layer is publishable in embedded maps. The weekly usage limit may be limited."
+            },
+            "breadcrumbs": { //Liiteri custom code
+                "myplaces": "My map layers",
+                "analysis": "Own analysis",
+                "userlayer": "Own datasets",
+                "userwms": "Rajapinta-aineistot"
             }
         },
         "manyLayersWarning": {
@@ -94,7 +100,7 @@ Oskari.registerLocalization({
         },
         "manyLayersWarningAlready": {
             "text": "The map currently has 10 or more map layers. If you continue, increasing the map layers will cause performance problems!"
-        },
-        "downloadLayer": "Download layer" //Liiteri custom code
+        },     
+        "downloadLayer": "Download layer" //Liiteri custom code     
     }
 });
