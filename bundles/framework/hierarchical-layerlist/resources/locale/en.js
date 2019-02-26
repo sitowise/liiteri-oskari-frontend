@@ -91,7 +91,7 @@ Oskari.registerLocalization({
                 "myplaces": "My map layers",
                 "analysis": "Own analysis",
                 "userlayer": "Own datasets",
-                "userwms": "Rajapinta-aineistot"
+                "userwms": "Interface datasets"
             }
         },
         "manyLayersWarning": {
