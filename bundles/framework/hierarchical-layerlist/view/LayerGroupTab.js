@@ -44,9 +44,9 @@ Oskari.clazz.define(
             noSearchResults: jQuery('<div class="hierarchical-layerlist-search-noresults"></div>'),
             layerContainer: jQuery('<span class="layer">' +
                 '<span class="layer-tools">' +
-                '   <span class= "layer-download-service"><a></a></span>' + //Liiteri custom code
                 '   <span class="layer-backendstatus-icon backendstatus-unknown" title=""></span>' +
                 '   <span class="layer-icon"></span>' +
+                '   <span class="layer-download-link"></span>' + //Liiteri custom code
                 '   <span class="layer-info"></span>' +                
                 '</span>' +
                 '<span class="layer-title"></span>' +
@@ -494,6 +494,15 @@ Oskari.clazz.define(
             ]);
         },
         /**
+         * Open download layer link -> Liiteri custom method
+         * @method  _openDownloadLayerLink
+         * @param   {Object}           layer oskari layer
+         * @private
+         */
+        _openDownloadLayerLink: function (layer) {
+            window.open(layer.getDownloadServiceUrl(), '_blank');
+        },
+        /**
          * Show maplayer backend status
          * @method  _showMapLayerBackendStatus
          * @param   {Object}          layer Oskari layer
@@ -581,14 +590,12 @@ Oskari.clazz.define(
             }
 
             //Liiteri custom code
-            var downloadService = tools.find('.layer-download-service a');
-            if (layer.getPermission('download') === "download_permission_ok" && layer.getDownloadServiceUrl() != null && layer.getDownloadServiceUrl() != '') {
-                downloadService.attr('href', layer.getDownloadServiceUrl());
-                downloadService.attr('style', 'font-size: 13px; text-decoration: underline');
-                downloadService.attr('target', '_blank');
-                downloadService.text(me.instance.getLocalization('downloadLayer'));
-            } else {
-                downloadService.css("display", "none");
+            if (layer.getPermission('download') === "download_permission_ok" &&
+                layer.getDownloadServiceUrl() != null &&
+                layer.getDownloadServiceUrl() != '') {
+                var layerDownloadLink = tools.find('span.layer-download-link');
+                layerDownloadLink.addClass('icon-download-link');
+                layerDownloadLink.attr('title', me.instance.getLocalization('downloadLayer'));
             }
 
             // setup id
@@ -816,6 +823,10 @@ Oskari.clazz.define(
                     // Need open metadata
                     else if (target.hasClass('layer-info')) {
                         me._showLayerMetaData(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
+                    }
+                    // Need open link -> Liiteri custom code
+                    else if (target.hasClass('layer-download-link')) {
+                        me._openDownloadLayerLink(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
                     }
                     // uncheck nodes
                     else if (isChecked) {
