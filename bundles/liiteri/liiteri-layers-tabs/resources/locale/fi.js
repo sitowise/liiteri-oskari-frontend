@@ -1,29 +1,44 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "fi",
-    "key": "hierarchical-layerlist",
+    "key": "liiteri-layers-tabs",
     "value": {
-        "title": "Karttatasot",
-        "desc": "Karttatasot",
+        "title": "Layers tabs",
+        "desc": "",
         "errors": {
+            "title": "Virhe",
             "generic": "Järjestelmässä tapahtui virhe.",
             "loadFailed": "Karttatasojen lataaminen epäonnistui. Päivitä sivu selaimessasi ja valitse karttatasot uudelleen.",
             "noResults": "Hakutuloksia ei löytynyt. Tarkista hakusana ja yritä uudelleen.",
-            "noResultsForKeyword": "Karttatasoja ei löytynyt. Tarkista hakusana ja yritä uudelleen."
+            "noResultsForKeyword": "Karttatasoja ei löytynyt. Tarkista hakusana ja yritä uudelleen.",
+            "minChars": "Antamasi hakusana on liian lyhyt. Hakusanassa on oltava vähintään neljä merkkiä."
         },
         "loading": "Haetaan...",
-
         "filter": {
             "text": "Hae karttatasoja",
+            "keywordsTitle": "Avainsanat",
             "shortDescription": "Hae karttatasoa karttatason nimen, tiedontuottajan nimen tai avainsanan perusteella.",
             "description": "Voit hakea karttatasoa karttatason nimen, tiedontuottajan nimen tai avainsanan perusteella. Voit kirjoittaa nimen kokonaan tai vain osan nimestä. Hakusanassa on oltava vähintään neljä merkkiä.",
-            "allLayers": "Kaikki tasot",
-            "didYouMean": "Tarkoititko:"
+            "inspire": "Inspire karttatasot",
+            "organization": "Tiedontuottajittain",
+            "servicePackage": "Palvelupaketin tasot",
+            "userThemes": "Kaikki tasot",
+            "published": "Käyttäjät",
+            "didYouMean": "Tarkoititko:",
+            "expandAll": "Laajenna kaikki",
+            "collapseAll": "Sulje kaikki"
+        },
+        "published": {
+            "organization": "Julkaistu karttataso",
+            "inspire": "Julkaistu karttataso"
         },
         "tooltip": {
+			"bundle": "Karttatasot",
             "type-base": "Taustakartta",
             "type-wms": "Karttataso",
             "type-wfs": "Tietotuote",
-            "type-wfs-manual": "Päivitä kohdetiedot kartalla klikkaamalla Kohdetiedot- tai Päivitä-painiketta karttanäkymässä."
+            "type-wfs-manual": "Päivitä kohdetiedot kartalla klikkaamalla Kohdetiedot- tai Päivitä-painiketta karttanäkymässä.",
+            "unsupported-srs": "Väärä karttaprojektio"
         },
         "backendStatus": {
             "OK": {
@@ -54,6 +69,13 @@ Oskari.registerLocalization({
         "buttons": {
             "ok": "OK"
         },
+        "types": {
+            "syn": "Synonyymi",
+            "lk": "Lähikäsite",
+            "vk": "Vieruskäsite",
+            "ak": "Alakäsite",
+            "yk": "Yläkäsite"
+        },
         "layerFilter": {
             "buttons": {
                 "newest": "Uusimmat",
@@ -67,40 +89,11 @@ Oskari.registerLocalization({
         },
         "guidedTour": {
             "title": "Karttatasot",
-            "message": "Karttatasot-valikosta löydät kaikki karttapalvelussa saatavilla olevat karttatasot. <br/><br/> Hae karttatasoja karttatason nimen, tiedontuottajan nimen tai avainsanan perusteella. Löydät uusimmat karttatasot, vektoritasot ja julkaistavissa olevat karttatasot valmiiksi määritellyiltä listoilta. <br/><br/>  Avoinna olevat karttatasot voit tarkistaa Valitut tasot -välilehdeltä.",
+            "message": "Karttatasot-valikosta löydät kaikki karttapalvelussa saatavilla olevat karttatasot. <br/><br/> Järjestä karttatasot joko aiheen tai tiedontuottajan mukaan. <br/><br/> Hae karttatasoja karttatason nimen, tiedontuottajan nimen tai avainsanan perusteella. Löydät uusimmat karttatasot, vektoritasot ja julkaistavissa olevat karttatasot valmiiksi määritellyiltä listoilta. <br/><br/>  Avoinna olevat karttatasot voit tarkistaa Valitut tasot -valikosta.",
             "openLink": "Näytä Karttatasot",
             "closeLink": "Piilota Karttatasot",
             "tileText": "Karttatasot"
         },
-        "SelectedLayersTab": {
-            "title": "Valitut tasot",
-            "style": "Tyyli",
-            "show": "Näytä",
-            "hide": "Piilota",
-            "rights": {
-                "can_be_published_map_user": "Julkaistavissa"
-            },
-            "tooltips": {
-                "removeLayer": "Poista taso valituista",
-                "openLayerTools": "Avaa tason toiminnot",
-                "closeLayerTools": "Sulje tason toiminnot",
-                "zoomToLayerExtent": "Sovita taso karttanäkymään",
-                "can_be_published_map_user": "Karttatason voi julkaista upotetussa kartassa. Viikottainen käyttömäärä voi olla rajoitettu."
-            },
-            "breadcrumbs": { //Liiteri custom code
-                "myplaces": "Omat karttatasot",
-                "analysis": "Omat analyysit",
-                "userlayer": "Omat aineistot",
-                "userwms": "Rajapinta-aineistot"
-            }
-        },
-        "manyLayersWarning": {
-            "title": "Huomio!",
-            "text": "Olet lisäämässä kartalle 10 tai enemmän karttasoa. Jos jatkat, saattaa karttatason lisääminen aiheuttaa suorituskykyongelmia!"
-        },
-        "manyLayersWarningAlready": {
-            "text": "Kartalla on tällä hetkellä 10 tai enemmän karttasoa. Jos jatkat, saattaa karttatason lisääminen aiheuttaa suorituskykyongelmia!"
-        },      
-        "downloadLayer": "Lataa koneelle" //Liiteri custom code
+        "downloadLayer": "Lataa koneelle"
     }
 });

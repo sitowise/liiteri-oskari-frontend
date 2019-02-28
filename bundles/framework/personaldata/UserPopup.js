@@ -54,10 +54,6 @@
                 me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('admin-layerrights'), 'toggle']);
             	//me.sandbox.postRequestByName('ShowLayerrightsFlyoutRequest');
             });
-            content.find("#showAdminMapLayersTabAction").click(function () {
-                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('admin-layerselector'), 'toggle']);
-            	//me.sandbox.postRequestByName('ShowAdminLayerselectorFlyoutRequest');
-            });
             content.find("#showCreateMapTabAction").click(function () {
                 me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('Publisher2'), 'toggle']);
             	//me.sandbox.postRequestByName('ShowPublisherFlyoutRequest');
@@ -113,12 +109,9 @@
 	                content.append(announcementsLink);
 
 	                var layerrightsLink = $('<div class="linkRow"><a class="addButton" id="showLayerrightsTabAction">' +  this.locale.layerRights + ' &#8250;</a></div>');
-	                content.append(layerrightsLink);
+                    content.append(layerrightsLink);
 
-	                var adminMapLayersLink = $('<div class="linkRow"><a class="addButton" id="showAdminMapLayersTabAction">' +  this.locale.adminMapLayers + ' &#8250;</a></div>');
-	                content.append(adminMapLayersLink);
-
-	                $("<div>").addClass("menuLineDivider").appendTo(content);
+                    $("<div>").addClass("menuLineDivider").appendTo(content);
                 }
                 var createMapLink = $('<div class="linkRow"><a class="addButton" id="showCreateMapTabAction">' +  this.locale.createMap + ' &#8250;</a></div>');
                 content.append(createMapLink);
@@ -126,7 +119,7 @@
                 var logoutLink = jQuery('<div class="linkRow"><a class="addButton" id="logoutInAction">' +  this.locale.logout + ' &#8250;</a></div>');
                 content.append(logoutLink);
             } else {
-                var loginLink = jQuery('<div class="linkRow"><a class="addButton" id="logInAction">' + this.locale.login + ' &#8250;</a></div>'); //TODO localization
+                var loginLink = jQuery('<div class="linkRow"><a class="addButton" id="logInAction">' + this.locale.login + ' &#8250;</a></div>');
                 content.append(loginLink);
             }
 

@@ -1,27 +1,14 @@
-#ownGisDataTab .layer-tools a {
-    color: black;
-    font-size: 16px;
-    margin: 0 10px;
-    text-decoration: none;
-    float: left;
-}
-
-#ownGisDataTab .layer-tools .layer-expiration {
-    float: left;
-    margin: 0 10px;
-}
-
-#ownGisDataTab div.layer-filter {
+#liiteriLayersTab div.layer-filter {
     margin: 10px;
     color: #949494;
 }
 
-#ownGisDataTab div.header .badge-wrapper {
+#liiteriLayersTab div.header .badge-wrapper {
     right: 8%;
     max-width: 50px;
 }
 
-#ownGisDataTab div.filter {
+#liiteriLayersTab div.filter {
     border: 1px solid #a4a4a4;
     padding: 10px;
     float: left;
@@ -30,11 +17,11 @@
     margin-left: -1px;
 }
 
-#ownGisDataTab div.accordion div.accordion_panel div.content {
+#liiteriLayersTab div.accordion div.accordion_panel div.content {
     padding: 0;
 }
 
-#ownGisDataTab div.layer {
+#liiteriLayersTab div.layer {
     padding: 6px 10px 6px 40px;
     background-color: #ffffff;
     clear: both;
@@ -43,51 +30,51 @@
     line-height: 14px;
 }
 
-    #ownGisDataTab div.layer:nth-child(even) {
+    #liiteriLayersTab div.layer:nth-child(even) {
         background-color: #f3f3f3;
     }
 
-    #ownGisDataTab div.layer input {
+    #liiteriLayersTab div.layer input {
         float: left;
         margin-right: 5px;
     }
 
-        #ownGisDataTab div.layer input[type=checkbox] {
+        #liiteriLayersTab div.layer input[type=checkbox] {
             margin-top: -2px;
         }
 
-    #ownGisDataTab div.layer label.layer-title {
+    #liiteriLayersTab div.layer label.layer-title {
         /* Let's just imagine this is tabular data... */
         font-size: 12px;
     }
 
-    #ownGisDataTab div.layer div.layer-tools {
+    #liiteriLayersTab div.layer div.layer-tools {
         float: right;
     }
 
-    #ownGisDataTab div.layer div.layer-download-service {
+    #liiteriLayersTab div.layer div.layer-download-service {
         float: left;
     }
 
-    #ownGisDataTab div.layer .layer-title.not-supported {
+    #liiteriLayersTab div.layer .layer-title.not-supported {
         color: #888;
     }
 
-    #ownGisDataTab div.layer div.layer-icon {
+    #liiteriLayersTab div.layer div.layer-icon {
         float: left;
         width: 16px;
         height: 16px;
         background-repeat: no-repeat;
     }
 
-    #ownGisDataTab div.layer div.layer-info {
+    #liiteriLayersTab div.layer div.layer-info {
         width: 16px;
         height: 16px;
         margin-left: 5px;
         float: right;
     }
 
-    #ownGisDataTab div.layer div.layer-backendstatus-icon {
+    #liiteriLayersTab div.layer div.layer-backendstatus-icon {
         float: left;
         width: 20px;
         height: 16px;
@@ -95,108 +82,108 @@
         background-repeat: no-repeat;
     }
 
-    #ownGisDataTab div.layer div.layer-not-supported {
+    #liiteriLayersTab div.layer div.layer-not-supported {
         float: left;
         margin-right: 4px;
         background-repeat: no-repeat;
         margin-top: -2px;
     }
 
-    #ownGisDataTab div.layer div.backendstatus-down {
+    #liiteriLayersTab div.layer div.backendstatus-down {
         height: 20px !important;
         margin-bottom: 2px;
         margin-top: -2px;
         cursor: pointer;
     }
 
-    #ownGisDataTab div.layer div.backendstatus-maintenance {
+    #liiteriLayersTab div.layer div.backendstatus-maintenance {
         height: 20px !important;
         margin-bottom: 2px;
         margin-top: -2px;
         cursor: pointer;
     }
 
-    #ownGisDataTab div.layer div.backendstatus-ok {
+    #liiteriLayersTab div.layer div.backendstatus-ok {
         height: 20px !important;
         margin-bottom: 2px;
         margin-top: -2px;
         cursor: pointer;
     }
 
-    #ownGisDataTab div.layer div.backendstatus-unknown {
+    #liiteriLayersTab div.layer div.backendstatus-unknown {
         height: 20px !important;
         margin-bottom: 2px;
         margin-top: -2px;
     }
 
-    #ownGisDataTab div.layer div.backendstatus-unstable {
+    #liiteriLayersTab div.layer div.backendstatus-unstable {
         height: 20px !important;
         margin-bottom: 2px;
         margin-top: -2px;
     }
 
-#ownGisDataTab div.layerGroup {
+#liiteriLayersTab div.layerGroup {
     background-color: #f3f3f3;
     border: 1px solid #c0d0d0;
     margin: 0;
     padding: 0;
 }
 
-    #ownGisDataTab div.layerGroup.open {
+    #liiteriLayersTab div.layerGroup.open {
         background-color: #FFFFFF;
     }
 
-    #ownGisDataTab div.layerGroup div.groupIcon {
+    #liiteriLayersTab div.layerGroup div.groupIcon {
         display: inline-block;
         margin-left: 12px;
         vertical-align: middle;
     }
 
-    #ownGisDataTab div.layerGroup div.groupIcon {
+    #liiteriLayersTab div.layerGroup div.groupIcon {
         display: inline-block;
         margin-left: 12px;
         vertical-align: middle;
     }
 
-    #ownGisDataTab div.layerGroup div.groupHeader {
+    #liiteriLayersTab div.layerGroup div.groupHeader {
         display: inline-block;
         padding: 8px 10px 8px 12px;
     }
 
-#ownGisDataTab div.tab-content {
+#liiteriLayersTab div.tab-content {
     padding: 0;
 }
 
-    #ownGisDataTab div.tab-content div.oskarifield {
+    #liiteriLayersTab div.tab-content div.oskarifield {
         margin: 10px;
         position: relative;
     }
 
-        #ownGisDataTab div.tab-content div.oskarifield input[type=text] {
+        #liiteriLayersTab div.tab-content div.oskarifield input[type=text] {
             width: 90%;
         }
 
-        #ownGisDataTab div.tab-content div.oskarifield .icon-close {
+        #liiteriLayersTab div.tab-content div.oskarifield .icon-close {
             margin-right: -20px;
         }
 
-        #ownGisDataTab div.tab-content div.oskarifield .field-description {
+        #liiteriLayersTab div.tab-content div.oskarifield .field-description {
             padding: 3px 0;
             color: #666;
         }
 
-            #ownGisDataTab div.tab-content div.oskarifield .field-description .icon-info {
+            #liiteriLayersTab div.tab-content div.oskarifield .field-description .icon-info {
                 display: inline-block;
             }
 
-        #ownGisDataTab div.tab-content div.oskarifield .related-keywords {
+        #liiteriLayersTab div.tab-content div.oskarifield .related-keywords {
             display: none;
             overflow: hidden;
             height: 30px;
             line-height: 30px;
         }
 
-            #ownGisDataTab div.tab-content div.oskarifield .related-keywords .keywords-title {
+            #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keywords-title {
                 box-sizing: border-box;
                 height: 30px;
                 line-height: 30px;
@@ -205,7 +192,7 @@
                 float: left;
             }
 
-            #ownGisDataTab div.tab-content div.oskarifield .related-keywords .keyword-cont {
+            #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keyword-cont {
                 display: block;
                 box-sizing: border-box;
                 height: 30px;
@@ -215,12 +202,12 @@
                 float: left;
             }
 
-                #ownGisDataTab div.tab-content div.oskarifield .related-keywords .keyword-cont .keyword {
+                #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keyword-cont .keyword {
                     float: left;
                     min-width: 91px;
                 }
 
-                #ownGisDataTab div.tab-content div.oskarifield .related-keywords .keyword-cont .type {
+                #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .keyword-cont .type {
                     background-color: #333438;
                     border: solid 2px #FFDE00;
                     color: #FFDE00;
@@ -233,24 +220,24 @@
                     text-align: center;
                 }
 
-            #ownGisDataTab div.tab-content div.oskarifield .related-keywords .focus {
+            #liiteriLayersTab div.tab-content div.oskarifield .related-keywords .focus {
                 background-color: #333438;
                 color: white;
             }
 
-#ownGisDataTab div.actionsContainer {
+#liiteriLayersTab div.actionsContainer {
     margin: 10px 5px 10px 15px;
 }
 
-    #ownGisDataTab div.actionsContainer span {
+    #liiteriLayersTab div.actionsContainer span {
         margin-right: 20px;
     }
 
-        #ownGisDataTab div.actionsContainer span i {
+        #liiteriLayersTab div.actionsContainer span i {
             margin-right: 5px;
         }
 
-#ownGisDataTab .expand-icon {
+#liiteriLayersTab .expand-icon {
     width: 12px;
     height: 12px;
     background-image: url(../images/expand-icon.png);
@@ -259,20 +246,11 @@
     display: inline-block;
 }
 
-#ownGisDataTab .collapse-icon {
+#liiteriLayersTab .collapse-icon {
     width: 12px;
     height: 12px;
     background-image: url(../images/collapse-icon.png);
     position: relative;
     top: 1px;
     display: inline-block;
-}
-
-div.layer-accordion {
-    position: absolute;
-    overflow-y: auto;
-    top: 0;
-    bottom: 0;
-    margin-top: 230px;
-    width: 515px;
 }

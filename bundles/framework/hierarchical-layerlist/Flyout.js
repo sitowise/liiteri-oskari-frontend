@@ -486,6 +486,11 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
                 if (me._currentFilter) {
                     me.activateFilter(me._currentFilter);
                 }
+
+                if (newTab.getId() === "userGisDataTab") {
+                    var request = me.sb.getRequestBuilder('liiteri-usergisdata.SelectCurrentTabRequest')(); //Usun¹c tab z requestu
+                    me.sb.request(me.instance, request);
+                }
             });
             me.tabContainer.insertTo(cel);
             for (i = 0; i < me.layerTabs.length; i += 1) {
@@ -522,6 +527,7 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
             var me = this;
             me.selectedTab.updateSelectedLayers();
         },
+
 
         /**
          * @public @method focus
@@ -700,6 +706,16 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
 
             me.layerTabs.push(tab);
             me.tabContainer.addPanel(tab.getTabPanel(), item.first);
+        },
+
+        /**
+        * Selects a tab from layerTabs; Liiteri custom method used by SelectTabRequestHandler
+        * @method  @private selectTab
+        * @param {Object} tab a tab to be selected
+        */
+        selectTab: function (tab) {
+            var me = this;
+            me.tabContainer.select(tab.getTabPanel());
         }
     }, {
 

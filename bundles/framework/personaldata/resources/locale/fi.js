@@ -145,7 +145,6 @@ Oskari.registerLocalization(
     	"groupings": "Ryhmittelyjen hallinta",
     	"announcements": "Ilmoitusten ylläpito",
     	"layerRights": "Karttatasojen oikeudet",
-    	"adminMapLayers": "Karttatasojen hallinta",
     	"createMap": "Julkaise kartta",
     	"logout": "Kirjaudu ulos",
     	"login": "Kirjaudu"

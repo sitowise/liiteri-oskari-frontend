@@ -46,7 +46,8 @@ Oskari.clazz.define(
                 '<span class="layer-tools">' +
                 '   <span class="layer-backendstatus-icon backendstatus-unknown" title=""></span>' +
                 '   <span class="layer-icon"></span>' +
-                '   <span class="layer-info"></span>' +
+                '   <span class="layer-download-link"></span>' + //Liiteri custom code
+                '   <span class="layer-info"></span>' +                
                 '</span>' +
                 '<span class="layer-title"></span>' +
                 '</span>')
@@ -484,6 +485,15 @@ Oskari.clazz.define(
             ]);
         },
         /**
+         * Open download layer link -> Liiteri custom method
+         * @method  _openDownloadLayerLink
+         * @param   {Object}           layer oskari layer
+         * @private
+         */
+        _openDownloadLayerLink: function (layer) {
+            window.open(layer.getDownloadServiceUrl(), '_blank');
+        },
+        /**
          * Show maplayer backend status
          * @method  _showMapLayerBackendStatus
          * @param   {Object}          layer Oskari layer
@@ -562,6 +572,15 @@ Oskari.clazz.define(
             if (layer.getMetadataIdentifier() || subLmeta) {
                 layerInfo = tools.find('span.layer-info');
                 layerInfo.addClass('icon-info');
+            }
+
+            //Liiteri custom code
+            if (layer.getPermission('download') === "download_permission_ok" &&
+                layer.getDownloadServiceUrl() != null &&
+                layer.getDownloadServiceUrl() != '') {
+                var layerDownloadLink = tools.find('span.layer-download-link');
+                layerDownloadLink.addClass('icon-download-link');
+                layerDownloadLink.attr('title', me.instance.getLocalization('downloadLayer'));
             }
 
             // setup id
@@ -781,6 +800,10 @@ Oskari.clazz.define(
                 // Need open metadata
                 else if (target.hasClass('layer-info')) {
                     me._showLayerMetaData(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
+                }
+                // Need open link -> Liiteri custom code
+                else if (target.hasClass('layer-download-link')) {
+                    me._openDownloadLayerLink(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
                 }
                 // uncheck nodes
                 else if (isChecked) {

@@ -144,7 +144,6 @@ Oskari.registerLocalization(
         	"groupings": "Groupings",
         	"announcements": "Announcements",
         	"layerRights": "Layer Rights",
-        	"adminMapLayers": "A: Map Layers",
         	"createMap": "Create Map",
         	"logout": "Logout",
         	"login": "Log in"

@@ -178,6 +178,23 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
      */
     _getBreadcrump: function () {
         var me = this;
+
+        //Liiteri custom code to handle custom tabs layer selection
+        var layerId = me._layer.getId();
+        var splittedLayerId = layerId.toString().split('_');
+        if (splittedLayerId.length > 1) {
+            switch (splittedLayerId[0]) {
+            case 'myplaces':
+                return me.locale.breadcrumbs.myplaces;
+            case 'analysis':
+                return me.locale.breadcrumbs.analysis;
+            case 'userlayer':
+                return me.locale.breadcrumbs.userlayer;
+            case 'userwms':
+                return me.locale.breadcrumbs.userwms;
+            }
+        }
+
         var groups = [];
         var groupId = me.instance._selectedLayerGroupId[me._layer.getId()] || me.sb.findMapLayerFromAllAvailable(me._layer.getId()).getGroups()[0].id;
 
@@ -232,6 +249,11 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
             me._el.find('.icon-remove').on('click', function (evt) {
                 evt.stopPropagation();
                 me.sb.postRequestByName('RemoveMapLayerRequest', [me._layer.getId()]);
+
+                //Liiteri custom code to handle proper subtabs selection in "My layers" tab
+                var request = me.sb.getRequestBuilder('liiteri-usergisdata.SelectLayerRequest')(me._layer.getId()); //MO¿e czy jest visible
+                me.sb.request(me.instance, request);
+
             });
         }
     },

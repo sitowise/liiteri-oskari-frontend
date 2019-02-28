@@ -410,5 +410,20 @@ div.hierarchical-layerlist .hierarchical-layerlist-tree {
     border: 1px solid #c0d0d0 !important; }
   div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-node[aria-level="1"] > div.jstree-wholerow {
     background-color: #f3f3f3 !important; }
-
+div.hierarchical-layerlist span.layer span.layer-download-service { /* Liiteri custom code */
+    float: left;
+    font-weight: normal;
+}
+/*Liiteri custom code*/
+div.hierarchical-layerlist span.layer span.layer-download-link {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    margin-top: 5px;
+    float: left;
+}
+div.hierarchical-layerlist .layer .icon-download-link {
+    display: inline-block;
+    background-image: url("../images/download_arrow.png");
+}
 /*# sourceMappingURL=style.css.map */

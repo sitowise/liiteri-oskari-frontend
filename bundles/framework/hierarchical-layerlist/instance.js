@@ -229,6 +229,10 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Hierarchical
             var addTabRequestHandler = Oskari.clazz.create('Oskari.framework.bundle.hierarchical-layerlist.request.AddTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']);
             sandbox.requestHandler('hierarchical-layerlist.AddTabRequest', addTabRequestHandler);
 
+            //Liiteri custom code
+            var selectTabRequestHandler = Oskari.clazz.create('Oskari.framework.bundle.hierarchical-layerlist.request.SelectTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']);
+            sandbox.addRequestHandler('hierarchical-layerlist.SelectTabRequest', selectTabRequestHandler);
+
             // draw ui
             me.createUi();
 
