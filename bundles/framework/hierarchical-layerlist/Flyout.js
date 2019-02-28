@@ -488,7 +488,7 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
                 }
 
                 if (newTab.getId() === "userGisDataTab") {
-                    var request = me.sb.getRequestBuilder('liiteri-usergisdata.SelectCurrentTabRequest')(); //Usun¹c tab z requestu
+                    var request = me.sb.getRequestBuilder('liiteri-usergisdata.SelectCurrentTabRequest')();
                     me.sb.request(me.instance, request);
                 }
             });
