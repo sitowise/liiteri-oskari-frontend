@@ -70,6 +70,9 @@ function () {
 		},
 		'UserLayers.LayersModified': function (event) {
 		    this.populateUserGisData();
+        },
+		'AfterMapLayerRemoveEvent': function (event) {
+		    this.unselectLayer(event.getMapLayer());
 		}
     },
     /**
@@ -84,7 +87,7 @@ function () {
 			sandbox = Oskari.getSandbox(sandboxName),
 			loc = me.getLocalization(),
 			request,
-			dropdownTabs = [],
+			subTabs = [],
 			myLayersTabPanel,
 			sharedLayersTabPanel;
 
@@ -97,26 +100,29 @@ function () {
 			if (me.eventHandlers.hasOwnProperty(p)) {
 				sandbox.registerForEventByName(me, p);
 			}
-		}
+        }
 
 		//Adding User GIS data tab to Layer Selector
-		myLayersTabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
+        myLayersTabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
 		myLayersTabPanel.setId(me.myLayersTabId);
 		myLayersTabPanel.setTitle(loc.tabs.myLayers);
-		dropdownTabs.push(myLayersTabPanel);
+        subTabs.push(myLayersTabPanel);
 
-		sharedLayersTabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
+        sharedLayersTabPanel = Oskari.clazz.create('Oskari.userinterface.component.TabPanel');
 		sharedLayersTabPanel.setId(me.sharedLayersTabId);
 		sharedLayersTabPanel.setTitle(loc.tabs.sharedLayers);
-		dropdownTabs.push(sharedLayersTabPanel);
+        subTabs.push(sharedLayersTabPanel);
 
-		me.userGisDataTab = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab", me, loc.myLayersTab, dropdownTabs);
+        me.userGisDataTab = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab", me, loc.myLayersTab, subTabs, "userGisDataTab");
 
 		//Is this used?
         //me.populateUserGisData();
 
-        request = me.sandbox.getRequestBuilder('layerselector2.AddTabRequest')(me.userGisDataTab, false);
+        request = me.sandbox.getRequestBuilder('hierarchical-layerlist.AddTabRequest')(me.userGisDataTab, false);
         sandbox.request(me, request);
+
+        var selectCurrentTabRequestHandler = Oskari.clazz.create('Oskari.liiteri.bundle.liiteri-usergisdata.request.SelectCurrentTabRequestHandler', sandbox, this);
+        sandbox.addRequestHandler('liiteri-usergisdata.SelectCurrentTabRequest', selectCurrentTabRequestHandler);
 
 		this._handleSharingUserGisDataLink();
 	},
@@ -139,7 +145,7 @@ function () {
 			me._getUnexpiredUserGisData('own', function(resp) {
 				if (resp) {
 					//My places
-					var groupMyPlaces = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.myPlaces);
+                    var groupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
 
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
@@ -162,7 +168,7 @@ function () {
 					myGroupList.push(groupMyPlaces);
 
 					//Analysis
-					var groupAnalysis = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.analysis);
+                    var groupAnalysis = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.analysis);
 
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
@@ -181,7 +187,7 @@ function () {
 					myGroupList.push(groupAnalysis);
 
 					//Imported my places
-					var groupImported = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.importedData);
+                    var groupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
@@ -199,7 +205,7 @@ function () {
 					myGroupList.push(groupImported);
 
 	                //Own WMS layers
-                    var groupUserLayers = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.userLayers);
+                    var groupUserLayers = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.userLayers);
                     if (mapLayerService) {
                         for (var i = 0; i < resp.length; i++) {
                             if (resp[i].dataType == "USERWMS") {
@@ -221,7 +227,7 @@ function () {
 			me._getUnexpiredUserGisData('shared', function(resp) {
 				if (resp) {
 					//Shared My places
-					var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.myPlaces);
+                    var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
 
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
@@ -243,7 +249,7 @@ function () {
 					sharedGroupList.push(sharedGroupMyPlaces);
 
 					//Shared Analysis
-					var sharedGroupAnalysis = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.analysis);
+                    var sharedGroupAnalysis = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.analysis);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "ANALYSIS") {
@@ -260,7 +266,7 @@ function () {
 					sharedGroupList.push(sharedGroupAnalysis);
 
 					//Shared Imported my places
-					var sharedGroupImported = Oskari.clazz.create("Oskari.mapframework.bundle.layerselector2.model.LayerGroup", loc.importedData);
+                    var sharedGroupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
@@ -402,7 +408,7 @@ function () {
 		d.setTime(d.getTime() + (days*24*60*60*1000));
 		var expires = "expires="+d.toUTCString();
 		document.cookie = paramName + "=" + paramValue + "; " + expires;
-	},
+    },
 
 	_sendRequest: function(url, successCb, errorCb) {
 		jQuery.ajax({
@@ -425,7 +431,26 @@ function () {
 				}
 			}
 		});
-	}
-}, {
+    },
+
+    unselectLayer: function (layer) {
+        var me = this;
+        var layerId = layer.getId();
+
+        for (var i = 0; i < me.userGisDataTab.subTabPanels.length; i++) {
+            var layerToUnselect = me.userGisDataTab.subTabPanels[i].getContainer().find('[layer_id="' + layerId + '"]');
+            if (layerToUnselect) {
+                layerToUnselect.find('input').prop('checked', false);
+                //return; TODO: Check "Minulle jaetut tasot" tab
+            }
+        }
+    },
+
+    selectCurrentTab: function () {
+        var me = this;
+        var currentTab = me.userGisDataTab.currentTab;
+        me.userGisDataTab.tabsContainer.select(currentTab);
+    }
+    }, {
     "extend" : ["Oskari.userinterface.extension.DefaultExtension"]
 });

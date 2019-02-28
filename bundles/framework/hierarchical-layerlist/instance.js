@@ -226,8 +226,13 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Hierarchical
             var reqHandlerAddLayerListFilter = Oskari.clazz.create('Oskari.mapframework.bundle.layerselector2.request.AddLayerListFilterRequestHandler', sandbox, this);
             sandbox.addRequestHandler('AddLayerListFilterRequest', reqHandlerAddLayerListFilter);
 
+            //Liiteri custom code
             var addTabRequestHandler = Oskari.clazz.create('Oskari.framework.bundle.hierarchical-layerlist.request.AddTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']);
             sandbox.addRequestHandler('hierarchical-layerlist.AddTabRequest', addTabRequestHandler);
+
+            //Liiteri custom code
+            var selectTabRequestHandler = Oskari.clazz.create('Oskari.framework.bundle.hierarchical-layerlist.request.SelectTabRequestHandler', sandbox, this.plugins['Oskari.userinterface.Flyout']);
+            sandbox.addRequestHandler('hierarchical-layerlist.SelectTabRequest', selectTabRequestHandler);
 
             // draw ui
             me.createUi();

@@ -1,29 +1,44 @@
-Oskari.registerLocalization({
+Oskari.registerLocalization(
+{
     "lang": "en",
-    "key": "hierarchical-layerlist",
+    "key": "liiteri-layers-tabs",
     "value": {
-        "title": "Map Layers",
+        "title": "Layers tabs",
         "desc": "",
         "errors": {
+            "title": "Error",
             "generic": "The system error occurred.",
             "loadFailed": "The map layers could not be loaded. Reload the webpage in your browser and select map layers again.",
             "noResults": "No search results could be found. Please check the search term.",
-            "noResultsForKeyword": "No map layers could be found. Please check the search term."
+            "noResultsForKeyword": "No map layers could be found. Please check the search term.",
+            "minChars": "The search term is too short. Type at least four characters."
         },
         "loading": "Searching...",
-
         "filter": {
             "text": "Search map layers.",
+            "keywordsTitle": "Keywords",
             "shortDescription": "Search map layers by map layer name, data producer name or keyword.",
             "description": "Search map layers by map layer name, data producer name or keyword. You can type a whole term or a part of it. The search term must be at least four characters long.",
-            "allLayers": "All layers",
-            "didYouMean": "Did you mean:"
+            "inspire": "By Theme",
+            "organization": "By Data Provider",
+            "servicePackage": "Service Package",
+            "userThemes" : "User themes",
+            "published": "Users",
+            "didYouMean": "Did you mean:",
+            "expandAll": "Expand all",
+            "collapseAll" : "Collapse all"
+        },
+        "published": {
+            "organization": "Published map layer",
+            "inspire": "Published map layer"
         },
         "tooltip": {
+			"bundle": "Map Layers",
             "type-base": "Background map",
             "type-wms": "Map layer (WMS, WMTS)",
             "type-wfs": "Data product (WFS)",
-            "type-wfs-manual": "Refresh feature data by clicking 'Feature Data' or 'Refresh' button in the map window."
+            "type-wfs-manual": "Refresh feature data by clicking 'Feature Data' or 'Refresh' button in the map window.",
+            "unsupported-srs": "Unsupported map projection"
         },
         "backendStatus": {
             "OK": {
@@ -54,6 +69,13 @@ Oskari.registerLocalization({
         "buttons": {
             "ok": "OK"
         },
+        "types": {
+            "syn": "Synonym",
+            "lk": "Related concept",
+            "vk": "Coordinate concept",
+            "ak": "Subordinate concept",
+            "yk": "Superordinate concept"
+        },
         "layerFilter": {
             "buttons": {
                 "newest": "Newest",
@@ -67,40 +89,11 @@ Oskari.registerLocalization({
         },
         "guidedTour": {
             "title": "Map layers",
-            "message": "In the Map Layers menu you can find all the map layers in the map service. <br/><br/> Search map layers by a map layer name, a data provider name or a keyword. Newest map layers, vector layers and publishable layers you can find in pre-defined lists.<br/><br/> Open map layers you can check in the Selected Layers tab.",
+            "message": "In the Map Layers menu you can find all the map layers in the map service. <br/><br/> Sort map layers by theme or data provider. <br/><br/> Search map layers by a map layer name, a data provider name or a keyword. Newest map layers, vector layers and publishable layers you can find in pre-defined lists.<br/><br/> Open map layers you can check in the Selected Layers menu.",
             "openLink": "Show Map Layers",
             "closeLink": "Hide Map Layers",
             "tileText": "Map layers"
         },
-        "SelectedLayersTab": {
-            "title": "Selected layers",
-            "style": "Style",
-            "show": "Show",
-            "hide": "Hide",
-            "rights": {
-                "can_be_published_map_user": "Publication permitted"
-            },
-            "tooltips": {
-                "removeLayer": "Remove layer for selected",
-                "openLayerTools": "Open layer tools",
-                "closeLayerTools": "Close layer tools",
-                "zoomToLayerExtent": "Zoom to layer extent",
-                "can_be_published_map_user": "The map layer is publishable in embedded maps. The weekly usage limit may be limited."
-            },
-            "breadcrumbs": { //Liiteri custom code
-                "myplaces": "My map layers",
-                "analysis": "Own analysis",
-                "userlayer": "Own datasets",
-                "userwms": "Interface datasets"
-            }
-        },
-        "manyLayersWarning": {
-            "title": "Attention!",
-            "text": "You are adding 10 or more layers to the map. If you continue, increasing the map layers will cause performance problems!"
-        },
-        "manyLayersWarningAlready": {
-            "text": "The map currently has 10 or more map layers. If you continue, increasing the map layers will cause performance problems!"
-        },     
-        "downloadLayer": "Download layer" //Liiteri custom code     
+        "downloadLayer": "Download layer"
     }
 });

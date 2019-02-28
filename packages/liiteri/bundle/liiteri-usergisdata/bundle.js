@@ -51,7 +51,13 @@ function() {
 		}, {
             "type" : "text/javascript",
             "src" : "../../../../bundles/liiteri/liiteri-usergisdata/model/LayerGroup.js"
-		}, {
+        }, {
+            "type": "text/javascript",
+            "src": "../../../../bundles/liiteri/liiteri-usergisdata/request/SelectCurrentTabRequest.js"
+        }, {
+            "type": "text/javascript",
+             "src": "../../../../bundles/liiteri/liiteri-usergisdata/request/SelectCurrentTabRequestHandler.js"
+        }, {
             "type": "text/css",
             "src": "../../../../bundles/liiteri/liiteri-usergisdata/resources/css/style.css"
         }],
