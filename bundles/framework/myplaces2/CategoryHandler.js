@@ -197,7 +197,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
          */
         _getMapLayerJson: function (categoryModel) {
             var baseJson = this._getMapLayerJsonBase();
-            baseJson.wmsUrl = this.instance.conf.wmsUrl + categoryModel.getId() + "&";
+            baseJson.wmsUrl = "/oskari-map/action?action_route=MyPlacesTile&myCat=" + categoryModel.getId() + "&";
+            //baseJson.wmsUrl = this.instance.conf.wmsUrl + categoryModel.getId() + "&";
             baseJson.name = categoryModel.getName();
             baseJson.id = this._getMapLayerId(categoryModel.getId());
             if (categoryModel.isPublic()) {
