@@ -177,7 +177,7 @@ function (instance) {
 			if (!this.isTheme) {
 				children.push(me._handleServicePackageTreeData([]));
 			} else {
-				children = [{title: 'uusi teema', isFolder: true, nodeType: 'roottheme', children: [], themeName: 'uusi teema', themeType: 'map_layers', activate: true, focus: true/*, icon: false*/}]; //TODO localization
+                children = [{title: 'uusi teema', isFolder: true, nodeType: 'roottheme', children: [], themeName: 'uusi teema', themeType: 'statistics', activate: true, focus: true/*, icon: false*/}]; //TODO localization
 			}
 		}
 		
@@ -295,7 +295,7 @@ function (instance) {
 				$('#themes').find('select[name=themetype]').val(node.data.themeType);
 				if ((me.isTheme && node.data.nodeType == 'roottheme' && (!node.getChildren() || node.getChildren().length == 0)) ||
 					(!me.isTheme && node.parent.data.nodeType == 'root' && (!node.getChildren() || node.getChildren().length == 0))) {
-					$('#themes').find('select[name=themetype]').prop('disabled', false);
+					//$('#themes').find('select[name=themetype]').prop('disabled', false);
 				} else {
 					$('#themes').find('select[name=themetype]').prop('disabled', 'disabled');
 				}
@@ -994,7 +994,7 @@ function (instance) {
 		themeMetadataContainer.append(themeNameField.getField());
 		
 		//Theme type			
-		var themeTypeField = jQuery('<div class="oskarifield"><label for="themetype" class="metadataFieldTitle">' + 'Teeman tyyppi' + '</label><select name="themetype"></select></div>'); //TODO localization
+		var themeTypeField = jQuery('<div class="oskarifield"><label for="themetype" class="metadataFieldTitle">' + 'Teeman tyyppi' + '</label><select name="themetype" disabled></select></div>'); //TODO localization
 		var themeTypeSelection = themeTypeField.find('select[name=themetype]');
 
 		var themeTypeOptions = [

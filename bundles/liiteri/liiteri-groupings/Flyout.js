@@ -127,11 +127,11 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
 			me._showGroupingList(content);
 			
 			//Button for creating packages
-			var createPackageButton = jQuery('<a class=""><span class="glyphicon glyphicon-tasks"></span>' + me.loc.CreateNewServicePackage + '</a>');
-			createPackageButton.click(function(){
-				var layers = me.instance.getLayersWithoutPublishRights();
-                me.instance.showCustomView(true, layers);
-			});
+			//var createPackageButton = jQuery('<a class=""><span class="glyphicon glyphicon-tasks"></span>' + me.loc.CreateNewServicePackage + '</a>');
+			//createPackageButton.click(function(){
+			//	var layers = me.instance.getLayersWithoutPublishRights();
+                  //me.instance.showCustomView(true, layers);
+			//});
 			
 			//Button for creating themes
 			var createThemeButton = jQuery('<a class=""><span class="glyphicon glyphicon-tasks"></span>' + me.loc.CreateNewTheme + '</a>');
@@ -140,7 +140,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
                 me.instance.showCustomView(true, layers, null, true);
 			});
 			
-			content.find('div.buttons').append(createPackageButton);
+			//content.find('div.buttons').append(createPackageButton);
 			content.find('div.buttons').append(createThemeButton);
         },
 		
@@ -227,7 +227,8 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
                     message = me.loc.noData;
                 } else {
                     message = me.loc.linkCopied;
-                    var url = window.location.protocol + '//' + window.location.host + '/?service_package=' + data.id;
+                    //DO NOT COMMIT!
+				    var url = window.location.protocol + '//' + window.location.host + '/oskari-map/?service_package=' + data.id;
                     // From http://www.jomendez.com/2017/01/25/copy-clipboard-using-javascript/
                     if (window.clipboardData && window.clipboardData.setData) { // IE
                         clipboardData.setData('Text', text);
