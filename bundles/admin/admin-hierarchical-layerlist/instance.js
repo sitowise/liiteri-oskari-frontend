@@ -36,13 +36,13 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundleInstan
                 tooltip: me.locale('tooltips.addMainGroup')
             });
 
-            // Add update all capabilities tool
-            me.service.addMainTool('update-capabilities', function(tool) {
-                me._recheckAllCapabilities(tool);
-            }, {
-                cls: 'update-capabilities',
-                tooltip: me.locale('recheckAllButton')
-            });
+            // Add update all capabilities tool -> Hidden in Liiteri
+            //me.service.addMainTool('update-capabilities', function(tool) {
+                //me._recheckAllCapabilities(tool);
+            //}, {
+               // cls: 'update-capabilities',
+               // tooltip: me.locale('recheckAllButton')
+            //});
 
         },
         /**

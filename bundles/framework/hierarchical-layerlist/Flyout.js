@@ -509,7 +509,7 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.Flyout',
 
             // Add other tabs
             me.selectedTab = Oskari.clazz.create('Oskari.framework.bundle.hierarchical-layerlist.view.SelectedLayersTab', me.instance);
-            me.tabContainer.addPanel(me.selectedTab.getTabPanel());
+            me.tabContainer.addPanel(me.selectedTab.getTabPanel(), true); //different tab order in Liiteri
 
             me.tabContainer.addTabChangeListener(
                 function(previousTab, newTab) {
