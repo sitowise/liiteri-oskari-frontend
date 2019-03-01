@@ -87,6 +87,7 @@ Oskari.clazz.define(
                 'Oskari.userinterface.component.TabPanel');
 
             me.tabPanel.setTitle(me.title, me.id);
+            me.tabPanel.setPriority(1);
 
             liiteriLayersTab = jQuery(me.templates.liiteriLayersTab);
 

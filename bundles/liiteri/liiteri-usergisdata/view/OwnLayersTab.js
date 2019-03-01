@@ -64,6 +64,7 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
                 'Oskari.userinterface.component.TabPanel');
             me.tabPanel.setTitle(me.title);
             me.tabPanel.setId(me.id);
+            me.tabPanel.setPriority(2);
 
             me.tabsContainer = Oskari.clazz.create('Oskari.userinterface.component.TabContainer', me.loc.noDataInfo);
             me.tabsContainer.addTabChangeListener(function (previousTab, newTab) {
