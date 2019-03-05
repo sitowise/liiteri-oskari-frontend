@@ -1,5 +1,5 @@
 .hierarchical-layerlist-flyout .oskari-flyoutcontentcontainer {
-  max-height: none; }
+  max-height: calc(100vh - 57px); } /* Liiteri custom setting for correct displaying lists in custom tabs*/
 
 div.hierarchical-layerlist div.hierarchical-layerlist-search-noresults {
   padding: 10px; }
