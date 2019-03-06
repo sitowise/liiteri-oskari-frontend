@@ -868,9 +868,9 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
             var allLayerGroups = me.getAllLayerGroups();
             var filteredLayers = me.getFilteredLayers(filterId);
 
-            var hasFilteredLayer = function(groupLayer) {
+            var hasFilteredLayer = function (layerId) {
                 var layers = filteredLayers.filter(function(l) {
-                    return groupLayer.getId() === l.getId();
+                    return layerId === l.getId();
                 });
                 return layers.length > 0;
             };
@@ -880,12 +880,14 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
 
                 groups.forEach(function (group) {
                     var filteredLayers = [];
-                    var filteredLayerModels = [];
 
-                    group.getLayers().forEach(function (mapLayer) {
-                        if (hasFilteredLayer(mapLayer)) {
-                            filteredLayers.push(mapLayer.getId());
-                            filteredLayerModels.push(mapLayer);
+                    group.getLayerIdList().forEach(function (mapLayerId) {
+                        if (hasFilteredLayer(mapLayerId)) {
+                            let layer = me.findMapLayer(mapLayerId);
+                            filteredLayers.push({
+                                id: layer.getId(),
+                                orderNumber: layer.getOrderNumber()
+                            });
                         }
                     });
 
@@ -898,7 +900,6 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                         groups: getRecursiveFilteredGroups(group.getGroups())
                     };
                     var groupModel = Oskari.clazz.create('Oskari.mapframework.domain.MaplayerGroup', json);
-                    groupModel.setLayers(filteredLayerModels);
                     filteredGroups.push(groupModel);
                 });
 
