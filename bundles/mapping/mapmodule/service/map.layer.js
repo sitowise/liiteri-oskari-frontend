@@ -883,7 +883,7 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
 
                     group.getLayerIdList().forEach(function (mapLayerId) {
                         if (hasFilteredLayer(mapLayerId)) {
-                            let layer = me.findMapLayer(mapLayerId);
+                            var layer = me.findMapLayer(mapLayerId);
                             filteredLayers.push({
                                 id: layer.getId(),
                                 orderNumber: layer.getOrderNumber()
