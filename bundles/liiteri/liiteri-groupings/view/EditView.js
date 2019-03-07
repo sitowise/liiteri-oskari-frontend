@@ -1141,7 +1141,7 @@ function (instance) {
             });
 		    
 		}
-		me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetGroupings',
+        me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetThemeGroupings',
 			// success callback
 			function (dataArray) {
 		        me.groupingsData = dataArray;
