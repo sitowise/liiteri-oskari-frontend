@@ -227,8 +227,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-groupings.Flyout',
                     message = me.loc.noData;
                 } else {
                     message = me.loc.linkCopied;
-                    //DO NOT COMMIT!
-				    var url = window.location.protocol + '//' + window.location.host + '/oskari-map/?service_package=' + data.id;
+				    var url = window.location.protocol + '//' + window.location.host + '/?service_package=' + data.id;
                     // From http://www.jomendez.com/2017/01/25/copy-clipboard-using-javascript/
                     if (window.clipboardData && window.clipboardData.setData) { // IE
                         clipboardData.setData('Text', text);
