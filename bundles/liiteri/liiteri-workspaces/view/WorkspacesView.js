@@ -35,8 +35,8 @@ function() {
 			selector: '#oskari-flyout-maplegend',
 			zIndexOffset: 1
 		},
-		layerSelector: {
-			selector: '#oskari-flyout-layerselector',
+		hierarchicalLayerlist: {
+            selector: '#oskari-flyout-hierarchical-layerlist',
 			zIndexOffset: 2
 		}
 	};
@@ -754,7 +754,7 @@ function() {
                 layer = sandbox.findMapLayerFromAllAvailable(workspace.selectedLayers[i].id);
                 if (layer != null) {
                     //add map layer
-                    me._sendRequest('AddMapLayerRequest', [workspace.selectedLayers[i].id, false, workspace.selectedLayers[i].baseLayer]);
+                    me._sendRequest('AddMapLayerRequest', [workspace.selectedLayers[i].id]);
                     //set opacity
                     me._sendRequest('ChangeMapLayerOpacityRequest', [workspace.selectedLayers[i].id, workspace.selectedLayers[i].opacity]);
                     //add custom style
@@ -882,7 +882,7 @@ function() {
 		openFlyouts.addClass('workspace-open-views');
 
 		var openFlyoutInputData = [
-			'layerSelector', 'mapLegends', 'statistics'
+			'hierarchicalLayerlist', 'mapLegends', 'statistics'
 		];
 		openFlyoutInputData.forEach(function(input) {
 			var checkbox = Oskari.clazz.create(
@@ -1111,8 +1111,8 @@ function() {
                 window.location.hostname +
                 (window.location.port ? ':' + window.location.port: '');
         }
-		
-		var workspaceURL = redirectURL = window.location.origin + "/?action=restoreWorkspace&workspaceId=" + workspaceId;
+
+	    var workspaceURL = redirectURL = window.location.origin + "/?action=restoreWorkspace&workspaceId=" + workspaceId;
 		//var workspaceURL = redirectURL = "http://liiteri.ymparisto.fi" + "/?action=restoreWorkspace&workspaceId=" + workspaceId; // ONLY FOR TESTING
 		//var workspaceURL = redirectURL = "http://liiteri-test.sito.fi/public/share.html"; // ONLY FOR TESTING
 		
@@ -1169,8 +1169,8 @@ function() {
                 window.location.hostname +
                 (window.location.port ? ':' + window.location.port: '');
         }
-        
-        var workspaceLink = window.location.origin + "/?action=restoreWorkspace&workspaceId=" + workspaceId;
+
+	    var workspaceLink = window.location.origin + "/?action=restoreWorkspace&workspaceId=" + workspaceId;
 		
         if (window.clipboardData && typeof window.clipboardData.setData == 'function') {
 	        var copyBtn = Oskari.clazz.create(copycn);

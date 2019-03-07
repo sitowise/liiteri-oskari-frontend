@@ -25,8 +25,8 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 selector: '#oskari-flyout-maplegend',
                 zIndexOffset: 1
             },
-            layerSelector: {
-                selector: '#oskari-flyout-layerselector',
+            hierarchicalLayerlist: {
+                selector: '#oskari-flyout-hierarchical-layerlist',
                 zIndexOffset: 2
             }
         };
@@ -137,7 +137,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                         continue;
                     }
                     //add map layer
-                    me._sendRequest('AddMapLayerRequest', [id, true, state.selectedLayers[i].baseLayer]);
+                    me._sendRequest('AddMapLayerRequest', [id]);
                     //set opacity
                     me._sendRequest('ChangeMapLayerOpacityRequest', [id, state.selectedLayers[i].opacity]);
                     //add custom style

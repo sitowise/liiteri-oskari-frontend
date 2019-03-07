@@ -179,20 +179,20 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
     _getBreadcrump: function () {
         var me = this;
 
-        //Liiteri custom code to handle custom tabs layer selection
+        //Liiteri custom code
         var layerId = me._layer.getId();
         var splittedLayerId = layerId.toString().split('_');
-        if (splittedLayerId.length > 1) {
-            switch (splittedLayerId[0]) {
-            case 'myplaces':
-                return me.locale.breadcrumbs.myplaces;
-            case 'analysis':
-                return me.locale.breadcrumbs.analysis;
-            case 'userlayer':
-                return me.locale.breadcrumbs.userlayer;
-            case 'userwms':
-                return me.locale.breadcrumbs.userwms;
-            }
+        switch (splittedLayerId[0]) {
+        case 'myplaces':
+            return me.locale.breadcrumbs.myplaces;
+        case 'analysis':
+            return me.locale.breadcrumbs.analysis;
+        case 'userlayer':
+            return me.locale.breadcrumbs.userlayer;
+        case 'userwms':
+            return me.locale.breadcrumbs.userwms;
+        case '4': //statistics
+            return '';
         }
 
         var groups = [];
