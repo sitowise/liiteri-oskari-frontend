@@ -494,6 +494,15 @@ Oskari.clazz.define(
             window.open(layer.getDownloadServiceUrl(), '_blank');
         },
         /**
+         * Open layer metadata link -> Liiteri custom method
+         * @method  _openLayerMetaDataLink
+         * @param   {Object}           layer oskari layer
+         * @private
+         */
+        _openLayerMetaDataLink: function (layer) {
+            window.open(layer.getMetadataIdentifier(), '_blank');
+        },
+        /**
          * Show maplayer backend status
          * @method  _showMapLayerBackendStatus
          * @param   {Object}          layer Oskari layer
@@ -799,7 +808,8 @@ Oskari.clazz.define(
                 }
                 // Need open metadata
                 else if (target.hasClass('layer-info')) {
-                    me._showLayerMetaData(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
+                    //Liiteri custom code
+                    me._openLayerMetaDataLink(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
                 }
                 // Need open link -> Liiteri custom code
                 else if (target.hasClass('layer-download-link')) {
