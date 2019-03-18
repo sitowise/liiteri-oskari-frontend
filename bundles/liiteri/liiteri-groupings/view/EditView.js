@@ -1061,7 +1061,7 @@ function (instance) {
 		
 		///////////////////////
 		//////STATISTICS///////
-		///////////////////////		
+		///////////////////////
 		var statsContainer = jQuery('<div class="statsContainer"></div>');
 		var statsField = jQuery('<div><label for="stats">' + me.loc.AddStatistic + '</label><select name="stats"></select></div>');
 		statsDropDown = statsField.find('select[name=stats]');
@@ -1143,8 +1143,8 @@ function (instance) {
 		}
         me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetThemeGroupings',
 			// success callback
-			function (dataArray) {
-		        me.groupingsData = dataArray;
+			function (themeGroupingsDataArray) {
+                me.groupingsData = themeGroupingsDataArray;
 		        mergeIndicatorsData();
 				if (!me.isTheme) {
 					if ((me.themesPanel != null)&&(me.themesPanel.isOpen())) {
@@ -1161,8 +1161,8 @@ function (instance) {
 		
         me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=indicators&version=1.1',
             // success callback
-              function (dataArray) {
-                  me.indicatorsData = dataArray;
+              function (szopaDataArray) {
+                  me.indicatorsData = szopaDataArray;
                   mergeIndicatorsData();
               },
               // error callback
@@ -1174,8 +1174,8 @@ function (instance) {
 		var statsBtnCnt = jQuery('<div class="buttons"></div>');
 		var addStatBtn2 = Oskari.clazz.create('Oskari.userinterface.component.Button');
 		addStatBtn2.setTitle(me.loc.AddSelectedStatistic);
-		addStatBtn2.setHandler(function () {                
-			var selectedItem = statsOptions[statsDropDown.val()];				
+        addStatBtn2.setHandler(function () {
+            var selectedItem = statsOptions[statsDropDown.val()];				
 			
 			var node = $("#tree").dynatree("getActiveNode");
 			
