@@ -192,7 +192,6 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundleInstan
             // Add Drag & drop plugin
             me.service.addLayerlistOption('plugins', ['checkbox', 'changed', 'wholerow', 'types', 'search', 'state', 'conditionalselect', 'dnd'], false);
             me.service.addLayerlistOption('dnd', {
-                use_html5: true,
                 inside_pos: 'last'
             });
         },
