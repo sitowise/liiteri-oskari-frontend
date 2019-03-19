@@ -537,7 +537,9 @@ function (instance) {
 		me.themeList.empty();
 		me.themesValues = new Array();
 		me.permissionsValues = new Array();
-			
+	    me.groupingsData = null;
+	    me.indicatorsData = null;
+
 		me.mainPanel = content;
 
 		var contentDiv = content.find('div.content'),
@@ -643,8 +645,6 @@ function (instance) {
 			me.labelPanel.setContent(labelContainer);
 			me.labelPanel.setVisible(true);
 			accordion.addPanel(me.labelPanel);
-
-			me._createServicePackageGroupingView();
         }
 
 		//Users
@@ -1140,11 +1140,11 @@ function (instance) {
 				width: "300px" //select is not in dom yet and chosen would render it as 0 width because real width is not known
             });
 		    
-		}
+        }
         me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetThemeGroupings',
 			// success callback
-			function (themeGroupingsDataArray) {
-                me.groupingsData = themeGroupingsDataArray;
+            function (dataArray) {
+                me.groupingsData = dataArray;
 		        mergeIndicatorsData();
 				if (!me.isTheme) {
 					if ((me.themesPanel != null)&&(me.themesPanel.isOpen())) {
@@ -1158,11 +1158,11 @@ function (instance) {
 				//me.showMessage("Error");
 				//return null;
 			});
-		
+
         me._sendRequest(me.instance.sandbox.getAjaxUrl() + 'action_route=GetSzopaData&action=indicators&version=1.1',
             // success callback
-              function (szopaDataArray) {
-                  me.indicatorsData = szopaDataArray;
+              function (dataArray) {
+                  me.indicatorsData = dataArray;
                   mergeIndicatorsData();
               },
               // error callback
