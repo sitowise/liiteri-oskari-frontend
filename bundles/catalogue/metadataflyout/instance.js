@@ -217,7 +217,7 @@ Oskari.clazz.define(
         },
 
         /**
-         * Adds the metadata tool for layer
+         * Adds the metadata tool for layer -->  method modified to support Liiteri requirements
          * @method  @private _addTool
          * @param  {String| Number} layerId layer to process
          * @param  {Boolean} suppressEvent true to not send event about updated layer (optional)
@@ -238,26 +238,8 @@ Oskari.clazz.define(
             tool.setName('metadata');
             tool.setIconCls('show-metadata-tool');
             tool.setTooltip(me._locale.tooltip);
-            var subLayers = layer.getSubLayers();
-            var additionalUuidsCheck = {};
-            var additionalUuids = [];
-            if (subLayers && subLayers.length > 0) {
-                for (var s = 0; s < subLayers.length; s += 1) {
-                    var subUuid = subLayers[s].getMetadataIdentifier();
-                    if (subUuid && subUuid !== '' && !additionalUuidsCheck[subUuid]) {
-                        additionalUuidsCheck[subUuid] = true;
-                        additionalUuids.push({
-                            uuid: subUuid
-                        });
-                    }
-                }
-            }
             tool.setCallback(function() {
-                me.sandbox.postRequestByName('catalogue.ShowMetadataRequest', [{
-                        uuid: layer.getMetadataIdentifier()
-                    },
-                    additionalUuids
-                ]);
+                window.open(layer.getMetadataIdentifier(), '_blank');
             });
 
             service.addToolForLayer(layer, tool, suppressEvent);
