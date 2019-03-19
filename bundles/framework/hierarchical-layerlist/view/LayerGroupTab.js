@@ -598,13 +598,19 @@ Oskari.clazz.define(
 
             /*
              * backend status
+             * Liiteri customization: elBackendStatus is used to show permission for publishing layer instead of backend status of layer
+             * backendstatus-ok icon class for layer with PUBLISH permission,
+             * backendstatus-unknown icon class for map without PUBLISH permission in oskari_permission db table
              */
             elBackendStatus = tools.find('.layer-backendstatus-icon');
 
-            var backendStatus = layer.getBackendStatus();
-            if (backendStatus) {
-                var iconClass = me.instance.getLocalization('backendStatus')[backendStatus] ? me.instance.getLocalization('backendStatus')[backendStatus].iconClass : null;
-                var tooltip = me.instance.getLocalization('backendStatus')[backendStatus] ? me.instance.getLocalization('backendStatus')[backendStatus].tooltip : null;
+            if (layer.getPermission('publish') === "publication_permission_ok") {
+                var iconClass = me.instance.getLocalization('backendStatus')["OK"]
+                    ? me.instance.getLocalization('backendStatus')["OK"].iconClass
+                    : null;
+                var tooltip = me.instance.getLocalization('backendStatus')["OK"]
+                    ? me.instance.getLocalization('backendStatus')["OK"].tooltip
+                    : null;
                 if (iconClass) {
                     elBackendStatus.removeClass('backendstatus-unknown');
                     elBackendStatus.addClass(iconClass);
