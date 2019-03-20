@@ -27,7 +27,7 @@ Oskari.registerLocalization({
         },
         "backendStatus": {
             "OK": {
-                "tooltip": "Kartlagret är tillgängligt just nu.",
+                "tooltip": "Karttataso on julkaistavissa.", //Liiteri custom code
                 "iconClass": "backendstatus-ok"
             },
             "DOWN": {
@@ -43,7 +43,7 @@ Oskari.registerLocalization({
                 "iconClass": "backendstatus-maintenance"
             },
             "UNKNOWN": {
-                "tooltip": "",
+                "tooltip": "Karttataso ei ole julkaistavissa.", //Liiteri custom code
                 "iconClass": "backendstatus-unknown"
             },
             "UNSTABLE": {

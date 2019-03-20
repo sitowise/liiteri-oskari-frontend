@@ -27,7 +27,7 @@ Oskari.registerLocalization({
         },
         "backendStatus": {
             "OK": {
-                "tooltip": "The map layer is currently available.",
+                "tooltip": "Map can be published.", //Liiteri custom code
                 "iconClass": "backendstatus-ok"
             },
             "DOWN": {
@@ -43,7 +43,7 @@ Oskari.registerLocalization({
                 "iconClass": "backendstatus-maintenance"
             },
             "UNKNOWN": {
-                "tooltip": "",
+                "tooltip": "Map cannot be published.", //Liiteri custom code
                 "iconClass": "backendstatus-unknown"
             },
             "UNSTABLE": {

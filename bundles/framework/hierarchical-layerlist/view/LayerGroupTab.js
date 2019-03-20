@@ -598,18 +598,30 @@ Oskari.clazz.define(
 
             /*
              * backend status
+             * Liiteri customization: elBackendStatus is used to show permission for publishing layer instead of backend status of layer
+             * backendstatus-ok icon class for layer with PUBLISH permission,
+             * backendstatus-unknown icon class for map without PUBLISH permission in oskari_permission db table
              */
             elBackendStatus = tools.find('.layer-backendstatus-icon');
 
-            var backendStatus = layer.getBackendStatus();
-            if (backendStatus) {
-                var iconClass = me.instance.getLocalization('backendStatus')[backendStatus] ? me.instance.getLocalization('backendStatus')[backendStatus].iconClass : null;
-                var tooltip = me.instance.getLocalization('backendStatus')[backendStatus] ? me.instance.getLocalization('backendStatus')[backendStatus].tooltip : null;
+            var tooltip;
+            if (layer.getPermission('publish') === "publication_permission_ok") {
+                var iconClass = me.instance.getLocalization('backendStatus')["OK"]
+                    ? me.instance.getLocalization('backendStatus')["OK"].iconClass
+                    : null;
+                tooltip = me.instance.getLocalization('backendStatus')["OK"]
+                    ? me.instance.getLocalization('backendStatus')["OK"].tooltip
+                    : null;
                 if (iconClass) {
                     elBackendStatus.removeClass('backendstatus-unknown');
                     elBackendStatus.addClass(iconClass);
                     elBackendStatus.attr('title', tooltip);
                 }
+            } else {
+                tooltip = me.instance.getLocalization('backendStatus')["UNKNOWN"]
+                    ? me.instance.getLocalization('backendStatus')["UNKNOWN"].tooltip
+                    : null;
+                elBackendStatus.attr('title', tooltip);
             }
 
             return layerDiv;
@@ -802,12 +814,12 @@ Oskari.clazz.define(
 
             switch (node.type) {
             case 'layer':
-                // Need open backend status
-                if (target.hasClass('layer-backendstatus-icon')) {
-                    me._showMapLayerBackendStatus(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
-                }
+                // Need open backend status --> Currently not used in Liiteri
+                //if (target.hasClass('layer-backendstatus-icon')) {
+                    //me._showMapLayerBackendStatus(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
+                //}
                 // Need open metadata
-                else if (target.hasClass('layer-info')) {
+                if (target.hasClass('layer-info')) {
                     //Liiteri custom code
                     me._openLayerMetaDataLink(me.sb.findMapLayerFromAllAvailable(me._getNodeRealId(node)));
                 }
