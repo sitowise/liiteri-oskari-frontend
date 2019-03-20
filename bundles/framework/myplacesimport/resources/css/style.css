@@ -11,4 +11,7 @@ div.myplacesimport div.info {
   padding-bottom: 10px;
   padding-top: 15px; }
 
+div.myplacesimport div.info ul {
+    margin-left: 20px;
+}
 
