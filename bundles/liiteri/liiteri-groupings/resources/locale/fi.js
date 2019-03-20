@@ -32,7 +32,6 @@ Oskari.registerLocalization(
 		"Metadata": "Tiedot",
 		"Name ": "Nimi",
 		"EnterNameOfTheGroupings": "Anna ryhmittelyn nimi",
-		"State": "Tila",
 		"Themes": "Teemat",
 		"AddNewTheme": "Lisää uusi teema",		
 		"EnterTheNameOfTheTheme": "Anna teeman nimi",
@@ -52,7 +51,6 @@ Oskari.registerLocalization(
 		"DeleteConfirm": "Haluatko varmasti poistaa palvelupaketin?",
 		"Yes": "Kyllä",
         "flyouttitle": "Siirry julkaisemaan",
-        "desc": "",
         "published": {
             "title": "Kartta julkaistu",
             "desc": "Voit liittää kartan internet-sivustollesi lisäämällä sinne alla olevan HTML-koodin:"
@@ -61,7 +59,7 @@ Oskari.registerLocalization(
             "popup": {
                 "title": "Muokataan julkaisua",
                 "msg": "Päivitetään aiemmin julkaistun kartan tietoja"
-            },
+            }
         },
         "BasicView": {
 			"Groupings": "Ryhmittelyt",
@@ -83,7 +81,6 @@ Oskari.registerLocalization(
 			"Metadata": "Tiedot",
 			"Name ": "Nimi",
 			"EnterNameOfTheGroupings": "Anna ryhmittelyn nimi",
-			"State": "Tila",
 			"Themes": "Teemat",
 			"AddNewTheme": "Lisää uusi teema",		
 			"EnterTheNameOfTheTheme": "Anna teeman nimi",

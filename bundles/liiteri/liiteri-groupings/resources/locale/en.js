@@ -32,7 +32,6 @@ Oskari.registerLocalization(
 		"Metadata": "Metadata",
 		"Name ": "Name",
 		"EnterNameOfTheGroupings": "Enter name of the groupings",
-		"State": "State",
 		"Themes": "Themes",
 		"AddNewTheme": "Add new theme",		
 		"EnterTheNameOfTheTheme": "Enter the name of the theme",
@@ -51,9 +50,7 @@ Oskari.registerLocalization(
 		"AddStatistic": "Add Statistic",
 		"DeleteConfirm": "Do you want to remove the grouping?",
 		"Yes": "Yes",
-
         "flyouttitle": "Create Embedded Map",
-        "desc": "",
         "published": {
             "title": "Map created to embed",
             "desc": "Map has been created. Embed the map by adding the HTML code below to your website and you have the map on your website:"
@@ -62,7 +59,7 @@ Oskari.registerLocalization(
             "popup": {
                 "title": "Opening the embedded map for editing",
                 "msg": "Updating the data for the previously embedded map."
-            },            
+            }            
         },
         "BasicView": {
 			"Groupings": "Groupings",
@@ -84,7 +81,6 @@ Oskari.registerLocalization(
 			"Metadata": "Metadata",
 			"Name ": "Name",
 			"EnterNameOfTheGroupings": "Enter name of the groupings",
-			"State": "State",
 			"Themes": "Themes",
 			"AddNewTheme": "Add new theme",		
 			"EnterTheNameOfTheTheme": "Enter the name of the theme",
@@ -112,6 +108,15 @@ Oskari.registerLocalization(
 			"themeUpdated": "Theme has been updated",
             "title": "Embed the Map",
             "titleEdit": "Edit the Embedded Map",
+			"grouping": "Grouping",
+			"chooseLabel": "Choose label",
+			"createNewLabel": "Create new label",
+			"close": "Close",
+            "multipleThemeTypes": "It is not possible to change the theme type of map layer or statistic.",
+            "mapLayerNestingLimit": "It is not possible to create sub themes for map layers.",
+            "existingLayer": "The layer is already in one of the themes of service package.",
+            "hasItemChildren": "It is not possible to add a subtheme for a theme that includes statistics.",
+            "hasThemeChildren": "It is not possible to add statistics to a theme that contains a subtheme.",
             "sharing": {
                 "delete": "Delete",
                 "email": "Share by email",
@@ -296,7 +301,28 @@ Oskari.registerLocalization(
                 "saveFailed": "Embedding the map failed. Please try again later.",
                 "nameIllegalCharacters": "The name of the map contains illegal characters. Allowed characters are the letters a-z as well as å, ä and ö, numbers, backspaces and hyphens.",
                 "domainIllegalCharacters": "The name of the website contains illegal characters. Allowed characters are the letters a-z as well as å, ä and ö, numbers, backspaces and hyphens."
-            }
+            },
+			"themeTools": {
+                "add": "Add to this group",
+			    "remove": "Delete",
+			    "moveUp": "Move up",
+			    "moveDown": "Move down",
+			    "rename": "Rename",
+			    "newThemeTitle": "New theme",
+			    "newThemeName": "New theme",
+			    "mapLayers": "Map layers",
+			    "statistics": "Statistics",
+			    "servicePackage": "Service package",
+			    "allData": "All data",
+                "confirmRemove": "Do you want to remove the object from the group of service package",
+                "renameInfo": "Modify the selected name",
+                "addInfo": "Add a new theme of the service package to this group",
+			    "btnCancel": "Cancel",
+			    "btnOk": "Confirm",
+			    "newMapLayer": "New map layer",
+			    "newStatistics": "New statistics",
+			    "removeItem": "Remove item"
+			}
         },
         "NotLoggedView": {
             "text": "You can create embedded maps after you have logged in the service.",
@@ -323,7 +349,6 @@ Oskari.registerLocalization(
 			"Metadata": "Metadata",
 			"Name ": "Name",
 			"EnterNameOfTheGroupings": "Enter name of the groupings",
-			"State": "State",
 			"Themes": "Themes",
 			"AddNewTheme": "Add new theme",		
 			"EnterTheNameOfTheTheme": "Enter the name of the theme",
@@ -338,40 +363,49 @@ Oskari.registerLocalization(
 			"Cancel": "Cancel",
 			"MapLegends": "Map legends",
 			"DeleteConfirm": "Do you want to remove the grouping?",
-			"Yes": "Yes",
+            "Yes": "Yes",
+			"ShortDescription": "Short description",
+			"UserGroup": "User group",
+			"CreateDate": "Create date",		
+			"text": "You can create the map and embed it to your own or your organisation's website.",
+			"touLink": "Show Terms of use for Embedded maps",
+			"layerlist_title": "Embeddable map layers",
+			"layerlist_empty": "Selected map layers cannot be published in a embedded map. Check the rights to publish in the menu \"Selected Map Layers\" before you start creating the map.",
+			"layerlist_denied": "The map layer cannot be published in a embedded map.",
+			"denied_tooltip": "The data producers have not granted permission to publish selected map layers in a embedded map. Check the rights to publish in the menu \"Selected Map Layers\" before you start creating the map.",
+			"myPlacesDisclaimer": "NB. You are publishing your own map layer.",
+			"buttons": {
+			    "continue": "Continue",
+			    "continueAndAccept": "Accept the Terms of Use and continue",
+			    "cancel": "Cancel",
+			    "close": "Close"
+			},
+			"tou": {
+			    "notfound": "The Terms of Use could not be found.",
+			    "reject": "Reject",
+			    "accept": "Accept"
+			},
+			"table": {
+			    "name": "ID / Name",
+			    "mainType": "Type",
+			    "created": "Created",
+			    "updated": "Updated",
+			    "state": "State",
+			    "operations": "Operations"
+			},
 			"info": "Info",
 			"publishedWarning": "Grouping is already published",
 			"notPublishedWarning": "Grouping is not yet published",
 			"packageUpdated": "Service package has been updated",
 			"themeUpdated": "Theme has been updated",
-		
-            "text": "You can create the map and embed it to your own or your organisation's website.",
-            "touLink": "Show Terms of use for Embedded maps",
-            "layerlist_title": "Embeddable map layers",
-            "layerlist_empty": "Selected map layers cannot be published in a embedded map. Check the rights to publish in the menu \"Selected Map Layers\" before you start creating the map.",
-            "layerlist_denied": "The map layer cannot be published in a embedded map.",
-            "denied_tooltip": "The data producers have not granted permission to publish selected map layers in a embedded map. Check the rights to publish in the menu \"Selected Map Layers\" before you start creating the map.",
-            "myPlacesDisclaimer": "NB. You are publishing your own map layer.",
-            "buttons": {
-                "continue": "Continue",
-                "continueAndAccept": "Accept the Terms of Use and continue",
-                "cancel": "Cancel",
-                "close": "Close"
-            },
-            "tou": {
-                "notfound": "The Terms of Use could not be found.",
-                "reject": "Reject",
-                "accept": "Accept"
-            },
-			"table": {
-				"name": "ID / Name",
-				"mainType": "Type",
-				"created": "Created",
-				"updated": "Updated",
-				"state": "State",
-				"operations": "Operations"
-			},
-			"datatablelanguagefile": "English.json"
+			"datatablelanguagefile": "English.json",          
+			"copyLink": "Copy link",
+			"edit": "Edit",
+			"remove": "Delete",
+            "directLink": "Direct link to the service package",
+            "linkCopied": "The direct link to the service package has been copied to the clipboard.",
+            "noData": "Creation of a direct link failed.",
+			"close": "Close"
         },
         "layer": {
             "show": "Show",

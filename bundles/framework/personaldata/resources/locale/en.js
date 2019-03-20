@@ -140,7 +140,8 @@ Oskari.registerLocalization(
         },
         "menuItems" :{
         	"myAccount": "My Account",
-        	"workspaces": "Workspaces",
+            "workspaces": "Workspaces",
+	        "userLayers": "User layers",
         	"groupings": "Groupings",
         	"announcements": "Announcements",
         	"layerRights": "Layer Rights",
