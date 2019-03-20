@@ -191,7 +191,9 @@ Oskari.clazz.define('Oskari.admin.hierarchical-layerlist.Layer', function(instan
      */
     showLayerAddPopup: function(tool, layerId, groupId) {
         var me = this;
-        me.getDataproviders(false, function(dataProviders) {
+        //first parameter set to true in order to refresh dataProviders list every time form modal is opened
+        //in case there was some new data provider added while filling the form
+        me.getDataproviders(true, function(dataProviders) {
             me._extraFlyout.move(100, 100, true);
             me._extraFlyout.makeDraggable();
             me._extraFlyout.addClass('admin-hierarchical-layerlist-add-layer');
