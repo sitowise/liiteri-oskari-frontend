@@ -1621,6 +1621,9 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
 
                     function (jqXHR, textStatus, errorThrown) {
                         me.progressSpinner.stop();
+                        if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                            me.instance.showMessage(me.loc.error.title, me.loc.error[jqXHR.responseJSON.error] || jqXHR.responseJSON.error);
+                        }
 
                     });
             }
