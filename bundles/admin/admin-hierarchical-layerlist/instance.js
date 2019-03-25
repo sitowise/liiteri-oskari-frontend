@@ -233,12 +233,10 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundleInstan
                 }
                 var originalParentNode = draggedNode.original;
 
-                // Get ajax data
-                var type = me._findJSTreeNodeActualType(draggedNode.type);
                 var draggedId = (draggedNode.type === 'layer') ? draggedNode.a_attr['data-layer-id'] : draggedNode.a_attr['data-group-id'];
                 var parentNode = data.data.origin.get_node(draggedNode.parent);
 
-                var draggedNodeOldParentId = originalParentNode.a_attr["data-group-id"];
+                var draggedNodeOldParentId = originalParentNode.a_attr['data-group-id'];
 
                 var ajaxData = {
                     orders: [],
@@ -261,6 +259,11 @@ Oskari.clazz.define("Oskari.admin.bundle.admin.HierarchicalLayerListBundleInstan
                 });
                 if (!data.data.origin.is_open(targetGroup)) {
                     data.data.origin.open_node(targetGroup);
+                }
+
+                //update original group id to new one (it's needed for proper working in case user would like to move the layer again to another group)
+                if (parentNode.a_attr && parentNode.a_attr['data-group-id']) {
+                    originalParentNode.a_attr['data-group-id'] = parentNode.a_attr['data-group-id']
                 }
 
                 me._saveOrder(ajaxData);
