@@ -129,10 +129,10 @@ Oskari.registerLocalization({
                 "tooltip": "",
                 "options": [{
                     "id": "oskari_analyse_all",
-                    "selected": true,
                     "label": "Kaikki"
                 }, {
                     "id": "oskari_analyse_none",
+                    "selected": true,
                     "label": "Ei mitään"
                 }, {
                     "id": "oskari_analyse_select",
@@ -212,6 +212,7 @@ Oskari.registerLocalization({
                 "Unable_to_get_WPS_features": "Analyysin WPS input kohteiden haku epäonnistui",
                 "WPS_execute_returns_Exception": "Analyysin prosessointi epäonnistui",
                 "WPS_execute_returns_no_features": "Analyysi ei palauta yhtään kohdetta",
+                "WPS_execute_returns_property_name_not_found": "Analyysi valitulle aineistolle ei onnistu, jos ominaisuustietoja on valittuna.",
                 "Unable_to_process_aggregate_union": "Yhdisteen koosteen prosessointi epäonnistui",
                 "Unable_to_get_features_for_union": "Koosteen input kohteiden haku epäonnistui",
                 "Unable_to_store_analysis_data": "Analyysin tallennus epäonnistui",
