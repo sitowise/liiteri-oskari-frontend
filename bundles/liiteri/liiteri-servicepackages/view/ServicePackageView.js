@@ -25,7 +25,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-servicepackages.view.ServiceP
                 selector: '#oskari-flyout-maplegend',
                 zIndexOffset: 1
             },
-            hierarchicalLayerlist: {
+            layerSelector: {
                 selector: '#oskari-flyout-hierarchical-layerlist',
                 zIndexOffset: 2
             }

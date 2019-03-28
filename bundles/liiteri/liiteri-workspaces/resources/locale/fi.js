@@ -31,7 +31,7 @@ Oskari.registerLocalization({
 		    "saveWorkspace": "Tallenna työtila",
 		    "saveWorkspaceInfo": "<p>Oletko varma, että haluat tallentaa nykyisen näkymän aiemmin tallentamasi työtilan päälle?</p><p>Jos et, avaa ensin haluamasi työtila klikkaamalla työtilan nimeä. Kun olet avannut työtilan, voit muokata työtilaa ja tallentaa sitten muutokset klikkaamalla tallenna -painiketta. Voit pidentää työtilan voimassaoloaikaa klikkaamalla kalenterin kuvaa.<p>",
 		    "openFlyouts": "Avoimeksi tallennettavat valikot (korkeintaan kaksi)",
-		    "hierarchicalLayerlist": "Karttatasovalikko",
+		    "layerSelector": "Karttatasovalikko",
 		    "mapLegends": "Karttaselitteet",
 		    "statistics": "Tilastot"
 		},
