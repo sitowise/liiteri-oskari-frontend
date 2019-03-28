@@ -142,12 +142,12 @@ module.exports = function (grunt) {
         // use grunt default options
         if(!version) {
             version  = new Date().toISOString().replace(/:/g,'');
-            grunt.log.writeln('No version specified, using current timestamp: ' + version + 
+            grunt.log.writeln('No version specified, using current timestamp: ' + version +
                 '\nUsage: grunt releaseManual:<version>:"../path/to/minifierAppSetup.json"');
         }
         if (options.configs && !configs) {
             configs = options.configs;
-            grunt.log.writeln('No setup specified, using default: ' + configs + 
+            grunt.log.writeln('No setup specified, using default: ' + configs +
                 '\nUsage: grunt releaseManual:<version>:"../path/to/minifierAppSetup.json"');
         }
         if (options.defaultIconDirectoryPath && !defaultIconDirectoryPath) {
@@ -175,7 +175,7 @@ module.exports = function (grunt) {
             copyFiles = {
                 expand: true,
                 cwd: cwd + '/',
-                src: ['css/**', 'images/**', '*.js'],
+                src: ['css/**', 'images/**', '*.js', '*.png', '*.gif'],
                 dest: dest
             };
 
