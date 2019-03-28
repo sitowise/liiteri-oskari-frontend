@@ -35,7 +35,7 @@ function() {
 			selector: '#oskari-flyout-maplegend',
 			zIndexOffset: 1
 		},
-		hierarchicalLayerlist: {
+		layerSelector: {
             selector: '#oskari-flyout-hierarchical-layerlist',
 			zIndexOffset: 2
 		}
@@ -882,7 +882,7 @@ function() {
 		openFlyouts.addClass('workspace-open-views');
 
 		var openFlyoutInputData = [
-			'hierarchicalLayerlist', 'mapLegends', 'statistics'
+			'layerSelector', 'mapLegends', 'statistics'
 		];
 		openFlyoutInputData.forEach(function(input) {
 			var checkbox = Oskari.clazz.create(
