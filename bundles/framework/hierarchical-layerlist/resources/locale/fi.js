@@ -85,7 +85,8 @@ Oskari.registerLocalization({
                 "openLayerTools": "Avaa tason toiminnot",
                 "closeLayerTools": "Sulje tason toiminnot",
                 "zoomToLayerExtent": "Sovita taso karttanäkymään",
-                "can_be_published_map_user": "Karttatason voi julkaista upotetussa kartassa. Viikottainen käyttömäärä voi olla rajoitettu."
+                "can_be_published_map_user": "Karttatason voi julkaista upotetussa kartassa. Viikottainen käyttömäärä voi olla rajoitettu.",
+                "moveToScale": "Siirry sopivalle mittakaavatasolle." //Liiteri custom code
             },
             "breadcrumbs": { //Liiteri custom code
                 "myplaces": "Omat karttatasot",

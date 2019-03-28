@@ -289,6 +289,11 @@ div.hierarchical-layerlist ul.layerlist {
             background-image: url("../images/glyphicons/glyphicons-31-pencil.png"); }
             div.hierarchical-layerlist ul.layerlist li.layer .layer-tools .tools-container .bottom-tools .tool.show-content-editor-tool:hover {
               background-image: url("../images/glyphicons/glyphicons-31-pencil-hover.png"); }
+          div.hierarchical-layerlist ul.layerlist li.layer .layer-tools .tools-container .bottom-tools .tool.move-to-scale-tool {
+              background-image: url("../images/glyphicons/glyphicons-216-resize-full.png"); }
+            div.hierarchical-layerlist ul.layerlist li.layer .layer-tools .tools-container .bottom-tools .tool.move-to-scale-tool:hover {
+                background-image: url("../images/glyphicons/glyphicons-216-resize-full-hover.png");
+            }
 div.hierarchical-layerlist .hierarchical-layerlist-tree {
   overflow-y: auto; }
   div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-wholerow-hovered {

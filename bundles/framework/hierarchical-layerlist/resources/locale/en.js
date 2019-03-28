@@ -85,7 +85,8 @@ Oskari.registerLocalization({
                 "openLayerTools": "Open layer tools",
                 "closeLayerTools": "Close layer tools",
                 "zoomToLayerExtent": "Zoom to layer extent",
-                "can_be_published_map_user": "The map layer is publishable in embedded maps. The weekly usage limit may be limited."
+                "can_be_published_map_user": "The map layer is publishable in embedded maps. The weekly usage limit may be limited.",
+                "moveToScale": "Please move to a suitable map level." //Liiteri custom code
             },
             "breadcrumbs": { //Liiteri custom code
                 "myplaces": "My map layers",
