@@ -124,10 +124,10 @@ Oskari.registerLocalization({
                 "tooltip": "",
                 "options": [{
                     "id": "oskari_analyse_all",
-                    "selected": true,
                     "label": "All"
                 }, {
                     "id": "oskari_analyse_none",
+                    "selected": true,
                     "label": "None"
                 }, {
                     "id": "oskari_analyse_select",
@@ -207,6 +207,7 @@ Oskari.registerLocalization({
                 "Unable_to_get_WPS_features": "Impossibile leggere la feature WPS",
                 "WPS_execute_returns_Exception": "WPS ritorna un eccezione",
                 "WPS_execute_returns_no_features": "WPS non ritorna nessuna feature",
+                "WPS_execute_returns_property_name_not_found": "Unable to process analysis with selected properties",
                 "Unable_to_process_aggregate_union": "Impossibile processare l'unione",
                 "Unable_to_get_features_for_union": "Impossibile ottenere feature dall'unione",
                 "Unable_to_store_analysis_data": "Impossibile memorizzare i parametri dell'analisi",

@@ -1897,8 +1897,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 exceedsFieldsCount = (
                     selectedLayer &&
                     selectedLayer.getFields &&
-                    (selectedLayer.getFields().length >
-                    this.max_analyse_layer_fields)
+                        (selectedLayer.getFields().length >
+                        this.max_analyse_layer_fields)
                 );
 
             if (exceedsFieldsCount) {
@@ -1911,9 +1911,8 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             var paramsCont = jQuery('.analyse-columns-container');
 
             paramsCont
-                .find('#oskari_analyse_all')
+                .find('#oskari_analyse_none')
                 .prop('disabled', false)
-                .prop('checked', true)
                 .change();
         },
         _disableAllParamsSelection: function() {
@@ -1923,10 +1922,6 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
                 .find('#oskari_analyse_all')
                 .prop('disabled', true);
 
-            paramsCont
-                .find('#oskari_analyse_select')
-                .prop('checked', true)
-                .change();
         },
         /**
          * Change default colors for analyse in random range order
