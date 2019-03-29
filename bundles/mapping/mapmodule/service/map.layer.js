@@ -465,6 +465,18 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                 return;
             }
 
+            //check if layer was updated and removed from a group
+            var isLayerUpdatedAndRemovedFromGroup = function (groupId) {
+                if (!deleteLayer && !newLayer) {
+                    if (!newLayerConf)
+                        throw "Missing layer config for updated layer";
+                    if (!newLayerConf.groups)
+                        throw "Missing groups for updated layer";
+                    return newLayerConf.groups.indexOf(groupId) === -1;
+                }
+                return false;
+            };
+
             // remove layer from group on delete, update layer in group if already exists
             // recurses the group structure
             var recurseLayerUpdate = function (group) {
@@ -472,8 +484,8 @@ Oskari.clazz.define('Oskari.mapframework.service.MapLayerService',
                 var layerIndex = group.getChildren().findIndex(function (children) {
                     return children.id === layerId && children.type === 'layer';
                 });
-                if (layerIndex !== -1) {
-                    if (deleteLayer) {
+                if (layerIndex !== -1) {                   
+                    if (deleteLayer || isLayerUpdatedAndRemovedFromGroup(group.id)) {
                         group.children.splice(layerIndex, 1);
                     }
                 }
