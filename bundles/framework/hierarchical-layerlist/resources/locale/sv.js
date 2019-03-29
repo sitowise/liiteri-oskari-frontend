@@ -92,7 +92,8 @@ Oskari.registerLocalization({
                 "openLayerTools": "Oöppnä kartlagerfunktionerna",
                 "closeLayerTools": "Stäng kartlagerfunktionerna",
                 "zoomToLayerExtent": "Matcha kartlager till kartvisningen",
-                "can_be_published_map_user": "Kartlagret får publiceras i ett inbäddat kartfönster. Antalet användare per vecka kan vara begränsat."
+                "can_be_published_map_user": "Kartlagret får publiceras i ett inbäddat kartfönster. Antalet användare per vecka kan vara begränsat.",
+                "moveToScale": "Gå till en lämplig skalnivå." //Liiteri custom code
             },
             "breadcrumbs": { //Liiteri custom code
                 "myplaces": "Omat karttatasot",

@@ -82,6 +82,7 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
         me._addLayerExtentTool();
         me._addLayerTools();
         me._addPublishableInformation();
+        me._addMoveToScaleTool();
         me._binded = true;
     },
     /**
@@ -133,8 +134,8 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
         tool.attr('title', tooltip);
         me._el.find('.bottom-tools').append(tool);
         me._tools[toolId] = tool;
-    },
-
+        },
+   
     /*******************************************************************************************************************************
     /* PRIVATE METHODS
     *******************************************************************************************************************************/
@@ -368,6 +369,22 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
                 me.sb.postRequestByName('MapModulePlugin.MapMoveByLayerContentRequest', [me._layer.getId(), true]);
             });
         }
+        },
+    /**
+     * Add move to scale tool --> Liiteri custom tool, equivalent of layerselection2 move-to-scale link
+     * @method  _addMoveToScaleTool
+     * @private
+     */
+    _addMoveToScaleTool: function () {
+        var me = this;
+        if (!me._layer.isInScale()) {
+            me.addTool('move-to-scale', 'move-to-scale-tool', me.locale.tooltips.moveToScale, function (evt) {
+                me.sb.postRequestByName('MapModulePlugin.MapMoveByLayerContentRequest', [me._layer.getId()]);
+            });
+        }
+        else {
+            me._removeTool('move-to-scale');
+        }
     },
     /**
      * Add publishable information
@@ -404,5 +421,23 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
                 tool.getCallback()();
             });
         });
+        },
+    /**
+    * Remove layer tool --> Liiteri custom method to handle move-to-scale tool
+    * @method _removeTool
+    * @private
+    * @param  {String} toolId  tool identifier
+    */
+    _removeTool: function (toolId) {
+        var me = this;
+        // not added
+        if (!me._tools[toolId]) {
+            return;
+        }
+
+        var tool = me._el.find('.' + toolId + '-tool');
+        tool.remove();
+
+        delete me._tools[toolId];
     }
 });
