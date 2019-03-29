@@ -249,11 +249,6 @@ Oskari.clazz.define('Oskari.framework.bundle.hierarchical-layerlist.SelectedLaye
             me._el.find('.icon-remove').on('click', function (evt) {
                 evt.stopPropagation();
                 me.sb.postRequestByName('RemoveMapLayerRequest', [me._layer.getId()]);
-
-                //Liiteri custom code to handle proper subtabs selection in "My layers" tab
-                var request = me.sb.getRequestBuilder('liiteri-usergisdata.SelectLayerRequest')(me._layer.getId());
-                me.sb.request(me.instance, request);
-
             });
         }
     },
