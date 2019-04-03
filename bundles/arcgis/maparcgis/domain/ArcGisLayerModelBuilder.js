@@ -20,6 +20,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayerModelBuild
                 var locOwnStyle = this.localization['own-style'];
                 var toolOwnStyle = toolBuilder();
                 toolOwnStyle.setName("ownStyle");
+                toolOwnStyle.setIconCls('show-own-style-tool');
                 toolOwnStyle.setTitle(locOwnStyle);
                 toolOwnStyle.setTooltip(locOwnStyle);
                 toolOwnStyle.setCallback(function () {
