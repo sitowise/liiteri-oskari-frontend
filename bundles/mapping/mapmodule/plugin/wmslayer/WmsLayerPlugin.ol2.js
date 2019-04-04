@@ -202,13 +202,13 @@ Oskari.clazz.define(
                         resolutions: newRes
                     });
                 oLayers[i].setVisibility(loopLayer.isInScale(scale));
-                    oLayers[i].redraw(true);
+                oLayers[i].redraw(true);
+
+                if (oLayers[i] && oLayers[i].params.LAYERS !== layer._wmsName) {
+                    oLayers[i].mergeNewParams({ layers: layer._wmsName });
                 }
-                
-                if(oLayers[i] && oLayers[i].params.LAYERS !== layer._wmsName) {
-                    oLayers[i].mergeNewParams({layers: layer._wmsName});
-                }
-            },
+            }               
+        },
         updateLayerParams: function (layer, forced, params) {
             var sandbox = this.getSandbox(),
                 i,

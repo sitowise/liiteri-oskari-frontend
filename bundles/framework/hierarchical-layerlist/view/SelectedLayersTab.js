@@ -291,6 +291,17 @@ Oskari.clazz.define(
             me._notifierService.on('MapSizeChangedEvent', function (evt) {
                 me._updateContainerHeight(evt.getHeight());
             });
+
+            me._notifierService.on('MapLayerEvent', function (evt) {
+                if (evt.getOperation() === 'update') {
+                    var layerId = evt.getLayerId();
+                    if (!me._layers[layerId])
+                        return;
+
+                    var layer = me.sb.findMapLayerFromAllAvailable(layerId);
+                    me._layers[layerId].updateLayer(layer);
+                }
+            });
         },
         /**
          * Blink wanted element
