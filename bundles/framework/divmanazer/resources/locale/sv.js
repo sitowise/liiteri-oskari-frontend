@@ -317,6 +317,10 @@ Oskari.registerLocalization(
                 "operator_missing": "Operatören saknas.",
                 "value_missing": "Värdet saknas.",
                 "boolean_operator_missing": "Den logiska operatören saknas."
+            },
+            "error": {
+                "title": "Fel",
+                "loadLayerTypesFailed": "WFS data typ request fel"
             }
         },
         "fileInput": {

@@ -333,6 +333,10 @@ Oskari.registerLocalization(
                 "getAggregateAnalysisFailed": "The statistical values could not be fetched.",
                 "noAggregateAnalysisPopupTitle": "Statistical Values Not Found",
                 "noAggregateAnalysisPopupContent": "The statistical values are not computed for this map layer. You can compute them in the Analysis function."
+            },
+            "error": {
+                "title": "Error",
+                "loadLayerTypesFailed": "WFS layer field types request failed"
             }
         },
         "fileInput": {

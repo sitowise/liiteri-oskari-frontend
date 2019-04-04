@@ -155,6 +155,24 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.service.AnalyseService',
             }
         },
         /**
+         * @private @method _returnAnalysisOfTypeAggregate
+         *
+         * @param {Function} cb Callback
+         *
+         */
+        _returnAnalysisOfTypeAggregate: function (cb) {
+            this.analyselayers = [];
+            this._getAnalysisLayers(function (response) {
+                this.analyselayers = response.analysislayers;
+                var analysisOfTypeAggregate = _.where(
+                    this.analyselayers, {
+                        method: 'aggregate'
+                    }
+                );
+                cb(analysisOfTypeAggregate);
+            });
+        },
+        /**
          * Get WFS layer properties and property types
          *
          * @method _getWFSLayerPropertiesAndTypes

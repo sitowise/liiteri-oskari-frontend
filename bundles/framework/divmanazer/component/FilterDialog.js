@@ -910,7 +910,7 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
                 // Error callback
 
                 function (jqXHR, textStatus, errorThrown) {
-                    me.instance.showMessage(me.loc.error.title, me.loc.error.loadLayerTypesFailed);
+                    me.showMessage(me.loc.error.title, me.loc.error.loadLayerTypesFailed);
                 });
 
         },
@@ -988,5 +988,17 @@ Oskari.clazz.category('Oskari.userinterface.component.FilterDialog',
          */
         setUpdateButtonHandler: function (pHandler) {
             this._updateButtonHandler = pHandler;
+        },
+
+        /**
+         * @method showMessage
+         * Shows user a message with ok button
+         * @param {String} title popup title
+         * @param {String} message popup message
+         */
+        showMessage: function (title, message) {
+            var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
+            dialog.show(title, message);
+            dialog.fadeout(5000);
         }
     });
