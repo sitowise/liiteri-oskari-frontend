@@ -100,17 +100,17 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
                 sandbox.registerForEventByName(me, p);
             }
         }
-        /*
+        
         //Let's extend UI
         var requestBuilder = sandbox.getRequestBuilder('userinterface.AddExtensionRequest');
         if (requestBuilder) {
-        var request = requestBuilder(this);
-        sandbox.request(this, request);
+            var request = requestBuilder(this);
+            sandbox.request(this, request);
         }
 
         // draw ui
         me.createUi();
-         */
+
         localization = this.getLocalization('selectionTools');
 
         //sends request via config to add tool selection button
@@ -138,17 +138,17 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
                 mapModule.startPlugin(this.selectionPlugin);
             }
         }
-        /*
+        
         // check if preselected layers included wfs layers -> act if they are added now
         for (i = 0; i < layers.length; ++i) {
-        if (layers[i].hasFeatureData()) {
-        this.plugin.refresh();
-        this.plugins['Oskari.userinterface.Flyout'].layerAdded(layers[i]);
-        }
+            if (layers[i].hasFeatureData()) {
+                this.plugin.refresh();
+                this.plugins['Oskari.userinterface.Flyout'].layerAdded(layers[i]);
+            }
         }
 
         sandbox.addRequestHandler('ShowFeatureDataRequest', this.requestHandlers.showFeatureHandler);
-        this.__setupLayerTools();*/
+        this.__setupLayerTools();
     },
 
     /**
@@ -249,79 +249,79 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
      * @static
      */
     eventHandlers: {
-        /*'WFSStatusChangedEvent': function(event) {
-        if (event.getLayerId() === undefined) {
-        return;
-        }
-        var layer = this.sandbox.findMapLayerFromSelectedMapLayers(event.getLayerId());
-        if (!this.__loadingStatus) {
-        this.__loadingStatus = {};
-        }
-        if (event.getStatus() === event.status.loading) {
-        this.__loadingStatus['' + event.getLayerId()] = 'loading';
-        this.plugin.showLoadingIndicator(true);
-        this.plugins['Oskari.userinterface.Flyout'].showLoadingIndicator(event.getLayerId(), true);
-        this.plugins['Oskari.userinterface.Flyout'].showErrorIndicator(event.getLayerId(), false);
-        }
+        'WFSStatusChangedEvent': function (event) {
+            if (event.getLayerId() === undefined) {
+                return;
+            }
+            var layer = this.sandbox.findMapLayerFromSelectedMapLayers(event.getLayerId());
+            if (!this.__loadingStatus) {
+                this.__loadingStatus = {};
+            }
+            if (event.getStatus() === event.status.loading) {
+                this.__loadingStatus['' + event.getLayerId()] = 'loading';
+                this.plugin.showLoadingIndicator(true);
+                this.plugins['Oskari.userinterface.Flyout'].showLoadingIndicator(event.getLayerId(), true);
+                this.plugins['Oskari.userinterface.Flyout'].showErrorIndicator(event.getLayerId(), false);
+            }
 
-        if (event.getStatus() === event.status.complete) {
-        delete this.__loadingStatus['' + event.getLayerId()];
-        this.plugins['Oskari.userinterface.Flyout'].showLoadingIndicator(event.getLayerId(), false);
-        this.plugins['Oskari.userinterface.Flyout'].showErrorIndicator(event.getLayerId(), false);
+            if (event.getStatus() === event.status.complete) {
+                delete this.__loadingStatus['' + event.getLayerId()];
+                this.plugins['Oskari.userinterface.Flyout'].showLoadingIndicator(event.getLayerId(), false);
+                this.plugins['Oskari.userinterface.Flyout'].showErrorIndicator(event.getLayerId(), false);
 
 
-        if (layer && layer.isManualRefresh()) {
-        if (event.getNop()) {
-        this.plugins['Oskari.userinterface.Flyout'].setGridOpacity(layer, 0.5);
-        } else if (event.getRequestType() === event.type.image || layer._activeFeatures.length === 0) {
-        this.plugins['Oskari.userinterface.Flyout'].setGridOpacity(layer, 0.5);
-        }
-        }
-        }
-        if (event.getStatus() === event.status.error) {
-        this.__loadingStatus['' + event.getLayerId()] = 'error';
-        this.plugins['Oskari.userinterface.Flyout'].showLoadingIndicator(event.getLayerId(), false);
-        this.plugins['Oskari.userinterface.Flyout'].showErrorIndicator(event.getLayerId(), true);
-        }
-        var status = {
-        loading: [],
-        error: []
-        };
-        _.each(this.__loadingStatus, function(value, key) {
-        status[value].push(key);
-        });
-        if (status.loading.length === 0) {
-        // no layers in loading state
-        this.plugin.showLoadingIndicator(false);
-        }
-        // setup error indicator based on error statuses
-        this.plugin.showErrorIndicator(status.error.length > 0);
-        },*/
-        /*'MapLayerEvent': function(event) {
-        if (event.getOperation() !== 'add') {
-        // only handle add layer
-        return;
-        }
+                if (layer && layer.isManualRefresh()) {
+                    if (event.getNop()) {
+                        this.plugins['Oskari.userinterface.Flyout'].setGridOpacity(layer, 0.5);
+                    } else if (event.getRequestType() === event.type.image || layer._activeFeatures.length === 0) {
+                        this.plugins['Oskari.userinterface.Flyout'].setGridOpacity(layer, 0.5);
+                    }
+                }
+            }
+            if (event.getStatus() === event.status.error) {
+                this.__loadingStatus['' + event.getLayerId()] = 'error';
+                this.plugins['Oskari.userinterface.Flyout'].showLoadingIndicator(event.getLayerId(), false);
+                this.plugins['Oskari.userinterface.Flyout'].showErrorIndicator(event.getLayerId(), true);
+            }
+            var status = {
+                loading: [],
+                error: []
+            };
+            _.each(this.__loadingStatus, function (value, key) {
+                status[value].push(key);
+            });
+            if (status.loading.length === 0) {
+                // no layers in loading state
+                this.plugin.showLoadingIndicator(false);
+            }
+            // setup error indicator based on error statuses
+            this.plugin.showErrorIndicator(status.error.length > 0);
+        },
+        'MapLayerEvent': function (event) {
+            if (event.getOperation() !== 'add') {
+                // only handle add layer
+                return;
+            }
 
-        if (event.getLayerId()) {
-        this.__addTool(event.getLayerId());
-        } else {
-        // ajax call for all layers
-        this.__setupLayerTools();
-        }
-        },*/
+            if (event.getLayerId()) {
+                this.__addTool(event.getLayerId());
+            } else {
+                // ajax call for all layers
+                this.__setupLayerTools();
+            }
+        },
         /**
          * @method AfterMapLayerRemoveEvent
          * @param {Oskari.mapframework.event.common.AfterMapLayerRemoveEvent} event
          *
          * Calls flyouts layerRemoved() method
          */
-        /*'AfterMapLayerRemoveEvent': function(event) {
-        if (event.getMapLayer().hasFeatureData()) {
-        this.plugin.refresh();
-        this.plugins['Oskari.userinterface.Flyout'].layerRemoved(event.getMapLayer());
-        }
-        },*/
+        'AfterMapLayerRemoveEvent': function (event) {
+            if (event.getMapLayer().hasFeatureData()) {
+                this.plugin.refresh();
+                this.plugins['Oskari.userinterface.Flyout'].layerRemoved(event.getMapLayer());
+            }
+        },
 
         /**
          * @method AfterMapLayerAddEvent
@@ -329,62 +329,62 @@ Oskari.clazz.define("Oskari.mapframework.bundle.featuredata2.FeatureDataBundleIn
          *
          * Calls flyouts layerAdded() method
          */
-        /*'AfterMapLayerAddEvent': function(event) {
-        if (event.getMapLayer().hasFeatureData()) {
-        this.plugin.refresh();
-        this.plugins['Oskari.userinterface.Flyout'].layerAdded(event.getMapLayer());
-        }
-        },*/
+        'AfterMapLayerAddEvent': function (event) {
+            if (event.getMapLayer().hasFeatureData()) {
+                this.plugin.refresh();
+                this.plugins['Oskari.userinterface.Flyout'].layerAdded(event.getMapLayer());
+            }
+        },
 
         /**
          * @method WFSPropertiesEvent
          * Update grid headers
          */
-        /*'WFSPropertiesEvent': function(event) {
-        // update grid information [don't update the grid if not active]
-        var layer = event.getLayer();
-        this.plugins['Oskari.userinterface.Flyout'].updateData(layer);
-        },*/
+        'WFSPropertiesEvent': function (event) {
+            // update grid information [don't update the grid if not active]
+            var layer = event.getLayer();
+            this.plugins['Oskari.userinterface.Flyout'].updateData(layer);
+        },
 
         /**
          * @method WFSFeatureEvent
          * Update grid data
          */
-        /*'WFSFeatureEvent': function(event) {
-        // update grid information [don't update the grid if not active]
-        var layer = event.getLayer();
-        this.plugins['Oskari.userinterface.Flyout'].updateData(layer);
-        },*/
+        'WFSFeatureEvent': function (event) {
+            // update grid information [don't update the grid if not active]
+            var layer = event.getLayer();
+            this.plugins['Oskari.userinterface.Flyout'].updateData(layer);
+        },
 
         /**
          * @method WFSFeaturesSelectedEvent
          * Highlight the feature on flyout
          */
-        /*'WFSFeaturesSelectedEvent': function(event) {
-        var layer = event.getMapLayer();
-        this.plugins['Oskari.userinterface.Flyout'].featureSelected(layer);
-        },*/
+        'WFSFeaturesSelectedEvent': function (event) {
+            var layer = event.getMapLayer();
+            this.plugins['Oskari.userinterface.Flyout'].featureSelected(layer);
+        },
 
         /**
          * @method userinterface.ExtensionUpdatedEvent
          * Disable grid updates on close, otherwise enable updates
          */
-        /*'userinterface.ExtensionUpdatedEvent': function(event) {
-        var plugin = this.plugins['Oskari.userinterface.Flyout'];
+        'userinterface.ExtensionUpdatedEvent': function (event) {
+            var plugin = this.plugins['Oskari.userinterface.Flyout'];
 
-        // ExtensionUpdateEvents are fired a lot, only let featuredata2 extension event to be handled when enabled
-        if (event.getExtension().getName() !== this.getName()) {
-        // wasn't me or disabled -> do nothing
-        return;
-        } else if (event.getViewState() === "close") {
-        plugin.setEnabled(false);
-        if (this.plugin) {
-        this.plugin.handleCloseFlyout();
-        }
-        } else {
-        plugin.setEnabled(true, true);
-        }
-        },*/
+            // ExtensionUpdateEvents are fired a lot, only let featuredata2 extension event to be handled when enabled
+            if (event.getExtension().getName() !== this.getName()) {
+                // wasn't me or disabled -> do nothing
+                return;
+            } else if (event.getViewState() === "close") {
+                plugin.setEnabled(false);
+                if (this.plugin) {
+                    this.plugin.handleCloseFlyout();
+                }
+            } else {
+                plugin.setEnabled(true, true);
+            }
+        },
 
         /**
          * @method FeatureData.FinishedDrawingEvent
