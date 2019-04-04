@@ -338,6 +338,10 @@ Oskari.registerLocalization({
                 "getAggregateAnalysisFailed": "Tunnuslukujen haku epäonnistui.",
                 "noAggregateAnalysisPopupTitle": "Tunnuslukuja ei löytynyt",
                 "noAggregateAnalysisPopupContent": "Kyseiselle tasolle ei ole laskettu tunnuslukuja. Voit laskea tunnusluvut haluamallesi aineistolle Analyysi-toiminnon avulla.."
+            },
+            "error": {
+                "title": "Virhe",
+                "loadLayerTypesFailed": "WFS-tason tietotyyppien haku epäonnistui"
             }
         },
         "fileInput": {

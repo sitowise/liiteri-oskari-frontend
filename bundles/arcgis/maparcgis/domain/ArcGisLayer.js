@@ -26,6 +26,7 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayer',
         this._customStyle = null;
         this._wmsName = null;
         this._WMSLayerId = null;
+        this._filterJson = null;
 
         this.localization = Oskari.getLocalization('MapWfs2');
     }, {
@@ -267,6 +268,21 @@ Oskari.clazz.define('Oskari.arcgis.bundle.maparcgis.domain.ArcGisLayer',
          */
         getWMSLayerId: function () {
             return this._WMSLayerId;
+        },
+        /**
+         * @method getFilterJson
+         * @return {Object[]} filterJson
+         */
+        getFilterJson: function () {
+            return this._filterJson;
+        },
+
+        /**
+         * @method setFilterJson
+         * @param {Object} filterJson
+         */
+        setFilterJson: function (filterJson) {
+            this._filterJson = filterJson;
         }
     }, {
         "extend": ["Oskari.mapframework.domain.AbstractLayer"]
