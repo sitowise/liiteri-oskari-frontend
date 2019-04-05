@@ -298,26 +298,27 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
          * @return {Object}
          */
         __getStyleValues: function(styleForm) {
-            var formValues = styleForm.getValues(),
+            var me = this,
+                formValues = styleForm.getValues(),
                 values = {};
 
             if (formValues) {
                 values.dot = {
                     size: formValues.dot.size,
-                    color: '#' + formValues.dot.color,
+                    color: me._prefixColorForServer(formValues.dot.color),
                     shape: formValues.dot.shape
                 };
                 values.line = {
                     width: formValues.line.width,
-                    color: '#' + formValues.line.color,
+                    color: me._prefixColorForServer(formValues.line.color),
                     cap: formValues.line.cap,
                     corner: formValues.line.corner,
                     style: formValues.line.style
                 };
                 values.area = {
                     lineWidth: formValues.area.lineWidth,
-                    lineColor: formValues.area.lineColor === null ? null : '#' + formValues.area.lineColor,
-                    fillColor: formValues.area.fillColor === null ? null : '#' + formValues.area.fillColor,
+                    lineColor: formValues.area.lineColor === null ? null : me._prefixColorForServer(formValues.area.lineColor),
+                    fillColor: formValues.area.fillColor === null ? null : me._prefixColorForServer(formValues.area.fillColor),
                     lineStyle: formValues.area.lineStyle,
                     fillStyle: formValues.area.fillStyle,
                     lineCorner: formValues.area.lineCorner
@@ -394,7 +395,18 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
             dialog.show(title, message, [btn]);
             if (fadeout) {
             dialog.fadeout(5000);
-        }
+            }
+        },
+        /**
+         * @method  _prefixColorForServer
+         * @private
+         * Adds prefix #-character if not present
+         */
+        _prefixColorForServer: function (color) {
+            if (color.charAt(0) !== '#') {
+                return '#' + color;
+            }
+            return color;
         }
     }, {
         "extend": ["Oskari.userinterface.extension.DefaultFlyout"]
