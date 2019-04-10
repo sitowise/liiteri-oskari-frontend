@@ -192,7 +192,6 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-layers-tabs.view.Layer",
 
             // setup id
             layerDiv.attr('layer_id', layer.getId());
-            layerDiv.find('input').attr('id', 'liiteri_layers_tabs_layerlist_checkbox_layerid_' + layer.getId());
             layerDiv.find('.layer-title')
                 .append(layer.getName())
                 .click(function () {
