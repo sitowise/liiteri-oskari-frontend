@@ -7482,7 +7482,7 @@
 		 * @name $.jstree.defaults.dnd.drag_selection
 		 * @plugin dnd
 		 */
-		drag_selection: true,
+		drag_selection: false,
 		/**
 		 * controls whether dnd works on touch devices. If left as boolean true dnd will work the same as in desktop browsers, which in some cases may impair scrolling. If set to boolean false dnd will not work on touch devices. There is a special third option - string "selected" which means only selected nodes can be dragged on touch devices.
 		 * @name $.jstree.defaults.dnd.touch
