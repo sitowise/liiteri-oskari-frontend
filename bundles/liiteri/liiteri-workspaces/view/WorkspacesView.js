@@ -1112,7 +1112,7 @@ function() {
                 (window.location.port ? ':' + window.location.port: '');
         }
 
-	    var workspaceURL = redirectURL = window.location.origin + "/?action=restoreWorkspace&workspaceId=" + workspaceId;
+        var workspaceURL = redirectURL = window.location.origin + "/?action=restoreWorkspace&type=hidden&workspaceId=" + workspaceId;
 		//var workspaceURL = redirectURL = "http://liiteri.ymparisto.fi" + "/?action=restoreWorkspace&workspaceId=" + workspaceId; // ONLY FOR TESTING
 		//var workspaceURL = redirectURL = "http://liiteri-test.sito.fi/public/share.html"; // ONLY FOR TESTING
 		
@@ -1170,7 +1170,7 @@ function() {
                 (window.location.port ? ':' + window.location.port: '');
         }
 
-	    var workspaceLink = window.location.origin + "/?action=restoreWorkspace&workspaceId=" + workspaceId;
+        var workspaceLink = window.location.origin + "/?action=restoreWorkspace&type=hidden&workspaceId=" + workspaceId;
 		
         if (window.clipboardData && typeof window.clipboardData.setData == 'function') {
 	        var copyBtn = Oskari.clazz.create(copycn);
