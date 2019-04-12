@@ -392,38 +392,41 @@ Oskari.clazz.define("Oskari.liiteri.bundle.liiteri-usergisdata.view.OwnLayersTab
 			}
         },
         selectAllLayers : function(isSelected, sendEvent) {
-			for (var subTabPanel in this.subTabPanels) {
-				var layerContainers = subTabPanel.layerContainers;
-				if (layerContainers) {
-					for (var layerId in layerContainers) {
-						var layerCont = layerContainers[layerId];
-						if (layerCont) {
-							layerCont.setSelected(isSelected, sendEvent);
-						}
-					}
-				}
-			}
+            var i;
+            for (i = 0; i < this.subTabPanels.length; i += 1) {
+                var layerContainers = this.subTabPanels[i].layerContainers;
+                if (layerContainers) {
+                    for (var layerId in layerContainers) {
+                        var layerCont = layerContainers[layerId];
+                        if (layerCont) {
+                            layerCont.setSelected(isSelected, sendEvent);
+                        }
+                    }
+                }
+            }
         },
         setLayerSelected: function (layerId, isSelected) {
-			for (var subTabPanel in this.subTabPanels) {
-				var layerContainers = subTabPanel.layerContainers;
-				if (layerContainers) {
-					var layerCont = layerContainers[layerId];
-					if (layerCont) {
-						layerCont.setSelected(isSelected);
-					}
-				}
-			}
+            var i;
+            for (i = 0; i < this.subTabPanels.length; i += 1) {
+                var layerContainers = this.subTabPanels[i].layerContainers;
+                if (layerContainers) {
+                    var layerCont = layerContainers[layerId];
+                    if (layerCont) {
+                        layerCont.setSelected(isSelected);
+                    }
+                }
+            }
         },
         updateLayerContent: function (layerId, layer) {
-			for (var subTabPanel in this.subTabPanels) {
-				var layerContainers = subTabPanel.layerContainers;
-				if (layerContainers) {
-					var layerCont = layerContainers[layerId];
-					if (layerCont) {
-						layerCont.updateLayerContent(layer);
-					}
-				}
-			}
+            var i;
+            for (i = 0; i < this.subTabPanels.length; i += 1) {
+                var layerContainers = this.subTabPanels[i].layerContainers;
+                if (layerContainers) {
+                    var layerCont = layerContainers[layerId];
+                    if (layerCont) {
+                        layerCont.updateLayerContent(layer);
+                    }
+                }
+            }
         }
     });

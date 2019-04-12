@@ -61,18 +61,26 @@ function () {
 		//TODO Add checking if GIS layers or my places comes. Do not refresh after every change in the map!
 		'MapLayerEvent': function (event) {
 			//Analysis and Imported my places
-			this.populateUserGisData();
+		    var me = this;
+			me.populateUserGisData();
 		},
 		//TODO Add checking if GIS layers or my places comes. Do not refresh after every change in the map!
 		'MyPlaces.MyPlacesChangedEvent': function (event) {
 			//My places
-			this.populateUserGisData();
+		    var me = this;
+			me.populateUserGisData();
 		},
-		'UserLayers.LayersModified': function (event) {
-		    this.populateUserGisData();
+        'UserLayers.LayersModified': function (event) {
+            var me = this;
+		    me.populateUserGisData();
         },
 		'AfterMapLayerRemoveEvent': function (event) {
-		    this.unselectLayer(event.getMapLayer());
+		    var me = this;
+		    me._selectLayerFromEvent(event.getMapLayer(), false);
+        },
+		'AfterMapLayerAddEvent': function (event) {
+		    var me = this;
+		    me._selectLayerFromEvent(event.getMapLayer(), true);
 		}
     },
     /**
@@ -133,7 +141,12 @@ function () {
 	        window.clearTimeout(this.populateUserGisDataTimeout);
 	    }
 	    this.populateUserGisDataTimeout = window.setTimeout(this._populateUserGisData, 200, this);
-	},
+    },
+    selectCurrentTab: function () {
+        var me = this;
+        var currentTab = me.userGisDataTab.currentTab;
+        me.userGisDataTab.tabsContainer.select(currentTab);
+    },
 	_populateUserGisData: function (me) {
 		var loc = me.getLocalization('view'),
 			myGroupList = [],
@@ -433,23 +446,11 @@ function () {
 		});
     },
 
-    unselectLayer: function (layer) {
+    _selectLayerFromEvent: function (layer, isSelected) {
+        if (!layer)
+            throw Error('Missing layer data in event data');
         var me = this;
-        var layerId = layer.getId();
-
-        for (var i = 0; i < me.userGisDataTab.subTabPanels.length; i++) {
-            var layerToUnselect = me.userGisDataTab.subTabPanels[i].getContainer().find('[layer_id="' + layerId + '"]');
-            if (layerToUnselect) {
-                layerToUnselect.find('input').prop('checked', false);
-                //return; TODO: Check "Minulle jaetut tasot" tab
-            }
-        }
-    },
-
-    selectCurrentTab: function () {
-        var me = this;
-        var currentTab = me.userGisDataTab.currentTab;
-        me.userGisDataTab.tabsContainer.select(currentTab);
+        me.userGisDataTab.setLayerSelected(layer.getId(), isSelected);
     }
     }, {
     "extend" : ["Oskari.userinterface.extension.DefaultExtension"]

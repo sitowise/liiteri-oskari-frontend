@@ -215,7 +215,8 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
                     type: "button",
                     group: 1,
                     action: function () {
-                me.cleanupPopup();
+                        me.cleanupPopup();
+                        me.drawPlugin.stopDrawing();
                     }
                 }, {
                     name: me.loc('buttons.save'),
@@ -429,8 +430,7 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.view.MainView",
                     var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup');
                     dialog.show(me.loc('notification.placeAdded.title'), me.loc('notification.placeAdded.message'));
                     dialog.fadeout();
-                    // remove drawing handled in ButtonHandler InfoBox.InfoBoxEvent listener
-                    //me.drawPlugin.stopDrawing();
+                    me.drawPlugin.stopDrawing();
                 } else {
                     me.instance.showMessage(me.loc('notification.error.title'), me.loc('notification.error.savePlace'));
                 }

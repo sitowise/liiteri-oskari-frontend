@@ -69,7 +69,12 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-layers-tabs.LiiteriLayersTabs
                 me._populateLayersFromServicePackage(event.getThemes(), cb);
             },
             'AfterMapLayerRemoveEvent': function (event) {
-                this._unselectLayer(event.getMapLayer());
+                var me = this;
+                me._selectLayerFromEvent(event.getMapLayer(), false);
+            },
+            'AfterMapLayerAddEvent': function (event) {
+                var me = this;
+                me._selectLayerFromEvent(event.getMapLayer(), true);
             }
         },
         _selectLayers: function (layers) {
@@ -174,20 +179,17 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-layers-tabs.LiiteriLayersTabs
             }
         },
 
-        _unselectLayer: function (layer) {
+        _selectLayerFromEvent: function(layer, isSelected) {
+            if (!layer)
+                throw Error('Missing layer data in event data');
+
             var me = this;
             var layerId = layer.getId();
 
             for (var i = 0; i < me.layersTabs.length; i++) {
                 var tab = me.layersTabs[i];
-                var tabPanel = tab.getTabPanel();
-
-                var layerToUnselect = tabPanel.getContainer().find('[layer_id="' + layerId + '"]');
-                if (layerToUnselect) {
-                    for (var i = 0; i < layerToUnselect.length; i++) {
-                        layerToUnselect.find('input').prop('checked', false);
-                    }
-                }
+                if (tab)
+                    tab.setLayerSelected(layerId, isSelected);
             }
         }
     }, {
