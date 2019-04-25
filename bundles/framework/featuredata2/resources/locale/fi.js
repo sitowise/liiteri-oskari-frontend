@@ -58,6 +58,7 @@ Oskari.registerLocalization(
             "out-of-scale": "Karttatasoa ei voida näyttää valitulla mittakaavatasolla.",
             "move-to-scale": "Siirry sopivalle mittakaavatasolle.",
             "out-of-content-area": "Karttatasolla ei ole kohteita karttanäkymän alueella.",
+            "out-of-content-area-or-no-response": "Karttatasolla ei ole kohteita karttanäkymän alueella tai kohdetietojen lataus epäonnistui. Siirry lähemmälle katselutasolle yrittääksesi latausta uudelleen.",
             "move-to-content-area": "Siirry karttatason alueelle.",
             "description": "Kuvaus",
             "object-data": "Kohdetiedot",
