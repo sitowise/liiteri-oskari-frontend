@@ -362,7 +362,10 @@ Oskari.clazz.define(
             if(layer.getActiveFeatures().length === 0 ) {
                 container.parent().children('.tab-tools').remove();
                 container.removeAttr('style');
-                container.append(this.instance.getLocalization('layer')['out-of-content-area']);
+                //TODO Find out why sometimes there is no feature info response even if some features are on the map.
+                //     Before that is investigated here is shown temporarly more general info.
+                container.append(this.instance.getLocalization('layer')['out-of-content-area-or-no-response']);
+                //container.append(this.instance.getLocalization('layer')['out-of-content-area']);
 
                 if (!panel.grid) {
                    container.parent().find('.grid-tools').remove();
@@ -753,26 +756,27 @@ Oskari.clazz.define(
                 panel.getContainer().append(gridEl);
                 panel.grid.renderTo(gridEl, null, panelParent);
 
+                // NOTICE: disabled according to the task: YM-825
                 // define flyout size to adjust correctly to arbitrary tables
-                var mapdiv = this.instance.sandbox.findRegisteredModuleInstance('MainMapModule').getMapEl(),
-                    content = jQuery('div.oskari-flyoutcontent.featuredata'),
-                    flyout = content.parent().parent();
+                //var mapdiv = this.instance.sandbox.findRegisteredModuleInstance('MainMapModule').getMapEl(),
+                //    content = jQuery('div.oskari-flyoutcontent.featuredata'),
+                //    flyout = content.parent().parent();
 
-                if (!me.resized) {
-                    // Define default size for the object data list
-                    var tabContent = flyout.find('div.tab-content');
-                    var parent = tabContent.parent('.oskari-flyoutcontentcontainer');
+                //if (!me.resized) {
+                //    // Define default size for the object data list
+                //    var tabContent = flyout.find('div.tab-content');
+                //    var parent = tabContent.parent('.oskari-flyoutcontentcontainer');
 
-                    // FIXME Need calculate different way or only use styles
-                    var paddings = flyout.find('.grid-tools').height() +
-                        flyout.find('.tabsHeader').height() +
-                        parseInt(tabContent.css('padding-top') || 0) +
-                        parseInt(tabContent.css('padding-bottom') || 0) +
-                        (flyout.find('.exporter').height() || 0) + 10;
+                //    // FIXME Need calculate different way or only use styles
+                //    var paddings = flyout.find('.grid-tools').height() +
+                //        flyout.find('.tabsHeader').height() +
+                //        parseInt(tabContent.css('padding-top') || 0) +
+                //        parseInt(tabContent.css('padding-bottom') || 0) +
+                //        (flyout.find('.exporter').height() || 0) + 10;
 
-                    tabContent.css('height', (parent.height() - paddings) + 'px');
-                    flyout.css('max-width', mapdiv.width().toString() + 'px');
-                }
+                //    tabContent.css('height', (parent.height() - paddings) + 'px');
+                //    flyout.css('max-width', mapdiv.width().toString() + 'px');
+                //}
                 if (me.resizable) {
                     this._enableResize();
                 }

@@ -58,6 +58,7 @@ Oskari.registerLocalization(
             "out-of-scale": "The map layer cannot be shown at this scale level.",
             "move-to-scale": "Move to a suitable map level.",
             "out-of-content-area": "The map layer has no features at the map view area.",
+            "out-of-content-area-or-no-response": "There is no features on map view or the download of feature info did not success. Please move the view a bit closer to try again.",
             "move-to-content-area": "Move to a suitable location.",
             "description": "Description",
             "object-data": "Feature data",
