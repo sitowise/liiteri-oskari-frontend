@@ -116,10 +116,10 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-layers-tabs.LiiteriLayersTabs
             //}
 
             //Add tabs to the hierarchical-layerlist flyout view
-            for (var layersTab of me.layersTabs) {
+            me.layersTabs.forEach(function(layersTab){
                 request = me.sandbox.getRequestBuilder('hierarchical-layerlist.AddTabRequest')(layersTab, false);
                 sandbox.request(me, request);
-            }
+            });
         },
 
         _populateLayersFromServicePackage: function (themesDataArray, cb) {
