@@ -22,7 +22,7 @@ Oskari.clazz.define(
 
         this.values = {
             size: this.defaultValues.size || 1,
-            color: '#' + (this.defaultValues.color || 'ffde00'),
+            color: this._prefixColorIfNeeded(this.defaultValues.color || 'ffde00'),
             shape: this.defaultValues.shape || 2,
             message: ''
         };
@@ -114,6 +114,7 @@ Oskari.clazz.define(
          */
         setValues: function (values) {
             if (values !== null && values !== undefined) {
+                values.color = this._prefixColorIfNeeded(values.color);
                 jQuery.extend(true, this.values, values);
             }
         },
@@ -391,6 +392,18 @@ Oskari.clazz.define(
          */
         _getOnScreenForm: function () {
             return jQuery('div.renderdialog');
+        },
+
+        /**
+        * @method  _prefixColorIfNeeded
+        * @private
+        * Adds prefix #-character if not present
+        */
+        _prefixColorIfNeeded: function (color) {
+            if (color && color.charAt(0) !== '#') {
+                return '#' + color;
+            }
+            return color;
         }
     }
 );

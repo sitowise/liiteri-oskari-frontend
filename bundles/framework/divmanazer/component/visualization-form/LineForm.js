@@ -21,7 +21,7 @@ Oskari.clazz.define(
             cap: this.defaultValues.cap,
             corner: this.defaultValues.corner,
             width: this.defaultValues.width,
-            color: '#' + this.defaultValues.color
+            color: this._prefixColorIfNeeded(this.defaultValues.color)
         };
 
         this.styleButtonNames = ['icon-line-basic', 'icon-line-dashed'], //'icon-double-line'];
@@ -146,6 +146,7 @@ Oskari.clazz.define(
                         values.style = i;
                     }
                 }
+                values.color = this._prefixColorIfNeeded(values.color);
                 jQuery.extend(true, this.values, values);
             }
         },
@@ -385,6 +386,18 @@ Oskari.clazz.define(
         _styleUnselectedButton: function (unselectedButton) {
             unselectedButton.css('border', '1px solid');
             unselectedButton.css('background-color', '');
+        },
+
+        /**
+        * @method  _prefixColorIfNeeded
+        * @private
+        * Adds prefix #-character if not present
+        */
+        _prefixColorIfNeeded: function (color) {
+            if (color && color.charAt(0) !== '#') {
+                return '#' + color;
+            }
+            return color;
         }
     }
 );

@@ -416,6 +416,9 @@ Oskari.clazz.define("Oskari.mapframework.bundle.myplaces2.CategoryHandler",
             if(value === null) {
                 return true;
             }
+            if (value && value.charAt(0) === '#') {
+                value = value.slice(1);
+            }
             return this.validateTool.validateHexColor(value);
         },
         validateCategoryFormValues: function (values) {
