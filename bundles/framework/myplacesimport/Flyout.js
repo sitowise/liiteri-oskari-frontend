@@ -403,7 +403,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.myplacesimport.Flyout',
          * Adds prefix #-character if not present
          */
         _prefixColorForServer: function (color) {
-            if (color.charAt(0) !== '#') {
+            if (color && color.charAt(0) !== '#') {
                 return '#' + color;
             }
             return color;

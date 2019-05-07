@@ -21,8 +21,8 @@ Oskari.clazz.define(
             lineWidth: this.defaultValues.line.width,
             lineCorner: this.defaultValues.line.corner,
             lineStyle: this.defaultValues.line.style,
-            lineColor: '#' + this.defaultValues.line.color,
-            fillColor: '#' + this.defaultValues.fill.color,
+            lineColor: this._prefixColorIfNeeded(this.defaultValues.line.color),
+            fillColor: this._prefixColorIfNeeded(this.defaultValues.fill.color),
             fillStyle: this.defaultValues.fill.style
         };
 
@@ -174,6 +174,8 @@ Oskari.clazz.define(
                         values.lineStyle = i;
                     }
                 }
+                values.lineColor = this._prefixColorIfNeeded(values.lineColor);
+                values.fillColor = this._prefixColorIfNeeded(values.fillColor);
                 jQuery.extend(true, this.values, values);
             }
         },
@@ -582,6 +584,18 @@ Oskari.clazz.define(
         _styleUnselectedButton: function (unselectedButton) {
             unselectedButton.css('border', '1px solid');
             unselectedButton.css('background-color', 'transparent');
+        },
+
+        /**
+        * @method  _prefixColorIfNeeded
+        * @private
+        * Adds prefix #-character if not present
+        */
+        _prefixColorIfNeeded: function (color) {
+            if (color && color.charAt(0) !== '#') {
+                return '#' + color;
+            }
+            return color;
         }
     }
 );
