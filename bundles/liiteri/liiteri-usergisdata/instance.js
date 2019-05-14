@@ -242,16 +242,13 @@ function () {
 				if (resp) {
 					//Shared My places
                     var sharedGroupMyPlaces = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.myPlaces);
-					console.log("SHARED RESP LENGTH "+resp.length);
 					if (myPlacesService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "MY_PLACES") {
-								console.log("SHARED MYPLACES");
 								var category = myPlacesService.findCategory(resp[i].dataId);
 								if (category) {
 									var layerId = 'myplaces_' + category.id;
 									var layer = me.sandbox.findMapLayerFromAllAvailable(layerId);
-									console.log("SHARED MYPLACES LAYER "+layer);
 									if (layer) {
 										layer.userDataId = resp[i].id;
 										layer.expirationDate = resp[i].expirationDate;
@@ -270,7 +267,7 @@ function () {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "ANALYSIS") {
 								var analysisLayer = mapLayerService.findMapLayer(resp[i].dataId);
-								if (analysisLayer && analysisLayer.shared) {
+								if (analysisLayer && (analysisLayer.shared == null || analysisLayer.shared == undefined)) {
 									analysisLayer.userDataId = resp[i].id;
 									analysisLayer.expirationDate = resp[i].expirationDate;
 
@@ -286,10 +283,8 @@ function () {
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
-								console.log("SHARED IMPORTED PLACES");
 								var importedLayer = mapLayerService.findMapLayer(resp[i].dataId);
-								console.log("SHARED IMPORTED LAYER "+importedLayer+" "+importedLayer.shared);
-								if (importedLayer && importedLayer.shared) {
+								if (importedLayer && (importedLayer.shared == null || importedLayer.shared == undefined)) {
 									importedLayer.userDataId = resp[i].id;
 									importedLayer.expirationDate = resp[i].expirationDate;
 
