@@ -281,12 +281,12 @@ function () {
                     var sharedGroupImported = Oskari.clazz.create("Oskari.liiteri.bundle.liiteri-usergisdata.model.LayerGroup", loc.importedData);
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
+							console.log("IMPORTED LAYER DATATYPE "+resp[i].dataType);
 							if (resp[i].dataType == "IMPORTED_PLACES") {
 								var importedLayer = mapLayerService.findMapLayer(resp[i].dataId);
 								console.log("IMPORTED LAYER "+importedLayer);
-								console.log("IMPORTED LAYER .shared "+importedLayer.shared);
-								console.log("IMPORTED LAYER shared == null "+(importedLayer == null));
-								console.log("IMPORTED LAYER shared == undefined "+(importedLayer == undefined));
+								console.log("IMPORTED LAYER shared == null "+(importedLayer.shared == null));
+								console.log("IMPORTED LAYER shared == undefined "+(importedLayer.shared == undefined));
 								if (importedLayer && (importedLayer.shared == null || importedLayer.shared == undefined)) {
 									importedLayer.userDataId = resp[i].id;
 									importedLayer.expirationDate = resp[i].expirationDate;
