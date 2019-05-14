@@ -282,8 +282,11 @@ function () {
 					if (mapLayerService) {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
-								console.log("IMPORTED PLACES");
 								var importedLayer = mapLayerService.findMapLayer(resp[i].dataId);
+								console.log("IMPORTED LAYER "+importedLayer);
+								console.log("IMPORTED LAYER .shared "+importedLayer.shared);
+								console.log("IMPORTED LAYER shared == null "+(importedLayer == null));
+								console.log("IMPORTED LAYER shared == undefined "+(importedLayer == undefined));
 								if (importedLayer && (importedLayer.shared == null || importedLayer.shared == undefined)) {
 									importedLayer.userDataId = resp[i].id;
 									importedLayer.expirationDate = resp[i].expirationDate;
