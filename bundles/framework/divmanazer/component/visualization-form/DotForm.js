@@ -267,7 +267,7 @@ Oskari.clazz.define(
             });
             this.cancelButton = cancelBtn;
 
-            me.renderDialog.show(title, dialogContent, [saveBtn, cancelBtn]);
+            me.renderDialog.show(title, dialogContent, [cancelBtn, saveBtn]);
             // Dialog location
             if (typeof dialogLocation === 'string') {
                 me.renderDialog.moveTo(renderButton, dialogLocation);

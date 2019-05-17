@@ -280,7 +280,7 @@ Oskari.clazz.define(
                 me.values.width = tempValues.width;
                 renderDialog.close();
             });
-            renderDialog.show(title, dialogContent, [saveBtn, cancelBtn]);
+            renderDialog.show(title, dialogContent, [cancelBtn, saveBtn]);
             renderDialog.moveTo(renderButton, 'top');
 
             me._updatePreview();
