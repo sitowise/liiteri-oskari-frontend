@@ -161,7 +161,7 @@ Oskari.clazz.define(
                     transparent: true,
                     format: 'image/png',
                     hidden_ids: '',
-					styles: "MyPlacesNoLabel_2"
+					styles: "MyPlacesDefaultStyle"
                 }, {
                     scales: layerScales,
                     isBaseLayer: false,
