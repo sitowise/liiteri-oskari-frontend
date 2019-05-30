@@ -123,6 +123,7 @@ Oskari.clazz.define(
 
         me._downloadServiceUrl = null;
         me._copyrightInfo = null;
+        me._shared = false;
 
         // WMS, WMTS or WFS version
         me._version = null;
@@ -1280,6 +1281,14 @@ Oskari.clazz.define(
 
         getDownloadServiceUrl: function () {
             return this._downloadServiceUrl;
+        },
+
+        setShared: function (shared) {
+            this.shared = shared;
+        },
+
+        getShared: function () {
+            return this.shared;
         },
 
         setCopyrightInfo: function (copyrightInfo) {
