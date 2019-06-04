@@ -104,6 +104,7 @@ function () {
             me.__sandbox.registerService(me.statsService);
             me.__plugin = Oskari.clazz.create(tool.id, tool.config, Oskari.getLocalization('StatsGrid'));
             me.__mapmodule.registerPlugin(me.__plugin);
+            me.__instance.gridPlugin = me.__plugin;
             me.statsContainer = jQuery(me.templates.publishedGridTemplate);
         }
 
