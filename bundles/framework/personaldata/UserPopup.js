@@ -55,7 +55,8 @@
             	//me.sandbox.postRequestByName('ShowLayerrightsFlyoutRequest');
             });
             content.find("#showCreateMapTabAction").click(function () {
-                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('Publisher2'), 'toggle']);
+                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('StatsGrid'), 'close']);
+                me.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [me._createExtension('Publisher2'), 'toggle']);             
             	//me.sandbox.postRequestByName('ShowPublisherFlyoutRequest');
             });
             content.find("#logoutInAction").click(function () {

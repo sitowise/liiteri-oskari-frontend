@@ -783,7 +783,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 if (me.instance.servicePackageData != null) {
                     $('.indicatorsSourceSelect').show();
                     $('.indicatorsSourceSelect').val('all');
-                } else {
+               } else {
                     $('.indicatorsSourceSelect').hide();
                 }
 
@@ -7067,6 +7067,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
                 el.show();
             }
+        },
+        /**
+         * @public @method getSandbox
+         *
+         *
+         * @return {Object}
+         * Sandbox
+         */
+        getSandbox: function () {
+            return this._sandbox;
         }
     }, {
         /**
