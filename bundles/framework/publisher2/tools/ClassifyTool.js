@@ -137,7 +137,17 @@ function () {
                     }
                 }
             };
-        } else {
+        } else if (!me.state.enabled && statsGridState){
+          return {
+            configuration: {
+              publishedgrid: {
+                state: statsGridState
+              }
+            }
+          };
+        }
+
+        else {
             return null;
         }
     },
