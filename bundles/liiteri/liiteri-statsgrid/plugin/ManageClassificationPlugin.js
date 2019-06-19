@@ -978,8 +978,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageClassificat
 
             // Get class count
             if (me._state.numberOfClasses > COL_VALUES.length - 1) {
-                var newValue = Math.max(2, COL_VALUES.length - 1);
+              var newValue = Math.max(2, COL_VALUES.length - 1);
+              if (this.rangeSlider) {
                 this.rangeSlider.slider('option', 'value', newValue);
+              }
                 jQuery('input#amount_class').val(newValue);
                 me._state.numberOfClasses = newValue;
             }
