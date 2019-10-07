@@ -45,7 +45,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
             if (config.useArcGis) {
                 me.useArcGis = config.useArcGis;
                 me.featureAttribute = 'KuntaNro';
-                me.defaultLayerId = '21';
+                me.defaultLayerId = '25';
             }                
         }
     }, {
