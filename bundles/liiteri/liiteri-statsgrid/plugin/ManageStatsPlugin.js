@@ -1476,7 +1476,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 for (j = 0; j < columnIds.length; j++) {
                     var columnId = columnIds[j];
-                    if (item.hasOwnProperty(columnId) && (item[columnId] != null || item[columnId + "_PrivacyLimitTriggered"] == true || item[columnId + "_NullValue"] == true)) {
+                    if (item.hasOwnProperty(columnId) && (item[columnId] != null || item[columnId + "_PrivacyLimitTriggered"] == true || item[columnId + "_NullValue"] == true) && item[columnId] != "-") {
                         newSel = 'checked';
                         break;
                     }
