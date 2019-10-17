@@ -60,7 +60,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.domain.StatsLayerModelB
 
         var statsConf = {
             /* ARC GIS definitions */
-            'KUNTA': { 'name': 'KUNTA', 'child': null, 'wmsNames': '25', 'filterProperties': 'KuntaNro', 'groupKey': 'municipality', 'type': 'administrative', 'hasVisualization': true },
+            'KUNTA': { 'name': 'KUNTA', 'child': null, 'wmsNames': '21', 'filterProperties': 'KuntaNro', 'groupKey': 'municipality', 'type': 'administrative', 'hasVisualization': true },
             'SEUTUKUNTA': { 'name': 'SEUTUKUNTA', 'child': "KUNTA", 'wmsNames': '18', 'filterProperties': 'SkuntaNro', 'groupKey': 'sub_region', 'type': 'administrative', 'hasVisualization': true },
             'MAAKUNTA': { 'name': 'MAAKUNTA', 'child': "SEUTUKUNTA", 'wmsNames': '15', 'filterProperties': 'MkuntaNro', 'groupKey': 'region', 'type': 'administrative', 'hasVisualization' : true },
             'ELY_E': { 'name': 'ELY_E', 'child': "MAAKUNTA", 'wmsNames': '12', 'filterProperties': 'ELYNro', 'groupKey': 'ely_e', 'type': 'administrative', 'hasVisualization': true },
