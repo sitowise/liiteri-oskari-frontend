@@ -4493,8 +4493,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             me.grid.invalidateAllRows();
             me.grid.render();
 
-            me._hideEmptyItemsInGrid();
-
             if (!silent) {
                 // Show classification
                 me.sendStatsData(column);
