@@ -1451,7 +1451,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         _expandAllSubitemsInGrid: function () {
             var me = this;
             me.expanderPlugin.expandAll();
-            me._hideEmptyItemsInGrid();
         },
         _hideEmptyItemsInGrid: function() {
             var data = this.grid.getData(),
@@ -3624,7 +3623,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 me.addIndicatorMeta(item);
                                 if(++loadedIndicators >= totalSelected && me._state.functionalRows.length === 0) {
                                     me._hideOverlay();
-                                    me._hideEmptyItemsInGrid();
                                 }
                             });
                     } else {
@@ -3642,7 +3640,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                     me.addIndicatorMeta(item);
                                     if(++loadedIndicators >= totalSelected) {
                                         me._hideOverlay();
-                                        me._hideEmptyItemsInGrid();
                                     }
                                 });
                         }
@@ -3877,7 +3874,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                               delete me._state.loadState[indicatorId + ":" + cat];
                               if ($.isEmptyObject(me._state.loadState)) {
                                   me._hideOverlay();
-                                  me._hideEmptyItemsInGrid();
                                   me._expandAllSubitemsInGrid();
                               }
                           });
@@ -4345,7 +4341,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             }
                             if($.isEmptyObject(me._state.loadState)) {
                                 me._hideOverlay();
-                                me._hideEmptyItemsInGrid();
                             }
                         } else {
                             var done = 0;
@@ -4355,7 +4350,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                                     if($.isEmptyObject(me._state.loadState)) {
                                         me._hideOverlay();
-                                        me._hideEmptyItemsInGrid();
                                     }
 
                                     if(++done == me._state.functionalRows.length) {
@@ -4492,8 +4486,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             me.dataView.refresh();
             me.grid.invalidateAllRows();
             me.grid.render();
-
-            me._hideEmptyItemsInGrid();
 
             if (!silent) {
                 // Show classification
