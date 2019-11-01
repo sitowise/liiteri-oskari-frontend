@@ -427,6 +427,12 @@ Oskari.clazz.category('Oskari.mapframework.mapmodule.GetInfoPlugin', 'formatter'
             valueDiv,
             innerTable,
             i;
+
+        //remove event handler which is resposible for disabling text selection on whole document
+        $('#mapdiv').on('selectstart', '#getinforesult', function () {
+            document.onselectstart = null;
+        });
+        
         for (key in node) {
             if (!node.hasOwnProperty(key)) {
                 continue;
