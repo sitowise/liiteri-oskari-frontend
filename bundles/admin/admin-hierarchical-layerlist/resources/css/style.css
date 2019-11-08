@@ -75,7 +75,6 @@
     position: absolute !important; }
   .oskari-flyout.admin-hierarchical-layerlist-add-layer div.oskari-flyoutcontentcontainer .icon-close {
     display: inline-block;
-    opacity: 0;
     position: absolute;
     top: 9px;
     right: 10px;
