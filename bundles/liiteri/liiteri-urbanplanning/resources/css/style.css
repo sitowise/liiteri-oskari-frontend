@@ -374,8 +374,7 @@ div.urbanPlanDetail div.actions {
 }
 
 input[type="checkbox"], input[type="radio"] {
-    margin: 4px;
-    position: absolute;
+	margin: 0 3px 0 3px;
 }
 
 span.idlink {
