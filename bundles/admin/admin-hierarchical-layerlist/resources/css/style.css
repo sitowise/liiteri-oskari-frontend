@@ -100,7 +100,8 @@
       margin-top: 0; }
     .oskari-flyout.admin-hierarchical-layerlist-add-layer div.oskari-flyoutcontentcontainer div.admin-add-layer .input-controls {
       position: relative;
-      margin-right: 5px; }
+      margin-right: 5px;
+      overflow: hidden }
       .oskari-flyout.admin-hierarchical-layerlist-add-layer div.oskari-flyoutcontentcontainer div.admin-add-layer .input-controls.buttons {
         text-align: center; }
         .oskari-flyout.admin-hierarchical-layerlist-add-layer div.oskari-flyoutcontentcontainer div.admin-add-layer .input-controls.buttons button {
