@@ -4492,6 +4492,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me.sendStatsData(column);
             }
 
+            // Call _hideEmptyItemsInGrid if a region has been defined
+            if ((regionId !== null && regionId !== undefined) || 
+                (column.indicatorData.geometry != null && column.indicatorData.geometry.length > 0)) {
+                me._hideEmptyItemsInGrid();
+            }
+
             me.updateDemographicsButtons(indicatorId, gender, year);
             me.grid.setSortColumn(me._state.currentColumn, true);
         },
