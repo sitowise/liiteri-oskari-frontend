@@ -4493,7 +4493,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             // Call _hideEmptyItemsInGrid if region other than whole finland is defined
-            if (regionId !== null && regionId !== undefined && regionId !== "finland:-1") {
+            if ((regionId !== null && regionId !== undefined && regionId !== "finland:-1") ||
+                item.municipality === "Karttarajaus") {
                 me._hideEmptyItemsInGrid();
             }
 
