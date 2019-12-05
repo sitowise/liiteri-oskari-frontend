@@ -4492,9 +4492,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me.sendStatsData(column);
             }
 
-            // Call _hideEmptyItemsInGrid if a region has been defined
-            if ((regionId !== null && regionId !== undefined) || 
-                (column.indicatorData.geometry != null && column.indicatorData.geometry.length > 0)) {
+            // Call _hideEmptyItemsInGrid if region other than whole finland is defined
+            if (regionId !== null && regionId !== undefined && regionId !== "finland:-1") {
                 me._hideEmptyItemsInGrid();
             }
 
