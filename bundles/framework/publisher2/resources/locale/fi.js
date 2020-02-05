@@ -214,7 +214,7 @@ Oskari.registerLocalization(
         },
         "StartView": {
             "text": "Tervetuloa karttajulkaisuun. Toiminnon avulla voit julkaista upotetun kartan omalla verkkosivulla.",
-            "touLink": "Näytä karttajulkaisun käyttöehdot",
+            "touLink": "Tietosuoja- ja julkaisuohje",
             "layerlist_title": "Avoinna olevat karttatasot, jotka ovat julkaistavissa",
             "layerlist_empty": "Avoinna olevat karttatasot eivät ole julkaistavissa. Tarkista Valitut tasot -valikosta, mitkä karttatasot ovat julkaistavissa.",
             "layerlist_denied": "Avoinna olevat karttatasot, jotka eivät ole julkaistavissa",
