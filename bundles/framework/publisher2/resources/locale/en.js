@@ -214,7 +214,7 @@ Oskari.registerLocalization(
         },
         "StartView": {
             "text": "Welcome to publish embedded map on your website.",
-            "touLink": "Show Terms of Use",
+            "touLink": "Privacy and publication guidelines",
             "layerlist_title": "Publishable map layers open in map window:",
             "layerlist_empty": "No publishable map layers are open in the map window. Please check publishable map layers in the Selected Layers menu.",
             "layerlist_denied": "Unpublishable map layers open in map window:",
