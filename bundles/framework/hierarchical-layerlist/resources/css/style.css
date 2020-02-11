@@ -27,9 +27,6 @@ div.hierarchical-layerlist span.layer label.layer-title {
   font-size: 12px; }
 div.hierarchical-layerlist span.layer span.layer-tools {
   float: right; }
-@-moz-document url-prefix() {
-  div.hierarchical-layerlist span.layer span.layer-tools {
-    margin-top: -30px; } }
 div.hierarchical-layerlist span.layer span.layer-icon {
   float: left;
   width: 16px;
@@ -324,9 +321,6 @@ div.hierarchical-layerlist .hierarchical-layerlist-tree {
     /* Subgroup tools */
     /* Subgroup subgroup tools */
     /*Layer tools */ }
-@-moz-document url-prefix() {
-  div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .group-tools {
-    margin-top: -30px; } }
     div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .group-tools {
       float: right; }
       div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .group-tools .group-tool {
@@ -340,9 +334,6 @@ div.hierarchical-layerlist .hierarchical-layerlist-tree {
         cursor: pointer; }
         div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .group-tools .group-tool.active {
           background-color: #ffde00; }
-@-moz-document url-prefix() {
-  div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .subgroup-tools {
-    margin-top: -30px; } }
     div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .subgroup-tools {
       float: right;
       display: inline; }
@@ -357,9 +348,6 @@ div.hierarchical-layerlist .hierarchical-layerlist-tree {
         cursor: pointer; }
         div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .subgroup-tools .subgroup-tool.active {
           background-color: #ffde00; }
-@-moz-document url-prefix() {
-  div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .subgroup-subgroup-tools {
-    margin-top: -30px; } }
     div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .subgroup-subgroup-tools {
       float: right;
       display: inline; }
@@ -374,9 +362,6 @@ div.hierarchical-layerlist .hierarchical-layerlist-tree {
         cursor: pointer; }
         div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .subgroup-subgroup-tools .subgroup-subgroup-tool.active {
           background-color: #ffde00; }
-@-moz-document url-prefix() {
-  div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .layer-tools .layer-tool {
-    margin-top: -30px; } }
     div.hierarchical-layerlist .hierarchical-layerlist-tree .jstree-anchor .layer-tools .layer-tool {
       width: 26px;
       height: 26px;
