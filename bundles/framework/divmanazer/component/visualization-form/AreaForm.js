@@ -354,7 +354,7 @@ Oskari.clazz.define(
                 me.values.fillStyle = tempValues.fillStyle;
                 renderDialog.close();
             });
-            renderDialog.show(title, dialogContent, [saveBtn, cancelBtn]);
+            renderDialog.show(title, dialogContent, [cancelBtn, saveBtn]);
             renderDialog.moveTo(renderButton, 'top');
             saveBtn.focus();
             return renderDialog;

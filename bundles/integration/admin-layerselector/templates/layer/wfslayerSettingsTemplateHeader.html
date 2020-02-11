@@ -22,8 +22,10 @@
                        placeholder="<%= instance.getLocalization('admin').interfaceAddress %>"
                        value="<%= model.getInterfaceUrl() %>" />
                 <div class="icon-close mid"></div>
+                <div>
+                    <button id="add-layer-ws-button" class="fetch-ws-button"><%= instance.getLocalization('admin').getInfo %></button>
+                </div>
             </div>
-            <button id="add-layer-ws-button" class="fetch-ws-button"><%= instance.getLocalization('admin').getInfo %></button>
         </div>
     </div>
 <% } %>
@@ -38,13 +40,15 @@
             <input type="text" id="add-layer-interface" class="add-layer-input mid"
                    placeholder="<%= instance.getLocalization('admin').interfaceAddress %>"
                    value="<%= model.getInterfaceUrl() %>" readonly />
-            <input
+            <div class="icon-close mid"></div>
+            <div>
+                <input
                     type="hidden"
                     id="add-layer-srs_name"
                     class="add-layer-input long"
-            <% if (model.getSrs_name()) { %>value="<%= model.getSrs_name() %>"<% } %>
-            />
-            <div class="icon-close mid"></div>
+                    <% if (model.getSrs_name()) { %>value="<%= model.getSrs_name() %>"<% } %>
+                />
+            </div>
         </div>
     </div>
 

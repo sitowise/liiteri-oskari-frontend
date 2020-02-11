@@ -124,3 +124,7 @@ div.admin-layerselector .add-layer-btn.add-layer-recheck {
 div.oskariTabs .tabsHeader ul li.userlayers {
     display: none !important;
 }
+
+#oskari-flyout-featuredata2.featuredata2-flyout-noleftmargin {
+    left: 0px !important;
+}

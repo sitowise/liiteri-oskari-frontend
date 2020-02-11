@@ -231,13 +231,7 @@ Oskari.clazz.define('Oskari.userinterface.component.GroupVisualizationForm',
          * @param {Object} values
          */
         setValues: function (values) {
-            if (this._options.groupMode) {
-                this.setGroupValues(values);
-            } else {
-                var newValues = {};
-                newValues[this.DEFAULT_GROUP] = values;
-                this.setGroupValues(newValues);
-            }
+            this.setGroupValues(values);
 
             return;
 
@@ -271,7 +265,7 @@ Oskari.clazz.define('Oskari.userinterface.component.GroupVisualizationForm',
 
                     var value = null;
                     for (var idx in values) {
-                        if (values[idx].group == groupId) {
+                        if (values[idx].group === groupId) {
                             value = values[idx].symbol;
                             break;
                         }

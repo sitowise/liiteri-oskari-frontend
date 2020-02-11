@@ -70,7 +70,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher2.PublisherBundleInstan
             'Publisher.MapPublishedEvent': function (event) {
                 var loc = this.getLocalization();
                 var url = event.getUrl();
-                var iframeCode = '<div class="codesnippet"><code>&lt;iframe src="' + url + '" allow="geolocation" style="border: none;';
+                var iframeCode = '<div id="publisherCodeSnippet" class="codesnippet"><code>&lt;iframe src="' + url + '" allow="geolocation" style="border: none;';
                 var width = event.getWidth();
                 var height = event.getHeight();
 
@@ -91,6 +91,11 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher2.PublisherBundleInstan
                 okBtn.addClass('primary');
                 dialog.show(loc.published.title, content, [okBtn]);
                 this.setPublishMode(false);
+                
+                //remove event handler responsible for disabling text selection on whole document
+                $(document.body).on('selectstart', '#publisherCodeSnippet', function () {
+                    document.onselectstart = null;
+                });
             }
         },
         /**

@@ -30,8 +30,8 @@
                     <option value="<%= dataProviders[i].id %>" <% if(model.getOrganizationName() == dataProviders[i].name ) { %>selected<% } %> ><%= dataProviders[i].name %></option>
                     <% } %>
                 </select>
-                </div>
                 <button id="add-dataprovider-button" class="add-dataprovider-button"><%= instance.locale('admin.addDataproviderButton') %></button>
+                </div>
             </div>
         </div>
 

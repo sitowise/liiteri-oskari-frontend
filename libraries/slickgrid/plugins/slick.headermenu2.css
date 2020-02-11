@@ -64,7 +64,6 @@
 
 .slick-column-name {
   width: 100%;
-  overflow: hidden;
   display: inline-block;
   text-overflow: ellipsis;
   padding-right: 20px;

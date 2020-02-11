@@ -89,13 +89,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.publishedgrid.PublishedGridBundleI
             // Register grid plugin to the map.
             var gridConf = {
                 'published': true,
-                'state': me.state
+                'state': me.state,
+                'layer': statsLayer
             };
             var gridPlugin = Oskari.clazz.create(
                 'Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin',
                 gridConf,
                 locale,
-                statsLayer
+                this
             );
             mapModule.registerPlugin(gridPlugin);
             mapModule.startPlugin(gridPlugin);
@@ -246,7 +247,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.publishedgrid.PublishedGridBundleI
          */
         createUI: function () {
             var me = this;
-            me.state.gridShown = true;
             // Makes some room in the DOM for the grid.
             me._toggleGrid(me.state.gridShown);
 

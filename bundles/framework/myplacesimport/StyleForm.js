@@ -88,26 +88,27 @@ Oskari.clazz.define(
          * @return {Object} styleJson
          */
         _getStyleValues: function(form){
-            var formValues = form.getValues(),
+            var me = this,
+                formValues = form.getValues(),
                 styleJson = {};
 
             if (formValues) {
                 styleJson.dot = {
                     size: formValues.dot.size,
-                    color: '#' + formValues.dot.color,
+                    color: me._prefixColorIfNeeded(formValues.dot.color),
                     shape: formValues.dot.shape
                 };
                 styleJson.line = {
                     width: formValues.line.width,
-                    color: '#' + formValues.line.color,
+                    color: me._prefixColorIfNeeded(formValues.line.color),
                     cap: formValues.line.cap,
                     corner: formValues.line.corner,
                     style: formValues.line.style
                 };
                 styleJson.area = {
                     lineWidth: formValues.area.lineWidth,
-                    lineColor: formValues.area.lineColor === null ? null : '#' + formValues.area.lineColor,
-                    fillColor: formValues.area.fillColor === null ? null : '#' + formValues.area.fillColor,
+                    lineColor: formValues.area.lineColor === null ? null : me._prefixColorIfNeeded(formValues.area.lineColor),
+                    fillColor: formValues.area.fillColor === null ? null : me._prefixColorIfNeeded(formValues.area.fillColor),
                     lineStyle: formValues.area.lineStyle,
                     fillStyle: formValues.area.fillStyle,
                     lineCorner: formValues.area.lineCorner
@@ -147,6 +148,18 @@ Oskari.clazz.define(
          */
         _getOnScreenForm: function () {
             return jQuery('div.myplacesimportstyleform');
+        },
+
+        /**
+        * @method  _prefixColorIfNeeded
+        * @private
+        * Adds prefix #-character if not present
+        */
+        _prefixColorIfNeeded: function (color) {
+            if (color && color.charAt(0) !== '#') {
+                return '#' + color;
+            }
+            return color;
         }
 
     });	

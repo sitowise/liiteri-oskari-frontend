@@ -783,7 +783,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 if (me.instance.servicePackageData != null) {
                     $('.indicatorsSourceSelect').show();
                     $('.indicatorsSourceSelect').val('all');
-                } else {
+               } else {
                     $('.indicatorsSourceSelect').hide();
                 }
 
@@ -1451,7 +1451,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         _expandAllSubitemsInGrid: function () {
             var me = this;
             me.expanderPlugin.expandAll();
-            me._hideEmptyItemsInGrid();
         },
         _hideEmptyItemsInGrid: function() {
             var data = this.grid.getData(),
@@ -1476,7 +1475,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 for (j = 0; j < columnIds.length; j++) {
                     var columnId = columnIds[j];
-                    if (item.hasOwnProperty(columnId) && (item[columnId] != null || item[columnId + "_PrivacyLimitTriggered"] == true || item[columnId + "_NullValue"] == true)) {
+                    if (item.hasOwnProperty(columnId) && (item[columnId] != null || item[columnId + "_PrivacyLimitTriggered"] == true || item[columnId + "_NullValue"] == true) && item[columnId] != "-") {
                         newSel = 'checked';
                         break;
                     }
@@ -3624,7 +3623,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 me.addIndicatorMeta(item);
                                 if(++loadedIndicators >= totalSelected && me._state.functionalRows.length === 0) {
                                     me._hideOverlay();
-                                    me._hideEmptyItemsInGrid();
                                 }
                             });
                     } else {
@@ -3642,7 +3640,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                     me.addIndicatorMeta(item);
                                     if(++loadedIndicators >= totalSelected) {
                                         me._hideOverlay();
-                                        me._hideEmptyItemsInGrid();
                                     }
                                 });
                         }
@@ -3877,7 +3874,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                               delete me._state.loadState[indicatorId + ":" + cat];
                               if ($.isEmptyObject(me._state.loadState)) {
                                   me._hideOverlay();
-                                  me._hideEmptyItemsInGrid();
                                   me._expandAllSubitemsInGrid();
                               }
                           });
@@ -4345,7 +4341,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             }
                             if($.isEmptyObject(me._state.loadState)) {
                                 me._hideOverlay();
-                                me._hideEmptyItemsInGrid();
                             }
                         } else {
                             var done = 0;
@@ -4355,7 +4350,6 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                                     if($.isEmptyObject(me._state.loadState)) {
                                         me._hideOverlay();
-                                        me._hideEmptyItemsInGrid();
                                     }
 
                                     if(++done == me._state.functionalRows.length) {
@@ -4493,11 +4487,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             me.grid.invalidateAllRows();
             me.grid.render();
 
-            me._hideEmptyItemsInGrid();
-
             if (!silent) {
                 // Show classification
                 me.sendStatsData(column);
+            }
+
+            // Call _hideEmptyItemsInGrid if region other than whole finland is defined
+            if ((regionId !== null && regionId !== undefined && regionId !== "finland:-1") ||
+                (regionId === "finland:-1" && column.indicatorData.geometry !== null && column.indicatorData.geometry.length > 0)) {
+                me._hideEmptyItemsInGrid();
             }
 
             me.updateDemographicsButtons(indicatorId, gender, year);
@@ -7067,6 +7065,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
                 el.show();
             }
+        },
+        /**
+         * @public @method getSandbox
+         *
+         *
+         * @return {Object}
+         * Sandbox
+         */
+        getSandbox: function () {
+            return this._sandbox;
         }
     }, {
         /**

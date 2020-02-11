@@ -579,20 +579,20 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             if (formValues) {
                 values.dot = {
                     size: formValues.dot.size,
-                    color: '#' + formValues.dot.color,
+                    color: me._prefixColorIfNeeded(formValues.dot.color),
                     shape: formValues.dot.shape
                 };
                 values.line = {
                     size: formValues.line.width,
-                    color: '#' + formValues.line.color,
+                    color: me._prefixColorIfNeeded(formValues.line.color),
                     cap: formValues.line.cap,
                     corner: formValues.line.corner,
                     style: formValues.line.style
                 };
                 values.area = {
                     size: formValues.area.lineWidth,
-                    lineColor: '#' + formValues.area.lineColor,
-                    fillColor: '#' + formValues.area.fillColor,
+                    lineColor: me._prefixColorIfNeeded(formValues.area.lineColor),
+                    fillColor: me._prefixColorIfNeeded(formValues.area.fillColor),
                     lineStyle: formValues.area.lineStyle,
                     fillStyle: formValues.area.fillStyle,
                     lineCorner: formValues.area.lineCorner
@@ -1968,6 +1968,18 @@ Oskari.clazz.define('Oskari.analysis.bundle.analyse.view.StartAnalyse',
             if (this.visualizationForm) {
                 this.visualizationForm.setValues(values);
             }
+        },
+
+        /**
+        * @method  _prefixColorIfNeeded
+        * @private
+        * Adds prefix #-character if not present
+        */
+        _prefixColorIfNeeded: function (color) {
+            if (color && color.charAt(0) !== '#') {
+                return '#' + color;
+            }
+            return color;
         },
 
         /**

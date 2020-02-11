@@ -70,7 +70,7 @@
     background-position: -216px 0px !important;
 }
 
-.backendstatus-maintenance {
+.backendstatus-maintenance-pending {
     width: 20px;
     height: 20px;
     background-image: url('icons.png') !important;
@@ -78,7 +78,7 @@
     background-position: -236px 0px !important;
 }
 
-.backendstatus-maintenance-pending {
+.backendstatus-maintenance {
     width: 20px;
     height: 20px;
     background-image: url('icons.png') !important;
@@ -190,7 +190,7 @@
     background-position: -483px 0px !important;
 }
 
-.icon-close {
+.icon-close-dark {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -198,28 +198,28 @@
     background-position: -506px 0px !important;
 }
 
-.icon-close:hover {
-    width: 16px;
-    height: 16px;
-    background-image: url('icons.png') !important;
-    background-repeat: no-repeat !important;
-    background-position: -506px -16px !important;
-}
-
-.icon-close-dark {
-    width: 16px;
-    height: 16px;
-    background-image: url('icons.png') !important;
-    background-repeat: no-repeat !important;
-    background-position: -522px 0px !important;
-}
-
 .icon-close-white {
     width: 20px;
     height: 20px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -538px 0px !important;
+    background-position: -522px 0px !important;
+}
+
+.icon-close {
+    width: 16px;
+    height: 16px;
+    background-image: url('icons.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: -542px 0px !important;
+}
+
+.icon-close:hover {
+    width: 16px;
+    height: 16px;
+    background-image: url('icons.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: -542px -16px !important;
 }
 
 .icon-corner-round {
@@ -246,28 +246,12 @@
     background-position: -614px 0px !important;
 }
 
-.icon-drag {
-    width: 16px;
-    height: 16px;
-    background-image: url('icons.png') !important;
-    background-repeat: no-repeat !important;
-    background-position: -642px 0px !important;
-}
-
-.icon-drag:hover {
-    width: 16px;
-    height: 16px;
-    background-image: url('icons.png') !important;
-    background-repeat: no-repeat !important;
-    background-position: -642px -16px !important;
-}
-
 .icon-drag-corner {
     width: 23px;
     height: 23px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -658px 0px !important;
+    background-position: -642px 0px !important;
 }
 
 .icon-drag-corner:hover {
@@ -275,7 +259,23 @@
     height: 23px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -658px -23px !important;
+    background-position: -642px -23px !important;
+}
+
+.icon-drag {
+    width: 16px;
+    height: 16px;
+    background-image: url('icons.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: -665px 0px !important;
+}
+
+.icon-drag:hover {
+    width: 16px;
+    height: 16px;
+    background-image: url('icons.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: -665px -16px !important;
 }
 
 .icon-find-nearest-address-dark {
@@ -310,7 +310,7 @@
     background-position: -765px 0px !important;
 }
 
-.icon-funnel {
+.icon-funnel-active {
     width: 18px;
     height: 18px;
     background-image: url('icons.png') !important;
@@ -318,7 +318,7 @@
     background-position: -793px 0px !important;
 }
 
-.icon-funnel-active {
+.icon-funnel {
     width: 18px;
     height: 18px;
     background-image: url('icons.png') !important;
@@ -334,20 +334,12 @@
     background-position: -829px 0px !important;
 }
 
-.icon-info {
+.icon-info-area-active {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
     background-position: -857px 0px !important;
-}
-
-.icon-info:hover {
-    width: 16px;
-    height: 16px;
-    background-image: url('icons.png') !important;
-    background-repeat: no-repeat !important;
-    background-position: -857px -16px !important;
 }
 
 .icon-info-area {
@@ -358,7 +350,7 @@
     background-position: -873px 0px !important;
 }
 
-.icon-info-area-active {
+.icon-info {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -366,12 +358,12 @@
     background-position: -889px 0px !important;
 }
 
-.icon-line {
-    width: 28px;
-    height: 28px;
+.icon-info:hover {
+    width: 16px;
+    height: 16px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -905px 0px !important;
+    background-position: -889px -16px !important;
 }
 
 .icon-line-basic {
@@ -379,7 +371,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -933px 0px !important;
+    background-position: -905px 0px !important;
 }
 
 .icon-line-dashed {
@@ -387,7 +379,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -961px 0px !important;
+    background-position: -933px 0px !important;
 }
 
 .icon-line-flat_cap {
@@ -395,7 +387,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -989px 0px !important;
+    background-position: -961px 0px !important;
 }
 
 .icon-line-round_cap {
@@ -403,7 +395,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1017px 0px !important;
+    background-position: -989px 0px !important;
 }
 
 .icon-line-thin-diagonal {
@@ -411,7 +403,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1045px 0px !important;
+    background-position: -1017px 0px !important;
 }
 
 .icon-line-thin-horizontal {
@@ -419,7 +411,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1073px 0px !important;
+    background-position: -1045px 0px !important;
 }
 
 .icon-line-wide-diagonal {
@@ -427,10 +419,18 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1101px 0px !important;
+    background-position: -1073px 0px !important;
 }
 
 .icon-line-wide-horizontal {
+    width: 28px;
+    height: 28px;
+    background-image: url('icons.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: -1101px 0px !important;
+}
+
+.icon-line {
     width: 28px;
     height: 28px;
     background-image: url('icons.png') !important;
@@ -590,7 +590,7 @@
     background-position: -1429px 0px !important;
 }
 
-.layer-newest {
+.layer-newest-disabled {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -598,7 +598,7 @@
     background-position: -1445px 0px !important;
 }
 
-.layer-newest-disabled {
+.layer-newest {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -606,7 +606,7 @@
     background-position: -1461px 0px !important;
 }
 
-.layer-publishable {
+.layer-publishable-disabled {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -614,7 +614,7 @@
     background-position: -1477px 0px !important;
 }
 
-.layer-publishable-disabled {
+.layer-publishable {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -622,7 +622,7 @@
     background-position: -1493px 0px !important;
 }
 
-.layer-stats {
+.layer-stats-disabled {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -630,7 +630,7 @@
     background-position: -1509px 0px !important;
 }
 
-.layer-stats-disabled {
+.layer-stats {
     width: 16px;
     height: 16px;
     background-image: url('icons.png') !important;
@@ -670,20 +670,12 @@
     background-position: -1589px 0px !important;
 }
 
-.marker {
-    width: 32px;
-    height: 32px;
-    background-image: url('icons.png') !important;
-    background-repeat: no-repeat !important;
-    background-position: -1605px 0px !important;
-}
-
 .marker-arrow {
     width: 28px;
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1637px 0px !important;
+    background-position: -1605px 0px !important;
 }
 
 .marker-dot {
@@ -691,7 +683,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1665px 0px !important;
+    background-position: -1633px 0px !important;
 }
 
 .marker-flag {
@@ -699,7 +691,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1693px 0px !important;
+    background-position: -1661px 0px !important;
 }
 
 .marker-pin {
@@ -707,7 +699,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1721px 0px !important;
+    background-position: -1689px 0px !important;
 }
 
 .marker-pin2 {
@@ -715,7 +707,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1749px 0px !important;
+    background-position: -1717px 0px !important;
 }
 
 .marker-share-dark {
@@ -723,7 +715,7 @@
     height: 32px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1777px 0px !important;
+    background-position: -1745px 0px !important;
 }
 
 .marker-share-light {
@@ -731,7 +723,7 @@
     height: 32px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1809px 0px !important;
+    background-position: -1777px 0px !important;
 }
 
 .marker-square {
@@ -739,7 +731,7 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1841px 0px !important;
+    background-position: -1809px 0px !important;
 }
 
 .marker-stud {
@@ -747,7 +739,15 @@
     height: 28px;
     background-image: url('icons.png') !important;
     background-repeat: no-repeat !important;
-    background-position: -1869px 0px !important;
+    background-position: -1837px 0px !important;
+}
+
+.marker {
+    width: 32px;
+    height: 32px;
+    background-image: url('icons.png') !important;
+    background-repeat: no-repeat !important;
+    background-position: -1865px 0px !important;
 }
 
 .menu-3d-dark {
@@ -814,7 +814,7 @@
     background-position: -2141px 0px !important;
 }
 
-.mobile-infobox-dark {
+.mobile-info-marker-dark {
     width: 32px;
     height: 32px;
     background-image: url('icons.png') !important;
@@ -822,7 +822,7 @@
     background-position: -2173px 0px !important;
 }
 
-.mobile-infobox-light {
+.mobile-info-marker-light {
     width: 32px;
     height: 32px;
     background-image: url('icons.png') !important;
@@ -830,7 +830,7 @@
     background-position: -2205px 0px !important;
 }
 
-.mobile-info-marker-dark {
+.mobile-infobox-dark {
     width: 32px;
     height: 32px;
     background-image: url('icons.png') !important;
@@ -838,7 +838,7 @@
     background-position: -2237px 0px !important;
 }
 
-.mobile-info-marker-light {
+.mobile-infobox-light {
     width: 32px;
     height: 32px;
     background-image: url('icons.png') !important;

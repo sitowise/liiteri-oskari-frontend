@@ -200,6 +200,16 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapmodule.plugin.MapIconsPlugin'
                 me.addMapIcon(conf.extension, conf.description, conf.state);
             });
         },
+        showIcons: function () {
+            var me = this;
+            me.element.find('ul').css('visibility', '');
+        },
+        hideIcons: function() {
+            var me = this;
+            var container = me.element.find('ul');
+            container.find('span.glyphicon.mapicon.user-mapicon').trigger("click");
+            container.css('visibility', 'hidden');
+        },
         addMapIcon: function (extension, description, isSelected) {
             var me = this;
             if (!me.element)

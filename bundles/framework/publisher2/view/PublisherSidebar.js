@@ -537,9 +537,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher2.view.PublisherSidebar
                 );
             _.each(mapModule.getPluginInstances(), function(plugin) {
                 if (plugin.hasUI && plugin.hasUI()) {
-                    plugin.stopPlugin(me.instance.sandbox);
-                    mapModule.unregisterPlugin(plugin);
-                    me.normalMapPlugins.push(plugin);
+                    if (plugin.getName() !== 'MainMapModuleMapIconsPlugin') {
+                        plugin.stopPlugin(me.instance.sandbox);
+                        mapModule.unregisterPlugin(plugin);
+                        me.normalMapPlugins.push(plugin);
+                    } else {
+                        plugin.hideIcons();
+                        me.normalMapPlugins.push(plugin);
+                    }
                 }
             });
 
@@ -564,10 +569,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.publisher2.view.PublisherSidebar
             // resume normal plugins
             for (var i = 0; i < me.normalMapPlugins.length; i += 1) {
                 plugin = me.normalMapPlugins[i];
-                mapModule.registerPlugin(plugin);
-                plugin.startPlugin(me.instance.sandbox);
-                if (plugin.refresh) {
-                    plugin.refresh();
+                if (plugin.getName() !== 'MainMapModuleMapIconsPlugin') {
+                    mapModule.registerPlugin(plugin);
+                    plugin.startPlugin(me.instance.sandbox);
+                    if (plugin.refresh) {
+                        plugin.refresh();
+                    }
+                } else {
+                    plugin.showIcons();
                 }
             }
 

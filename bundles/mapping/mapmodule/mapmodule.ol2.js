@@ -57,8 +57,7 @@ Oskari.clazz.define('Oskari.mapframework.ui.module.common.MapModule',
                 'bottom right',
                 'bottom left',
                 'right top',
-                'left top',
-                'top2 right'
+                'left top'
             ];
         },
 

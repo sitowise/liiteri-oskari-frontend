@@ -813,6 +813,13 @@ Oskari.clazz.define('Oskari.userinterface.bundle.ui.UserInterfaceBundleInstance'
                 flyoutPlugin = flyoutInfo.plugin;
                 flyout = flyoutInfo.el;
 
+                /* Liiteri custom code
+                 * remove default flyout left margin for featuredata2 flyout in published view to properly fit iframe
+                */
+                if (flyoutPlugin.getName() === 'Oskari.mapframework.bundle.featuredata2.Flyout'
+                    && Oskari.app.getType() === 'published')
+                    flyout.addClass('featuredata2-flyout-noleftmargin');
+
                 //if flyout plugin has a lazyRender created, use it.
                 if (state === 'attach' && flyoutPlugin.lazyRender) {
                     flyoutPlugin.lazyRender();

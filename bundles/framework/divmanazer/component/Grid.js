@@ -1020,8 +1020,9 @@ Oskari.clazz.define('Oskari.userinterface.component.Grid',
                         jQuery(exportForm.getElement()),
                         [cancelButton, exportButton]
                     );
-                });
-                exporter.append(exportPopupButton.getElement());
+              });
+                //Hidden for now (there are some layers, where it's not allowed to share data - customer decided to temporarily get rid of that button)
+                //exporter.append(exportPopupButton.getElement());
 
                 me.toolRow.append(exporter);
             }

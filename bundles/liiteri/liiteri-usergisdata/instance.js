@@ -265,7 +265,7 @@ function () {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "ANALYSIS") {
 								var analysisLayer = mapLayerService.findMapLayer(resp[i].dataId);
-								if (analysisLayer && (analysisLayer.shared == null || analysisLayer.shared == undefined)) {
+							    if (analysisLayer && analysisLayer.shared) {
 									analysisLayer.userDataId = resp[i].id;
 									analysisLayer.expirationDate = resp[i].expirationDate;
 
@@ -282,7 +282,7 @@ function () {
 						for (var i = 0; i < resp.length; i++) {
 							if (resp[i].dataType == "IMPORTED_PLACES") {
 								var importedLayer = mapLayerService.findMapLayer(resp[i].dataId);
-								if (importedLayer && (importedLayer.shared == null || importedLayer.shared == undefined)) {
+							    if (importedLayer && importedLayer.shared) {
 									importedLayer.userDataId = resp[i].id;
 									importedLayer.expirationDate = resp[i].expirationDate;
 
