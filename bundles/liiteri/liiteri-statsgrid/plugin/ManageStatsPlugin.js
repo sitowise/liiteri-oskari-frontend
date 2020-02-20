@@ -1260,6 +1260,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             });
             categoryIconContainer.append(hideEmptyItemsElement);
 
+            var showEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-refresh" title="Palauta rivit"></span>');
+            showEmptyItemsElement.click(function() {
+                me._showAllItemsInGrid();
+                if (me.currentAreaFilter._data.length > 0) {
+                    me._hideAreasNotSelected(me.currentAreaFilter._data, false);
+                }
+            });
+            categoryIconContainer.append(showEmptyItemsElement);
+
             cont.append(categoryIconContainer);
 
             //                    var sortingSelectorContainer = jQuery(me.templates.selectorContainer);
@@ -1565,6 +1574,25 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         data.updateItem(item.id, item);
                     }
                 }
+            }
+            data.collapseGroup('empty');
+            data.endUpdate();
+            data.refresh();
+        },
+        _showAllItemsInGrid: function() {
+            var data = this.grid.getData(),
+                columns = this.grid.getColumns(),
+                items = data.getItems(),
+                item,
+                i,
+                j,
+                newSel,
+                id;
+            data.beginUpdate();
+            for (i = 0; i < items.length; i++) {
+                item = items[i];
+                item.sel = 'checked';
+                data.updateItem(item.id, item);
             }
             data.collapseGroup('empty');
             data.endUpdate();
