@@ -1252,7 +1252,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var categoryIconContainer = jQuery("<div class='iconContainer'></div>");
             var hideEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-upload" title="Piilota tyhjät rivit"></span>');
             hideEmptyItemsElement.click(function() {
-                me._hideEmptyItemsInGrid();
+                if (me.currentAreaFilter._data.length > 0) {
+                    me._hideAreasNotSelected(me.currentAreaFilter._data, true);
+                } else {
+                    me._hideEmptyItemsInGrid();
+                }
             });
             categoryIconContainer.append(hideEmptyItemsElement);
 
@@ -1478,6 +1482,68 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     if (item.hasOwnProperty(columnId) && (item[columnId] != null || item[columnId + "_PrivacyLimitTriggered"] == true || item[columnId + "_NullValue"] == true) && item[columnId] != "-") {
                         newSel = 'checked';
                         break;
+                    }
+                }
+
+                if (item.sel != newSel) {
+                    item.sel = newSel;
+                    data.updateItem(item.id, item);
+                }
+            }
+            for (i = 0; i < items.length; i++) {
+                item = items[i];
+                //FIXME: works only in one level of drilling down
+                if (item._parent != null) {
+                    if(!item.category || this._categoriesHierarchy[item.category].type === "functional") {
+                        continue;
+                    }
+                    var parentItem = data.getItemById(item._parent);
+                    if (item.sel != parentItem.sel) {
+                        item.sel = parentItem.sel;
+                        data.updateItem(item.id, item);
+                    }
+                }
+            }
+            data.collapseGroup('empty');
+            data.endUpdate();
+            data.refresh();
+        },
+        _hideAreasNotSelected: function(_selectedAreas, _hideEmptyRows) {
+            var data = this.grid.getData(),
+                columns = this.grid.getColumns(),
+                items = data.getItems(),
+                item,
+                i,
+                j,
+                newSel,
+                id;
+            var columnIds = [];
+            for (j = 0; j < columns.length; j++) {
+                if (columns[j].id.indexOf('indicator') < 0)
+                    continue;
+                columnIds.push(columns[j].id);
+            }
+
+            data.beginUpdate();
+            for (i = 0; i < items.length; i++) {
+                item = items[i];
+                newSel = 'empty';
+
+                for (j = 0; j < columnIds.length; j++) {
+                    var columnId = columnIds[j];
+                    for (var k = 0, bLen = _selectedAreas[0].values.length; k < bLen; ++k) {
+                        var areaId = _selectedAreas[0].values[k]
+                        for (var l = 0, bLen2 = item.memberOf.length; l < bLen2; ++l) {
+                            if (item.memberOf[l].split(':')[1] === areaId) {
+                                if (!_hideEmptyRows){
+                                    newSel = 'checked';
+                                    break;
+                                } else if (_hideEmptyRows && item.hasOwnProperty(columnId) && (item[columnId] != null || item[columnId + "_PrivacyLimitTriggered"] == true || item[columnId + "_NullValue"] == true) && item[columnId] != "-") {
+                                    newSel = 'checked';
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -4492,9 +4558,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 me.sendStatsData(column);
             }
 
-            // Call _hideEmptyItemsInGrid if region other than whole finland is defined
-            if ((regionId !== null && regionId !== undefined && regionId !== "finland:-1") ||
-                (regionId === "finland:-1" && column.indicatorData.geometry !== null && column.indicatorData.geometry.length > 0)) {
+            // Call _hideAreasNotSelected if region(s) are selected
+            if (me.currentAreaFilter._data.length > 0) {
+                me._hideAreasNotSelected(me.currentAreaFilter._data, false);
+            // Call _hideEmptyItemsInGrid if a geometryFilter is used
+            } else if (me.geometryFilter._geometries.length > 0) {
                 me._hideEmptyItemsInGrid();
             }
 
