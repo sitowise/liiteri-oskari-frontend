@@ -448,7 +448,9 @@ Oskari.registerLocalization(
             "tasksElementTitle": "Vertaa valittuun sarakkeeseen",
             "cancel": "Peruuta",
             "ok": "Laske"
-        }
+        },
+        "hideEmptyRows": "Piilota tyhjät rivit",
+        "showRowsAgain": "Palauta piilotetut rivit"
     }
 }
 );

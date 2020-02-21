@@ -421,7 +421,9 @@ Oskari.registerLocalization(
             "selectAttrInstr": "Select identyfying attribute",
             "selectAttrWarn": "You should select an identyfying attribute",
             "drawnAreaFilterId": "Drawn area {0}"
-        }
+        },
+        "hideEmptyRows": "Hide empty rows",
+        "showRowsAgain": "Show hidden rows"
     }
 }
 );

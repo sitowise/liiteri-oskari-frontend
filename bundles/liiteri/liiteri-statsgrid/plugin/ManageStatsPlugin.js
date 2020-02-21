@@ -1250,7 +1250,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             cont.append(regionSelectorContainer);
 
             var categoryIconContainer = jQuery("<div class='iconContainer'></div>");
-            var hideEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-upload" title="Piilota tyhjät rivit"></span>');
+            var hideEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-upload" title="' + this._locale.hideEmptyRows + '"></span>');
             hideEmptyItemsElement.click(function() {
                 if (!me.currentAreaFilter.isEmpty()) {
                     me._hideAreasNotSelected(me.currentAreaFilter.getData(), true);
@@ -1260,7 +1260,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             });
             categoryIconContainer.append(hideEmptyItemsElement);
 
-            var showEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-refresh" title="Palauta rivit"></span>');
+            var showEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-refresh" title="' + this._locale.showRowsAgain + '"></span>');
             showEmptyItemsElement.click(function() {
                 me._showAllItemsInGrid();
                 if (!me.currentAreaFilter.isEmpty()) {
