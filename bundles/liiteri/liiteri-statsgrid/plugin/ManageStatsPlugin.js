@@ -1252,8 +1252,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var categoryIconContainer = jQuery("<div class='iconContainer'></div>");
             var hideEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-upload" title="Piilota tyhjät rivit"></span>');
             hideEmptyItemsElement.click(function() {
-                if (me.currentAreaFilter._data.length > 0) {
-                    me._hideAreasNotSelected(me.currentAreaFilter._data, true);
+                if (!me.currentAreaFilter.isEmpty()) {
+                    me._hideAreasNotSelected(me.currentAreaFilter.getData(), true);
                 } else {
                     me._hideEmptyItemsInGrid();
                 }
@@ -1263,8 +1263,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var showEmptyItemsElement = jQuery('<span class="glyphicon glyphicon-refresh" title="Palauta rivit"></span>');
             showEmptyItemsElement.click(function() {
                 me._showAllItemsInGrid();
-                if (me.currentAreaFilter._data.length > 0) {
-                    me._hideAreasNotSelected(me.currentAreaFilter._data, false);
+                if (!me.currentAreaFilter.isEmpty()) {
+                    me._hideAreasNotSelected(me.currentAreaFilter.getData(), false);
                 }
             });
             categoryIconContainer.append(showEmptyItemsElement);
@@ -4587,10 +4587,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             // Call _hideAreasNotSelected if region(s) are selected
-            if (me.currentAreaFilter._data.length > 0) {
-                me._hideAreasNotSelected(me.currentAreaFilter._data, false);
+            if (!me.currentAreaFilter.isEmpty()) {
+                me._hideAreasNotSelected(me.currentAreaFilter.getData(), false);
             // Call _hideEmptyItemsInGrid if a geometryFilter is used
-            } else if (me.geometryFilter._geometries.length > 0) {
+            } else if (!me.geometryFilter.isEmpty()) {
                 me._hideEmptyItemsInGrid();
             }
 
