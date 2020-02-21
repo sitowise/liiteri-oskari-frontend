@@ -48,6 +48,7 @@ Oskari.registerLocalization(
             "work": "Työalueittain",
             "home": "Kotialueittain"
         },
+        "type": "Statistics",
         "addColumn": "Get data",
         "addColumnFromArea": "Set geometry area filter",
         "addColumnFromRegionFilter": "Set area filter",
@@ -61,6 +62,7 @@ Oskari.registerLocalization(
         "availableRegions": "Values are found for the following regional classifications:",
         "numberOfSelectedIndicators": "You have selected {0} indicators",
         "year": "Year",
+        "createIntersection": "Create an intersection between selected functional areas (select only two areas)",
         "buttons": {
             "ok": "OK",
             "cancel": "Cancel",
@@ -96,6 +98,7 @@ Oskari.registerLocalization(
             "stageTitle": "Stage",
             "unitTitle": "Unit",
             "yearsTitle": "Years",
+            "gridYearsTitle": "Grid years",
             "annotations" : {
                 "year": "Year",
                 "organization": "Organization",
@@ -219,6 +222,8 @@ Oskari.registerLocalization(
         "selectIndicatorPlaceholder": "Select indicators",
         "areaRestrictions": "Area restrictions",
         "presentationLevel": "Presentation level",
+        "yearSelector": "Year(s)",
+        "functionalAreas": "Operational areas",
         "noAreaFilterSet": "There is no area filter set",
         "noAreaFilterSetNoGrid": "There is no area filter set",
         "areaFilterLimitBySelected": "Limit by selected regions",
@@ -253,6 +258,8 @@ Oskari.registerLocalization(
         "dataSource" : "Data source",
         "regionCategories": {
             "title": "Region categories",
+            "ERVA": "ERVA-areas",
+            "ELY-KESKUS": "ELY-areas",
             "KUNTA": "Municipality",
             "ALUEHALLINTOVIRASTO": "Aluehallintovirasto",
             "MAAKUNTA": "Region",
@@ -268,6 +275,7 @@ Oskari.registerLocalization(
             'NEIGHBORHOOD': "Neighborhood",
             'LOCALITY': "Locality",
             "PLANNEDAREA" : "Planned area",
+            "PLANNEDAREATYPE": "Planned area -type",
             "NEIGHBORHOODTYPE" : "Neighborhood type",
             "ADMINISTRATIVELAWAREA" : "Administrative law area",
             "SHOPAREA" : "Shop area",
@@ -290,6 +298,8 @@ Oskari.registerLocalization(
             "ADMINISTRATIVELAWAREA": "Administrative law area",
             "PALISKUNTA": "Reindeer herding cooperative"
         },
+        "baseInfoTitle": "Base info",
+        "dataTitle": "Data",
         "addDataButton": "Add indicator",
         "addDataTitle": "Add a new indicator.",
         "openImportDialogTip": "Import data from the clipboard.",
@@ -421,7 +431,26 @@ Oskari.registerLocalization(
             "selectAttrInstr": "Select identyfying attribute",
             "selectAttrWarn": "You should select an identyfying attribute",
             "drawnAreaFilterId": "Drawn area {0}"
-        }
+        },
+        "columnComparison": {
+            "notValid": "Column cannot be compared to itself. Please click the compare button of a column you want to compare to.",
+            "compared": "Cannot use the values of a previous comparison in a new comparison.",
+            "unknown": "Unknown error.",
+            "instructions": "Please select the change type for the previous column selection (a) and this columns (b) comparison.",
+            "difference": "Difference b-a",
+            "division": "Division b/a",
+            "relativeChange": "Relative change (b-a)/a x 100 %",
+            "sum": "Sum a+b",
+            "differenceTitle": "Difference",
+            "divisionTitle": "Division",
+            "relativeChangeTitle": "Change Ratio",
+            "sumTitle": "Sum",
+            "tasksElementTitle": "Compare to selected column",
+            "cancel": "Cancel",
+            "ok": "Calculate"
+        },
+        "hideEmptyRows": "Hide empty rows",
+        "showRowsAgain": "Show hidden rows"
     }
 }
 );
