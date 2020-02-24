@@ -125,6 +125,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
         this.WFSLayerService = null;
 
+        this.statsAreaFeatureCollection = null;
+
         this.columnComparisonOptions = [{
             type: 'difference',
             selected: true,
@@ -716,6 +718,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         filterBtn.attr('disabled', 'disabled');
                     }
                 }
+            },
+            'StatsGrid.StatsAreaEstablishedEvent': function (event) {
+                this.statsAreaFeatureCollection = event.getFeatureCollection();
             }
         },
 
@@ -3186,6 +3191,26 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             group = me._categoriesGroupKeys[grp],
             gender = gender !== null && gender !== undefined ? gender : 'total',
             functionalRows = [];
+
+            // set feature collection for export functionality
+            if (!me.geometryFilter.isEmpty()) {
+                var geometries = me.geometryFilter.getGeometries();
+
+                var wktFormat = new OpenLayers.Format.WKT();
+                var featureCollection = [];
+
+                for (var i = 0; i < geometries.length; i++) {
+                    var feature = wktFormat.read(geometries[i].geom);
+                    feature.attributes = {
+                        'featureId': geometries[i].id,
+                        'areaType': 'ownDrawing'
+                    };
+                    featureCollection.push(feature);
+                }
+
+                var geoJSONFormat = new OpenLayers.Format.GeoJSON();
+                me.statsAreaFeatureCollection = JSON.parse(geoJSONFormat.write(featureCollection));
+            }
 
             if (me.isIndicatorPresent()) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
@@ -6438,6 +6463,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
                 saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 content = jQuery('<div id="statsgrid-csv-container"></div>');
+
+            //File Type
+            var fileTypeDiv = jQuery("<div>" + "File type" + "</div>"); //TODO add translations
+            var fileTypeRadio = jQuery("<br /><input type='radio' id='shp-field-file-type-stats-export' name='field-file-type-stats-export' value='shp'>" +
+                "<label for='shp-field-file-type-stats-export'>SHP</label><br />" + //TODO add translations
+                "<input type='radio' id='csv-field-file-type-stats-export' name='field-file-type-stats-export' value='csv'>" +
+                "<label for='csv-field-file-type-stats-export'>CSV</label>"); //TODO add translations
+            fileTypeDiv.append(fileTypeRadio);
+            content.append(fileTypeDiv);
+    
             //Field separator
             var fieldSeparator = jQuery("<div class='csv-format-row'>" + me._locale.csv.fieldSeparator + "</div>");
             var fieldSeparatorSelect = jQuery("<select id='field-separator-csv-format' class='csv-format-select'></select>");
@@ -6471,7 +6506,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             saveBtn.addClass('primary');
             saveBtn.setTitle(me._locale.csv.toFile);
 
-            //Generating CSV
+            //Exporting data to file
             saveBtn.setHandler(function() {
                 var columns = me.grid.getColumns(),
                     columnNames = [],
@@ -6479,10 +6514,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     data = [],
                     fieldSeparator = $("#field-separator-csv-format").val(),
                     quoteSymbol = '"';
-                nullSymbolizer = $("#null-symbolizer-csv-format").val(),
+                    nullSymbolizer = $("#null-symbolizer-csv-format").val(),
                     decimalSeparator = $("#decimal-separator-csv-format").val(),
-                    headerRow = {};
-                var indicatorMap = {}, i, maxThemeDepth = 0;
+                    headerRow = {},
+                    indicatorMap = {},
+                    i,
+                    maxThemeDepth = 0,
+                    fileType = $("[name=field-file-type-stats-export]:checked").val()
 
                 _.each(columns, function (item) {
                     if (item.id.indexOf('indicator') === 0) {
@@ -6568,47 +6606,154 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         data.push(row);
                     }
                 });
+                
+                if (fileType == 'csv') {
+                    //convert json to csv
+                    var csvString = me._convertJsonToCsv(
+                        data,
+                        fieldSeparator,
+                        quoteSymbol,
+                        nullSymbolizer,
+                        decimalSeparator
+                    );
 
-                //convert json to csv
-                var csvString = me._convertJsonToCsv(
-                    data,
-                    fieldSeparator,
-                    quoteSymbol,
-                    nullSymbolizer,
-                    decimalSeparator
-                );
+                    var csvLink = $('#statistics-download-csv-file');
 
-                var csvLink = $('#statistics-download-csv-file');
+                    if (csvLink) {
+                        csvLink.remove();
+                    }
 
-                if (csvLink) {
-                    csvLink.remove();
+                    var ua = window.navigator.userAgent;
+
+                    if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
+                        var blob = new Blob(['\uFEFF' + csvString], {
+                            type: "text/csv;charset=utf-8;"
+                        });
+
+                        navigator.msSaveBlob(blob, me._locale.csv.csvFileName + '.csv');
+                    } else {
+                        //create link to download the file
+                        $('<a></a>')
+                            .attr('id', 'statistics-download-csv-file')
+                            .attr('href', 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
+                            .attr('download', me._locale.csv.csvFileName + '.csv')
+                            .appendTo('body');
+
+                        $('#statistics-download-csv-file').ready(function () {
+                            $('#statistics-download-csv-file').get(0).click();
+                        });
+                    }
+
+                } else if (fileType == 'shp') {
+                    //prepare feature collection for backend
+                    var preparedCollection = me._prepareDataForShp(data);
+
+                    //send request to backend
+                    var url = me._sandbox.getAjaxUrl() + "action_route=ExportStatsToShpHandler";
+                    var successCb = function (response) {
+
+                        var shpLink = $('#statistics-download-shp-file');
+
+                        if (shpLink) {
+                            shpLink.remove();
+                        }
+
+                        var ua = window.navigator.userAgent;
+
+                        if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
+                            var blob = new Blob(['\uFEFF' + response], {
+                                type: "application/zip;charset=utf-8;"
+                            });
+
+                            navigator.msSaveBlob(blob, 'stats.zip'); //TODO add translation
+                        } else {
+                            var blob = new Blob([response], { type: 'application/zip;charset=utf-8;' });
+                            //create link to download the file
+                            $('<a></a>')
+                                .attr('id', 'statistics-download-shp-file')
+                                .attr('href', window.URL.createObjectURL(blob))
+                                .attr('download', 'stats.zip') //TODO add translation
+                                .appendTo('body');
+
+                            $('#statistics-download-shp-file').ready(function () {
+                                $('#statistics-download-shp-file').get(0).click();
+                            });
+                        }
+                    };
+                    var errorCb = null;
+                    
+                    return me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection);
                 }
 
-                var ua = window.navigator.userAgent;
-
-                if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
-                    var blob = new Blob(['\uFEFF' + csvString],{
-                        type: "text/csv;charset=utf-8;"
-                    });
-
-                    navigator.msSaveBlob(blob, me._locale.csv.csvFileName + '.csv');
-                } else {
-                //create link to download the file
-                    $('<a></a>')
-                        .attr('id','statistics-download-csv-file')
-                        .attr('href','data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
-                        .attr('download', me._locale.csv.csvFileName + '.csv')
-                        .appendTo('body');
-
-                    $('#statistics-download-csv-file').ready(function() {
-                        $('#statistics-download-csv-file').get(0).click();
-                    });
-                }
                 dialog.close();
             });
 
             dialog.show(me._locale.csv.formattingOfTheFile, content, [saveBtn, cancelBtn]);
         },
+
+        _prepareDataForShp: function (jsonData) {
+            var preparedCollection = {
+                "type": "FeatureCollection",
+                "crs": {
+                    "type": "name",
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::3067"
+                    }
+                },
+                "features": []
+            };
+            var array = typeof jsonData != 'object' ? JSON.parse(jsonData) : jsonData;
+            
+            for (var i = 0; i < array.length; i++) {
+
+                var areaCode = parseInt(array[i].code);
+
+                if (!isNaN(areaCode)) {
+                    var foundFeature = this.statsAreaFeatureCollection.features.find(function (feature) {
+                        if (feature.properties.areaType === 'ownDrawing') {
+                            return feature.properties[Object.keys(feature.properties)[0]] == array[i].municipality;
+                        } else {
+                            return feature.properties[Object.keys(feature.properties)[0]] == areaCode;
+                        }
+                    });
+
+                    if (foundFeature != null) {
+                        var preparedFeature = _.cloneDeep(foundFeature);
+                        preparedFeature.properties = {
+                            "regionId": array[i].code,
+                            "regionName": array[i].municipality
+                        };
+                        var statsCount = 0;
+                        for (var propName in array[i]) {
+                            if (propName != "municipality" && propName != "code" && array[i][propName] != null) {
+                                statsCount++;
+                                preparedFeature.properties["stat" + statsCount] = array[i][propName];
+                            }
+                        }
+
+                        preparedCollection.features.push(preparedFeature);
+                    }
+                }
+            }
+
+            return preparedCollection;
+        },
+
+        _sendPostRequestWithBlob: function (method, url, successCb, errorCb, data) {
+            var request = new XMLHttpRequest();
+            request.open(method, url);
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (typeof successCb === 'function') {
+                        successCb(this.response);
+                    }
+                }
+            };
+            request.responseType = 'blob';
+            request.send('featureCollection=' + JSON.stringify(data));
+        },
+
         _zeroFill: function (number, width)
         {
             width -= number.toString().length;
