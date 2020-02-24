@@ -77,7 +77,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.conf = jQuery.extend(true, config, defaults);
         this._locale = locale || {};
         this.templates = {
-            'csvButton': '<span class="statsgrid-csv-button action-link"></span>',
+            'exportButton': '<span class="stats-export-button action-link"></span>',
             'statsgridTotalsVar': '<span class="statsgrid-variable"></span>',
             'subHeader': '<span class="statsgrid-grid-subheader"></span>',
             'gridHeaderMenu': '<li><input type="checkbox" /><label></label></li>',
@@ -3051,13 +3051,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 });
                 additionalButtonsRow.append(createChartButton);
 
-                //Adding csv button
-                var csvLink = jQuery(me.templates.csvButton);
-                csvLink.append(this._locale.csv.downloadFile + " &gt;");
-                csvLink.click(function() {
-                    me._showCreatingCsvPopUp();
+                //Adding export to file button
+                var exportLink = jQuery(me.templates.exportButton);
+                exportLink.append(this._locale.export.downloadFile + " &gt;");
+                exportLink.click(function() {
+                    me._showExportToFilePopUp();
                 });
-                additionalButtonsRow.append(csvLink);
+                additionalButtonsRow.append(exportLink);
 
                 var additionalButtonsRow2 = jQuery('<div></div>');
                 var printLink = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' action-link"><span class="glyphicon glyphicon-print"></span> ' + this._locale.print + ' &gt;</span>');
@@ -3130,7 +3130,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
         _updateButtons: function() {
             var me = this,
-                items = [$("span.create-chart"), $('span.statsgrid-csv-button')];
+                items = [$("span.create-chart"), $('span.stats-export-button')];
             $.each(items, function(index, item) {
                 if (me.isIndicatorPresent()) {
                     item.css("pointer-events", "initial").removeClass("disabled");
@@ -3203,7 +3203,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     var feature = wktFormat.read(geometries[i].geom);
                     feature.attributes = {
                         'featureId': geometries[i].id,
-                        'areaType': 'ownDrawing'
+                        'customArea': true
                     };
                     featureCollection.push(feature);
                 }
@@ -6456,71 +6456,135 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             return false;
         },
 
-        _showCreatingCsvPopUp: function() {
-            var me = this, lang = Oskari.getLang(),
-                sandbox = this.instance.getSandbox(),
+        _showExportToFilePopUp: function() {
+            var me = this,
+                lang = Oskari.getLang(),
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
-                cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
+                content = jQuery('<div id="stats-export-container"></div>'),
                 saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
-                content = jQuery('<div id="statsgrid-csv-container"></div>');
+                cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
+                fileTypeRadioGroup = Oskari.clazz.create('Oskari.userinterface.component.RadioButtonGroup'),
+                fieldSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                nullSymbolizerSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select');
 
             //File Type
-            var fileTypeDiv = jQuery("<div>" + "File type" + "</div>"); //TODO add translations
-            var fileTypeRadio = jQuery("<br /><input type='radio' id='shp-field-file-type-stats-export' name='field-file-type-stats-export' value='shp'>" +
-                "<label for='shp-field-file-type-stats-export'>SHP</label><br />" + //TODO add translations
-                "<input type='radio' id='csv-field-file-type-stats-export' name='field-file-type-stats-export' value='csv'>" +
-                "<label for='csv-field-file-type-stats-export'>CSV</label>"); //TODO add translations
-            fileTypeDiv.append(fileTypeRadio);
-            content.append(fileTypeDiv);
-    
+            var fileTypeOptions = [
+                {
+                    title: me._locale.export.csv,
+                    value: 'csv'
+                },
+                {
+                    title: me._locale.export.shp,
+                    value: 'shp'
+                }
+            ];
+            fileTypeRadioGroup.setName('stats-export-file-type');
+            fileTypeRadioGroup.setOptions(fileTypeOptions);
+            fileTypeRadioGroup.setValue(fileTypeOptions[0]);
+            fileTypeRadioGroup.setHandler(function (value) {
+                if (value === 'shp') {
+                    fieldSeparatorSelect.setEnabled(false)
+                } else if (value === 'csv') {
+                    fieldSeparatorSelect.setEnabled(true)
+                }
+            });
+            var fileTypeTitle = jQuery('<label>').text(me._locale.export.fileType);
+            fileTypeTitle.prependTo(fileTypeRadioGroup.getElement());
+            fileTypeRadioGroup.insertTo(content);
+
             //Field separator
-            var fieldSeparator = jQuery("<div class='csv-format-row'>" + me._locale.csv.fieldSeparator + "</div>");
-            var fieldSeparatorSelect = jQuery("<select id='field-separator-csv-format' class='csv-format-select'></select>");
-            fieldSeparatorSelect.append("<option value=';'>" + me._locale.csv.semicolon + "</option>");
-            fieldSeparatorSelect.append("<option value=','>" + me._locale.csv.comma + "</option>");
-            fieldSeparatorSelect.append("<option value=':'>" + me._locale.csv.colon + "</option>");
-            fieldSeparatorSelect.append("<option value='\t'>" + me._locale.csv.tabulator + "</option>");
-            fieldSeparatorSelect.append("<option value='|'>" + me._locale.csv.pipe + "</option>");
-            fieldSeparator.append(fieldSeparatorSelect);
-            content.append(fieldSeparator);
+            var fieldSeparatorOptions = [
+                {
+                    title: me._locale.export.semicolon,
+                    value: ';'
+                },
+                {
+                    title: me._locale.export.comma,
+                    value: ','
+                },
+                {
+                    title: me._locale.export.colon,
+                    value: ':'
+                },
+                {
+                    title: me._locale.export.tabulator,
+                    value: '\t'
+                },
+                {
+                    title: me._locale.export.pipe,
+                    value: '|'
+                }
+            ];
+            fieldSeparatorSelect.setName('stats-export-field-separator');
+            fieldSeparatorSelect.setTitle(me._locale.export.fieldSeparator);
+            fieldSeparatorSelect.setOptions(fieldSeparatorOptions);
+            fieldSeparatorSelect.setValue(fieldSeparatorOptions[0])
+            fieldSeparatorSelect.insertTo(content);
 
             //Null symbolizer
-            var nullSymbolizer = jQuery("<div class='csv-format-row'>" + me._locale.csv.nullSymbolizer + "</div>");
-            var nullSymbolizerSelect = jQuery("<select id='null-symbolizer-csv-format' class='csv-format-select'></select>");
-            nullSymbolizerSelect.append("<option value=''>" + me._locale.csv.empty + "</option>");
-            nullSymbolizerSelect.append("<option value='.'>" + me._locale.csv.dot + "</option>");
-            nullSymbolizerSelect.append("<option value='-1'>" + me._locale.csv.negative1 + "</option>");
-            nullSymbolizerSelect.append("<option value='-99'>" + me._locale.csv.negative99 + "</option>");
-            nullSymbolizerSelect.append("<option value='-99999'>" + me._locale.csv.negative99999 + "</option>");
-            nullSymbolizer.append(nullSymbolizerSelect);
-            content.append(nullSymbolizer);
+            var nullSymbolizerOptions = [
+                {
+                    title: me._locale.export.empty,
+                    value: ''
+                },
+                {
+                    title: me._locale.export.dot,
+                    value: '.'
+                },
+                {
+                    title: me._locale.export.negative1,
+                    value: '-1'
+                },
+                {
+                    title: me._locale.export.negative99,
+                    value: '-99'
+                },
+                {
+                    title: me._locale.export.negative99999,
+                    value: '-99999'
+                }
+            ];
+            nullSymbolizerSelect.setName('stats-export-null-symbolizer');
+            nullSymbolizerSelect.setTitle(me._locale.export.nullSymbolizer);
+            nullSymbolizerSelect.setOptions(nullSymbolizerOptions);
+            nullSymbolizerSelect.setValue(nullSymbolizerOptions[0])
+            nullSymbolizerSelect.insertTo(content);
 
             //Decimal separator
-            var decimalSeparator = jQuery("<div class='csv-format-row'>" + me._locale.csv.decimalSeparator + "</div>");
-            var decimalSeparatorSelect = jQuery("<select id='decimal-separator-csv-format' class='csv-format-select'></select>");
-            decimalSeparatorSelect.append("<option value=','>" + me._locale.csv.comma + "</option>");
-            decimalSeparatorSelect.append("<option value='.'>" + me._locale.csv.dot + "</option>");
-            decimalSeparator.append(decimalSeparatorSelect);
-            content.append(decimalSeparator);
+            var decimalSeparatorOptions = [
+                {
+                    title: me._locale.export.comma,
+                    value: ','
+                },
+                {
+                    title: me._locale.export.dot,
+                    value: '.'
+                }
+            ];
+            decimalSeparatorSelect.setName('stats-export-decimal-separator');
+            decimalSeparatorSelect.setTitle(me._locale.export.decimalSeparator);
+            decimalSeparatorSelect.setOptions(decimalSeparatorOptions);
+            decimalSeparatorSelect.setValue(decimalSeparatorOptions[0])
+            decimalSeparatorSelect.insertTo(content);
 
             saveBtn.addClass('primary');
-            saveBtn.setTitle(me._locale.csv.toFile);
-
+            saveBtn.setTitle(me._locale.export.toFile);
             //Exporting data to file
             saveBtn.setHandler(function() {
                 var columns = me.grid.getColumns(),
                     columnNames = [],
                     columnIds = [],
                     data = [],
-                    fieldSeparator = $("#field-separator-csv-format").val(),
+                    fieldSeparator = fieldSeparatorSelect.getValue(),
+                    nullSymbolizer = nullSymbolizerSelect.getValue(),
+                    decimalSeparator = decimalSeparatorSelect.getValue(),
+                    fileType = fileTypeRadioGroup.getValue(),
                     quoteSymbol = '"';
-                    nullSymbolizer = $("#null-symbolizer-csv-format").val(),
-                    decimalSeparator = $("#decimal-separator-csv-format").val(),
                     headerRow = {},
                     indicatorMap = {},
                     i,
-                    maxThemeDepth = 0,
-                    fileType = $("[name=field-file-type-stats-export]:checked").val()
+                    maxThemeDepth = 0;
 
                 _.each(columns, function (item) {
                     if (item.id.indexOf('indicator') === 0) {
@@ -6630,13 +6694,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             type: "text/csv;charset=utf-8;"
                         });
 
-                        navigator.msSaveBlob(blob, me._locale.csv.csvFileName + '.csv');
+                        navigator.msSaveBlob(blob, me._locale.export.csvFileName + '.csv');
                     } else {
                         //create link to download the file
                         $('<a></a>')
                             .attr('id', 'statistics-download-csv-file')
                             .attr('href', 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
-                            .attr('download', me._locale.csv.csvFileName + '.csv')
+                            .attr('download', me._locale.export.csvFileName + '.csv')
                             .appendTo('body');
 
                         $('#statistics-download-csv-file').ready(function () {
@@ -6665,14 +6729,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 type: "application/zip;charset=utf-8;"
                             });
 
-                            navigator.msSaveBlob(blob, 'stats.zip'); //TODO add translation
+                            navigator.msSaveBlob(blob, me._locale.export.shpFileName);
                         } else {
                             var blob = new Blob([response], { type: 'application/zip;charset=utf-8;' });
                             //create link to download the file
                             $('<a></a>')
                                 .attr('id', 'statistics-download-shp-file')
                                 .attr('href', window.URL.createObjectURL(blob))
-                                .attr('download', 'stats.zip') //TODO add translation
+                                .attr('download', me._locale.export.shpFileName)
                                 .appendTo('body');
 
                             $('#statistics-download-shp-file').ready(function () {
@@ -6682,13 +6746,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     };
                     var errorCb = null;
                     
-                    return me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection);
+                    me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection);
                 }
 
                 dialog.close();
             });
 
-            dialog.show(me._locale.csv.formattingOfTheFile, content, [saveBtn, cancelBtn]);
+            dialog.show(me._locale.export.formattingOfTheFile, content, [saveBtn, cancelBtn]);
         },
 
         _prepareDataForShp: function (jsonData) {
@@ -6710,7 +6774,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 if (!isNaN(areaCode)) {
                     var foundFeature = this.statsAreaFeatureCollection.features.find(function (feature) {
-                        if (feature.properties.areaType === 'ownDrawing') {
+                        if (feature.properties.customArea === true) {
                             return feature.properties[Object.keys(feature.properties)[0]] == array[i].municipality;
                         } else {
                             return feature.properties[Object.keys(feature.properties)[0]] == areaCode;
@@ -6782,8 +6846,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             //add metadata to the file
-            str += this._locale.csv.fileHeader + ', ' + todayFormatted + '\r\n';
-            str += this._locale.csv.dataSources + ': ' + dataSources.join(', ') + '\r\n';
+            str += this._locale.export.fileHeader + ', ' + todayFormatted + '\r\n';
+            str += this._locale.export.dataSources + ': ' + dataSources.join(', ') + '\r\n';
 
             for (var i = 0; i < array.length; i++) {
                 var line = '';

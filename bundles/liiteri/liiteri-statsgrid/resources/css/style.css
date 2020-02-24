@@ -484,21 +484,6 @@ div.contentContainer .slick-header {
 .indisel .chosen-container-single .chosen-single div b {
   background-position-y: -3px; }
 
-/*
-CSV FILES MODULE
-*/
-#statsgrid-csv-container {
-  width: 450px; }
-
-#statsgrid-csv-container .csv-format-row {
-  height: 40px;
-  position: relative;
-  width: 100%; }
-
-#statsgrid-csv-container .csv-format-select {
-  position: absolute;
-  right: 0; }
-
 #functionalAreasSelector input {
   margin-left: 10px; }
 

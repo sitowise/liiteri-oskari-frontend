@@ -381,15 +381,19 @@ Oskari.registerLocalization(
             "validateOk": "Ok",
             "infoText": "Valitse alue ja työmatkojen tarkastelusuunta. Asuinpaikka tarkoittaa työmatkojen lähtöaluetta, työpaikka työmatkojen kohdealuetta. Jos valitset ensimmäisen rajauksen suunnaksi asuinpaikan, saat tulostaulukkoon kaikki valitulla alueella asuvien työmatkojen kohdealueet. Jos valitset työpaikan, saat tulostaulukkoon kaikki valitulla alueella työssäkäyvien asuinalueet."    
         },
-		"csv": {
+		"export": {
 			"downloadFile": "Download file",
 			"toFile": "Download file",
-			"csvFileName": "statistics",
-			"formattingOfTheFile": "Formatting of the file",
+            "csvFileName": "statistics",
+            "shpFileName": "statistics",
+            "formattingOfTheFile": "Formatting of the file",
+            "fileType": "File type",
 			"fieldSeparator": "Field separator",
 			"stringSeparator": "String separator",
 			"nullSymbolizer": "Null symbolizer",
-			"decimalSeparator": "Decimal separator",
+            "decimalSeparator": "Decimal separator",
+            "csv": "CSV",
+            "shp": "SHP",
             "semicolon": "Semicolon",
             "comma": "Comma",
             "colon": "Colon",
