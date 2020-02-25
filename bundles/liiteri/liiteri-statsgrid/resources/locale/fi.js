@@ -419,7 +419,8 @@ Oskari.registerLocalization(
             "negative99999": "-99999",
             "empty": "Ei mitään",
 			"fileHeader": "Elinympäristön tietopalvelu Liiteri",
-			"dataSources": "Tietolähteet"
+            "dataSources": "Tietolähteet",
+            "ownAreaWarning": "Varoitus! Valittujen aluekohteiden olemassa olevat ominaisuudet poistetaan."
 		},
         "classification" : {
             "error" : {

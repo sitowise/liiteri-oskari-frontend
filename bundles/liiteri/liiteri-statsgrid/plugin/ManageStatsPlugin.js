@@ -6467,6 +6467,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 fieldSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 nullSymbolizerSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                ownAreaAlert = Oskari.clazz.create('Oskari.userinterface.component.Alert'),
                 csvFileName = me._locale.export.csvFileName,
                 shpFileName = me._locale.export.shpFileName;
 
@@ -6489,10 +6490,18 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     fieldSeparatorSelect.setEnabled(false);
                     nullSymbolizerSelect.setEnabled(false);
                     decimalSeparatorSelect.setEnabled(false);
+
+                    // show a warning text if user selected own area
+                    if (!me.geometryFilter.isEmpty()) {
+                        ownAreaAlert.insertTo(content);
+                        ownAreaAlert.setContent(me._locale.export.ownAreaWarning);
+                    }
+
                 } else if (value === 'csv') {
                     fieldSeparatorSelect.setEnabled(true);
                     nullSymbolizerSelect.setEnabled(true);
                     decimalSeparatorSelect.setEnabled(true);
+                    ownAreaAlert.hide();
                 }
             });
             var fileTypeTitle = jQuery('<label>').text(me._locale.export.fileType);

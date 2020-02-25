@@ -538,3 +538,7 @@ div.divmanazerpopup.stats-compare-dialog {
 
 div.stats-compare-instructions {
   margin-bottom: 10px; }
+
+#stats-export-container {
+    max-width: 340px;
+}

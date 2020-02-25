@@ -409,7 +409,8 @@ Oskari.registerLocalization(
             "negative99999": "-99999",
             "empty": "Empty",
 			"fileHeader": "The Living Environment Information Services Liiteri",
-			"dataSources": "Data sources"
+            "dataSources": "Data sources",
+            "ownAreaWarning": "Warning! The existing attributes from the selected area features will be removed."
 		},
         "classification" : {
             "error" : {
