@@ -6725,7 +6725,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                 } else if (fileType == 'shp') {
                     //prepare feature collection for backend
-                    var preparedCollection = me._prepareDataForShp(data);
+                    var preparedCollection = me._prepareDataForShp(data, headerRow);
 
                     //send request to backend
                     var url = me._sandbox.getAjaxUrl() + "action_route=ExportStatsToShpHandler";
@@ -6770,7 +6770,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             dialog.show(me._locale.export.formattingOfTheFile, content, [saveBtn, cancelBtn]);
         },
 
-        _prepareDataForShp: function (jsonData) {
+        _prepareDataForShp: function (jsonData, headerRow) {
             var preparedCollection = {
                 "type": "FeatureCollection",
                 "crs": {
@@ -6798,15 +6798,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
                     if (foundFeature != null) {
                         var preparedFeature = _.cloneDeep(foundFeature);
-                        preparedFeature.properties = {
-                            "regionId": array[i].code,
-                            "regionName": array[i].municipality
-                        };
-                        var statsCount = 0;
+                        preparedFeature.properties = {};
+                        preparedFeature.properties[headerRow.code] = array[i].code;
+                        preparedFeature.properties[headerRow.municipality] = array[i].municipality;
+                        
                         for (var propName in array[i]) {
                             if (propName != "municipality" && propName != "code" && array[i][propName] != null) {
-                                statsCount++;
-                                preparedFeature.properties["stat" + statsCount] = array[i][propName];
+                                preparedFeature.properties[headerRow[propName]] = array[i][propName];
                             }
                         }
 
