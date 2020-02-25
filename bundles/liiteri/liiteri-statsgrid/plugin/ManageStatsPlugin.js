@@ -6466,7 +6466,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 fileTypeRadioGroup = Oskari.clazz.create('Oskari.userinterface.component.RadioButtonGroup'),
                 fieldSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 nullSymbolizerSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
-                decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select');
+                decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                csvFileName = me._locale.export.csvFileName,
+                shpFileName = me._locale.export.shpFileName;
 
             //File Type
             var fileTypeOptions = [
@@ -6484,9 +6486,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             fileTypeRadioGroup.setValue(fileTypeOptions[0]);
             fileTypeRadioGroup.setHandler(function (value) {
                 if (value === 'shp') {
-                    fieldSeparatorSelect.setEnabled(false)
+                    fieldSeparatorSelect.setEnabled(false);
+                    nullSymbolizerSelect.setEnabled(false);
+                    decimalSeparatorSelect.setEnabled(false);
                 } else if (value === 'csv') {
-                    fieldSeparatorSelect.setEnabled(true)
+                    fieldSeparatorSelect.setEnabled(true);
+                    nullSymbolizerSelect.setEnabled(true);
+                    decimalSeparatorSelect.setEnabled(true);
                 }
             });
             var fileTypeTitle = jQuery('<label>').text(me._locale.export.fileType);
@@ -6694,13 +6700,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                             type: "text/csv;charset=utf-8;"
                         });
 
-                        navigator.msSaveBlob(blob, me._locale.export.csvFileName + '.csv');
+                        navigator.msSaveBlob(blob, csvFileName + '.csv');
                     } else {
                         //create link to download the file
                         $('<a></a>')
                             .attr('id', 'statistics-download-csv-file')
                             .attr('href', 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
-                            .attr('download', me._locale.export.csvFileName + '.csv')
+                            .attr('download', csvFileName + '.csv')
                             .appendTo('body');
 
                         $('#statistics-download-csv-file').ready(function () {
@@ -6729,14 +6735,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 type: "application/zip;charset=utf-8;"
                             });
 
-                            navigator.msSaveBlob(blob, me._locale.export.shpFileName);
+                            navigator.msSaveBlob(blob, shpFileName + '.zip');
                         } else {
                             var blob = new Blob([response], { type: 'application/zip;charset=utf-8;' });
                             //create link to download the file
                             $('<a></a>')
                                 .attr('id', 'statistics-download-shp-file')
                                 .attr('href', window.URL.createObjectURL(blob))
-                                .attr('download', me._locale.export.shpFileName)
+                                .attr('download', shpFileName + '.zip')
                                 .appendTo('body');
 
                             $('#statistics-download-shp-file').ready(function () {
@@ -6745,8 +6751,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         }
                     };
                     var errorCb = null;
-                    
-                    me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection);
+
+                    me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection, shpFileName);
                 }
 
                 dialog.close();
@@ -6803,7 +6809,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             return preparedCollection;
         },
 
-        _sendPostRequestWithBlob: function (method, url, successCb, errorCb, data) {
+        _sendPostRequestWithBlob: function (method, url, successCb, errorCb, data, shpFileName) {
             var request = new XMLHttpRequest();
             request.open(method, url);
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -6815,7 +6821,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             };
             request.responseType = 'blob';
-            request.send('featureCollection=' + JSON.stringify(data));
+            request.send('featureCollection=' + JSON.stringify(data) + '&fileName=' + shpFileName);
         },
 
         _zeroFill: function (number, width)
