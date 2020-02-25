@@ -6804,7 +6804,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         
                         for (var propName in array[i]) {
                             if (propName != "municipality" && propName != "code" && array[i][propName] != null) {
-                                preparedFeature.properties[headerRow[propName]] = array[i][propName];
+                                preparedFeature.properties["#STAT_ATTRIBUTE#" + headerRow[propName]] = array[i][propName];
                             }
                         }
 
