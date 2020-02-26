@@ -77,7 +77,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.conf = jQuery.extend(true, config, defaults);
         this._locale = locale || {};
         this.templates = {
-            'csvButton': '<span class="statsgrid-csv-button action-link"></span>',
+            'exportButton': '<span class="stats-export-button action-link"></span>',
             'statsgridTotalsVar': '<span class="statsgrid-variable"></span>',
             'subHeader': '<span class="statsgrid-grid-subheader"></span>',
             'gridHeaderMenu': '<li><input type="checkbox" /><label></label></li>',
@@ -124,6 +124,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
         this.geomFilterIdAttributes = [];
 
         this.WFSLayerService = null;
+
+        this.statsAreaFeatureCollection = null;
 
         this.columnComparisonOptions = [{
             type: 'difference',
@@ -716,6 +718,9 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         filterBtn.attr('disabled', 'disabled');
                     }
                 }
+            },
+            'StatsGrid.StatsAreaEstablishedEvent': function (event) {
+                this.statsAreaFeatureCollection = event.getFeatureCollection();
             }
         },
 
@@ -3140,13 +3145,13 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 });
                 additionalButtonsRow.append(createChartButton);
 
-                //Adding csv button
-                var csvLink = jQuery(me.templates.csvButton);
-                csvLink.append(this._locale.csv.downloadFile + " &gt;");
-                csvLink.click(function() {
-                    me._showCreatingCsvPopUp();
+                //Adding export to file button
+                var exportLink = jQuery(me.templates.exportButton);
+                exportLink.append(this._locale.export.downloadFile + " &gt;");
+                exportLink.click(function() {
+                    me._showExportToFilePopUp();
                 });
-                additionalButtonsRow.append(csvLink);
+                additionalButtonsRow.append(exportLink);
 
                 var additionalButtonsRow2 = jQuery('<div></div>');
                 var printLink = jQuery('<span class="create-chart' + (includedInGrid ? ' hidden' : '') + ' action-link"><span class="glyphicon glyphicon-print"></span> ' + this._locale.print + ' &gt;</span>');
@@ -3219,7 +3224,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
 
         _updateButtons: function() {
             var me = this,
-                items = [$("span.create-chart"), $('span.statsgrid-csv-button')];
+                items = [$("span.create-chart"), $('span.stats-export-button')];
             $.each(items, function(index, item) {
                 if (me.isIndicatorPresent()) {
                     item.css("pointer-events", "initial").removeClass("disabled");
@@ -3280,6 +3285,26 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             group = me._categoriesGroupKeys[grp],
             gender = gender !== null && gender !== undefined ? gender : 'total',
             functionalRows = [];
+
+            // set feature collection for export functionality
+            if (!me.geometryFilter.isEmpty()) {
+                var geometries = me.geometryFilter.getGeometries();
+
+                var wktFormat = new OpenLayers.Format.WKT();
+                var featureCollection = [];
+
+                for (var i = 0; i < geometries.length; i++) {
+                    var feature = wktFormat.read(geometries[i].geom);
+                    feature.attributes = {
+                        'featureId': geometries[i].id,
+                        'customArea': true
+                    };
+                    featureCollection.push(feature);
+                }
+
+                var geoJSONFormat = new OpenLayers.Format.GeoJSON();
+                me.statsAreaFeatureCollection = JSON.parse(geoJSONFormat.write(featureCollection));
+            }
 
             if (me.isIndicatorPresent()) {
                 var dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
@@ -6527,58 +6552,150 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             return false;
         },
 
-        _showCreatingCsvPopUp: function() {
-            var me = this, lang = Oskari.getLang(),
-                sandbox = this.instance.getSandbox(),
+        _showExportToFilePopUp: function() {
+            var me = this,
+                lang = Oskari.getLang(),
                 dialog = Oskari.clazz.create('Oskari.userinterface.component.Popup'),
-                cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
+                content = jQuery('<div id="stats-export-container"></div>'),
                 saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
-                content = jQuery('<div id="statsgrid-csv-container"></div>');
+                cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
+                fileTypeRadioGroup = Oskari.clazz.create('Oskari.userinterface.component.RadioButtonGroup'),
+                fieldSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                nullSymbolizerSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
+                ownAreaAlert = Oskari.clazz.create('Oskari.userinterface.component.Alert'),
+                csvFileName = me._locale.export.csvFileName,
+                shpFileName = me._locale.export.shpFileName;
+
+            //File Type
+            var fileTypeOptions = [
+                {
+                    title: me._locale.export.csv,
+                    value: 'csv'
+                },
+                {
+                    title: me._locale.export.shp,
+                    value: 'shp'
+                }
+            ];
+            fileTypeRadioGroup.setName('stats-export-file-type');
+            fileTypeRadioGroup.setOptions(fileTypeOptions);
+            fileTypeRadioGroup.setValue(fileTypeOptions[0]);
+            fileTypeRadioGroup.setHandler(function (value) {
+                if (value === 'shp') {
+                    fieldSeparatorSelect.setEnabled(false);
+                    nullSymbolizerSelect.setEnabled(false);
+                    decimalSeparatorSelect.setEnabled(false);
+
+                    // show a warning text if user selected own area
+                    if (!me.geometryFilter.isEmpty()) {
+                        ownAreaAlert.insertTo(content);
+                        ownAreaAlert.setContent(me._locale.export.ownAreaWarning);
+                    }
+
+                } else if (value === 'csv') {
+                    fieldSeparatorSelect.setEnabled(true);
+                    nullSymbolizerSelect.setEnabled(true);
+                    decimalSeparatorSelect.setEnabled(true);
+                    ownAreaAlert.hide();
+                }
+            });
+            var fileTypeTitle = jQuery('<label>').text(me._locale.export.fileType);
+            fileTypeTitle.prependTo(fileTypeRadioGroup.getElement());
+            fileTypeRadioGroup.insertTo(content);
+
             //Field separator
-            var fieldSeparator = jQuery("<div class='csv-format-row'>" + me._locale.csv.fieldSeparator + "</div>");
-            var fieldSeparatorSelect = jQuery("<select id='field-separator-csv-format' class='csv-format-select'></select>");
-            fieldSeparatorSelect.append("<option value=';'>" + me._locale.csv.semicolon + "</option>");
-            fieldSeparatorSelect.append("<option value=','>" + me._locale.csv.comma + "</option>");
-            fieldSeparatorSelect.append("<option value=':'>" + me._locale.csv.colon + "</option>");
-            fieldSeparatorSelect.append("<option value='\t'>" + me._locale.csv.tabulator + "</option>");
-            fieldSeparatorSelect.append("<option value='|'>" + me._locale.csv.pipe + "</option>");
-            fieldSeparator.append(fieldSeparatorSelect);
-            content.append(fieldSeparator);
+            var fieldSeparatorOptions = [
+                {
+                    title: me._locale.export.semicolon,
+                    value: ';'
+                },
+                {
+                    title: me._locale.export.comma,
+                    value: ','
+                },
+                {
+                    title: me._locale.export.colon,
+                    value: ':'
+                },
+                {
+                    title: me._locale.export.tabulator,
+                    value: '\t'
+                },
+                {
+                    title: me._locale.export.pipe,
+                    value: '|'
+                }
+            ];
+            fieldSeparatorSelect.setName('stats-export-field-separator');
+            fieldSeparatorSelect.setTitle(me._locale.export.fieldSeparator);
+            fieldSeparatorSelect.setOptions(fieldSeparatorOptions);
+            fieldSeparatorSelect.setValue(fieldSeparatorOptions[0])
+            fieldSeparatorSelect.insertTo(content);
 
             //Null symbolizer
-            var nullSymbolizer = jQuery("<div class='csv-format-row'>" + me._locale.csv.nullSymbolizer + "</div>");
-            var nullSymbolizerSelect = jQuery("<select id='null-symbolizer-csv-format' class='csv-format-select'></select>");
-            nullSymbolizerSelect.append("<option value=''>" + me._locale.csv.empty + "</option>");
-            nullSymbolizerSelect.append("<option value='.'>" + me._locale.csv.dot + "</option>");
-            nullSymbolizerSelect.append("<option value='-1'>" + me._locale.csv.negative1 + "</option>");
-            nullSymbolizerSelect.append("<option value='-99'>" + me._locale.csv.negative99 + "</option>");
-            nullSymbolizerSelect.append("<option value='-99999'>" + me._locale.csv.negative99999 + "</option>");
-            nullSymbolizer.append(nullSymbolizerSelect);
-            content.append(nullSymbolizer);
+            var nullSymbolizerOptions = [
+                {
+                    title: me._locale.export.empty,
+                    value: ''
+                },
+                {
+                    title: me._locale.export.dot,
+                    value: '.'
+                },
+                {
+                    title: me._locale.export.negative1,
+                    value: '-1'
+                },
+                {
+                    title: me._locale.export.negative99,
+                    value: '-99'
+                },
+                {
+                    title: me._locale.export.negative99999,
+                    value: '-99999'
+                }
+            ];
+            nullSymbolizerSelect.setName('stats-export-null-symbolizer');
+            nullSymbolizerSelect.setTitle(me._locale.export.nullSymbolizer);
+            nullSymbolizerSelect.setOptions(nullSymbolizerOptions);
+            nullSymbolizerSelect.setValue(nullSymbolizerOptions[0])
+            nullSymbolizerSelect.insertTo(content);
 
             //Decimal separator
-            var decimalSeparator = jQuery("<div class='csv-format-row'>" + me._locale.csv.decimalSeparator + "</div>");
-            var decimalSeparatorSelect = jQuery("<select id='decimal-separator-csv-format' class='csv-format-select'></select>");
-            decimalSeparatorSelect.append("<option value=','>" + me._locale.csv.comma + "</option>");
-            decimalSeparatorSelect.append("<option value='.'>" + me._locale.csv.dot + "</option>");
-            decimalSeparator.append(decimalSeparatorSelect);
-            content.append(decimalSeparator);
+            var decimalSeparatorOptions = [
+                {
+                    title: me._locale.export.comma,
+                    value: ','
+                },
+                {
+                    title: me._locale.export.dot,
+                    value: '.'
+                }
+            ];
+            decimalSeparatorSelect.setName('stats-export-decimal-separator');
+            decimalSeparatorSelect.setTitle(me._locale.export.decimalSeparator);
+            decimalSeparatorSelect.setOptions(decimalSeparatorOptions);
+            decimalSeparatorSelect.setValue(decimalSeparatorOptions[0])
+            decimalSeparatorSelect.insertTo(content);
 
             saveBtn.addClass('primary');
-            saveBtn.setTitle(me._locale.csv.toFile);
-
-            //Generating CSV
+            saveBtn.setTitle(me._locale.export.toFile);
+            //Exporting data to file
             saveBtn.setHandler(function() {
                 var columns = me.grid.getColumns(),
                     columnNames = [],
                     columnIds = [],
                     data = [],
-                    fieldSeparator = $("#field-separator-csv-format").val(),
+                    fieldSeparator = fieldSeparatorSelect.getValue(),
+                    nullSymbolizer = nullSymbolizerSelect.getValue(),
+                    decimalSeparator = decimalSeparatorSelect.getValue(),
+                    fileType = fileTypeRadioGroup.getValue(),
                     quoteSymbol = '"';
-                nullSymbolizer = $("#null-symbolizer-csv-format").val(),
-                    decimalSeparator = $("#decimal-separator-csv-format").val(),
-                    headerRow = {};
-                var indicatorMap = {}, i, maxThemeDepth = 0;
+                    headerRow = {},
+                    indicatorMap = {},
+                    i,
+                    maxThemeDepth = 0;
 
                 _.each(columns, function (item) {
                     if (item.id.indexOf('indicator') === 0) {
@@ -6664,47 +6781,152 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         data.push(row);
                     }
                 });
+                
+                if (fileType == 'csv') {
+                    //convert json to csv
+                    var csvString = me._convertJsonToCsv(
+                        data,
+                        fieldSeparator,
+                        quoteSymbol,
+                        nullSymbolizer,
+                        decimalSeparator
+                    );
 
-                //convert json to csv
-                var csvString = me._convertJsonToCsv(
-                    data,
-                    fieldSeparator,
-                    quoteSymbol,
-                    nullSymbolizer,
-                    decimalSeparator
-                );
+                    var csvLink = $('#statistics-download-csv-file');
 
-                var csvLink = $('#statistics-download-csv-file');
+                    if (csvLink) {
+                        csvLink.remove();
+                    }
 
-                if (csvLink) {
-                    csvLink.remove();
+                    var ua = window.navigator.userAgent;
+
+                    if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
+                        var blob = new Blob(['\uFEFF' + csvString], {
+                            type: "text/csv;charset=utf-8;"
+                        });
+
+                        navigator.msSaveBlob(blob, csvFileName + '.csv');
+                    } else {
+                        //create link to download the file
+                        $('<a></a>')
+                            .attr('id', 'statistics-download-csv-file')
+                            .attr('href', 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
+                            .attr('download', csvFileName + '.csv')
+                            .appendTo('body');
+
+                        $('#statistics-download-csv-file').ready(function () {
+                            $('#statistics-download-csv-file').get(0).click();
+                        });
+                    }
+
+                } else if (fileType == 'shp') {
+                    //prepare feature collection for backend
+                    var preparedCollection = me._prepareDataForShp(data, headerRow);
+
+                    //send request to backend
+                    var url = me._sandbox.getAjaxUrl() + "action_route=ExportStatsToShpHandler";
+                    var successCb = function (response) {
+
+                        var shpLink = $('#statistics-download-shp-file');
+
+                        if (shpLink) {
+                            shpLink.remove();
+                        }
+
+                        var ua = window.navigator.userAgent;
+
+                        if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
+                            var blob = new Blob(['\uFEFF' + response], {
+                                type: "application/zip;charset=utf-8;"
+                            });
+
+                            navigator.msSaveBlob(blob, shpFileName + '.zip');
+                        } else {
+                            var blob = new Blob([response], { type: 'application/zip;charset=utf-8;' });
+                            //create link to download the file
+                            $('<a></a>')
+                                .attr('id', 'statistics-download-shp-file')
+                                .attr('href', window.URL.createObjectURL(blob))
+                                .attr('download', shpFileName + '.zip')
+                                .appendTo('body');
+
+                            $('#statistics-download-shp-file').ready(function () {
+                                $('#statistics-download-shp-file').get(0).click();
+                            });
+                        }
+                    };
+                    var errorCb = null;
+
+                    me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection, shpFileName);
                 }
 
-                var ua = window.navigator.userAgent;
-
-                if (ua.indexOf('MSIE ') > 0 || ua.indexOf('Trident/') > 0 || ua.indexOf('Edge/') > 0) {
-                    var blob = new Blob(['\uFEFF' + csvString],{
-                        type: "text/csv;charset=utf-8;"
-                    });
-
-                    navigator.msSaveBlob(blob, me._locale.csv.csvFileName + '.csv');
-                } else {
-                //create link to download the file
-                    $('<a></a>')
-                        .attr('id','statistics-download-csv-file')
-                        .attr('href','data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csvString))
-                        .attr('download', me._locale.csv.csvFileName + '.csv')
-                        .appendTo('body');
-
-                    $('#statistics-download-csv-file').ready(function() {
-                        $('#statistics-download-csv-file').get(0).click();
-                    });
-                }
                 dialog.close();
             });
 
-            dialog.show(me._locale.csv.formattingOfTheFile, content, [saveBtn, cancelBtn]);
+            dialog.show(me._locale.export.formattingOfTheFile, content, [saveBtn, cancelBtn]);
         },
+
+        _prepareDataForShp: function (jsonData, headerRow) {
+            var preparedCollection = {
+                "type": "FeatureCollection",
+                "crs": {
+                    "type": "name",
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::3067"
+                    }
+                },
+                "features": []
+            };
+            var array = typeof jsonData != 'object' ? JSON.parse(jsonData) : jsonData;
+            
+            for (var i = 0; i < array.length; i++) {
+
+                var areaCode = parseInt(array[i].code);
+
+                if (!isNaN(areaCode)) {
+                    var foundFeature = this.statsAreaFeatureCollection.features.find(function (feature) {
+                        if (feature.properties.customArea === true) {
+                            return feature.properties[Object.keys(feature.properties)[0]] == array[i].municipality;
+                        } else {
+                            return feature.properties[Object.keys(feature.properties)[0]] == areaCode;
+                        }
+                    });
+
+                    if (foundFeature != null) {
+                        var preparedFeature = _.cloneDeep(foundFeature);
+                        preparedFeature.properties = {};
+                        preparedFeature.properties[headerRow.code] = array[i].code;
+                        preparedFeature.properties[headerRow.municipality] = array[i].municipality;
+                        
+                        for (var propName in array[i]) {
+                            if (propName != "municipality" && propName != "code" && array[i][propName] != null) {
+                                preparedFeature.properties["#STAT_ATTRIBUTE#" + headerRow[propName]] = array[i][propName];
+                            }
+                        }
+
+                        preparedCollection.features.push(preparedFeature);
+                    }
+                }
+            }
+
+            return preparedCollection;
+        },
+
+        _sendPostRequestWithBlob: function (method, url, successCb, errorCb, data, shpFileName) {
+            var request = new XMLHttpRequest();
+            request.open(method, url);
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    if (typeof successCb === 'function') {
+                        successCb(this.response);
+                    }
+                }
+            };
+            request.responseType = 'blob';
+            request.send('featureCollection=' + JSON.stringify(data) + '&fileName=' + shpFileName);
+        },
+
         _zeroFill: function (number, width)
         {
             width -= number.toString().length;
@@ -6733,8 +6955,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
 
             //add metadata to the file
-            str += this._locale.csv.fileHeader + ', ' + todayFormatted + '\r\n';
-            str += this._locale.csv.dataSources + ': ' + dataSources.join(', ') + '\r\n';
+            str += this._locale.export.fileHeader + ', ' + todayFormatted + '\r\n';
+            str += this._locale.export.dataSources + ': ' + dataSources.join(', ') + '\r\n';
 
             for (var i = 0; i < array.length; i++) {
                 var line = '';

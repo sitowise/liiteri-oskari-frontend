@@ -391,15 +391,19 @@ Oskari.registerLocalization(
             "validateOk": "Ok",
             "infoText": "Valitse alue ja työmatkojen tarkastelusuunta. Asuinpaikka tarkoittaa työmatkojen lähtöaluetta, työpaikka työmatkojen kohdealuetta. Jos valitset ensimmäisen rajauksen suunnaksi asuinpaikan, saat tulostaulukkoon kaikki valitulla alueella asuvien työmatkojen kohdealueet. Jos valitset työpaikan, saat tulostaulukkoon kaikki valitulla alueella työssäkäyvien asuinalueet."    
         },
-		"csv": {
+		"export": {
 			"downloadFile": "Download file",
 			"toFile": "Download file",
-			"csvFileName": "statistics",
-			"formattingOfTheFile": "Formatting of the file",
+            "csvFileName": "statistics",
+            "shpFileName": "statistics",
+            "formattingOfTheFile": "Formatting of the file",
+            "fileType": "File type",
 			"fieldSeparator": "Field separator",
 			"stringSeparator": "String separator",
 			"nullSymbolizer": "Null symbolizer",
-			"decimalSeparator": "Decimal separator",
+            "decimalSeparator": "Decimal separator",
+            "csv": "CSV",
+            "shp": "SHP",
             "semicolon": "Semicolon",
             "comma": "Comma",
             "colon": "Colon",
@@ -415,7 +419,8 @@ Oskari.registerLocalization(
             "negative99999": "-99999",
             "empty": "Empty",
 			"fileHeader": "The Living Environment Information Services Liiteri",
-			"dataSources": "Data sources"
+            "dataSources": "Data sources",
+            "ownAreaWarning": "Warning! The existing attributes from the selected area features will be removed."
 		},
         "classification" : {
             "error" : {

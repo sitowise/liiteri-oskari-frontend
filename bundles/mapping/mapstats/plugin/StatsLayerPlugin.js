@@ -929,9 +929,17 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
 //            if (doUpdate) {
 //                console.log('updated');
 //            }
+
+            //send event with areas feature collection for export functionality
+            var eventBuilder = this._sandbox.getEventBuilder('StatsGrid.StatsAreaEstablishedEvent');
+            if (eventBuilder) {
+                var event = eventBuilder(JSON.parse(request.responseText));
+                this._sandbox.notifyAll(event);
+            }
                 
             return result;
         },
+
         _afterStatsVisualizationChangeEvent: function (event) {
             var me = this;
             var layer = event.getLayer(),

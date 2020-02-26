@@ -89,6 +89,9 @@ Oskari.clazz.define("Oskari.statistics.bundle.statsgrid.StatsGridBundle",
                 "src": "../../../../bundles/liiteri/liiteri-statsgrid/event/GridVisualizationRowChanged.js"
             }, {
                 "type": "text/javascript",
+                "src": "../../../../bundles/liiteri/liiteri-statsgrid/event/StatsAreaEstablishedEvent.js"
+            }, {
+                "type": "text/javascript",
                 "src": "../../../../bundles/liiteri/liiteri-statsgrid/request/CurrentStateRequest.js"
             }, {
                 "type": "text/javascript",
