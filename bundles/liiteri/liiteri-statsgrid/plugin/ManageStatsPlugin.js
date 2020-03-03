@@ -1546,9 +1546,19 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 for (j = 0; j < columnIds.length; j++) {
                     var columnId = columnIds[j];
                     for (var k = 0, bLen = _selectedAreas[0].values.length; k < bLen; ++k) {
-                        var areaId = _selectedAreas[0].values[k]
+                        var areaId = _selectedAreas[0].values[k];
+
+                        if (_selectedAreas[0].key.toLowerCase().includes('ely')) {
+                            areaId = _selectedAreas[0].key.toLowerCase() + ':' + _selectedAreas[0].values[k];
+                        }
+
                         for (var l = 0, bLen2 = item.memberOf.length; l < bLen2; ++l) {
-                            if (item.memberOf[l].split(':')[1] === areaId) {
+                            var itemGroup = item.memberOf[l].split(':')[1];
+                            if (_selectedAreas[0].key.toLowerCase().includes('ely')) {
+                                itemGroup = item.memberOf[l];
+                            }
+                            
+                            if (itemGroup === areaId) {
                                 if (!_hideEmptyRows){
                                     newSel = 'checked';
                                     break;
