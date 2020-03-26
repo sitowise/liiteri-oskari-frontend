@@ -718,10 +718,11 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         filterBtn.attr('disabled', 'disabled');
                     }
                 }
-            },
-            'StatsGrid.StatsAreaEstablishedEvent': function (event) {
-                this.statsAreaFeatureCollection = event.getFeatureCollection();
             }
+            //Notice! YM-853: The feature should NOT be available when choosing regional data in Liiteri
+            //'StatsGrid.StatsAreaEstablishedEvent': function (event) {
+            //    this.statsAreaFeatureCollection = event.getFeatureCollection();
+            //}
         },
 
         /**
@@ -6463,50 +6464,61 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 content = jQuery('<div id="stats-export-container"></div>'),
                 saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
-                fileTypeRadioGroup = Oskari.clazz.create('Oskari.userinterface.component.RadioButtonGroup'),
+                fileTypeRadioGroup = null;
                 fieldSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 nullSymbolizerSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 ownAreaAlert = Oskari.clazz.create('Oskari.userinterface.component.Alert'),
                 csvFileName = me._locale.export.csvFileName,
-                shpFileName = me._locale.export.shpFileName;
+                shpFileName = me._locale.export.shpFileName
 
-            //File Type
-            var fileTypeOptions = [
-                {
-                    title: me._locale.export.csv,
-                    value: 'csv'
-                },
-                {
-                    title: me._locale.export.shp,
-                    value: 'shp'
-                }
-            ];
-            fileTypeRadioGroup.setName('stats-export-file-type');
-            fileTypeRadioGroup.setOptions(fileTypeOptions);
-            fileTypeRadioGroup.setValue(fileTypeOptions[0]);
-            fileTypeRadioGroup.setHandler(function (value) {
-                if (value === 'shp') {
-                    fieldSeparatorSelect.setEnabled(false);
-                    nullSymbolizerSelect.setEnabled(false);
-                    decimalSeparatorSelect.setEnabled(false);
-
-                    // show a warning text if user selected own area
-                    if (!me.geometryFilter.isEmpty()) {
-                        ownAreaAlert.insertTo(content);
-                        ownAreaAlert.setContent(me._locale.export.ownAreaWarning);
+            // Notice! YM-853: 
+            // - The feature should NOT be available when choosing regional data in Liiteri
+            // - The feature should NOT be available for guest users
+            if (me.geometryFilter.isEmpty() || !me._sandbox.getUser().isLoggedIn()) {
+                fieldSeparatorSelect.setEnabled(true);
+                nullSymbolizerSelect.setEnabled(true);
+                decimalSeparatorSelect.setEnabled(true);
+                ownAreaAlert.hide();
+            } else {
+                //File Type
+                var fileTypeOptions = [
+                    {
+                        title: me._locale.export.csv,
+                        value: 'csv'
+                    },
+                    {
+                        title: me._locale.export.shp,
+                        value: 'shp'
                     }
+                ];
+                fileTypeRadioGroup = Oskari.clazz.create('Oskari.userinterface.component.RadioButtonGroup'),
+                fileTypeRadioGroup.setName('stats-export-file-type');
+                fileTypeRadioGroup.setOptions(fileTypeOptions);
+                fileTypeRadioGroup.setValue(fileTypeOptions[0]);
+                fileTypeRadioGroup.setHandler(function (value) {
+                    if (value === 'shp') {
+                        fieldSeparatorSelect.setEnabled(false);
+                        nullSymbolizerSelect.setEnabled(false);
+                        decimalSeparatorSelect.setEnabled(false);
 
-                } else if (value === 'csv') {
-                    fieldSeparatorSelect.setEnabled(true);
-                    nullSymbolizerSelect.setEnabled(true);
-                    decimalSeparatorSelect.setEnabled(true);
-                    ownAreaAlert.hide();
-                }
-            });
-            var fileTypeTitle = jQuery('<label>').text(me._locale.export.fileType);
-            fileTypeTitle.prependTo(fileTypeRadioGroup.getElement());
-            fileTypeRadioGroup.insertTo(content);
+                        // show a warning text if user selected own area
+                        if (!me.geometryFilter.isEmpty()) {
+                            ownAreaAlert.insertTo(content);
+                            ownAreaAlert.setContent(me._locale.export.ownAreaWarning);
+                        }
+
+                    } else if (value === 'csv') {
+                        fieldSeparatorSelect.setEnabled(true);
+                        nullSymbolizerSelect.setEnabled(true);
+                        decimalSeparatorSelect.setEnabled(true);
+                        ownAreaAlert.hide();
+                    }
+                });
+                var fileTypeTitle = jQuery('<label>').text(me._locale.export.fileType);
+                fileTypeTitle.prependTo(fileTypeRadioGroup.getElement());
+                fileTypeRadioGroup.insertTo(content);
+            }
 
             //Field separator
             var fieldSeparatorOptions = [
@@ -6594,7 +6606,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     fieldSeparator = fieldSeparatorSelect.getValue(),
                     nullSymbolizer = nullSymbolizerSelect.getValue(),
                     decimalSeparator = decimalSeparatorSelect.getValue(),
-                    fileType = fileTypeRadioGroup.getValue(),
+                    fileType = fileTypeRadioGroup ? fileTypeRadioGroup.getValue() : 'csv',
                     quoteSymbol = '"';
                     headerRow = {},
                     indicatorMap = {},

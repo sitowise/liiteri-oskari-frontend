@@ -1,5 +1,6 @@
 ﻿/**
  * Used to notify other components of stats area establishes.
+ * Notice! YM-853: The feature should NOT be available when choosing regional data in Liiteri
  * 
  * @class Oskari.statistics.bundle.statsgrid.event.StatsAreaEstablishedEvent
  */
