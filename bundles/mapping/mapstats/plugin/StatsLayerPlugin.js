@@ -930,12 +930,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.mapstats.plugin.StatsLayerPlugin
 //                console.log('updated');
 //            }
 
+            //Notice! YM-853: The feature should NOT be available when choosing regional data in Liiteri
             //send event with areas feature collection for export functionality
-            var eventBuilder = this._sandbox.getEventBuilder('StatsGrid.StatsAreaEstablishedEvent');
-            if (eventBuilder) {
-                var event = eventBuilder(JSON.parse(request.responseText));
-                this._sandbox.notifyAll(event);
-            }
+            //var eventBuilder = this._sandbox.getEventBuilder('StatsGrid.StatsAreaEstablishedEvent');
+            //if (eventBuilder) {
+            //    var event = eventBuilder(JSON.parse(request.responseText));
+            //    this._sandbox.notifyAll(event);
+            //}
                 
             return result;
         },
