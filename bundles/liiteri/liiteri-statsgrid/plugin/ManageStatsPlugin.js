@@ -6840,7 +6840,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             };
             request.responseType = 'blob';
-            request.send('featureCollection=' + JSON.stringify(data) + '&fileName=' + shpFileName);
+            request.send('featureCollection=' + JSON.stringify(data).replace(/%/g, '%25') + '&fileName=' + shpFileName);
         },
 
         _zeroFill: function (number, width)
