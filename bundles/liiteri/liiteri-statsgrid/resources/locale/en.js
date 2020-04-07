@@ -410,7 +410,9 @@ Oskari.registerLocalization(
             "empty": "Empty",
 			"fileHeader": "The Living Environment Information Services Liiteri",
             "dataSources": "Data sources",
-            "ownAreaWarning": "Warning! The existing attributes from the selected area features will be removed."
+            "ownAreaWarning": "Warning! The existing attributes from the selected area features will be removed.",
+            "areaPropName": "Area",
+            "shpExplanation": "Explanation of attribute names for this shapefile:"
 		},
         "classification" : {
             "error" : {
