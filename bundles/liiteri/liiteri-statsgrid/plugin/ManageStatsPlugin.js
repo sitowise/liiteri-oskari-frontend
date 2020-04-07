@@ -6750,41 +6750,64 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         columnIds.push('code');
                     }
                 });
+                
+                //add themes structure to csv file
+                if (fileType == 'csv') {
+                    for (var themeIdx = 0; themeIdx < maxThemeDepth; themeIdx++) {
+                        var row = {};
+                        for (i = 0; i < columnIds.length; i++) {
+                            var colId = columnIds[i];
 
-                //add themes structure
-                for (var themeIdx = 0; themeIdx < maxThemeDepth; themeIdx++) {
-                    var row = {};
-                    for (i = 0; i < columnIds.length; i++) {
-                        var colId = columnIds[i];
-
-                        if (colId == 'municipality' || colId == 'code') {
-                            row[colId] = '';
-                        }
-                        else {
-                            if (indicatorMap[colId].themes != null) {
-                                var fixedIdx = indicatorMap[colId].themes.length - maxThemeDepth + themeIdx;
-                                if (fixedIdx >= 0
-                                    && indicatorMap[colId].themes[fixedIdx] != null
-                                    && indicatorMap[colId].themes[fixedIdx][lang] != null) {
-                                    row[colId] = indicatorMap[colId].themes[fixedIdx][lang];
+                            if (colId == 'municipality' || colId == 'code') {
+                                row[colId] = '';
+                            } else {
+                                if (indicatorMap[colId].themes != null) {
+                                    var fixedIdx = indicatorMap[colId].themes.length - maxThemeDepth + themeIdx;
+                                    if (fixedIdx >= 0
+                                        && indicatorMap[colId].themes[fixedIdx] != null
+                                        && indicatorMap[colId].themes[fixedIdx][lang] != null) {
+                                        row[colId] = indicatorMap[colId].themes[fixedIdx][lang];
+                                    } else {
+                                        row[colId] = '';
+                                    }
                                 } else {
                                     row[colId] = '';
                                 }
-                            } else {
-                                row[colId] = '';
                             }
                         }
+                        data.push(row);
                     }
-                    data.push(row);
                 }
-
-
 
                 //add header row
-                for (i=0; i < columnIds.length; i++) {
-                    headerRow[columnIds[i]] = columnNames[i];
+                for (i = 0; i < columnIds.length; i++) {
+                    var colId = columnIds[i];
+
+                    if (fileType === 'shp') {
+                        if (colId !== 'municipality' && colId !== 'code') {
+                            //add indicator theme names to header of shp file
+                            headerRow[colId] = '';
+                            for (var themeIdx = 0; themeIdx < indicatorMap[colId].themes.length; themeIdx++) {
+                                headerRow[colId] += indicatorMap[colId].themes[themeIdx][lang] + ' - ';
+                            }
+                            headerRow[colId] += columnNames[i];
+                        } else if (!me.geometryFilter.isEmpty()) {
+                            if (colId === 'municipality') {
+                                headerRow[colId] = me._locale.export.areaPropName;
+                            }
+                        } else {
+                            headerRow[colId] = columnNames[i];
+                        }
+                    } else {
+                        //add header name for other cases
+                        headerRow[colId] = columnNames[i];
+                    }
                 }
-                data.push(headerRow);
+
+                //csv needs headerRow also in data collection
+                if (fileType === 'csv') {
+                    data.push(headerRow);
+                }
 
                 var functionalAreas = me._state.functionalRows != null && me._state.functionalRows.length > 0;
 
@@ -6803,7 +6826,25 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         data.push(row);
                     }
                 });
-                
+
+                var explanation = '';
+                //get toady's date and format it
+                var today = new Date();
+                var todayFormatted = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear(); //Finnish format: dd.mm.yyyy
+
+                //find data sources of selected indicators
+                var dataSources = [];
+                for (var i = 0; i < me.indicators.length; i++) {
+                    var dataSource = me._findDataSourceForIndicator(me.indicators[i]);
+                    if (dataSource != '' && $.inArray(dataSource, dataSources) === -1) {
+                        dataSources.push(dataSource);
+                    }
+                }
+
+                //add metadata to the file
+                explanation += me._locale.export.fileHeader + ', ' + todayFormatted + '\r\n';
+                explanation += me._locale.export.dataSources + ': ' + dataSources.join(', ') + '\r\n';
+
                 if (fileType == 'csv') {
                     //convert json to csv
                     var csvString = me._convertJsonToCsv(
@@ -6811,7 +6852,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         fieldSeparator,
                         quoteSymbol,
                         nullSymbolizer,
-                        decimalSeparator
+                        decimalSeparator,
+                        explanation
                     );
 
                     var csvLink = $('#statistics-download-csv-file');
@@ -6842,6 +6884,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     }
 
                 } else if (fileType == 'shp') {
+                    explanation += me._locale.export.shpExplanation + '\r\n';
+
                     //prepare feature collection for backend
                     var preparedCollection = me._prepareDataForShp(data, headerRow);
 
@@ -6879,7 +6923,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                     };
                     var errorCb = null;
 
-                    me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection, shpFileName);
+                    me._sendPostRequestWithBlob("POST", url, successCb, errorCb, preparedCollection, shpFileName, explanation);
                 }
 
                 dialog.close();
@@ -6888,7 +6932,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             dialog.show(me._locale.export.formattingOfTheFile, content, [saveBtn, cancelBtn]);
         },
 
-        _prepareDataForShp: function (jsonData, headerRow) {
+        _prepareDataForShp: function (dataRows, headerRow) {
             var preparedCollection = {
                 "type": "FeatureCollection",
                 "crs": {
@@ -6899,42 +6943,39 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 },
                 "features": []
             };
-            var array = typeof jsonData != 'object' ? JSON.parse(jsonData) : jsonData;
-            
-            for (var i = 0; i < array.length; i++) {
+            var dataRows = typeof dataRows != 'object' ? JSON.parse(dataRows) : dataRows;
 
-                var areaCode = parseInt(array[i].code);
+            this.statsAreaFeatureCollection.features.forEach(function (feature) {
+                var featureIdPropName = Object.keys(feature.properties)[0]; //TODO determine id property in better way
+                var featureId = feature.properties[featureIdPropName];
+                var foundDataRow = dataRows.find(function (dataRow) {
+                    if (feature.properties.customArea === true) {
+                        return featureId === dataRow.municipality;
+                    } else {
+                        return featureId === parseInt(dataRow.code);
+                    }
+                });
 
-                if (!isNaN(areaCode)) {
-                    var foundFeature = this.statsAreaFeatureCollection.features.find(function (feature) {
-                        if (feature.properties.customArea === true) {
-                            return feature.properties[Object.keys(feature.properties)[0]] == array[i].municipality;
-                        } else {
-                            return feature.properties[Object.keys(feature.properties)[0]] == areaCode;
-                        }
-                    });
+                var preparedFeature = _.cloneDeep(feature);
+                preparedFeature.properties = {};
+                if (headerRow.code) {
+                    preparedFeature.properties[headerRow.code] = foundDataRow ? foundDataRow.code : featureId;
+                }
+                preparedFeature.properties[headerRow.municipality] = foundDataRow ? foundDataRow.municipality : featureId;
 
-                    if (foundFeature != null) {
-                        var preparedFeature = _.cloneDeep(foundFeature);
-                        preparedFeature.properties = {};
-                        preparedFeature.properties[headerRow.code] = array[i].code;
-                        preparedFeature.properties[headerRow.municipality] = array[i].municipality;
-                        
-                        for (var propName in array[i]) {
-                            if (propName != "municipality" && propName != "code" && array[i][propName] != null) {
-                                preparedFeature.properties["#STAT_ATTRIBUTE#" + headerRow[propName]] = array[i][propName];
-                            }
-                        }
-
-                        preparedCollection.features.push(preparedFeature);
+                for (var propName in headerRow) {
+                    if (propName != "municipality" && propName != "code") {
+                        preparedFeature.properties["#STAT_ATTRIBUTE#" + headerRow[propName]] = foundDataRow ? foundDataRow[propName] : '';
                     }
                 }
-            }
+
+                preparedCollection.features.push(preparedFeature);
+            });
 
             return preparedCollection;
         },
 
-        _sendPostRequestWithBlob: function (method, url, successCb, errorCb, data, shpFileName) {
+        _sendPostRequestWithBlob: function (method, url, successCb, errorCb, data, shpFileName, explanation) {
             var request = new XMLHttpRequest();
             request.open(method, url);
             request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -6946,7 +6987,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 }
             };
             request.responseType = 'blob';
-            request.send('featureCollection=' + JSON.stringify(data).replace(/%/g, '%25') + '&fileName=' + shpFileName);
+            request.send('featureCollection=' + JSON.stringify(data).replace(/%/g, '%25') + '&fileName=' + shpFileName + '&explanation=' + explanation);
         },
 
         _zeroFill: function (number, width)
@@ -6958,27 +6999,10 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             }
             return number + ""; // always return a string
         },
-        _convertJsonToCsv: function(jsonData, fieldSeparator, quoteSymbol, nullSymbolizer, decimalSeparator) {
+        _convertJsonToCsv: function(jsonData, fieldSeparator, quoteSymbol, nullSymbolizer, decimalSeparator, explanation) {
             var array = typeof jsonData != 'object' ? JSON.parse(jsonData) : jsonData;
 
-            var str = '';
-
-            //get toady's date and format it
-            var today = new Date();
-            var todayFormatted = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear(); //Finnish format: dd.mm.yyyy
-
-            //find data sources of selected indicators
-            var dataSources = [];
-            for (var i = 0; i < this.indicators.length; i++) {
-                var dataSource = this._findDataSourceForIndicator(this.indicators[i]);
-                if (dataSource != '' && $.inArray(dataSource, dataSources) === -1) {
-                    dataSources.push(dataSource);
-                }
-            }
-
-            //add metadata to the file
-            str += this._locale.export.fileHeader + ', ' + todayFormatted + '\r\n';
-            str += this._locale.export.dataSources + ': ' + dataSources.join(', ') + '\r\n';
+            var str = explanation;
 
             for (var i = 0; i < array.length; i++) {
                 var line = '';

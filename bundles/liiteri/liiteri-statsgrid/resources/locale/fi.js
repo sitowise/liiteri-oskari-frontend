@@ -420,7 +420,9 @@ Oskari.registerLocalization(
             "empty": "Ei mitään",
 			"fileHeader": "Elinympäristön tietopalvelu Liiteri",
             "dataSources": "Tietolähteet",
-            "ownAreaWarning": "Varoitus! Valittujen aluekohteiden olemassa olevat ominaisuudet poistetaan."
+            "ownAreaWarning": "Varoitus! Valittujen aluekohteiden olemassa olevat ominaisuudet poistetaan.",
+            "areaPropName": "Alue",
+            "shpExplanation": "Shapefile-tiedoston ominaisuustietojen selite:"
 		},
         "classification" : {
             "error" : {
