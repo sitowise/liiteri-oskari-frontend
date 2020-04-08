@@ -226,7 +226,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             this.geometryFilter.reset(true);
             for (var i = 0; i < event.getDrawing().components.length; ++i) {
                 var drawnAreaFilterId = this._locale.geometryFilter.drawnAreaFilterId.replace('{0}', i + 1);
-                this.geometryFilter.addGeometry(event.getDrawing().components[i].toString(), drawnAreaFilterId);
+                this.geometryFilter.addGeometry(event.getDrawing().components[i].toString(), drawnAreaFilterId, true);
             }
             this._updateGeometryFilter();
         },
@@ -3193,17 +3193,16 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             gender = gender !== null && gender !== undefined ? gender : 'total',
             functionalRows = [];
 
-            // set feature collection for export functionality
-            if (!me.geometryFilter.isEmpty()) {
-                var geometries = me.geometryFilter.getGeometries();
-
+            // set feature collection for shp export functionality
+            if (me.geometryFilter.hasAreasForShpExport()) {
+                var areasForShpExport = me.geometryFilter.getAreasForShpExport();
                 var wktFormat = new OpenLayers.Format.WKT();
                 var featureCollection = [];
 
-                for (var i = 0; i < geometries.length; i++) {
-                    var feature = wktFormat.read(geometries[i].geom);
+                for (var i = 0; i < areasForShpExport.length; i++) {
+                    var feature = wktFormat.read(areasForShpExport[i].geom);
                     feature.attributes = {
-                        'featureId': geometries[i].id,
+                        'featureId': areasForShpExport[i].id,
                         'customArea': true
                     };
                     featureCollection.push(feature);
@@ -6066,7 +6065,14 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                         } else {
                                             id = activeFeatures[k][attrIndex];
                                         }
-                                        me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1], id);
+
+                                        //check if this area can be used as geometry filter for SHP export
+                                        var isAreaForShpExport = false;
+                                        if (['myplaces', 'analysis', 'userlayer'].includes(l.getLayerType())) {
+                                            isAreaForShpExport = true;
+                                        }
+
+                                        me.geometryFilter.addGeometry(l.getClickedGeometries()[j][1], id, isAreaForShpExport);
                                     }
                                 }
                             }
@@ -6464,18 +6470,19 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                 content = jQuery('<div id="stats-export-container"></div>'),
                 saveBtn = Oskari.clazz.create('Oskari.userinterface.component.Button'),
                 cancelBtn = dialog.createCloseButton(me._locale.buttons.cancel),
-                fileTypeRadioGroup = null;
+                fileTypeRadioGroup = null,
                 fieldSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 nullSymbolizerSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 decimalSeparatorSelect = Oskari.clazz.create('Oskari.userinterface.component.Select'),
                 ownAreaAlert = Oskari.clazz.create('Oskari.userinterface.component.Alert'),
                 csvFileName = me._locale.export.csvFileName,
-                shpFileName = me._locale.export.shpFileName
+                shpFileName = me._locale.export.shpFileName,
+                hasAreasForShpExport = me.geometryFilter.hasAreasForShpExport();
 
             // Notice! YM-853: 
             // - The feature should NOT be available when choosing regional data in Liiteri
             // - The feature should NOT be available for guest users
-            if (me.geometryFilter.isEmpty() || !me._sandbox.getUser().isLoggedIn()) {
+            if (!hasAreasForShpExport || !me._sandbox.getUser().isLoggedIn()) {
                 fieldSeparatorSelect.setEnabled(true);
                 nullSymbolizerSelect.setEnabled(true);
                 decimalSeparatorSelect.setEnabled(true);
@@ -6503,7 +6510,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                         decimalSeparatorSelect.setEnabled(false);
 
                         // show a warning text if user selected own area
-                        if (!me.geometryFilter.isEmpty()) {
+                        if (hasAreasForShpExport) {
                             ownAreaAlert.insertTo(content);
                             ownAreaAlert.setContent(me._locale.export.ownAreaWarning);
                         }
@@ -6685,7 +6692,7 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
                                 headerRow[colId] += indicatorMap[colId].themes[themeIdx][lang] + ' - ';
                             }
                             headerRow[colId] += columnNames[i];
-                        } else if (!me.geometryFilter.isEmpty()) {
+                        } else if (hasAreasForShpExport) {
                             if (colId === 'municipality') {
                                 headerRow[colId] = me._locale.export.areaPropName;
                             }

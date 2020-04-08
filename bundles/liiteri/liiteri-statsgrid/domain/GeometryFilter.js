@@ -14,11 +14,12 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.domain.GeometryFilter',
         /**
          * Adds the geometry with specified id to geometry filter
          */
-        addGeometry: function (geom, id) {
+        addGeometry: function (geom, id, isAreaForShpExport) {
             this._geometries.push(geom);
             this._geomObjects.push({
                 "id": id,
-                "geom": geom
+                "geom": geom,
+                "isAreaForShpExport": isAreaForShpExport
             });
         },
         setDirection: function (direction) {
@@ -47,5 +48,15 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.domain.GeometryFilter',
         },
         getGeometries: function () {
             return this._geomObjects;
+        },
+        getAreasForShpExport: function () {
+            return this._geomObjects.filter(function (geom) {
+                return geom.isAreaForShpExport === true
+            });
+        },
+        hasAreasForShpExport: function () {
+            return this._geomObjects.find(function (geom) {
+                return geom.isAreaForShpExport === true
+            }) != null;
         }
     });
