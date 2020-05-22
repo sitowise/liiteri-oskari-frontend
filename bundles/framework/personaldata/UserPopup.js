@@ -91,26 +91,32 @@
                 content.append(userLayersTabLink);
 
                 var isAdmin = false;
+                var isSykeAdmin = false;
                 var roles = user.getRoles();
                 $.each(roles, function (index, role){
-                	if ($.inArray(role.name, ["liiteri_admin", "liiteri_groupings_admin"]) > -1)
-        			{
-                		isAdmin = true;
-        			}
+                    if ($.inArray(role.name, ["liiteri_admin", "liiteri_groupings_admin"]) > -1) {
+                        isAdmin = true;
+                    } else if (role.name === "syke_admin") {
+                        isSykeAdmin = true;
+                    }
                 });
 
-                if (isAdmin)
+                if (isAdmin || isSykeAdmin)
                 {
                 	$("<div>").addClass("menuLineDivider").appendTo(content);
 
-	                var groupingLink = $('<div class="linkRow"><a class="addButton" id="showGroupingsTabAction">' +  this.locale.groupings + ' &#8250;</a></div>');
-	                content.append(groupingLink);
+                    if (isAdmin) {
+                        var groupingLink = $('<div class="linkRow"><a class="addButton" id="showGroupingsTabAction">' + this.locale.groupings + ' &#8250;</a></div>');
+                        content.append(groupingLink);
+                    }
 
 	                var announcementsLink = $('<div class="linkRow"><a class="addButton" id="showAnnouncementsTabAction">' +  this.locale.announcements + ' &#8250;</a></div>');
 	                content.append(announcementsLink);
 
-	                var layerrightsLink = $('<div class="linkRow"><a class="addButton" id="showLayerrightsTabAction">' +  this.locale.layerRights + ' &#8250;</a></div>');
-                    content.append(layerrightsLink);
+                    if (isAdmin) {
+                        var layerrightsLink = $('<div class="linkRow"><a class="addButton" id="showLayerrightsTabAction">' + this.locale.layerRights + ' &#8250;</a></div>');
+                        content.append(layerrightsLink);
+                    }
 
                     $("<div>").addClass("menuLineDivider").appendTo(content);
                 }
