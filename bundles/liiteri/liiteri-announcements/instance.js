@@ -92,7 +92,7 @@ Oskari.clazz.define(
 				var roles = user.getRoles();
 				if (roles != null) {
 					for (var i = 0; i < roles.length; i++) {
-						if (roles[i].name == 'liiteri_admin') {
+						if (roles[i].name == 'liiteri_admin' || roles[i].name == 'syke_admin') {
 							correctRole = true;
 							break;
 						}

@@ -98,7 +98,7 @@ Oskari.clazz.define('Oskari.liiteri.bundle.liiteri-urbanplanning.service.UrbanPl
             if (user == null || user.getRoles() == null)
                 return false;
 
-            var adminRoles = ["liiteri_env_user", "liiteri_groupings_admin", "liiteri_admin"];
+            var adminRoles = ["liiteri_env_user", "liiteri_groupings_admin", "liiteri_admin", "syke_admin"];
             var roles = user.getRoles();
 
             for (var i = 0; i < roles.length; i++) {
