@@ -1192,7 +1192,7 @@ function() {
 	    if (user == null || user.getRoles() == null)
 	        return false;
 
-	    var adminRoles = ["liiteri_groupings_admin", "liiteri_admin", "syke_admin"];
+		var adminRoles = ["liiteri_groupings_admin", "liiteri_admin", "liiteri_admin_light"];
 	    var roles = user.getRoles();
 
 	    for (var i = 0; i < roles.length; i++) {

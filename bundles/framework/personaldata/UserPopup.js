@@ -96,7 +96,7 @@
                 $.each(roles, function (index, role){
                     if ($.inArray(role.name, ["liiteri_admin", "liiteri_groupings_admin"]) > -1) {
                         isAdmin = true;
-                    } else if (role.name === "syke_admin") {
+                    } else if (role.name === "liiteri_admin_light") {
                         isSykeAdmin = true;
                     }
                 });
