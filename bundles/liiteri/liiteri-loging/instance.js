@@ -250,14 +250,15 @@ Oskari.clazz
                   loginContainer
                       .find(".guest")
                       .click(
-                          function() {
-                            var eventBuilder = me.sandbox.getEventBuilder('liiteri-loging.LoginEvent');
-                            var event = eventBuilder("guest");
-                            me.sandbox.notifyAll(event);
-                            jQuery.cookie('guest_login', 1);
-                            dialog.close(true);
-                            overlay.close();
-                            me._startGuide(1);
+                          function () {
+                              var eventBuilder = me.sandbox.getEventBuilder('liiteri-loging.LoginEvent');
+                              var event = eventBuilder("guest");
+                              me.sandbox.notifyAll(event);
+                              jQuery.cookie('guest_login', 1);
+                              dialog.close(true);
+                              overlay.close();
+                              // According to customer comments to task [YM-875] a disclaimer / usage terms are not necessary
+                              //me._startGuide(1);
                           });
                   loginContainer
                   .find(".login-oiva")
