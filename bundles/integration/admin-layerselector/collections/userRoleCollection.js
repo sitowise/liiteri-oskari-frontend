@@ -7,7 +7,12 @@
             // Reference to this collection's model.
             model : roleModel,
 
-            getRoles : function() {
+            getRoles: function () {
+                this.models.forEach((item, index) => {
+                    if (item.name === 'liiteri_admin_light') {
+                        item.name = 'liiteri_admin';
+                    }
+                });
                 return this.models;
             }
         });
