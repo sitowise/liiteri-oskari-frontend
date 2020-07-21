@@ -6953,7 +6953,8 @@ Oskari.clazz.define('Oskari.statistics.bundle.statsgrid.plugin.ManageStatsPlugin
             var dataRows = typeof dataRows != 'object' ? JSON.parse(dataRows) : dataRows;
 
             this.statsAreaFeatureCollection.features.forEach(function (feature) {
-                var featureIdPropName = Object.keys(feature.properties)[0]; //TODO determine id property in better way
+                //var featureIdPropName = Object.keys(feature.properties)[0]; //TODO When regional areas for shp export are enabled, then determine id property in better way
+                var featureIdPropName = 'featureId';
                 var featureId = feature.properties[featureIdPropName];
                 var foundDataRow = dataRows.find(function (dataRow) {
                     if (feature.properties.customArea === true) {
