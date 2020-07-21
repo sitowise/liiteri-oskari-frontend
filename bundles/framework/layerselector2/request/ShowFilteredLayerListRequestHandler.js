@@ -30,8 +30,8 @@ Oskari.clazz.define('Oskari.mapframework.bundle.layerselector2.request.ShowFilte
                 layerSelectorFlyout.activateFilter(request.getSelectedFilter());
             }
 
-            if(request.getOpenLayerList() && request.getOpenLayerList() === true){
-                this.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [this.instance, 'attach']);
+            if (request.getOpenLayerList() && request.getOpenLayerList() === true) {
+                this.sandbox.postRequestByName('userinterface.UpdateExtensionRequest', [this.instance, 'attach', null, null, request.getLeftPosition()]);
             }
         }
     }, {

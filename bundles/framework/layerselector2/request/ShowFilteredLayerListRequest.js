@@ -13,10 +13,12 @@ Oskari.clazz
      *
      * @param {String} selectedFilter select wanted filter
      * @param {Boolean} opeLayerList Open layer list when calling request
+     * @param {Number} leftPosition value of left position for the flyout [px]
      */
-        function(selectedFilter, openLayerList) {
+        function(selectedFilter, openLayerList, leftPosition) {
             this._selectedFilter = selectedFilter;
             this._openLayerList = openLayerList;
+            this._leftPosition = leftPosition;
     }, {
         /** @static @property __name request name */
         __name : "ShowFilteredLayerListRequest",
@@ -40,6 +42,13 @@ Oskari.clazz
          */
         getOpenLayerList: function(){
             return this._openLayerList;
+        },
+        /**
+         * @method getLeftPosition
+         * @return {Number} value of left position for the flyout [px]
+         */
+        getLeftPosition: function () {
+            return this._leftPosition;
         }
     }, {
         /**
