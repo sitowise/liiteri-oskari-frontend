@@ -205,7 +205,7 @@ div.divmanazerpopup div.actions input {
     z-index: 10001;
 }  .divmanazerpopup div.close-icon {
     position: absolute;
-    top: 8px;
+    top: 5px;
     right: 5px;
     cursor: pointer; }
   .divmanazerpopup.mobile-popup {

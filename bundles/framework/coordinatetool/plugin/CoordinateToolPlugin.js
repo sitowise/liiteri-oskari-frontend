@@ -318,7 +318,7 @@ Oskari.clazz.define('Oskari.mapframework.bundle.coordinatetool.plugin.Coordinate
                 var topOffsetElement = jQuery('div.mobileToolbarDiv');
                 me._popup.addClass('coordinatetool__popup');
                 me._popup.addClass('mobile-popup');
-                me._popup.setColourScheme({"bgColour": "#e6e6e6"});
+                //me._popup.setColourScheme({"bgColour": "#e6e6e6"});
                 me._popup.createCloseIcon();
 
                 //hide mouse coordinates
@@ -337,12 +337,14 @@ Oskari.clazz.define('Oskari.mapframework.bundle.coordinatetool.plugin.Coordinate
                     me._popup.moveTo(mapmodule.getMapEl(), 'center', true, null);
                 }
 
-                popupCloseIcon = (Oskari.util.isDarkColor(themeColours.activeColour)) ? 'icon-close-white' : undefined;
-                me._popup.setColourScheme({
-                    'bgColour': themeColours.activeColour,
-                    'titleColour': themeColours.activeTextColour,
-                    'iconCls': popupCloseIcon
-                });
+                //popupCloseIcon = (Oskari.util.isDarkColor(themeColours.activeColour)) ? 'icon-close-white' : undefined;
+                //me._popup.setColourScheme({
+                //    'bgColour': themeColours.activeColour,
+                //    'titleColour': themeColours.activeTextColour,
+                //    'iconCls': popupCloseIcon
+                //});
+                me._popup.setColourScheme({ 'iconCls': 'icon-close-white' });
+
                 me._popup.addClass('mobile-popup');
             } else {
                 me._popup.makeDraggable();
@@ -360,12 +362,13 @@ Oskari.clazz.define('Oskari.mapframework.bundle.coordinatetool.plugin.Coordinate
                 me._popup.show(popupTitle, popupContent, buttons);
                 me._popup.moveTo(me.getElement(), popupLocation, true);
                 me._popup.adaptToMapSize(me._sandbox, popupName);
-                popupCloseIcon = (mapmodule.getTheme() === 'dark') ? 'icon-close-white' : undefined;
-                me._popup.setColourScheme({
-                    'bgColour': themeColours.backgroundColour,
-                    'titleColour': themeColours.textColour,
-                    'iconCls': popupCloseIcon
-                });
+                //popupCloseIcon = (mapmodule.getTheme() === 'dark') ? 'icon-close-white' : undefined;
+                //me._popup.setColourScheme({
+                //    'bgColour': themeColours.backgroundColour,
+                //    'titleColour': themeColours.textColour,
+                //    'iconCls': popupCloseIcon
+                //});
+                me._popup.setColourScheme({ 'iconCls': 'icon-close-white' });
             }
 
             me.refresh();
