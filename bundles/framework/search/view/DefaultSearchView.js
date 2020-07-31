@@ -460,6 +460,19 @@ Oskari.clazz.define(
                 );
 
             sandbox.request(this.instance.getName(), request);
+
+            //open proper layers for clicked search result (based on bundle configuration for current search channel)
+            if (this.instance.conf && this.instance.conf.channels) {
+                var currentChannelConfig = this.instance.conf.channels[result.channelId];
+                if (currentChannelConfig && currentChannelConfig.mapLayers) {
+                    var addLayerRequestBuilder = sandbox.getRequestBuilder('AddMapLayerRequest');
+
+                    for (var i = 0; i < currentChannelConfig.mapLayers.length; i++) {
+                        var addLayerRequest = addLayerRequestBuilder(currentChannelConfig.mapLayers[i]);
+                        sandbox.request(this.instance.getName(), addLayerRequest);
+                    }
+                }
+            }
         },
 
         /**
