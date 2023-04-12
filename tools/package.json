@@ -43,6 +43,6 @@
     "openlayers": "4.4.2",
     "uglify-js": "^2.6.2",
     "uglifycss": "0.0.20",
-    "xml2js": "^0.4.16"
+    "xml2js": "^0.5.0"
   }
 }
